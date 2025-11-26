@@ -1,0 +1,30 @@
+{
+  "exp1": {
+    "table": {
+      "Collected Date": "/",
+      "Location": "/",
+      "Setting": "Laboratory setting (implied by equipment description)",
+      "Modality": "Visual",
+      "Fixation size": "0.8° × 0.8°",
+      "Shape size": "3.8° × 3.8°",
+      "Label size": "1.6° (height)",
+      "Stimulus order": "Simultaneously",
+      "Shape-label interval": "0 ms (simultaneous presentation)",
+      "Stimulus color": "White",
+      "Background color": "Gray",
+      "Equipment for presenting": "21.5-inch Apple iMac computer",
+      "Monitor properties": "/",
+      "Software for experiment": "MATLAB (version 2010a) with Psychophysics toolbox",
+      "Viewing distance": "/",
+      "Fixation presentation duration": "500 ms",
+      "Stimulus presentation duration": "100 ms",
+      "Response deadline": "1500 ms",
+      "ITI": "500 ms",
+      "Feedback duration": "500 ms",
+      "Number of practice trials": "24",
+      "Block number": "3 blocks",
+      "Trial Number": "120 trials per block (360 total)"
+    },
+    "detail": ""
+  }
+}

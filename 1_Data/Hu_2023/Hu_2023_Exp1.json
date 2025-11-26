@@ -1,0 +1,30 @@
+{
+  "exp2": {
+    "table": {
+      "Collected Date": "2014-04",
+      "Location": "Beijing (Tsinghua University)",
+      "Setting": "Individual testing in dim-lighted chamber",
+      "Modality": "Visual perceptual matching task",
+      "Fixation size": "0.8° × 0.8°",
+      "Shape size": "3.7° × 3.7°",
+      "Label size": "3.6° × 1.6°",
+      "Stimulus order": "Simultaneously",
+      "Shape-label interval": "0 ms",
+      "Stimulus color": "/",
+      "Background color": "/",
+      "Equipment for presenting": "CRT monitors",
+      "Monitor properties": "22-inch",
+      "Software for experiment": "E-prime 2.0",
+      "Viewing distance": "60 cm (with chin brace)",
+      "Fixation presentation duration": "/",
+      "Stimulus presentation duration": "/",
+      "Response deadline": "/",
+      "ITI": "/",
+      "Feedback duration": "/",
+      "Number of practice trials": "Until ≥60% accuracy reached",
+      "Block number": "/",
+      "Trial Number": "180"
+    },
+    "detail": ""
+  }
+}
