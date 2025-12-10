@@ -1,0 +1,13 @@
+{
+    "Paper_name": "The oscillatory fingerprints of self-prioritization: Novel markers in spectral EEG for self-relevant processing",
+    "Summary": "This EEG study investigated the spectral dynamics of self-prioritization using a familiarity-confound free matching task. Participants associated arbitrary shapes with 'self' or 'stranger', and behavioral results showed self-prioritization effects in reaction time and accuracy. EEG analysis revealed two significant self-prioritization effects in spectral power: one in the delta/theta band (2–7 Hz) and one in the beta band (19–29 Hz). Drift-diffusion modeling linked beta activity to evidence accumulation and delta/theta activity to response selection. The findings suggest these oscillatory patterns serve as novel biomarkers for self-relevant processing.",
+    "Year": "2023",
+    "Author": "Céline C. Haciahmet, Marius Golubickis, Sarah Schäfer, Christian Frings, Bernhard Pastötter",
+    "Journal": "Psychophysiology",
+    "Country": "Germany",
+    "City": "Trier",
+    "Extra_Var": "/",
+    "Email": "pastoetter@uni-trier.de",
+    "DOI": "10.1111/psyp.14396",
+    "Conclusion": "The study identified two novel oscillatory biomarkers of self-prioritization: decreased beta suppression associated with more efficient sensorimotor processing of self-associated features, and increased delta/theta power linked to facilitated retrieval of self-relevant information across a distributed associative network. These spectral EEG markers indicate that self-prioritization functions as an 'associative glue' for the self-concept, with distinct frequency bands supporting different cognitive processes (evidence accumulation vs. response selection)."
+}

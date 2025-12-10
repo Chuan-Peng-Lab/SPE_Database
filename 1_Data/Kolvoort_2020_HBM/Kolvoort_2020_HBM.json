@@ -1,0 +1,13 @@
+{
+    "Paper_name": "Temporal integration as “common currency” of brain and self-scale-free activity in resting-state EEG correlates with temporal delay effects on self-relatedness",
+    "Summary": "The study investigates the relationship between temporal integration on the psychological level of the self and temporal integration on the neuronal level. The authors modified a self-matching paradigm by adding temporal delays to measure psychological integration. On the neuronal level, they used resting-state EEG to measure scale-free dynamics via the power law exponent and autocorrelation window. They hypothesized that the self-prioritization effect would change with temporal delays and correlate with neuronal integration measures. Results showed a significant self-prioritization effect across delays, indicating stronger integration for self-related stimuli. Furthermore, higher degrees of neuronal integration were linked to a stronger increase in the self-prioritization effect over longer delays.",
+    "Year": "2020",
+    "Author": "Ivar R. Kolvoort, Soren Wainio-Theberge, Annemarie Wolff, Georg Northoff",
+    "Journal": "Human Brain Mapping",
+    "Country": "Canada",
+    "City": "Ottawa",
+    "Extra_Var": "/",
+    "Email": "i.r.kolvoort@uva.nl",
+    "DOI": "10.1002/hbm.25129",
+    "Conclusion": "The study concludes that temporal integration on the neuronal level serves as a template for temporal integration of the self on the psychological level. The findings suggest that temporal integration acts as a 'common currency' linking neuronal and psychological aspects of the self, with scale-free brain activity correlating with the strength of self-prioritization across temporal delays."
+}

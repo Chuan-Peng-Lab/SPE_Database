@@ -1,0 +1,13 @@
+{
+    "Paper_name": "Decoding individual differences in self-prioritization from the resting-state functional connectome",
+    "Summary": "This study investigates the fundamental self hypothesis, which posits that the self is a baseline function embedded in the brain's spontaneous activity. Using resting-state fMRI data from 348 young participants, the researchers employed machine learning to predict the magnitude of self-bias in a perceptual matching task from whole-brain functional connectivity patterns. The support vector regression model successfully predicted self-biased behavior, and its generalizability was confirmed using an external dataset of older adults. The findings link self-biased behavior to distinct connections between the default mode, cognitive control, and salience networks, extending to regions like the thalamus.",
+    "Year": "2023",
+    "Author": "Yongfa Zhang, Fei Wang, Jie Sui",
+    "Journal": "NeuroImage",
+    "Country": "China",
+    "City": "/",
+    "Extra_Var": "/",
+    "Email": "wf3126@mail.tsinghua.edu.cn",
+    "DOI": "10.1016/j.neuroimage.2023.120205",
+    "Conclusion": "The study provides evidence that self-biased behavior can be predicted from patterns of spontaneous neural connectivity, supporting the fundamental self hypothesis. The results demonstrate that self-prioritization is associated with distinct functional connections between the default mode, cognitive control, and salience networks, with contributions from regions like the thalamus. This supports an integrated neural network model of the self as a fundamental brain function that emerges from resting-state activity and regulates responses to the environment."
+}

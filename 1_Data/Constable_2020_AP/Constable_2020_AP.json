@@ -1,0 +1,13 @@
+{
+    "Paper_name": "Sticking together? Re-binding previous other-associated stimuli interferes with self-verification but not partner-verification",
+    "Summary": "The study investigates whether the 'we-prioritisation' effect extends to individual task partners, similar to the self-prioritisation effect where self-relevant stimuli are processed faster. Pairs of participants performed a joint shape-label matching task where identities (self, partner, stranger) were assigned to shapes and then switched halfway. Results showed a standard self-prioritisation effect with faster responses to self-stimuli. After remapping, performance decreased for self-trials but improved for partner- and stranger-stimuli. No evidence was found for an enhanced representation for task-partner identities, but interference between old and new memory traces affected self-retrieval processes.",
+    "Year": "2020",
+    "Author": "Merryn D. Constable, Günther Knoblich",
+    "Journal": "Acta Psychologica",
+    "Country": "United Kingdom",
+    "City": "/",
+    "Extra_Var": "/",
+    "Email": "merryn.constable@northumbria.ac.uk",
+    "DOI": "https://doi.org/10.1016/j.actpsy.2020.103167",
+    "Conclusion": "The experiment found no evidence for partner-prioritisation, as task-partner-associated identities did not benefit from an enhanced memory representation. However, switching identity associations caused interference specifically for self-verification processes, slowing responses to newly mapped self-stimuli. This suggests that while self-prioritisation is robust, the binding and re-binding of identity-relevant information in memory can disrupt self-retrieval when previous associations conflict."
+}
