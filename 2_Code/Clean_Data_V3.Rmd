@@ -39,7 +39,7 @@ rm(variable_summary,variable_summary_df,summary_value,var_data,var_name)
 
 ```{r}
 # 设置工作目录，即文件所在的文件夹
-setwd("D:/GitHub_programe/GitHub/SPE_Database/3_Code")
+setwd("D:/GitHub_programe/GitHub/SPE_Database/2_Code")
 
 # 读取CSV文件
 data <- read.csv("../1_Data/Zhang_2023_NI/Zhang_2023_NI_Exp1_raw.csv")
@@ -47,6 +47,8 @@ data <- read.csv("../1_Data/Zhang_2023_NI/Zhang_2023_NI_Exp1_raw.csv")
 # 打印变量名称
 print(names(data))
 n_distinct(data$Subject)
+
+rm(data)
 ```
 
 ## Matlab tools
@@ -482,7 +484,7 @@ write.csv(x = df[[5]], file = "../1_Data/Qian_2019_QJEP/Exp2/Qian_2019_QJEP_Exp2
 "Self", "Mother","none", "Acquaintance"   →   "Self","Close","Acquaintance,"Non_Person"（No  trial mess) (Flanker?) (to be Continue) 
 ```{r Paper p54 Experiment 1}
 df[[6]] <- read.csv(
-  "../1_Data/Schaefer_2019_CP/Schaefer_2019_CP_Exp1_raw.csv"
+  "../1_Data/Schaefer_2019_CP/Exp1/Schaefer_2019_CP_Exp1_raw.csv"
   ) %>%
   dplyr::filter(
     Procedure.Trial. == "FLproc"
@@ -531,7 +533,7 @@ df[[6]] <- read.csv(
 
 names(df)[6] <- "Schaefer_2019_CP Exp 1"
 summary(df[[6]])
-write.csv(x = df[[6]], file = "../1_Data/Schaefer_2019_CP/Schaefer_2019_CP_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[6]], file = "../1_Data/Schaefer_2019_CP/Exp1/Schaefer_2019_CP_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Sarah Schaefer_2019_CP (Drop?)
@@ -539,7 +541,7 @@ write.csv(x = df[[6]], file = "../1_Data/Schaefer_2019_CP/Schaefer_2019_CP_Exp1_
 "Self", "Mother","none", "Acquaintance"   （No  trial mess)
 ```{r Paper p54 Experiment 2}
 df[[7]] <- read.csv(
-  "../1_Data/Schaefer_2019_CP/Schaefer_2019_CP_Exp2_raw.csv"
+  "../1_Data/Schaefer_2019_CP/Exp2/Schaefer_2019_CP_Exp2_raw.csv"
   ) %>%
   dplyr::mutate(
     Subject = as.numeric(Subject),
@@ -571,7 +573,7 @@ write.csv(x = df[[7]], file = "../1_Data/Schaefer_2019_CP/Schaefer_2019_CP_Exp2_
 "Self", "Mother", "Acquaintance"    →   "Self","Close","Non_Person"（No trial mess)
 ```{r Paper p54 Experiment 3}
 df[[8]] <- read.csv(
-  "../1_Data/Schaefer_2019_CP/Schaefer_2019_CP_Exp3_raw.csv"
+  "../1_Data/Schaefer_2019_CP/Exp3/Schaefer_2019_CP_Exp3_raw.csv"
   ) %>%
   dplyr::filter(
     Procedure == "RPproc"
@@ -631,7 +633,7 @@ df[[8]] <- read.csv(
   )
 names(df)[8] <- "Schaefer_2019_CP Exp 3"
 summary(df[[8]])
-write.csv(x = df[[8]], file = "../1_Data/Schaefer_2019_CP/Schaefer_2019_CP_Exp3_Clean.csv",row.names = FALSE)
+write.csv(x = df[[8]], file = "../1_Data/Schaefer_2019_CP/Exp3/Schaefer_2019_CP_Exp3_Clean.csv",row.names = FALSE)
 ```
 
 # Mateusz Wozniak_2018_PLOS (Face)
@@ -639,7 +641,7 @@ write.csv(x = df[[8]], file = "../1_Data/Schaefer_2019_CP/Schaefer_2019_CP_Exp3_
 "Self", "Friend", "Stranger"    →   "Self","Close","Non_Person" (Face_Gender)
 ```{r Paper p95 Experiment 1}
 df[[9]] <- read.csv(
-  "../1_Data/Wozniak_2018_PLOS/Wozniak_2018_PLOS_Exp1_raw.csv"
+  "../1_Data/Wozniak_2018_PLOS/Exp1/Wozniak_2018_PLOS_Exp1_raw.csv"
   ) %>%
   dplyr::filter(
     PracticeMode == "No"
@@ -716,7 +718,7 @@ df[[9]] <- read.csv(
 
 names(df)[9] <- "Wozniak_2018_PLOS Exp 1"
 summary(df[[9]])
-write.csv(x = df[[9]], file = "../1_Data/Wozniak_2018_PLOS/Wozniak_2018_PLOS_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[9]], file = "../1_Data/Wozniak_2018_PLOS/Exp1/Wozniak_2018_PLOS_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Mateusz Wozniak_2018_PLOS
@@ -724,7 +726,7 @@ write.csv(x = df[[9]], file = "../1_Data/Wozniak_2018_PLOS/Wozniak_2018_PLOS_Exp
 "Self", "Friend", "Stranger"    →   "Self","Close","Stranger"
 ```{r Paper p95 Experiment 2}
 df[[10]] <- read.csv(
-  "../1_Data/Wozniak_2018_PLOS/Wozniak_2018_PLOS_Exp2_raw.csv"
+  "../1_Data/Wozniak_2018_PLOS/Exp2/Wozniak_2018_PLOS_Exp2_raw.csv"
   ) %>%
   dplyr::filter(
     PracticeMode == "No"
@@ -796,7 +798,7 @@ df[[10]] <- read.csv(
 
 names(df)[10] <- "Wozniak_2018_PLOS Exp 2"
 summary(df[[10]])
-write.csv(x = df[[10]], file = "../1_Data/Wozniak_2018_PLOS/Wozniak_2018_PLOS_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[10]], file = "../1_Data/Wozniak_2018_PLOS/Exp2/Wozniak_2018_PLOS_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Marius Golubickis_2021_AP
@@ -916,7 +918,7 @@ write.csv(x = df[[12]], file = "../1_Data/Golubickis_2021_AP/Exp2/Golubickis_202
 "Self", "Friend", "Stranger"    →   "Self","Close","Stranger"（No  trial mess)
 ```{r Paper n13 Experiment 1}
 df[[13]] <- read.csv(
-  "../1_Data/Navon_2021/Navon_2021_Exp1_raw.csv"
+  "../1_Data/Navon_2021/Exp1/Navon_2021_Exp1_raw.csv"
   ) %>%
   dplyr::filter(
     Procedure.SubTrial. == "MMProc"
@@ -982,7 +984,7 @@ df[[13]] <- read.csv(
 
 names(df)[13] <- "Mayan Navon_2021 Exp 1"
 summary(df[[13]])
-write.csv(x = df[[13]], file = "../1_Data/Navon_2021/Navon_2021_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[13]], file = "../1_Data/Navon_2021/Exp1/Navon_2021_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Mayan Navon_2021
@@ -990,7 +992,7 @@ write.csv(x = df[[13]], file = "../1_Data/Navon_2021/Navon_2021_Exp1_Clean.csv",
 "Father", "Close", "Stranger"   →   "Close","Close","Stranger"（No trial mess) （No Label）
 ```{r Paper n13 Experiment 2}
 df[[14]] <- read.csv(
-  "../1_Data/Navon_2021/Navon_2021_Exp2_raw.csv"
+  "../1_Data/Navon_2021/Exp2/Navon_2021_Exp2_raw.csv"
   ) %>%
   dplyr::filter(
     Procedure.SubTrial. == "MMProc"
@@ -1047,7 +1049,7 @@ df[[14]] <- read.csv(
 
 names(df)[14] <- "Mayan Navon_2021 Exp 2"
 summary(df[[14]])
-write.csv(x = df[[14]], file = "../1_Data/Navon_2021/Navon_2021_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[14]], file = "../1_Data/Navon_2021/Exp2/Navon_2021_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Mayan Navon_2021
@@ -1055,7 +1057,7 @@ write.csv(x = df[[14]], file = "../1_Data/Navon_2021/Navon_2021_Exp2_Clean.csv",
 "Self", "Father", "Stranger"    →   "Self","Close","Stranger"
 ```{r Paper n13 Experiment 3}
 df[[15]] <- read.csv(
-  "../1_Data/Navon_2021/Navon_2021_Exp3_raw.csv"
+  "../1_Data/Navon_2021/Exp3/Navon_2021_Exp3_raw.csv"
   ) %>%
   dplyr::filter(
   Procedure.SubTrial. == "MMProc"
@@ -1121,7 +1123,7 @@ df[[15]] <- read.csv(
 
 names(df)[15] <- "Mayan Navon_2021 Exp 3"
 summary(df[[15]])
-write.csv(x = df[[15]], file = "../1_Data/Navon_2021/Navon_2021_Exp3_Clean.csv",row.names = FALSE)
+write.csv(x = df[[15]], file = "../1_Data/Navon_2021/Exp3/Navon_2021_Exp3_Clean.csv",row.names = FALSE)
 ```
 
 # Mayan Navon_2021
@@ -1129,7 +1131,7 @@ write.csv(x = df[[15]], file = "../1_Data/Navon_2021/Navon_2021_Exp3_Clean.csv",
 "Self", "Friend", "Stranger"    →   "Self","Close","Stranger"（No  trial mess)
 ```{r Paper n13 Experiment 4}
 df[[16]] <- read.csv(
-  "../1_Data/Navon_2021/Navon_2021_Exp4_raw.csv"
+  "../1_Data/Navon_2021/Exp4/Navon_2021_Exp4_raw.csv"
   ) %>%
   dplyr::filter(
   Procedure.SubTrial. == "MMProc"
@@ -1194,7 +1196,7 @@ df[[16]] <- read.csv(
 
 names(df)[16] <- "Mayan Navon_2021 Exp 4"
 summary(df[[16]])
-write.csv(x = df[[16]], file = "../1_Data/Navon_2021/Navon_2021_Exp4_Clean.csv",row.names = FALSE)
+write.csv(x = df[[16]], file = "../1_Data/Navon_2021/Exp4/Navon_2021_Exp4_Clean.csv",row.names = FALSE)
 ```
 
 # Saga L. Svensson_2021_PR
@@ -1202,7 +1204,7 @@ write.csv(x = df[[16]], file = "../1_Data/Navon_2021/Navon_2021_Exp4_Clean.csv",
 "Self", "Friend"    →   "Self","Close"（No  trial mess)
 ```{r Paper n16 Experiment 1}
 df[[17]] <- read.csv(
-  "../1_Data/Svensson_2021_PR/Svensson_2021_PR_Exp1_raw.csv"
+  "../1_Data/Svensson_2021_PR/Exp1/Svensson_2021_PR_Exp1_raw.csv"
   ) %>%
   dplyr::select(
     Subject = Participant..,
@@ -1249,7 +1251,7 @@ df[[17]] <- read.csv(
 
 names(df)[17] <- "Svensson_2021_PR Exp 1"
 summary(df[[17]])
-write.csv(x = df[[17]], file = "../1_Data/Svensson_2021_PR/Svensson_2021_PR_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[17]], file = "../1_Data/Svensson_2021_PR/Exp1/Svensson_2021_PR_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Saga L. Svensson_2021_PR
@@ -1257,7 +1259,7 @@ write.csv(x = df[[17]], file = "../1_Data/Svensson_2021_PR/Svensson_2021_PR_Exp1
 "Self", "Friend"    →   "Self","Close"（No  trial mess)
 ```{r Paper n16 Experiment 2}
 df[[18]] <- read.csv(
-  "../1_Data/Svensson_2021_PR/Svensson_2021_PR_Exp2_raw.csv"
+  "../1_Data/Svensson_2021_PR/Exp2/Svensson_2021_PR_Exp2_raw.csv"
   ) %>%
   dplyr::select(
     Subject = Participant,
@@ -1305,7 +1307,7 @@ df[[18]] <- read.csv(
 
 names(df)[18] <- "Svensson_2021_PR Exp 2"
 summary(df[[18]])
-write.csv(x = df[[18]], file = "../1_Data/Svensson_2021_PR/Svensson_2021_PR_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[18]], file = "../1_Data/Svensson_2021_PR/Exp2/Svensson_2021_PR_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Saga L. Svensson_2021_PR
@@ -1313,7 +1315,7 @@ write.csv(x = df[[18]], file = "../1_Data/Svensson_2021_PR/Svensson_2021_PR_Exp2
 "Self", "Friend"    →   "Self","Close"（No  trial mess)
 ```{r Paper n16 Experiment 3}
 df[[19]] <- read.csv(
-  "../1_Data/Svensson_2021_PR/Svensson_2021_PR_Exp3_raw.csv"
+  "../1_Data/Svensson_2021_PR/Exp3/Svensson_2021_PR_Exp3_raw.csv"
   ) %>%
   dplyr::select(
     Subject = Participant,
@@ -1360,7 +1362,7 @@ df[[19]] <- read.csv(
 
 names(df)[19] <- "Svensson_2021_PR Exp 3"
 summary(df[[19]])
-write.csv(x = df[[19]], file = "../1_Data/Svensson_2021_PR/Svensson_2021_PR_Exp3_Clean.csv",row.names = FALSE)
+write.csv(x = df[[19]], file = "../1_Data/Svensson_2021_PR/Exp3/Svensson_2021_PR_Exp3_Clean.csv",row.names = FALSE)
 ```
 
 # Xu_2021_CP
@@ -1796,7 +1798,7 @@ write.csv(x = df[[25]], file = "../1_Data/Constable_2019_EPHPP/Exp4/Constable_20
 "Self", "Stranger"    →   "Self","Stranger" (No trial mess) (No Origin Shape and Label)
 ```{r Paper t6 Experiment 1}
 df[[26]] <- read.csv(
-  "../1_Data/Vicovaro_2022_EPHPP/Vicovaro_2022_EPHPP_Exp1_raw.csv"
+  "../1_Data/Vicovaro_2022_EPHPP/Exp1/Vicovaro_2022_EPHPP_Exp1_raw.csv"
   ) %>%
   dplyr::select(
     Subject = participant_id,
@@ -1850,7 +1852,7 @@ df[[26]] <- read.csv(
 
 names(df)[26] <- "Vicovaro_2022_EPHPP_Exp1"
 summary(df[[26]])
-write.csv(x = df[[26]], file = "../1_Data/Vicovaro_2022_EPHPP/Vicovaro_2022_EPHPP_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[26]], file = "../1_Data/Vicovaro_2022_EPHPP/Exp1/Vicovaro_2022_EPHPP_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Vicovaro_2022_EPHPP
@@ -1858,7 +1860,7 @@ write.csv(x = df[[26]], file = "../1_Data/Vicovaro_2022_EPHPP/Vicovaro_2022_EPHP
 "Self", "Stranger"    →   "Self","Stranger" (No trial mess) (No Origin Shape and Label)
 ```{r Paper t6 Experiment 2}
 temp <- read.csv(
-  "../1_Data/Vicovaro_2022_EPHPP/Vicovaro_2022_EPHPP_Exp2_raw.csv"
+  "../1_Data/Vicovaro_2022_EPHPP/Exp2/Vicovaro_2022_EPHPP_Exp2_raw.csv"
   ) %>%
   dplyr::filter(block == "selfS") %>%
   dplyr::select(
@@ -1933,7 +1935,7 @@ df[[27]] <- temp %>%
   )
 names(df)[27] <- "Vicovaro_2022_EPHPP_Exp2"
 summary(df[[27]])
-write.csv(x = df[[27]], file = "../1_Data/Vicovaro_2022_EPHPP/Vicovaro_2022_EPHPP_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[27]], file = "../1_Data/Vicovaro_2022_EPHPP/Exp2/Vicovaro_2022_EPHPP_Exp2_Clean.csv",row.names = FALSE)
 rm(Subject_ID,temp)
 ```
 
@@ -2090,7 +2092,7 @@ write.csv(x = df[[29]], file = "../1_Data/Hu_2020_CP/Hu_2020_CP_Exp1_Clean.csv",
 ###############################Save Raw Data####################################
 # 获取文件列表
 file_list <- list.files(
-  path = "../1_Data/Wozniak_2022_PR/Data - Experiment 1/",
+  path = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Raw/Data - Experiment 1/",
   pattern = "^SelfPriorExp_3.*\\.dat$",
   full.names = TRUE
 )
@@ -2102,7 +2104,7 @@ combined_data <- do.call(rbind, data_list)
 
 write.csv(
   x = combined_data, 
-  file = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp1_raw.csv",
+  file = "../1_Data/Wozniak_2022_PR/Exp1/Wozniak_2022_PR_Exp1_raw.csv",
   row.names = FALSE
 )
 
@@ -2111,7 +2113,7 @@ rm(file_list, data_list, combined_data)
 
 ```{r Paper t9 Experiment 1}
 ##################################Clean Data####################################
-df[[30]] <- read.csv("../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp1_raw.csv") %>%
+df[[30]] <- read.csv("../1_Data/Wozniak_2022_PR/Exp1/Wozniak_2022_PR_Exp1_raw.csv") %>%
   dplyr::select(
     Subject = V1,
     Shape = V7,
@@ -2167,7 +2169,7 @@ df[[30]] <- read.csv("../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp1_raw.csv") %
 
 names(df)[30] <- "Wozniak_2022_PR_Exp 1"
 summary(df[[30]])
-write.csv(x = df[[30]], file = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[30]], file = "../1_Data/Wozniak_2022_PR/Exp1/Wozniak_2022_PR_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Wozniak_2022_PR
@@ -2177,7 +2179,7 @@ write.csv(x = df[[30]], file = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp1_C
 ###############################Save Raw Data####################################
 # 获取文件列表
 file_list <- list.files(
-  path = "../1_Data/Wozniak_2022_PR/Data - Experiment 2/",
+  path = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Raw/Data - Experiment 2/",
   pattern = "^SelfPriorExp_1.*\\.dat$",
   full.names = TRUE
 )
@@ -2189,7 +2191,7 @@ combined_data <- do.call(rbind, data_list)
 
 write.csv(
   x = combined_data, 
-  file = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp2_raw.csv",
+  file = "../1_Data/Wozniak_2022_PR/Exp2/Wozniak_2022_PR_Exp2_raw.csv",
   row.names = FALSE
 )
 
@@ -2198,7 +2200,7 @@ rm(file_list, data_list, combined_data)
 
 ```{r Paper t9 Experiment 2}
 ##################################Clean Data####################################
-df[[31]] <- read.csv("../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp2_raw.csv") %>%
+df[[31]] <- read.csv("../1_Data/Wozniak_2022_PR/Exp2/Wozniak_2022_PR_Exp2_raw.csv") %>%
   dplyr::select(
     Subject = V1,
     Shape = V7,
@@ -2258,7 +2260,7 @@ df[[31]] <- read.csv("../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp2_raw.csv") %
 
 names(df)[31] <- "Wozniak_2022_PR_Exp 2"
 summary(df[[31]])
-write.csv(x = df[[31]], file = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[31]], file = "../1_Data/Wozniak_2022_PR/Exp2/Wozniak_2022_PR_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Wozniak_2022_PR
@@ -2268,7 +2270,7 @@ write.csv(x = df[[31]], file = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp2_C
 ###############################Save Raw Data####################################
 # 获取文件列表
 file_list <- list.files(
-  path = "../1_Data/Wozniak_2022_PR/Data - Experiment 3/",
+  path = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Raw/Data - Experiment 3/",
   pattern = "^SelfPriorExp_2.*\\.dat$",
   full.names = TRUE
 )
@@ -2280,7 +2282,7 @@ combined_data <- do.call(rbind, data_list)
 
 write.csv(
   x = combined_data, 
-  file = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp3_raw.csv",
+  file = "../1_Data/Wozniak_2022_PR/Exp3/Wozniak_2022_PR_Exp3_raw.csv",
   row.names = FALSE
 )
 
@@ -2289,7 +2291,7 @@ rm(file_list, data_list, combined_data)
 
 ```{r Paper t9 Experiment 3}
 ##################################Clean Data####################################
-df[[32]] <- read.csv("../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp3_raw.csv") %>%
+df[[32]] <- read.csv("../1_Data/Wozniak_2022_PR/Exp3/Wozniak_2022_PR_Exp3_raw.csv") %>%
   dplyr::select(
     Subject = V1,
     Shape = V7,
@@ -2345,7 +2347,7 @@ df[[32]] <- read.csv("../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp3_raw.csv") %
 
 names(df)[32] <- "Wozniak_2022_PR_Exp 3"
 summary(df[[32]])
-write.csv(x = df[[32]], file = "../1_Data/Wozniak_2022_PR/Wozniak_2022_PR_Exp3_Clean.csv",row.names = FALSE)
+write.csv(x = df[[32]], file = "../1_Data/Wozniak_2022_PR/Exp3/Wozniak_2022_PR_Exp3_Clean.csv",row.names = FALSE)
 ```
 
 # Haciahmet_2023_Psychophysiology
@@ -2663,7 +2665,6 @@ df[[37]] <- read.csv(
     Subject = subj_idx,
     Shape = shape,
     Matching = match,
-    Session = session,
     Shape_Origin_Identity = shape,
     Response = response,
     Phase = session,
@@ -2700,12 +2701,12 @@ df[[37]] <- read.csv(
     ACC = as.numeric(ACC),
   ) %>%
   dplyr::select(
-    Subject, Session, Phase, Shape, Matching, 
+    Subject, Phase, Shape, Matching, 
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity, 
     Response, RT_ms, RT_sec, ACC
   ) %>%
   dplyr::arrange(
-    Subject, Session, 
+    Subject, Phase, 
   )
 
 names(df)[37] <- "Liang_2022_HBM_dlpfc"
@@ -2718,7 +2719,7 @@ write.csv(x = df[[37]], file = "../1_Data/Liang_2022_HBM/Liang_2022_HBM_Exp1.1_C
 "Self", "Friend", "Stranger"    →   "Self","Close","Stranger"
 ```{r Paper p34 Experiment 1}
 df[[38]] <- read.csv(
-  "../1_Data/Kolvoort_2020_HBM/Kolvoort_2020_HBM_Exp1_foracc_raw.csv"
+  "../1_Data/Kolvoort_2020_HBM/Kolvoort_2020_HBM_Exp1_foreff_raw.csv"
   ) %>%
   dplyr::select(
     Subject = subid,
@@ -2879,7 +2880,7 @@ write.csv(x = df[[39]], file = "../1_Data/Liu_2023_CP/Liu_2023_CP_Exp1_Clean.csv
 "Self", "Stranger"    →   "Self","Stranger"(Practice Need Code) (匹配的条件对不上S1-ID2)
 ```{r Paper n14 Experiment 1}
 df[[40]] <- read.csv(
-"../1_Data/Orellana-Corrales_2021_EP/Orellana-Corrales_2021_EP_Exp1_raw.csv"
+"../1_Data/Orellana-Corrales_2021_EP/Exp1/Orellana-Corrales_2021_EP_Exp1_raw.csv"
   ) %>%
   dplyr::filter(
     Running == "manipCheck",
@@ -2955,7 +2956,7 @@ df[[40]] <- read.csv(
 
 names(df)[40] <- "Orellana-Corrales_2021_EP_Exp1"
 summary(df[[40]])
-write.csv(x = df[[40]], file = "../1_Data/Orellana-Corrales_2021_EP/Orellana-Corrales_2021_EP_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[40]], file = "../1_Data/Orellana-Corrales_2021_EP/Exp1/Orellana-Corrales_2021_EP_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Orellana-Corrales_2021_EP
@@ -2963,7 +2964,7 @@ write.csv(x = df[[40]], file = "../1_Data/Orellana-Corrales_2021_EP/Orellana-Cor
 "Self", "Stranger"    →   "Self","Stranger"
 ```{r Paper n14 Experiment 2}
 df[[41]] <- read.csv(
-"../1_Data/Orellana-Corrales_2021_EP/Orellana-Corrales_2021_EP_Exp2_raw.csv"
+"../1_Data/Orellana-Corrales_2021_EP/Exp2/Orellana-Corrales_2021_EP_Exp2_raw.csv"
   ) %>%
   dplyr::filter(
     Running == "manipCheck",
@@ -3039,7 +3040,7 @@ df[[41]] <- read.csv(
 
 names(df)[41] <- "Orellana-Corrales_2021_Exp2"
 summary(df[[41]])
-write.csv(x = df[[41]], file = "../1_Data/Orellana-Corrales_2021_EP/Orellana-Corrales_2021_EP_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[41]], file = "../1_Data/Orellana-Corrales_2021_EP/Exp2/Orellana-Corrales_2021_EP_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Orellana-Corrales_2021_EP
@@ -3047,7 +3048,7 @@ write.csv(x = df[[41]], file = "../1_Data/Orellana-Corrales_2021_EP/Orellana-Cor
 "Self", "Stranger"    →   "Self","Stranger" (Subject 1 error?)
 ```{r Paper n14 Experiment 3}
 df[[42]] <- read.csv(
-"../1_Data/Orellana-Corrales_2021_EP/Orellana-Corrales_2021_EP_Exp3_raw.csv"
+"../1_Data/Orellana-Corrales_2021_EP/Exp3/Orellana-Corrales_2021_EP_Exp3_raw.csv"
   ) %>%
   dplyr::filter(
     Running == "manipCheck",
@@ -3122,7 +3123,7 @@ df[[42]] <- read.csv(
 
 names(df)[42] <- "Orellana-Corrales_2021_Exp3"
 summary(df[[42]])
-write.csv(x = df[[42]], file = "../1_Data/Orellana-Corrales_2021_EP/Orellana-Corrales_2021_EP_Exp3_Clean.csv",row.names = FALSE)
+write.csv(x = df[[42]], file = "../1_Data/Orellana-Corrales_2021_EP/Exp3/Orellana-Corrales_2021_EP_Exp3_Clean.csv",row.names = FALSE)
 ```
 
 # Amodeo_2024_CABN
@@ -3418,7 +3419,7 @@ write.csv(x = df[[46]], file = "../1_Data/Martinez-Perez_2024_CC/Martinez-Perez_
 "Self", "Friend", "Stranger"    →   "Self","Close","Stranger"
 ```{r  Experiment 1}
 df[[47]] <- read.csv(
-  "../1_Data/Wang_2016_EPHPP/Merge_Data_Used.csv"
+  "../1_Data/Wang_2016_EPHPP/Wang_2016_EPHPP_Exp1_Raw.csv"
   ) %>%
   dplyr::select(
     Subject = Subject,
@@ -3546,7 +3547,7 @@ write.csv(x = df[[48]], file = "../1_Data/Sui_2014/Sui_2014_Exp1_Clean.csv",row.
 ```{r Paper s4 Experiment 1}
 # 获取文件夹内所有满足条件的文件名
 file_list <- list.files(
-  path = "../1_Data/Sui_2015/Source/",
+  path = "../1_Data/Sui_2015/Sui_2015_Raw/Source/",
   pattern = "^PractExperiment_1.*\\.mat$",
   full.names = TRUE
 )
@@ -3620,7 +3621,7 @@ rm(list_mat_e1, mat_data)
 
 names(df)[49] <- "Sui_2015_Exp1"
 summary(df[[49]])
-write.csv(x = df[[49]], file = "../1_Data/Sui_2015/Sui_2015_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[49]], file = "../1_Data/Sui_2015/Exp1/Sui_2015_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Sui_2015
@@ -3629,7 +3630,7 @@ write.csv(x = df[[49]], file = "../1_Data/Sui_2015/Sui_2015_Exp1_Clean.csv",row.
 ```{r Paper s4 Experiment 2}
 # 获取文件夹内所有满足条件的文件名
 file_list <- list.files(
-  path = "../1_Data/Sui_2015/Source/",
+  path = "../1_Data/Sui_2015/Sui_2015_Raw/Source/",
   pattern = "^PractExperiment_2.*\\.mat$",
   full.names = TRUE
 )
@@ -3701,7 +3702,7 @@ rm(list_mat_e2, mat_data)
 
 names(df)[50] <- "Sui_2015_Exp2"
 summary(df[[50]])
-write.csv(x = df[[50]], file = "../1_Data/Sui_2015/Sui_2015_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[50]], file = "../1_Data/Sui_2015/Exp2/Sui_2015_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Dalmaso_2024_CC [Face]
@@ -3709,7 +3710,7 @@ write.csv(x = df[[50]], file = "../1_Data/Sui_2015/Sui_2015_Exp2_Clean.csv",row.
 "Self","Other" → "Self","Stranger"(No  trial mess)
 ```{r Paper a2 Experiment 1}
 df[[51]] <- read.csv(
-  "../1_Data/Dalmaso_2024_CC/Dalmaso_2024_CC_Exp1_raw.csv"
+  "../1_Data/Dalmaso_2024_CC/Exp1/Dalmaso_2024_CC_Exp1_raw.csv"
   ) %>%
   dplyr::select(
     Subject = participant,
@@ -3770,7 +3771,7 @@ df[[51]] <- read.csv(
 
 names(df)[51] <- "Dalmaso_2024_CC_Exp1"
 summary(df[[51]])
-write.csv(x = df[[51]], file = "../1_Data/Dalmaso_2024_CC/Dalmaso_2024_CC_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[51]], file = "../1_Data/Dalmaso_2024_CC/Exp1/Dalmaso_2024_CC_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Dalmaso_2024_CC
@@ -3778,7 +3779,7 @@ write.csv(x = df[[51]], file = "../1_Data/Dalmaso_2024_CC/Dalmaso_2024_CC_Exp1_C
 "Self","Other" → "Self","Stranger"(No  trial mess)
 ```{r Paper a2 Experiment 2}
 df[[52]] <- read.csv(
-  "../1_Data/Dalmaso_2024_CC/Dalmaso_2024_CC_Exp2_raw.csv"
+  "../1_Data/Dalmaso_2024_CC/Exp2/Dalmaso_2024_CC_Exp2_raw.csv"
   ) %>%
   dplyr::select(
     Subject = participant,
@@ -3831,15 +3832,15 @@ df[[52]] <- read.csv(
 
 names(df)[52] <- "Dalmaso_2024_CC_Exp2"
 summary(df[[52]])
-write.csv(x = df[[52]], file = "../1_Data/Dalmaso_2024_CC/Dalmaso_2024_CC_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[52]], file = "../1_Data/Dalmaso_2024_CC/Exp2/Dalmaso_2024_CC_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Bukowski_2021_AP
 ## Experiment 1 (Identtiy = 3)
 "Self", "Friend", "Stranger"
 ```{r Paper p19 Experiment 1}
-df[[53]] <- read.csv("../1_Data/Bukowski_2021_AP/Bukowski_2021_AP_Exp1_raw.csv") %>%
-  #dplyr::filter(Session == 3) %>%
+df[[53]] <- read.csv("../1_Data/Bukowski_2021_AP/Exp1/Bukowski_2021_AP_Exp1_raw.csv") %>%
+  # dplyr::filter(Session == 3) %>%
   dplyr::select(
     Subject,
     Session,
@@ -3899,14 +3900,14 @@ df[[53]] <- read.csv("../1_Data/Bukowski_2021_AP/Bukowski_2021_AP_Exp1_raw.csv")
 
 names(df)[53] <- "Bukowski_2021_AP_Exp1"
 summary(df[[53]])
-write.csv(x = df[[53]], file = "../1_Data/Bukowski_2021_AP/Bukowski_2021_AP_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[53]], file = "../1_Data/Bukowski_2021_AP/Exp1/Bukowski_2021_AP_Exp1_Clean.csv",row.names = FALSE)
 ```
 
 # Bukowski_2021_AP
 ## Experiment 2 (Identtiy = 3)
 "Self", "Friend", "Stranger"
 ```{r Paper p19 Experiment 2}
-df[[54]] <- read.csv("../1_Data/Bukowski_2021_AP/Bukowski_2021_AP_Exp2_raw.csv") %>%
+df[[54]] <- read.csv("../1_Data/Bukowski_2021_AP/Exp2/Bukowski_2021_AP_Exp2_raw.csv") %>%
   #dplyr::filter(Session == 3) %>%
   dplyr::select(
     Subject,
@@ -3969,7 +3970,7 @@ df[[54]] <- read.csv("../1_Data/Bukowski_2021_AP/Bukowski_2021_AP_Exp2_raw.csv")
 
 names(df)[54] <- "Bukowski_2021_AP_Exp2"
 summary(df[[54]])
-write.csv(x = df[[54]], file = "../1_Data/Bukowski_2021_AP/Bukowski_2021_AP_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[54]], file = "../1_Data/Bukowski_2021_AP/Exp2/Bukowski_2021_AP_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Wozniak_2020_PLOS
@@ -4637,7 +4638,7 @@ write.csv(x = df[[64]], file = "../1_Data/Orellana-Corrales_2021_APP/Orellana-Co
 "Self", "Stranger" (Label-Identity)
 ```{r}
 df[[65]] <- read.csv(
-  "../1_Data/Orellana-Corrales_2021_APP/Orellana-Corrales_2021_APP_Exp2.csv"
+  "../1_Data/Orellana-Corrales_2021_APP/Exp2/Orellana-Corrales_2021_APP_Exp2.csv"
   ) %>%
   dplyr::filter(
     Procedure == "Matching"
@@ -4685,7 +4686,7 @@ df[[65]] <- read.csv(
 
 names(df)[65] <- "Orellana-Corrales_2021_APP_Exp2"
 summary(df[[65]])
-write.csv(x = df[[65]], file = "../1_Data/Orellana-Corrales_2021_APP/Orellana-Corrales_2021_APP_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[65]], file = "../1_Data/Orellana-Corrales_2021_APP/Exp2/Orellana-Corrales_2021_APP_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Smith_2024_Cortex
@@ -4804,7 +4805,6 @@ df[[67]] <- read.csv(
     Subject = subj_idx,
     Shape = shape,
     Matching = match,
-    Session = session,
     Shape_Origin_Identity = shape,
     Response = response,
     Phase = session,
@@ -4840,12 +4840,12 @@ df[[67]] <- read.csv(
     ACC = as.numeric(ACC),
   ) %>%
   dplyr::select(
-    Subject, Session, Shape, Matching, 
+    Subject, Phase, Shape, Matching, 
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity, 
     Response, Phase, RT_ms, RT_sec, ACC
   ) %>%
   dplyr::arrange(
-    Subject, Session, 
+    Subject, Phase 
   )
 
 names(df)[67] <- "Liang_2022_HBM_sham"
