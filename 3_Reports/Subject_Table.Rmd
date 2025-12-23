@@ -2148,3 +2148,319 @@ result_44$Gender[tolower(result_44$Gender) == "male"] <- "Male"
  
 ```
 
+```{r}
+# 读取CSV文件
+data_path_1 <- "../1_Data/Bukowski_2021_AP/Exp2/Bukowski_2021_AP_Exp2_raw.csv"
+data_1 <- read.csv("../1_Data/Bukowski_2021_AP/Exp2/Bukowski_2021_AP_Exp2_raw.csv")
+
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("Subject"),
+  rename_map = list("Subject" = "Subject_ID"),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "P19E2",  # 🆕 新参数：直接设置实验ID
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+```
+
+
+## New Code for Subject
+```{r}
+# 预设的标准列顺序
+DEFAULT_STANDARD_COLUMNS <- c(
+  "Subject_ID", "Exp_id", "Age", "Gender", "Handedness", "Ethnicity", 
+  "Employment_Status", "Country", "First_Language", "Education"
+)
+
+# 数据框列提取和标准化函数 - 完整版
+extract_and_standardize <- function(df, 
+                                    selected_cols = NULL, 
+                                    rename_map = NULL, 
+                                    standard_order = NULL,
+                                    fill_value = "/",
+                                    exp_id_value = NULL,
+                                    deduplicate_by_subject = TRUE,
+                                    deduplicate_column = "Subject_ID",  # 新参数：自定义去重列名
+                                    verbose = TRUE) {
+  
+  if (verbose) {
+    cat("=== 开始数据框列提取和标准化 ===\n")
+    cat("原始维度:", nrow(df), "行 ×", ncol(df), "列\n")
+    cat("原始列名:", paste(colnames(df), collapse = ", "), "\n\n")
+  }
+  
+  # 步骤1: 选择指定列（如果提供）
+  if (!is.null(selected_cols)) {
+    if (verbose) cat("步骤1: 选择指定列\n")
+    
+    # 检查哪些列存在
+    existing_cols <- intersect(selected_cols, colnames(df))
+    missing_cols <- setdiff(selected_cols, colnames(df))
+    
+    if (length(missing_cols) > 0 && verbose) {
+      cat("  ⚠️  未找到列:", paste(missing_cols, collapse = ", "), "\n")
+    }
+    
+    if (length(existing_cols) > 0) {
+      df <- df[, existing_cols, drop = FALSE]
+      if (verbose) {
+        cat("  ✓ 已选择列:", paste(existing_cols, collapse = ", "), "\n")
+      }
+    } else {
+      stop("错误: 没有找到任何指定的列！")
+    }
+  }
+  
+  # 步骤2: 重命名列（如果提供）
+  if (!is.null(rename_map)) {
+    if (verbose) cat("\n步骤2: 重命名列\n")
+    
+    for (old_name in names(rename_map)) {
+      new_name <- rename_map[[old_name]]
+      if (old_name %in% colnames(df)) {
+        colnames(df)[colnames(df) == old_name] <- new_name
+        if (verbose) cat("  ✓", old_name, "→", new_name, "\n")
+      } else if (verbose) {
+        cat("  ⚠️  未找到列:", old_name, "\n")
+      }
+    }
+  }
+  
+  # 步骤3: 按标准顺序排列（如果提供）
+  if (!is.null(standard_order)) {
+    if (verbose) cat("\n步骤3: 按标准顺序排列并填充缺失列\n")
+    
+    # 检查并创建缺失的标准列（但不覆盖已存在的列）
+    for (col_name in standard_order) {
+      if (!col_name %in% colnames(df)) {
+        df[[col_name]] <- fill_value
+        if (verbose) cat("  + 创建新列:", col_name, "（内容:", fill_value, "）\n")
+      } else if (verbose) {
+        cat("  ✓ 列已存在:", col_name, "\n")
+      }
+    }
+    
+    # 特殊处理：如果提供了exp_id_value，直接赋值给Exp_id列
+    if (!is.null(exp_id_value) && "Exp_id" %in% colnames(df)) {
+      df$Exp_id <- exp_id_value
+      if (verbose) cat("  ✓ 已设置 Exp_id =", exp_id_value, "\n")
+    }
+    
+    # 获取额外列（不在标准顺序中的列）
+    extra_cols <- setdiff(colnames(df), standard_order)
+    if (length(extra_cols) > 0 && verbose) {
+      cat("  发现额外列:", paste(extra_cols, collapse = ", "), "\n")
+    }
+    
+    # 重新排列列顺序
+    final_order <- c(standard_order, extra_cols)
+    df <- df[, final_order, drop = FALSE]
+    
+    if (verbose) cat("  ✓ 列已按标准顺序排列\n")
+  }
+  
+  # 步骤4: 按指定列去重（如果启用且存在该列）
+  if (deduplicate_by_subject && deduplicate_column %in% colnames(df)) {
+    if (verbose) {
+      cat("\n步骤4: 按", deduplicate_column, "列去重\n")
+      cat("  去重前行数:", nrow(df), "\n")
+    }
+    
+    # 检查重复情况
+    duplicates <- duplicated(df[[deduplicate_column]])
+    n_duplicates <- sum(duplicates)
+    
+    if (n_duplicates > 0) {
+      if (verbose) {
+        cat("  发现", n_duplicates, "行重复的", deduplicate_column, "\n")
+        
+        # 显示重复的值
+        dup_values <- unique(df[[deduplicate_column]][duplicates])
+        if (length(dup_values) <= 10) {
+          cat("  重复的", deduplicate_column, ":", paste(dup_values, collapse = ", "), "\n")
+        } else {
+          cat("  重复的", deduplicate_column, ":", paste(dup_values[1:10], collapse = ", "), "... (共", length(dup_values), "个)\n")
+        }
+      }
+      
+      # 去重：保留每个值的第一行（强制保持数据框格式）
+      df <- df[!duplicates, , drop = FALSE]
+      
+      if (verbose) {
+        cat("  ✓ 已去重，保留每个", deduplicate_column, "的第一行\n")
+        cat("  去重后行数:", nrow(df), "\n")
+      }
+    } else {
+      if (verbose) {
+        cat("  ✓ 没有发现重复的", deduplicate_column, "\n")
+      }
+    }
+  } else if (deduplicate_by_subject && !deduplicate_column %in% colnames(df)) {
+    if (verbose) {
+      cat("\n步骤4: 跳过去重（未找到", deduplicate_column, "列）\n")
+    }
+  } else if (verbose) {
+    cat("\n步骤4: 跳过去重（已禁用）\n")
+  }
+  
+  # 最终检查数据框完整性
+  if (!is.data.frame(df)) {
+    if (verbose) cat("  ⚠️  警告：结果不是数据框，正在转换...\n")
+    df <- as.data.frame(df)
+  }
+  
+  # 生成报告
+  if (verbose) {
+    cat("\n=== 处理完成报告 ===\n")
+    cat("最终维度:", nrow(df), "行 ×", ncol(df), "列\n")
+    cat("最终列名:\n")
+    for (i in 1:length(colnames(df))) {
+      col_name <- colnames(df)[i]
+      if (!is.null(standard_order) && col_name %in% standard_order) {
+        cat(sprintf("  %2d. %s\n", i, col_name))
+      } else {
+        cat(sprintf("  %2d. %s (额外列)\n", i, col_name))
+      }
+    }
+    cat("数据类型:", class(df), "\n")
+  }
+  
+  return(df)
+}
+```
+
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Lee_2023_Cognition/Exp2/Lee_2023_Cognition_Exp2_raw.csv"
+output_file_name <- "Lee_2023_Cognition_Exp2_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("subject","age","sex","education","handedness"),
+  rename_map = list("subject" = "Subject_ID",
+                    "age" = "Age",
+                    "sex" = "Gender",
+                    "handedness" = "Handedness",
+                    "education" = "Education"),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "U5E2",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Dalmaso_2024_CC/Exp2/Dalmaso_2024_CC_Exp2_raw.csv"
+output_file_name <- "Dalmaso_2024_CC_Exp2_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("participant"),
+  rename_map = list("participant" = "Subject_ID"),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "U2E2",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Orellana-Corrales_2021_APP/Exp2/Orellana-Corrales_2021_APP_Exp2_raw.csv"
+output_file_name <- "Orellana-Corrales_2021_APP_Exp2_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("Subject","Age","Handedness","Sex"),
+  rename_map = list("Subject" = "Subject_ID",
+                    "Age" = "Age",
+                    "Handedness" = "Handedness",
+                    "Sex" = "Gender"),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "U9E2",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
