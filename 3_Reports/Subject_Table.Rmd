@@ -2331,12 +2331,11 @@ extract_and_standardize <- function(df,
 }
 ```
 
-
 ```{r}
 # 核心业务逻辑：读取数据 → 标准化 → 保存结果
 # 1. 定义文件路径（解耦路径，便于维护）
-raw_data_path <- "../1_Data/Lee_2023_Cognition/Exp2/Lee_2023_Cognition_Exp2_raw.csv"
-output_file_name <- "Lee_2023_Cognition_Exp2_raw_Subject.csv"
+raw_data_path <- "../1_Data/Zhang_2023_NI/Zhang_2023_NI_Exp1_raw.csv"
+output_file_name <- "Zhang_2023_NI_Exp1_raw_Subject.csv"
 output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
 
 # 2. 读取原始数据（增加存在性校验）
@@ -2348,14 +2347,418 @@ data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型�
 # 3. 执行数据标准化
 result_1 <- extract_and_standardize(
   df = data_1,
-  selected_cols = c("subject","age","sex","education","handedness"),
-  rename_map = list("subject" = "Subject_ID",
-                    "age" = "Age",
-                    "sex" = "Gender",
-                    "handedness" = "Handedness",
-                    "education" = "Education"),
+  selected_cols = c("Subject","Age","Handedness","Sex"),
+  rename_map = list("Subject" = "Subject_ID",
+                    "Age" = "Age",
+                    "Handedness" = "Handedness",
+                    "Sex" = "Gender"
+                    ),
   standard_order = DEFAULT_STANDARD_COLUMNS,
-  exp_id_value = "U5E2",
+  exp_id_value = "Pt10E1",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Wang_2016_EPHPP/Wang_2016_EPHPP_Exp1_raw.csv"
+output_file_name <- "Wang_2016_EPHPP_Exp1_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("Subject","Age","Handedness","Sex"),
+  rename_map = list("Subject" = "Subject_ID",
+                    "Age" = "Age",
+                    "Handedness" = "Handedness",
+                    "Sex" = "Gender"
+                    ),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "Pu1E1",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Svensson_2023_QJEP/Svensson_2023_QJEP_Exp1_raw.csv"
+output_file_name <- "Svensson_2023_QJEP_Exp1_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("subject"),
+  rename_map = list("subject" = "Subject_ID"
+                    ),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "Pu10E1",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Svensson_2021_PR/Exp3/Svensson_2021_PR_Exp3_raw.csv"
+output_file_name <- "Svensson_2021_PR_Exp3_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("Participant"),
+  rename_map = list("Participant" = "Subject_ID"
+                    ),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "Pn16E3",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Sun_2025/Sun_2025_Exp1_raw.csv"
+output_file_name <- "Sun_2025_Exp1_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("ParticipantID","Sex"),
+  rename_map = list("ParticipantID" = "Subject_ID",
+                    "Sex" = "Gender"
+                    ),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "Pu6E1",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Smith_2024_Cortex/Smith_2024_Cortex_Exp1_raw.csv"
+output_file_name <- "Smith_2024_Cortex_Exp1_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("participant","age","gender"),
+  rename_map = list("participant" = "Subject_ID",
+                    "age" = "Age",
+                    "gender" = "Gender"
+                    ),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "Pu3E1",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Pan_2025/Pan_2025_Exp1_raw.csv"
+output_file_name <- "Pan_2025_Exp1_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("subj_id","year","education"),
+  rename_map = list("subj_id" = "Subject_ID",
+                    "year" = "Age",
+                    "education" = "Education"
+                    ),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "Pu8E1",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Orellana-Corrales_2021_EP/Exp3/Orellana-Corrales_2021_EP_Exp3_raw.csv"
+output_file_name <- "Orellana-Corrales_2021_EP_Exp3_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("Subject","Age","Sex","Handedness"),
+  rename_map = list("Subject" = "Subject_ID",
+                    "Age" = "Age",
+                    "Sex" = "Gender",
+                    "Handedness" = "Handedness"
+                    ),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "Pn14E3",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Orellana-Corrales_2021_EP/Exp3/Orellana-Corrales_2021_EP_Exp3_raw.csv"
+output_file_name <- "Orellana-Corrales_2021_EP_Exp3_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("Subject","Age","Sex","Handedness"),
+  rename_map = list("Subject" = "Subject_ID",
+                    "Age" = "Age",
+                    "Sex" = "Gender",
+                    "Handedness" = "Handedness"
+                    ),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "Pn14E3",
+  deduplicate_by_subject = TRUE,
+  verbose = TRUE
+)
+
+# 4. 保存处理后的结果（增加保存成功/失败提示）
+# 可选：添加row.names = FALSE避免保存行号（按需调整）
+write_result <- tryCatch({
+  write.csv(result_1, output_data_path, row.names = FALSE, fileEncoding = "UTF-8")
+  TRUE
+}, error = function(e) {
+  message(paste("保存失败：", e$message))
+  FALSE
+})
+
+# 5. 保存结果反馈
+if (write_result) {
+  cat("\n=== 保存完成 ===\n")
+  cat("处理后文件已保存至：", output_data_path, "\n")
+  cat("文件大小约：", round(file.info(output_data_path)$size / 1024, 2), "KB\n")
+}
+```
+
+```{r}
+# 核心业务逻辑：读取数据 → 标准化 → 保存结果
+# 1. 定义文件路径（解耦路径，便于维护）
+raw_data_path <- "../1_Data/Orellana-Corrales_2021_EP/Exp1/Orellana-Corrales_2021_EP_Exp1_raw.csv"
+output_file_name <- "Orellana-Corrales_2021_EP_Exp1_raw_Subject.csv"
+output_data_path <- file.path(dirname(raw_data_path), output_file_name)  # 自动拼接输出路径（和原文件同目录）
+
+# 2. 读取原始数据（增加存在性校验）
+if (!file.exists(raw_data_path)) {
+  stop(paste("错误：原始文件不存在 →", raw_data_path))
+}
+data_1 <- read.csv(raw_data_path, stringsAsFactors = FALSE)  # 禁用因子型，避免默认转换问题
+
+# 3. 执行数据标准化
+result_1 <- extract_and_standardize(
+  df = data_1,
+  selected_cols = c("Subject","Age","Sex","Handedness"),
+  rename_map = list("Subject" = "Subject_ID",
+                    "Age" = "Age",
+                    "Sex" = "Gender",
+                    "Handedness" = "Handedness"
+                    ),
+  standard_order = DEFAULT_STANDARD_COLUMNS,
+  exp_id_value = "Pn14E1",
   deduplicate_by_subject = TRUE,
   verbose = TRUE
 )

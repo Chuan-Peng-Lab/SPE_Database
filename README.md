@@ -72,7 +72,6 @@ Contributors
 **New features/changes**
 
 * **[Data Filtering]**: Using R, retaining behavioral variables required for calculating the Self-Prioritization Effect (SPE), including Matching, Shape/Face/Voice, Label, Identity (Shape_Origin_Identity,Shape_English_Identity,Shape_Standardized_Identity,Label_Origin_Identity,Label_English_Identity,Label_Standardized_Identity standardized as: NonPerson, Self, Close, Acquaintance, Celebrity, Stranger), RT_ms, and ACC. Demographic variables (e.g., gender, age, handedness) were also retained when available.
-
 * **[Floder Structure]**: The database is bifurcated into two primary folders: "Clean_Data" and "Raw_Data." The "Clean_Data" folder encompasses micpreprocessed data files, whereas the "Raw_Data" folder houses the original data files sourced from the articles. Within the Clean_Data folder, a JSON file has been added to document the paper's infromation, and a codebook has been included to provide a detailed account of the dataset's contents. Additionally, a codebook is present to meticulously log the data descriptions of the dataset.
 
 ### Version 0.1.2 — 2025-06-16
@@ -122,7 +121,8 @@ root
 │       └─ <Author>_<Year>_<Journal>_<Exp-id>_Clean.csv
 │       └─ <Author>_<Year>_<Journal>_<Exp-id>_raw_Subject.csv
 │       └─ Codebook_<Author>_<Year>_<Journal>_<Exp-id>_Clean.xlsx
-│       └─ <Author>_<Year>_<Journal>.json  # Including 'Authors'、'Citation'、'Participants'、'Procedure'、'Data Files'.
+│       └─ <Author>_<Year>_<Journal>.json  # Including Meta data for each paper.
+│       └─ <Author>_<Year>_<Journal>_<Exp-id>.json  # Including methodological information for the specific experiment.
 │       └─ <Author>_<Year>_<Journal>_<Exp-id>_raw.csv
 ├─2_Code
 │   └─ Clean_Data.Rproj
