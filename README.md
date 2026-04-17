@@ -67,6 +67,18 @@ Contributors
 
 ## Data Version
 
+### Version 0.1.4 — 2026-04-13
+
+**New features/changes**
+
+* **[Visualization Tool]**: Added Shiny-based interactive data cleaning tool with batch processing capabilities
+* **[Batch Processing]**: Support for processing multiple `*_raw.csv` files in a directory automatically
+* **[Interactive Interface]**: Web-based UI for variable mapping, Identity standardization, and data preview
+* **[Flexible Input]**: Support for various path formats (with/without quotes, forward/backward slashes)
+* **[Identity Mapping]**: Manual Shape and Label Identity mapping with auto-detection suggestions
+* **[Batch Download]**: Results packaged as ZIP archive for easy distribution
+* **[Progress Tracking]**: Real-time batch processing progress and detailed results summary
+
 ### Version 0.1.3 — 2025-10-20
 
 **New features/changes**
