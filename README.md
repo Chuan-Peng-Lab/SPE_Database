@@ -67,6 +67,14 @@ Contributors
 
 ## Data Version
 
+### Version v0.1.5 — 2026-06-28
+
+**New features/changes**
+
+* **[Reproducible Analyses]**: Added three self-contained R Markdown analyses — Identity-level SPE with mixed-model bootstrap (`1_Identity_Analysis`), bootstrap estimation of SPE under mismatch conditions (`2_Mismatch_Analysis`), and exploratory Spearman bootstrap moderator analysis (`3_Exploratory_Analysis`).
+* **[Updated Data Fold Structure]**: Updated the data folder structure for better organization and clarity.It helps to organize the data and analyses in a more structured and logical manner, making it easier to navigate and understand the contents of the repository.
+*  **[Updated Metadata in JSON Format]**: Updated the JSON file to include more detailed information about the data, such as the number of participants, the number of trials, and the number of variables. This makes it easier to understand the structure and content of the data.
+
 ### Version 0.1.4 — 2026-04-13
 
 **New features/changes**

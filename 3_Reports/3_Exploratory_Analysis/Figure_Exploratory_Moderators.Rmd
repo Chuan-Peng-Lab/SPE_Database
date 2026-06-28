@@ -1,0 +1,294 @@
+---
+title: "Exploratory Moderator Analysis - Spearman Bootstrap"
+author: "SPE Database Analysis"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r packages}
+library(dplyr)
+```
+
+```{r paths}
+# ===========================================================================
+# 路径设置（相对于 3_Reports/ 项目根目录）
+# ===========================================================================
+# 预计算的 visualization 数据（Python v08 pipeline 输出）
+data_dir <- "../Datasets/8_Exploratory_Analysis/Output/08"
+
+pic_dir      <- "Output/Pic"
+data_out_dir <- "Output/data"
+
+dir.create(pic_dir,      showWarnings = FALSE, recursive = TRUE)
+dir.create(data_out_dir, showWarnings = FALSE, recursive = TRUE)
+```
+
+```{r load-data}
+# ===========================================================================
+# 1. 加载预计算的 visualization 数据
+# ===========================================================================
+
+analysis_df <- read.csv(file.path(data_dir, "visualization_analysis_dataset.csv"),
+                        stringsAsFactors = FALSE)
+num_results <- read.csv(file.path(data_dir, "visualization_numeric_results.csv"),
+                        stringsAsFactors = FALSE)
+
+cat(sprintf("分析数据: %d 行\n", nrow(analysis_df)))
+cat(sprintf("数值结果: %d 行\n", nrow(num_results)))
+print(num_results[, c("moderator", "measure", "n_datasets", "spearman_rho")])
+```
+
+```{r process-bootstrap}
+# ===========================================================================
+# 2. 从原始分析数据计算 bootstrap Spearman（自包含流程）
+#    复刻 Python _bootstrap_spearman() + summarize_numeric()
+# ===========================================================================
+
+N_BOOTSTRAP <- 10000
+BOOT_SEED   <- 42
+set.seed(BOOT_SEED)
+
+# 仅使用 Stranger identity 的数据（与 Python 一致）
+analysis_df <- analysis_df[analysis_df$comparison_identity == "Stranger", ]
+
+# 去重：每个 dataset_id × measure × moderator 只保留一行
+analysis_df <- analysis_df[!duplicated(
+  analysis_df[, c("dataset_id", "measure", "moderator_name")]), ]
+
+# Bootstrap Spearman 函数
+bootstrap_spearman <- function(x, y, n_boot = N_BOOTSTRAP, seed = BOOT_SEED) {
+  set.seed(seed)
+  n <- length(x)
+  boot_rho <- numeric(n_boot)
+  for (i in seq_len(n_boot)) {
+    idx <- sample.int(n, size = n, replace = TRUE)
+    boot_rho[i] <- cor(x[idx], y[idx], method = "spearman")
+  }
+  rho_obs <- cor(x, y, method = "spearman")
+  rho_p   <- cor.test(x, y, method = "spearman")$p.value
+  ci_lo   <- quantile(boot_rho, 0.025, na.rm = TRUE)
+  ci_hi   <- quantile(boot_rho, 0.975, na.rm = TRUE)
+  p_boot  <- 2 * min(mean(boot_rho <= 0), mean(boot_rho >= 0))
+  list(spearman_rho = rho_obs, spearman_p = rho_p,
+       ci_lower = ci_lo, ci_upper = ci_hi, p_boot = p_boot)
+}
+
+# 为每个 moderator × measure 计算 bootstrap
+summarize_results <- function(df) {
+  rows <- list()
+  for (mod in c("stimulus_duration_ms_first", "trial_number_max")) {
+    sub <- df[df$moderator_name == mod & !is.na(df$moderator_value), ]
+    for (meas in c("RT_ms", "ACC")) {
+      cur <- sub[sub$measure == meas, ]
+      if (nrow(cur) < 8) next
+      x <- cur$moderator_value
+      y <- cur$cohens_dz
+      boot <- bootstrap_spearman(x, y)
+      rows[[length(rows) + 1]] <- data.frame(
+        moderator = mod, measure = meas,
+        n_datasets = nrow(cur),
+        x_min = min(x), x_max = max(x),
+        y_min = min(y), y_max = max(y),
+        spearman_rho = boot$spearman_rho,
+        spearman_p  = boot$spearman_p,
+        ci_lower    = boot$ci_lower,
+        ci_upper    = boot$ci_upper,
+        p_boot      = boot$p_boot,
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  do.call(rbind, rows)
+}
+
+computed_results <- summarize_results(analysis_df)
+cat("\nBootstrap Spearman 结果:\n")
+print(computed_results[, c("moderator", "measure", "n_datasets", "spearman_rho", "ci_lower", "ci_upper")])
+
+# 保存中间数据
+write.csv(analysis_df,
+          file.path(data_out_dir, "exploratory_analysis_dataset.csv"),
+          row.names = FALSE, fileEncoding = "UTF-8")
+write.csv(computed_results,
+          file.path(data_out_dir, "exploratory_numeric_results.csv"),
+          row.names = FALSE, fileEncoding = "UTF-8")
+cat("\n中间数据已保存至:", data_out_dir, "\n")
+```
+
+```{r load-processed}
+# ===========================================================================
+# 3. 读取处理好的数据
+# ===========================================================================
+analysis_df <- read.csv(file.path(data_out_dir, "exploratory_analysis_dataset.csv"),
+                        stringsAsFactors = FALSE)
+num_results <- read.csv(file.path(data_out_dir, "exploratory_numeric_results.csv"),
+                        stringsAsFactors = FALSE)
+```
+
+```{r panel-constants}
+# ===========================================================================
+# 4. 绘图常量（与 Python v8 完全一致）
+# ===========================================================================
+
+POINT_COLOR          <- "#557A95"
+POINT_COLOR_EXCLUDED <- "#D4A0A0"
+LINE_COLOR           <- "#2D5F73"
+LINE_COLOR_EXCLUDED  <- "#C05050"
+GRID_COLOR           <- "#D9D9D9"
+TEXT_COLOR           <- "#222222"
+CI_FILL              <- "#DCE7EC"
+
+PANEL_TITLES <- list(
+  "stimulus_duration_ms_first_RT_ms" = "A. RT SPE by stimulus duration",
+  "stimulus_duration_ms_first_ACC"   = "B. ACC SPE by stimulus duration",
+  "trial_number_max_RT_ms"           = "C. RT SPE by trial number",
+  "trial_number_max_ACC"             = "D. ACC SPE by trial number"
+)
+
+MEASURE_LABELS <- c("RT_ms" = "RT SPE (Cohen's dz)", "ACC" = "ACC SPE (Cohen's dz)")
+```
+
+```{r draw-panel-function}
+# ===========================================================================
+# 5. 单面板绘图函数
+# ===========================================================================
+
+draw_numeric_panel <- function(raw_df, result_row, measure, is_duration, y_min, y_max) {
+  if (nrow(raw_df) == 0) {
+    text(0.5, 0.5, "No eligible datasets", cex = 1.5)
+    return()
+  }
+
+  x <- raw_df$moderator_value
+  y <- raw_df$cohens_dz
+
+  # X 轴范围
+  x_min <- floor((min(x) - 20) / 100) * 100
+  x_max <- ceiling((max(x) + 20) / 100) * 100
+  if (x_max <= x_min) x_max <- x_min + 100
+
+  # 设置坐标系
+  plot.new()
+  plot.window(xlim = c(x_min, x_max), ylim = c(y_min, y_max))
+
+  # 水平网格线（对应 y ticks）
+  y_ticks <- seq(ceiling(y_min / 0.5) * 0.5, floor(y_max / 0.5) * 0.5, by = 0.5)
+  abline(h = y_ticks, col = GRID_COLOR, lwd = 0.5)
+
+  # 回归线 + 95% CI 带
+  n <- length(x)
+  if (n > 2) {
+    fit <- lm(y ~ x)
+    x_grid <- seq(x_min, x_max, length.out = 120)
+    pred <- predict(fit, newdata = data.frame(x = x_grid), se.fit = TRUE,
+                    interval = "confidence", level = 0.95)
+
+    # CI 填充带
+    polygon(c(x_grid, rev(x_grid)),
+            c(pred$fit[, "lwr"], rev(pred$fit[, "upr"])),
+            col = CI_FILL, border = NA)
+
+    # 回归线
+    lines(x_grid, pred$fit[, "fit"], col = LINE_COLOR, lwd = 3)
+  }
+
+  # 敏感度分析虚线（仅 trial_number，排除 top 3）
+  if (!is_duration && n > 3) {
+    sorted_x <- sort(x, decreasing = TRUE)
+    excl_vals <- sorted_x[1:3]
+    top3_mask <- !(x %in% excl_vals)
+    if (sum(top3_mask) >= 8) {
+      df_s <- data.frame(xs = x[top3_mask], ys = y[top3_mask])
+      fit_s <- lm(ys ~ xs, data = df_s)
+      pred_s <- predict(fit_s, newdata = data.frame(xs = x_grid))
+      lines(x_grid, pred_s, col = LINE_COLOR_EXCLUDED, lwd = 2, lty = 2)
+    }
+  } else {
+    excl_vals <- numeric(0)
+  }
+
+  # 散点
+  for (i in seq_len(n)) {
+    excl <- x[i] %in% excl_vals
+    col  <- if (excl) POINT_COLOR_EXCLUDED else POINT_COLOR
+    bg   <- if (excl) LINE_COLOR_EXCLUDED  else "#FFFFFF"
+    cex  <- if (excl) 1.6 else 1.3
+    lwd  <- if (excl) 2.5 else 1.5
+    points(x[i], y[i], pch = 21, col = bg, bg = col, cex = cex, lwd = lwd)
+  }
+
+  # 坐标轴
+  axis(1)
+  axis(2, at = y_ticks, las = 1)
+  box(bty = "l")
+
+  # 图内标注框：Spearman 结果
+  anno <- sprintf("n = %d,  Spearman \u03C1 = %.3f,  p = %.3f\nBootstrap 95%% CI [%.3f, %.3f],  p_boot = %.4f",
+                  as.integer(result_row$n_datasets),
+                  result_row$spearman_rho, result_row$spearman_p,
+                  result_row$ci_lower, result_row$ci_upper, result_row$p_boot)
+
+  legend("topright", legend = anno, bty = "o",
+         box.col = "#D9D9D9", bg = "#F6F8FAE6",
+         text.col = TEXT_COLOR, cex = 0.65, inset = c(0.01, 0.01))
+}
+```
+
+```{r combined-figure}
+# ===========================================================================
+# 6. 生成 2×2 组合图
+# ===========================================================================
+
+combined_path <- file.path(pic_dir, "Figure_Exploratory_Moderators_Main.png")
+
+# 高清输出（匹配 Python 的 5000×3600 比例）
+png(combined_path, width = 5000, height = 3800, res = 300)
+
+layout_matrix <- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2, byrow = TRUE)
+layout(layout_matrix)
+
+# 计算公共 y 轴范围
+all_y <- analysis_df$cohens_dz[!is.na(analysis_df$cohens_dz)]
+y_min <- floor((min(all_y) - 0.1) * 2) / 2
+y_max <- ceiling((max(all_y) + 0.1) * 2) / 2
+if (y_max - y_min < 2.0) y_max <- y_min + 2.0
+
+panels <- list(
+  list(mod = "stimulus_duration_ms_first", meas = "RT_ms", dur = TRUE,
+       title = "A. RT SPE by stimulus duration",
+       xlab  = "Stimulus presentation duration (ms)"),
+  list(mod = "stimulus_duration_ms_first", meas = "ACC", dur = TRUE,
+       title = "B. ACC SPE by stimulus duration",
+       xlab  = "Stimulus presentation duration (ms)"),
+  list(mod = "trial_number_max", meas = "RT_ms", dur = FALSE,
+       title = "C. RT SPE by trial number",
+       xlab  = "Maximum trial number"),
+  list(mod = "trial_number_max", meas = "ACC", dur = FALSE,
+       title = "D. ACC SPE by trial number",
+       xlab  = "Maximum trial number")
+)
+
+par(mar = c(4.5, 4.5, 3.5, 1.5))
+
+for (p in panels) {
+  raw <- analysis_df[analysis_df$moderator_name == p$mod
+                     & analysis_df$measure == p$meas, ]
+  res <- num_results[num_results$moderator == p$mod
+                     & num_results$measure == p$meas, ]
+  if (nrow(res) == 0) next
+
+  draw_numeric_panel(raw, res[1, ], p$meas, p$dur, y_min, y_max)
+
+  title(main = p$title, font.main = 2, cex.main = 1.2, col.main = TEXT_COLOR)
+  title(xlab = p$xlab,  cex.lab = 1.0, col.lab = TEXT_COLOR)
+  title(ylab = MEASURE_LABELS[p$meas], cex.lab = 1.0, col.lab = TEXT_COLOR)
+}
+
+dev.off()
+cat("\n组合图已保存:", combined_path, "\n")
+```

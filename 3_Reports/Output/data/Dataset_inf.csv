@@ -1,0 +1,76 @@
+ID,Paper_ID,Paper,Author,Year,Journal,Exp,Study,Self,Close,Others,Practice_Trial,Practice_Block,Formal_Trials,Formal_Block,Environmental Information,Country,City,Stimu_language,Sample_Size,Male,Female,Drop_Subject,Remain,Design,Stim_Type,File_Name,License
+1,P5E1,P5,Constable et al.,2019,Journal of Experimental Psychology:  Human Perception and Performance,1,1,Self,We,They/Alone,20,NA,96,3,,Hungary,Budapest,Hungarian,28,12,16,0,28,"2(Self,Other)*2(Individual,Group)",Geometric Shape,Constable_2019_EPHPP,
+2,P5E2,P5,Constable et al.,2019,Journal of Experimental Psychology:  Human Perception and Performance,2,2,Self,We,They/Alone,20,NA,96,3,,Hungary,Budapest,Hungarian,28,6,22,0,28,"2(Self,Other)*2(Individual,Group)",Geometric Shape,Constable_2019_EPHPP,
+3,P5E3,P5,Constable et al.,2019,Journal of Experimental Psychology:  Human Perception and Performance,3,3,Self,We,They/Alone,20,NA,96,3,,Hungary,Budapest,Hungarian,28,8,14,0,28,"2(Self,Other)*2(Individual,Group)",Geometric Shape,Constable_2019_EPHPP,
+4,P5E4,P5,Constable et al.,2019,Journal of Experimental Psychology:  Human Perception and Performance,4,4,P1/P2,Team,Stranger/Stranger Team,50,NA,80,8,,Hungary,Budapest,English,40,14,14,0,40,,Geometric Shape,Constable_2019_EPHPP,
+5,P6E1,P6,Constable & Knoblich,2020,Acta Psychologica,1,1,Self,Partner,Stranger,24,NA,240,4,,United Kingdom,Newcastle,Hungarian,92,19,73,0,92,"3(ShapeIdentity:Self,Partner,
+Stranger)*2(Phase:1,2)*2(SwitchIdentity:Partner,Stranger)",Geometric Shape,Constable_2020_AP,
+6,P20E1,P20,Hu et al.,2020,Collabra: Psychology,1,1,Self,,Other,48,NA,312,14,Matlab + PTB,China,Nanjing,Chinese,46,19,27,5,41,,Geometric Shape,Hu_2020_CP,
+7,P34E1,P34,IR Kolvoort et al.,2020,Human Brain Mapping,1,1,Self,Friend,Stranger,NA,NA,100,NA,,Netherlands,Amsterdam,English,31,17,14,0,31,"2(Self,Non-Self)*2(Matching,Nonmatching)*4(Nodelay,40,120,or700ms)",Geometric Shape,Kolvoort_2020_HBM,
+8,P45E1,P45,L McIvor et al.,2021,European Journal of Neuroscience,1,1,Self,,Other,12,NA,960,7,E-prime2.0,United Kingdom,Oxford,English,40,8,32,7,33,,Geometric Shape (Emotional Face Embedded),Mcivor_2020_EJN,CC BY 4.0
+9,P46E2,P46,Constable et al.,2020,Cognition and Emotion,2,2,Self,,Stranger,8,NA,192,4,,United Kingdom,Newcastle,English,56,25,31,5,51,2(Strength)*2(Association),Face,Constable_2020_CE,
+10,P51E1,P51,Qian et al.,2020,Quarterly Journal of Experimental Psychology,1,1,Self,,Stranger/Celebrity,10,NA,144,NA,E-prime2.0,China,Shanghai,Chinese,26,10,16,2,24,,Geometric Shape,Qian_2019_QJEP,https://osf.io/bw27c
+11,P51E2,P51,Qian et al.,2020,Quarterly Journal of Experimental Psychology,2,2,Self,,Celebrity,20,NA,100,2,E-prime2.0,China,Shanghai,Chinese,26,7,19,1,25,"2(identity:self,celebrity)*2(alerting
+cue:with,without)",Geometric Shape,Qian_2019_QJEP,https://osf.io/bw27c
+12,P54E1,P54,Sch?fer & Frings,2019,Journal of Cognitive Psychology,1,1,Self,Mother/Acquaintance,none,48,NA,144,3,E-prime2.0,Germany,Trier,German,103,13,90,0,103,"2(matchingcondition:matching,nonmatching)*3(shapeassociation:self,familiar
+other,neutralinstance)",Geometric Shape,Schaefer_2019_CP,CC-BY-SA 4.0
+13,P95E1,P95,Wo?niak et al.,2018,PloS one,1,1,Self,Friend,Stranger,24,NA,672,4,E-prime2.0,Australia,Melbourne,English,19,9,9,1,18,,face,Wozniak_2018_PLOS,CC BY 4.0
+14,P95E2,P95,Wo?niak et al.,2018,PloS one,2,2,Self,Friend,Stranger,24,NA,672,4,E-prime2.0,Australia,Melbourne,English,20,9,9,2,18,,face,Wozniak_2018_PLOS,CC BY 4.0
+15,Pn4E1,Pn4,Golubickis & Macrae,2021,Acta Psychologica,1,1,Self,Friend,Stranger,12,NA,360,6,,United Kingdom,Plymouth,English,30,9,21,5,25,"3(ShapeAssociation:self,friend,stranger)*2(Presentation:mixed,blocked)*2(TrialType:matching,nonmatching)",Geometric Shape,Golubickis_2021_AP,CC BY-NC-ND
+16,Pn4E1,Pn4,Golubickis & Macrae,2021,Acta Psychologica,2,2,Self,Friend,Stranger,12,NA,360,6,,United Kingdom,Plymouth,English,30,10,20,5,25,"3(ShapeAssociation:self,friend,stranger)*2(Presentation:mixd,blocked)*2(TrialType:matching,nonmatching)",Geometric Shape,Golubickis_2021_AP,CC BY-NC-ND
+17,Pn13E1,Pn13,Navon & Makovski,2021,,1,1,Self,Friend,Stranger,12,1,360,3,E-prime2.0,Israel,Ra'anana,Hebrew,13,3,10,0,13,,Geometric Shape,Navon_2021,CC0 1.0 Universal
+18,Pn13E2,Pn13,Navon & Makovski,2021,,2,2,Father,Close-Relative,Stranger,12,1,360,3,E-prime2.0,Israel,Ra'anana,Hebrew,27,9,18,0,27,,Geometric Shape,Navon_2021,CC0 1.0 Universal
+19,Pn13E3,Pn13,Navon & Makovski,2021,,3,3,Self,Father,Stranger,12,1,360,3,E-prime2.0,Israel,Ra'anana,Hebrew,27,12,15,0,27,,Geometric Shape,Navon_2021,CC0 1.0 Universal
+20,Pn13E4,Pn13,Navon & Makovski,2021,,4,4,Self,Friend,Stranger,12,1,360,3,E-prime2.0,Israel,Ra'anana,Hebrew,26,9,18,1,25,,Geometric Shape,Navon_2021,CC0 1.0 Universal
+21,Pn14E1,Pn14,G Orellana-Corrales et al.,2020,Experimental Psychology,1,1,Self,,Stranger,84,NA,128,NA,E-prime2.0,Germany,T¨¹bingen,German,38,9,29,4,34,2(targetlocation:self£¬stranger)*3(typeofrepresentation:label£¬shape£¬pair),Geometric Shape,Orellana-Corrales_2021_EP,
+22,Pn14E2,Pn14,G Orellana-Corrales et al.,2020,Experimental Psychology,2,2,Self,,Stranger,24,NA,240,NA,E-prime2.0,Germany,T¨¹bingen,German,33,7,26,2,31,"2(target
+location:self,stranger)*3(typeofrepresentation:label,shape,pair)",Geometric Shape,Orellana-Corrales_2021_EP,
+23,Pn14E3,Pn14,G Orellana-Corrales et al.,2020,Experimental Psychology,3,3,Self,,Stranger,24,NA,240,NA,E-prime2.0,Germany,T¨¹bingen,German,36,7,29,1,35,"2(shape:selfassociated£¬stranger-associated)*2(trialtype:
+matching£¬nonmatching)",Geometric Shape,Orellana-Corrales_2021_EP,
+24,Pn16E1,Pn16,Svensson et al.,2022,Psychological Research,1,1,Self,Friend,,10,NA,200,4,,United Kingdom,Aberdeen,English,20,6,14,0,20,"2(ShapeAssociation:self,friend)*2(MatchingCondition:matching,nonmatching)",Geometric Shape,Svensson_2021_PR,
+25,Pn16E2,Pn16,Svensson et al.,2022,Psychological Research,2,2,Self,Friend,,10,NA,400,2,,United Kingdom,Aberdeen,English,24,8,16,0,24,"2(StimulusFrequency:self-frequent,friend-frequent)*2(ShapeAssociation:self,friend)*2(MatchingCondition:matching,nonmatching)",Geometric Shape,Svensson_2021_PR,
+26,Pn16E3,Pn16,Svensson et al.,2022,Psychological Research,3,3,Self,Friend,,10,NA,400,2,,United Kingdom,Aberdeen,English,25,7,18,0,25,"2(StimulusFrequency:self-frequent,friend-frequent)*2
+(ShapeAssociation:self,friend)*2(MatchingCondition:matching,nonmatching)*TrialNumber",Geometric Shape,Svensson_2021_PR,
+27,Pn23E1,Pn23,Xu et al.,2021,Current Psychology,1,1,Self,Friend,Stranger,12,NA,360,3,E-prime2.0,China,Changchun,Chinese,105,51,54,0,105,,Geometric Shape,Yang_2021_CP,
+28,Ps1E1,Ps1,Liu et al.,2023,Cognitive Research: Principles and Implications,1,1,Self,,Stranger,1,NA,64,NA,Gorilla Experiment Builder,United Kingdom,In United Kingdom,English,302,132,161,3,299,,face,Liu_2023_CP,Need Permission
+29,Ps2E1,Ps2,Hu et al.,2023,,1,6b,Self,,Stranger,NA,NA,90,2,,China,Nanjing,Chinese,23,No Gender Data,,1,22,"2(matching:match,mismatch)*2(reference:self,other)*3(moralcharacter:good,neutral,bad)",Geometric Shape,Hu_2023,Need Citation
+30,Ps3E1,Ps3,Sui (unpublished),2014,,1,NA,Self,Friend,Stranger,,,40,,,China,Nanjing,Chinese,24,,,,24,,Geometric Shape,Sui_2014,
+31,Ps4E1,Ps4,Sui (unpublished),2015,,1,NA,Self,Friend,Stranger,,,40,,,China,Nanjing,Chinese,20,,,,20,,Geometric Shape,Sui_2015,
+32,Ps4E2,Ps4,Sui (unpublished),2015,,2,NA,Self,Friend,Stranger,,,40,,,China,Nanjing,Chinese,21,,,,21,,Geometric Shape,Sui_2015,
+33,Ps5E1,Ps5,Sui et al.,2014,"Attention, Perception, & Psychophysics",1,1,Self,Mother,Stranger,,,60,,,China,Beijing,Chinese,24,,,,24,,Geometric Shape,Sui_2014_APP,
+34,Ps5E2,Ps5,Sui et al.,2014,"Attention, Perception, & Psychophysics",2,2,Self,Mother,Stranger,,,60,,,China,Beijing,Chinese,18,,,,18,,Geometric Shape,Sui_2014_APP,
+35,Ps5E3,Ps5,Sui et al.,2014,"Attention, Perception, & Psychophysics",3,3,Self,Mother,Stranger,,,60,,,China,Beijing,Chinese,22,,,,22,,Geometric Shape,Sui_2014_APP,
+36,Ps5E4,Ps5,Sui et al.,2014,"Attention, Perception, & Psychophysics",4,4,Self,Mother,Stranger,,,60,,,China,Beijing,Chinese,20,,,,20,,Geometric Shape,Sui_2014_APP,
+37,Pt1E1,Pt1,Haciahmet et al.,2023,PSYCHOLOGY,1,1,Self,,Stranger,,24,240,4,E-prime2.0,Germany,Trier,German,40,8,32,3,37,"2(stimulipairings:self-associated,stranger-associated)*2(condition:match,non-match)",Geometric Shape,Haciahmet_2023_Psy,CC BY 4.0
+38,Pt2E1,Pt2,Hobbs et al.,2023,Psychological Medicine,1,1,Self,Friend,Stranger,NA,NA,60,2,,United Kingdom,Bath,English,144,31,112,2,142,,face,Hobbs_2023_PM,CC BY 4.0
+39,Pt3E1,Pt3,Liang et al.,2021,Human Brain Mapping,1,1,Self,Friend,Stranger,NA,NA,360,6,E-prime2.0,China,Beijing,English,109,50,59,1,108,,Geometric Shape,Liang_2021_HBM,"This is an open access article under the terms of the Creative Commons Attribution-NonCommercial-NoDerivs License, which permits use and distribution in any medium, provided the original work is properly cited, the use is non-commercial and no modifications or adaptations are made."
+40,Pt5E1,Pt5,Sch?fer et al.,2023,Experimental Psychology,1,1,Self,Mother/Acquaintance,,24,1,300,1,E-prime2.0,,,German,40,8,32,1,39,"2(stimulusvalence:negative,neutral)*2(matchingcondition:matching,nonmatching)*3(association:self,mother,acquaintance)",Geometric Shape,,
+41,Pt6E1,Pt6,Vicovaro et al.,2022,Journal of Experimental Psychology: Human Perception and Performance,1,1,Self,,Stranger,24,1,240,2,PsychoPy3,Italy,Padova,Italian,30,14,16,3,27,"2matching(matched,nonmatching)*2shape(self-related,stranger-related)*60repetitions",Dot Pattern,Vicovaro_2022_EPHPP,CC BY 4.0
+42,Pt6E2,Pt6,Vicovaro et al.,2022,Journal of Experimental Psychology: Human Perception and Performance,2,2,Self,,Stranger,24,1,240,2,PsychoPy3,Italy,Padova,Italian,104,14,90,2,102,"2matching(matched,nonmatching)*2shape(self-related,stranger-related)*60repetitions",Dot Pattern,Vicovaro_2022_EPHPP,CC BY 4.0
+43,Pt7E1,Pt7,Perrykkad et al.,2022,BMC Psychology,1,1,Self,Friend,Stranger,NA,NA,360,3,Matlab + PTB,Australia,Clayton,English,328,No Gender Data,,40,288,,Geometric Shape,Perrykkad_2022_BMC,CC BY 4.0
+44,Pt9E1,Pt9,Wo?niak et al.,2020,Psychological Research,1,1,Self,Friend,none,24,1,360,3,Matlab,,,English,23,7,11,5,18,"2(task:standardtaskvs.pseudo-wordstask)*2(trialtype:matching,mismatching)*3(identity:self,friend,none)",Geometric Shape,Wozniak_2022_PR,CC BY 4.0
+45,Pt9E2,Pt9,Wo?niak et al.,2020,Psychological Research,1,1,Self,Friend,none,24,1,360,3,Matlab,,,English,21,6,12,3,18,"2(task:standardtaskvs.pseudo-wordstask)*2(trialtype:matching,mismatching)*3(identity:self,friend,none)",Geometric Shape,Wozniak_2022_PR,CC BY 4.0
+46,Pt9E3,Pt9,Wo?niak et al.,2020,Psychological Research,1,1,Self,Friend,none,24,1,360,3,Matlab,,,English,18,0,18,0,18,"2(task:standardtaskvs.pseudo-wordstask)*2(trialtype:matching,mismatching)*3(identity:self,friend,none)",Geometric Shape,Wozniak_2022_PR,CC BY 4.0
+47,Pt10E1,Pt10,Yongfa Zhang et al.,2023,NeuroImage,1,1,Self,,Stranger,12,NA,96,NA,E-prime2.0,,,English,380,No Gender Data,,32,348,,Geometric Shape,Zhang_2023_NI,CC BY-NC-ND
+48,Pt13E1,Pt13,M Feldborg et al.,2021,International Journal of Environmental Research and Public Health,1,1,Self,Friend,Stranger,NA,3,320,4,,,,,84,13,70,0,84,,Geometric Shape (Emotional Face Embedded),Feldborg_2021_ERPH,CC BY 4.0
+49,Pt18E1,Pt18,J Sui et al.,2023,Consciousness and Cognition,1,1,Self,Friend,Stranger,12,NA,960,16,,,,,20,12,8,0,20,"3(ShapeAssociation:self,friend,stranger)*2(MatchingCondition:matching,mismatching)",Geometric Shape,Sui_2023_CC,CC BY-NC-ND
+50,Pt27E2,Pt27,V Mart¨ªnez-P¨¦rez et al.,2024,Consciousness and Cognition,1,1,Self,Friend,Stranger,20,1,240,5,E-prime 3,,,Spanish,32,5,27,0,32,"2(match:matching,non-matching)*3(labelcondition:you,friend,stranger)",Geometric Shape,Martinez-Perez_2024_CC,CC BY 4.0
+51,Pt28E1,Pt28,L Amodeo et al.,2024,"Cognitive, Affective, & Behavioral Neuroscience",1,1,Self,Close-Others,Stranger,24,1,360,0,,,,,70,49,21,,,"2(Group:Autism,Neuro typical)*2(Trials:Matching,Mismatching)*3(Person:Self,CloseOther,Stranger)",Geometric Shape,Amodeo_2024_CABN,"All materials, datasets, and R scripts are available from the corresponding author on reasonable request. The experiment was not preregistered."
+52,Pu1E1,Pu1,,,,1,,,,,,,,,,,,,,,,,,,Geometric Shape,Wang_2016_EPHPP,
+53,Pu2E1,Pu2,Mario Dalmaso et al.,2024,Consciousness and Cognition,1,1,Self,,Other,,,,,PsychoPy + MATLAB toolbox,,,Japanese,40,19,21,0,40,"2(Condition:self_Asian vs. self_White)*2(Trials:MatchingnNonmatching)*2(Identity:Self,Other)",Voice,Dalmaso_2024_CC,CC BY 4.0
+54,Pu2E2,Pu2,Mario Dalmaso et al.,2024,Consciousness and Cognition,2,2,Self,,Other,,,,,PsychoPy + MATLAB toolbox,,,Japanese,40,16,24,0,40,"2(Condition:self_Asian vs. self_White)*2(Trials:MatchingnNonmatching)*2(Identity:Self,Other)",Voice,Dalmaso_2024_CC,CC BY 4.0
+55,Pu3E1,Pu3,,,,,,,,,,,,,,,,,,,,,,,face,Smith_2024_Cortex,CC BY-NC-ND
+56,Pu4E1,Pu4,Neil W. Kirk et al.,2024,British Journal of Psycholog y,1,1,Slef,Friend,Other,,,,,,,,,,,,,,,Voice,Kirk_2025_BJP,CC BY 4.0
+57,Pu5E1,Pu5,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,Lee_2023_Cognition,
+58,Pu5E2,Pu5,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,Lee_2023_Cognition,
+59,Pu6E1,Pu6,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
+,,,,,,,,,,,,,,,,,,,,,,,,,Geometric Shape,,
