@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Japan",
       "Setting": "Laboratory setting",
-      "Modality": "Visual",
-      "Fixation size": "0.05 height units (black fixation cross)",
-      "Shape size": "300 × 300 pixels (faces)",
-      "Label size": "0.04 height units",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "/",
-      "Background color": "/",
-      "Equipment for presenting": "/",
-      "Monitor properties": "/",
-      "Software for experiment": "PsychoPy",
-      "Viewing distance": "/",
-      "Fixation presentation duration": "400 ms",
-      "Stimulus presentation duration": "200 ms",
-      "Response deadline": "1000 ms",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "PsychoPy"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "40 trials (20 per block)",
+      "Block_number": "2 blocks",
+      "Trial_number": "360 trials (180 per block)"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms",
+      "Fixation_duration": "400 ms",
+      "Stimulus_duration": "200 ms",
+      "Response_deadline": "1000 ms",
       "ITI": "/",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "40 trials (20 per block)",
-      "Block number": "2 blocks",
-      "Trial Number": "360 trials (180 per block)"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.05 height units (black fixation cross)",
+      "Shape": "300 × 300 pixels (faces)",
+      "Label": "0.04 height units",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
     },
     "detail": ""
   }

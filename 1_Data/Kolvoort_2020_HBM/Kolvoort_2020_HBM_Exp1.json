@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "The Royal Ottawa's Institute for Mental Health Research",
       "Setting": "Laboratory setting",
-      "Modality": "Visual",
-      "Fixation size": "/",
-      "Shape size": "/",
-      "Label size": "/",
-      "Stimulus order": "Shape first (in delay conditions)",
-      "Shape-label interval": "0 ms, 40 ms, 120 ms, 700 ms",
-      "Stimulus color": "/",
-      "Background color": "Gray",
-      "Equipment for presenting": "Computer keyboard",
-      "Monitor properties": "/",
-      "Software for experiment": "/",
-      "Viewing distance": "/",
-      "Fixation presentation duration": "Duration of delay intervals (40, 120, 700 ms)",
-      "Stimulus presentation duration": "100 ms (for both shape and label)",
-      "Response deadline": "1,500 ms",
+      "Equipment": {
+        "Presenting": "Computer keyboard",
+        "Monitor": "/",
+        "Software": "/"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "/",
+      "Block_number": "4 blocks",
+      "Trial_number": "100 trials per block"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Shape first (in delay conditions)",
+      "SOA": "0 ms, 40 ms, 120 ms, 700 ms",
+      "Fixation_duration": "Duration of delay intervals (40, 120, 700 ms)",
+      "Stimulus_duration": "100 ms (for both shape and label)",
+      "Response_deadline": "1,500 ms",
       "ITI": "2-4 s (jittered, steps of 0.5 s)",
-      "Feedback duration": "/",
-      "Number of practice trials": "/",
-      "Block number": "4 blocks",
-      "Trial Number": "100 trials per block"
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "/",
+      "Label": "/",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "Gray"
+      }
     },
     "detail": ""
   }

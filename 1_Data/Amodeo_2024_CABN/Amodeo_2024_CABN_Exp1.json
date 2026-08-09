@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Ghent University (implied by ethical committee approval)",
       "Setting": "Electrically shielded chamber (for EEG recording)",
-      "Modality": "Visual",
-      "Fixation size": "/",
-      "Shape size": "3.7° × 3.7°",
-      "Label size": "36-point Arial Narrow",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms (simultaneous presentation)",
-      "Stimulus color": "White",
-      "Background color": "Light gray",
-      "Equipment for presenting": "/",
-      "Monitor properties": "/",
-      "Software for experiment": "E-prime Studio, version 2.0.10.248",
-      "Viewing distance": "/",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "Practice: 1000 ms; Test: 200 ms",
-      "Response deadline": "Practice: 2400 ms; Test: 1600 ms",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "E-prime Studio, version 2.0.10.248"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "24 trials (repeatable up to 3 times if accuracy <70%)",
+      "Block_number": "6 blocks",
+      "Trial_number": "360 trials total (60 trials per block)"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "Practice: 1000 ms; Test: 200 ms",
+      "Response_deadline": "Practice: 2400 ms; Test: 1600 ms",
       "ITI": "Variable 1400-1600 ms",
-      "Feedback duration": "1000 ms (practice phase only)",
-      "Number of practice trials": "24 trials (repeatable up to 3 times if accuracy <70%)",
-      "Block number": "6 blocks",
-      "Trial Number": "360 trials total (60 trials per block)"
+      "Feedback_duration": "1000 ms (practice phase only)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "3.7° × 3.7°",
+      "Label": "36-point Arial Narrow",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Light gray"
+      }
     },
     "detail": ""
   }

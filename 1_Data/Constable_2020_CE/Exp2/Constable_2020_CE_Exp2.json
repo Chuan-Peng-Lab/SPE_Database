@@ -1,29 +1,43 @@
 {
   "exp2": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Not mentioned (Participants received supermarket vouchers in HUF, suggesting Hungary)",
       "Setting": "Laboratory (inferred)",
-      "Modality": "Visual",
-      "Fixation size": "1.4° X 1.4° VA",
-      "Shape size": "Not mentioned (Luminance squares used, no geometric shapes)",
-      "Label size": "Height: 1.4° VA",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "Text: Purple; Luminance squares: Grayscale (Strong Dark = 2 cd/m², Weak Dark = 86 cd/m², Weak Light = 255 cd/m², Strong Light = 340 cd/m²)",
-      "Background color": "Grey (169 cd/m²)",
-      "Equipment for presenting": "Computer running Windows 10",
-      "Monitor properties": "Spatial resolution: 1920X1080; Refresh rate: 60 Hz; Maximum brightness",
-      "Software for experiment": "/",
-      "Viewing distance": "Average of 57 cm",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "233 ms",
-      "Response deadline": "1500 ms (after stimulus offset)",
+      "Equipment": {
+        "Presenting": "Computer running Windows 10",
+        "Monitor": "Spatial resolution: 1920X1080; Refresh rate: 60 Hz; Maximum brightness",
+        "Software": "/"
+      },
+      "Viewing_distance": "Average of 57 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "8 trials (Matching Task); 8 trials (Initial Training)",
+      "Block_number": "4 blocks",
+      "Trial_number": "192 trials total"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "233 ms",
+      "Response_deadline": "1500 ms (after stimulus offset)",
       "ITI": "Variable, 500–800 ms",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "8 trials (Matching Task); 8 trials (Initial Training)",
-      "Block number": "4 blocks",
-      "Trial Number": "192 trials total"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "1.4° X 1.4° VA",
+      "Shape": "Not mentioned (Luminance squares used, no geometric shapes)",
+      "Label": "Height: 1.4° VA",
+      "Colors": {
+        "Stimulus": "Text: Purple; Luminance squares: Grayscale (Strong Dark = 2 cd/m², Weak Dark = 86 cd/m², Weak Light = 255 cd/m², Strong Light = 340 cd/m²)",
+        "Background": "Grey (169 cd/m²)"
+      }
     },
     "detail": ""
   }

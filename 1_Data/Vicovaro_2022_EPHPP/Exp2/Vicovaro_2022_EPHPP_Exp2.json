@@ -1,29 +1,43 @@
 {
   "exp2": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Online (remote)",
       "Setting": "Online experiment",
-      "Modality": "Visual",
-      "Fixation size": "/",
-      "Shape size": "900 × 500 pixels (adapted to screen)",
-      "Label size": "Integrated into pre-generated images",
-      "Stimulus order": "Pre-generated combined images (shape + label)",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "White dots, black labels",
-      "Background color": "Grey",
-      "Equipment for presenting": "Participants' own devices",
-      "Monitor properties": "15.5'' screen",
-      "Software for experiment": "Pavlovia",
-      "Viewing distance": "About 57 cm",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "100 ms",
-      "Response deadline": "1500 ms",
+      "Equipment": {
+        "Presenting": "Participants' own devices",
+        "Monitor": "15.5'' screen",
+        "Software": "Pavlovia"
+      },
+      "Viewing_distance": "About 57 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "24",
+      "Block_number": "2 blocks",
+      "Trial_number": "240 experimental trials"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Pre-generated combined images (shape + label)",
+      "SOA": "0 ms",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms",
+      "Response_deadline": "1500 ms",
       "ITI": "/",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "24",
-      "Block number": "2 blocks",
-      "Trial Number": "240 experimental trials"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "900 × 500 pixels (adapted to screen)",
+      "Label": "Integrated into pre-generated images",
+      "Colors": {
+        "Stimulus": "White dots, black labels",
+        "Background": "Grey"
+      }
     },
     "detail": ""
   }

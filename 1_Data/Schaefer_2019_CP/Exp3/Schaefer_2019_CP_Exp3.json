@@ -1,29 +1,43 @@
 {
   "exp3": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "University of Trier",
       "Setting": "Sound-proofed rooms",
-      "Modality": "Visual",
-      "Fixation size": "/",
-      "Shape size": "2.7° × 2.7° visual angle",
-      "Label size": "0.48° visual angle",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "Black (words), Shapes color not explicitly stated",
-      "Background color": "White",
-      "Equipment for presenting": "Standard PCs",
-      "Monitor properties": "TFT monitors, 1,680 × 1,050 pixels resolution",
-      "Software for experiment": "E-Prime 2.0",
-      "Viewing distance": "60 cm",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "100 ms",
-      "Response deadline": "1500 ms (from stimulus offset)",
+      "Equipment": {
+        "Presenting": "Standard PCs",
+        "Monitor": "TFT monitors, 1,680 × 1,050 pixels resolution",
+        "Software": "E-Prime 2.0"
+      },
+      "Viewing_distance": "60 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "48",
+      "Block_number": "3 blocks",
+      "Trial_number": "144"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms",
+      "Response_deadline": "1500 ms (from stimulus offset)",
       "ITI": "500 ms (black screen at trial start)",
-      "Feedback duration": "Until response or 1500ms elapsed (for experimental phase)",
-      "Number of practice trials": "48",
-      "Block number": "3 blocks",
-      "Trial Number": "144"
+      "Feedback_duration": "Until response or 1500ms elapsed (for experimental phase)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "2.7° × 2.7° visual angle",
+      "Label": "0.48° visual angle",
+      "Colors": {
+        "Stimulus": "Black (words), Shapes color not explicitly stated",
+        "Background": "White"
+      }
     },
     "detail": ""
   }

@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Tsinghua University (testing room)",
       "Setting": "Individual testing in a quiet room",
-      "Modality": "Visual",
-      "Fixation size": "0.8° × 0.8° visual angle",
-      "Shape size": "3.7° × 3.7° visual angle",
-      "Label size": "3.6° × 1.6° visual angle",
-      "Stimulus order": "Simultaneously (shape above, label below fixation)",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "White",
-      "Background color": "Grey",
-      "Equipment for presenting": "PC",
-      "Monitor properties": "22-inch CRT monitor, 1024 × 768 resolution, 100Hz",
-      "Software for experiment": "Matlab 2016a with PsychToolbox-3",
-      "Viewing distance": "/",
-      "Fixation presentation duration": "/",
-      "Stimulus presentation duration": "100 ms (matching task), 200 ms (categorization task)",
-      "Response deadline": "/",
+      "Equipment": {
+        "Presenting": "PC",
+        "Monitor": "22-inch CRT monitor, 1024 × 768 resolution, 100Hz",
+        "Software": "Matlab 2016a with PsychToolbox-3"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "48 (matching task)",
+      "Block_number": "2 blocks (matching task), 6 blocks (categorization task)",
+      "Trial_number": "120 trials per block (matching), 144 trials per block (categorization)"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously (shape above, label below fixation)",
+      "SOA": "0 ms",
+      "Fixation_duration": "/",
+      "Stimulus_duration": "100 ms (matching task), 200 ms (categorization task)",
+      "Response_deadline": "/",
       "ITI": "/",
-      "Feedback duration": "/",
-      "Number of practice trials": "48 (matching task)",
-      "Block number": "2 blocks (matching task), 6 blocks (categorization task)",
-      "Trial Number": "120 trials per block (matching), 144 trials per block (categorization)"
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.8° × 0.8° visual angle",
+      "Shape": "3.7° × 3.7° visual angle",
+      "Label": "3.6° × 1.6° visual angle",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Grey"
+      }
     },
     "detail": ""
   }

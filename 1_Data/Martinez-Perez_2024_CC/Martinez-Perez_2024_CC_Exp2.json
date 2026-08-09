@@ -1,29 +1,43 @@
 {
   "exp2": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Universidad de Murcia, Spain",
       "Setting": "Laboratory",
-      "Modality": "Visual",
-      "Fixation size": "/",
-      "Shape size": "4 degrees of visual angle",
-      "Label size": "TU: 1.7° × 1.4°; AMIGO: 1.7° × 4°; EXTRAÑO: 1.7° × 4.2°",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "/",
-      "Background color": "/",
-      "Equipment for presenting": "Chronos device (Psychology Software Tools)",
-      "Monitor properties": "22′′ TFT monitor, 1920 × 1080 resolution",
-      "Software for experiment": "E-Prime 3",
-      "Viewing distance": "60 cm",
-      "Fixation presentation duration": "/",
-      "Stimulus presentation duration": "100 ms",
-      "Response deadline": "/",
+      "Equipment": {
+        "Presenting": "Chronos device (Psychology Software Tools)",
+        "Monitor": "22′′ TFT monitor, 1920 × 1080 resolution",
+        "Software": "E-Prime 3"
+      },
+      "Viewing_distance": "60 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "48",
+      "Block_number": "5 blocks",
+      "Trial_number": "240"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms",
+      "Fixation_duration": "/",
+      "Stimulus_duration": "100 ms",
+      "Response_deadline": "/",
       "ITI": "1100 ms",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "48",
-      "Block number": "5 blocks",
-      "Trial Number": "240"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "4 degrees of visual angle",
+      "Label": "TU: 1.7° × 1.4°; AMIGO: 1.7° × 4°; EXTRAÑO: 1.7° × 4.2°",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
     },
     "detail": ""
   }

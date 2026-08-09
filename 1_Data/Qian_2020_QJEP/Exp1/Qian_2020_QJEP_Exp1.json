@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "/",
       "Setting": "Laboratory setting",
-      "Modality": "Visual",
-      "Fixation size": "0.8° × 0.8°",
-      "Shape size": "3.5° × 3.5°",
-      "Label size": "2.52° × 1.6°",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "White",
-      "Background color": "Grey",
-      "Equipment for presenting": "Windows PC",
-      "Monitor properties": "17-inch cathode-ray tube (CRT) monitor",
-      "Software for experiment": "E-Prime (Version 2.0, Psychology Software Tools, Inc.)",
-      "Viewing distance": "About 65 cm",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "100 ms",
-      "Response deadline": "1000 ms",
+      "Equipment": {
+        "Presenting": "Windows PC",
+        "Monitor": "17-inch cathode-ray tube (CRT) monitor",
+        "Software": "E-Prime (Version 2.0, Psychology Software Tools, Inc.)"
+      },
+      "Viewing_distance": "About 65 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "20",
+      "Block_number": "/",
+      "Trial_number": "144"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms",
+      "Response_deadline": "1000 ms",
       "ITI": "/",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "20",
-      "Block number": "/",
-      "Trial Number": "144"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.8° × 0.8°",
+      "Shape": "3.5° × 3.5°",
+      "Label": "2.52° × 1.6°",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Grey"
+      }
     },
     "detail": ""
   }

@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Northeast Normal University",
       "Setting": "Laboratory setting",
-      "Modality": "Visual",
-      "Fixation size": "/",
-      "Shape size": "3.8° × 3.8°",
-      "Label size": "3.1°/3.6° × 1.6°",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "White",
-      "Background color": "/",
-      "Equipment for presenting": "14-inch Dell monitor",
-      "Monitor properties": "60-Hz refresh rate, 1024 × 768 pixels resolution",
-      "Software for experiment": "E-prime 2.0",
-      "Viewing distance": "/",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "100 ms",
-      "Response deadline": "800-1200 ms",
+      "Equipment": {
+        "Presenting": "14-inch Dell monitor",
+        "Monitor": "60-Hz refresh rate, 1024 × 768 pixels resolution",
+        "Software": "E-prime 2.0"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "12",
+      "Block_number": "3",
+      "Trial_number": "360"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms",
+      "Response_deadline": "800-1200 ms",
       "ITI": "/",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "12",
-      "Block number": "3",
-      "Trial Number": "360"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "3.8° × 3.8°",
+      "Label": "3.1°/3.6° × 1.6°",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "/"
+      }
     },
     "detail": ""
   }

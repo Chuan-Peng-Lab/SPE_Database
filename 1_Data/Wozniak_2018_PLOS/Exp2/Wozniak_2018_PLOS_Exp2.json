@@ -1,29 +1,43 @@
 {
   "exp2": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "/",
       "Setting": "/",
-      "Modality": "Visual",
-      "Fixation size": "0.6° x 0.6°",
-      "Shape size": "/",
-      "Label size": "Width between 2° and 4.4°",
-      "Stimulus order": "Label first",
-      "Shape-label interval": "1500ms",
-      "Stimulus color": "White",
-      "Background color": "Black",
-      "Equipment for presenting": "PC computer",
-      "Monitor properties": "24'' widescreen LED monitor",
-      "Software for experiment": "E-Prime 2.0",
-      "Viewing distance": "/",
-      "Fixation presentation duration": "800ms",
-      "Stimulus presentation duration": "Face: 200ms; Label: until response (max 3000ms)",
-      "Response deadline": "200-1600ms (acceptance window)",
+      "Equipment": {
+        "Presenting": "PC computer",
+        "Monitor": "24'' widescreen LED monitor",
+        "Software": "E-Prime 2.0"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "/",
+      "Block_number": "4 blocks",
+      "Trial_number": "84 trials per block"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Label first",
+      "SOA": "1500ms",
+      "Fixation_duration": "800ms",
+      "Stimulus_duration": "Face: 200ms; Label: until response (max 3000ms)",
+      "Response_deadline": "200-1600ms (acceptance window)",
       "ITI": "Randomly varied between 800ms and 1800ms",
-      "Feedback duration": "200ms",
-      "Number of practice trials": "/",
-      "Block number": "4 blocks",
-      "Trial Number": "84 trials per block"
+      "Feedback_duration": "200ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.6° x 0.6°",
+      "Shape": "/",
+      "Label": "Width between 2° and 4.4°",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Black"
+      }
     },
     "detail": ""
   }

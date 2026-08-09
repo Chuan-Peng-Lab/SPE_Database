@@ -1,29 +1,43 @@
 {
   "exp3": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Tsinghua University",
       "Setting": "Laboratory",
-      "Modality": "Visual",
-      "Fixation size": "0.58° × 0.58°",
-      "Shape size": "Large: ~7°×7°; Small: ~3°×3°",
-      "Label size": "~3°×1.5°",
-      "Stimulus order": "Shape first",
-      "Shape-label interval": "200 ms",
-      "Stimulus color": "White",
-      "Background color": "Dark gray",
-      "Equipment for presenting": "PC",
-      "Monitor properties": "21-inch monitor (1,024 × 768 at 60 Hz)",
-      "Software for experiment": "E-Prime (Version 1.1)",
-      "Viewing distance": "/",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "Shape: 100 ms; Label: 100 ms",
-      "Response deadline": "1,000-1,300 ms (variable)",
+      "Equipment": {
+        "Presenting": "PC",
+        "Monitor": "21-inch monitor (1,024 × 768 at 60 Hz)",
+        "Software": "E-Prime (Version 1.1)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "18 trials",
+      "Block_number": "6 blocks",
+      "Trial_number": "360 trials (6 blocks × 60 trials)"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Shape first",
+      "SOA": "200 ms",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "Shape: 100 ms; Label: 100 ms",
+      "Response_deadline": "1,000-1,300 ms (variable)",
       "ITI": "/",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "18 trials",
-      "Block number": "6 blocks",
-      "Trial Number": "360 trials (6 blocks × 60 trials)"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.58° × 0.58°",
+      "Shape": "Large: ~7°×7°; Small: ~3°×3°",
+      "Label": "~3°×1.5°",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Dark gray"
+      }
     },
     "detail": ""
   }

@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "August 2021",
+    "schema_version": "2",
+    "Collected_date": "August 2021",
+    "Physical_Environment": {
       "Location": "Online (UK residents)",
       "Setting": "Online (participants' own devices)",
-      "Modality": "Visual",
-      "Fixation size": "/",
-      "Shape size": "Not applicable",
-      "Label size": "/",
-      "Stimulus order": "Face first, then label",
-      "Shape-label interval": "1000 ms",
-      "Stimulus color": "/",
-      "Background color": "/",
-      "Equipment for presenting": "Participants' own laptops/desktop computers",
-      "Monitor properties": "/",
-      "Software for experiment": "Gorilla Experiment Builder",
-      "Viewing distance": "/",
-      "Fixation presentation duration": "400 ms",
-      "Stimulus presentation duration": "Face: 800 ms; Label: until response",
-      "Response deadline": "/",
+      "Equipment": {
+        "Presenting": "Participants' own laptops/desktop computers",
+        "Monitor": "/",
+        "Software": "Gorilla Experiment Builder"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "Practice trial administered (exact number not specified)",
+      "Block_number": "/",
+      "Trial_number": "64 trials total"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Face first, then label",
+      "SOA": "1000 ms",
+      "Fixation_duration": "400 ms",
+      "Stimulus_duration": "Face: 800 ms; Label: until response",
+      "Response_deadline": "/",
       "ITI": "/",
-      "Feedback duration": "/",
-      "Number of practice trials": "Practice trial administered (exact number not specified)",
-      "Block number": "/",
-      "Trial Number": "64 trials total"
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "Not applicable",
+      "Label": "/",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
     },
     "detail": ""
   }

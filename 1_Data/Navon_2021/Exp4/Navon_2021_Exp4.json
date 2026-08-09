@@ -1,29 +1,43 @@
 {
   "exp4": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Not mentioned (Ethics approval from Open University of Israel)",
       "Setting": "Laboratory setting (implied)",
-      "Modality": "Visual",
-      "Fixation size": "0.8° × 0.8°",
-      "Shape size": "Approximately 3.0° × 3.0°",
-      "Label size": "1.5°-2.0° × 1.0°",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "White",
-      "Background color": "Gray",
-      "Equipment for presenting": "Computer setup",
-      "Monitor properties": "23.5\" monitor (1920 × 1080, 60 Hz)",
-      "Software for experiment": "E-prime software (version 2.0)",
-      "Viewing distance": "Approximately 60 cm",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "Until response",
-      "Response deadline": "None",
+      "Equipment": {
+        "Presenting": "Computer setup",
+        "Monitor": "23.5\" monitor (1920 × 1080, 60 Hz)",
+        "Software": "E-prime software (version 2.0)"
+      },
+      "Viewing_distance": "Approximately 60 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "12 trials",
+      "Block_number": "1 practice block + 3 experimental blocks",
+      "Trial_number": "12 practice + 360 experimental trials"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "Until response",
+      "Response_deadline": "None",
       "ITI": "0 ms (no additional ITI following feedback)",
-      "Feedback duration": "Correct: 400 ms; Error: 1000 ms",
-      "Number of practice trials": "12 trials",
-      "Block number": "1 practice block + 3 experimental blocks",
-      "Trial Number": "12 practice + 360 experimental trials"
+      "Feedback_duration": "Correct: 400 ms; Error: 1000 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.8° × 0.8°",
+      "Shape": "Approximately 3.0° × 3.0°",
+      "Label": "1.5°-2.0° × 1.0°",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Gray"
+      }
     },
     "detail": ""
   }

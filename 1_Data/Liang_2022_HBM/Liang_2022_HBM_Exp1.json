@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "Department of Psychology, School of Social Sciences, Tsinghua University, Beijing, China",
       "Setting": "Laboratory setting",
-      "Modality": "Visual",
-      "Fixation size": "0.8° × 0.8° (white fixation cross)",
-      "Shape size": "3.8° × 3.8° (six geometric shapes)",
-      "Label size": "2.4° × 1.6° (words \"You\", \"Friend\", \"Stranger\")",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms (simultaneous presentation)",
-      "Stimulus color": "White",
-      "Background color": "Gray",
-      "Equipment for presenting": "PC",
-      "Monitor properties": "17-inch monitor (1,024 × 768 at 60 Hz)",
-      "Software for experiment": "E-prime software (Version 2.0)",
-      "Viewing distance": "57 cm",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "100 ms",
-      "Response deadline": "1,100-1,300 ms (variable blank screen response window)",
+      "Equipment": {
+        "Presenting": "PC",
+        "Monitor": "17-inch monitor (1,024 × 768 at 60 Hz)",
+        "Software": "E-prime software (Version 2.0)"
+      },
+      "Viewing_distance": "57 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "Criterion-based (six consecutive correct trials)",
+      "Block_number": "6 blocks",
+      "Trial_number": "60 trials per block (360 total trials)"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms",
+      "Response_deadline": "1,100-1,300 ms (variable blank screen response window)",
       "ITI": "/",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "Criterion-based (six consecutive correct trials)",
-      "Block number": "6 blocks",
-      "Trial Number": "60 trials per block (360 total trials)"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.8° × 0.8° (white fixation cross)",
+      "Shape": "3.8° × 3.8° (six geometric shapes)",
+      "Label": "2.4° × 1.6° (words \"You\", \"Friend\", \"Stranger\")",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Gray"
+      }
     },
     "detail": ""
   }

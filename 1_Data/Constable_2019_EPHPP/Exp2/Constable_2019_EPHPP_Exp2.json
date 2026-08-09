@@ -1,29 +1,43 @@
 {
   "exp2": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "/",
       "Setting": "/",
-      "Modality": "Visual",
-      "Fixation size": "1.4° × 1.4° VA",
-      "Shape size": "3.5° × 3.5° VA",
-      "Label size": "Height: 1.4° VA",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms (simultaneous presentation)",
-      "Stimulus color": "White",
-      "Background color": "Black",
-      "Equipment for presenting": "Computer running Windows 10",
-      "Monitor properties": "Spatial resolution of 1920 × 1080, refresh rate of 60 Hz",
-      "Software for experiment": "/",
-      "Viewing distance": "57 cm",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "233 ms",
-      "Response deadline": "1500 ms after stimulus offset",
+      "Equipment": {
+        "Presenting": "Computer running Windows 10",
+        "Monitor": "Spatial resolution of 1920 × 1080, refresh rate of 60 Hz",
+        "Software": "/"
+      },
+      "Viewing_distance": "57 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "20",
+      "Block_number": "3 blocks",
+      "Trial_number": "96 trials per block (288 total)"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "233 ms",
+      "Response_deadline": "1500 ms after stimulus offset",
       "ITI": "500-800 ms (variable)",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "20",
-      "Block number": "3 blocks",
-      "Trial Number": "96 trials per block (288 total)"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "1.4° × 1.4° VA",
+      "Shape": "3.5° × 3.5° VA",
+      "Label": "Height: 1.4° VA",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Black"
+      }
     },
     "detail": ""
   }

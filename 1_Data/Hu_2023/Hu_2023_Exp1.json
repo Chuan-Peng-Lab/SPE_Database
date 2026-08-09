@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "2014-04",
+    "schema_version": "2",
+    "Collected_date": "2014-04",
+    "Physical_Environment": {
       "Location": "Beijing (Tsinghua University)",
       "Setting": "Individual testing in dim-lighted chamber",
-      "Modality": "Visual perceptual matching task",
-      "Fixation size": "0.8° × 0.8°",
-      "Shape size": "3.7° × 3.7°",
-      "Label size": "3.6° × 1.6°",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "/",
-      "Background color": "/",
-      "Equipment for presenting": "CRT monitors",
-      "Monitor properties": "22-inch",
-      "Software for experiment": "E-prime 2.0",
-      "Viewing distance": "60 cm (with chin brace)",
-      "Fixation presentation duration": "/",
-      "Stimulus presentation duration": "/",
-      "Response deadline": "/",
+      "Equipment": {
+        "Presenting": "CRT monitors",
+        "Monitor": "22-inch",
+        "Software": "E-prime 2.0"
+      },
+      "Viewing_distance": "60 cm (with chin brace)"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "Until ≥60% accuracy reached",
+      "Block_number": "/",
+      "Trial_number": "180"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms",
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "Response_deadline": "/",
       "ITI": "/",
-      "Feedback duration": "/",
-      "Number of practice trials": "Until ≥60% accuracy reached",
-      "Block number": "/",
-      "Trial Number": "180"
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual perceptual matching task",
+      "Fixation": "0.8° × 0.8°",
+      "Shape": "3.7° × 3.7°",
+      "Label": "3.6° × 1.6°",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
     },
     "detail": ""
   }

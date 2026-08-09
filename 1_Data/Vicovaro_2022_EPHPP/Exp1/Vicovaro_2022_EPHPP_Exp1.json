@@ -1,29 +1,43 @@
 {
   "exp1": {
-    "table": {
-      "Collected Date": "/",
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
       "Location": "/",
       "Setting": "Dimly lit room",
-      "Modality": "Visual",
-      "Fixation size": "/",
-      "Shape size": "10-cm circular area (~10° visual angle), dots diameter = 0.4 cm (~0.4°)",
-      "Label size": "Height 0.5 cm (Arial font)",
-      "Stimulus order": "Simultaneously",
-      "Shape-label interval": "0 ms",
-      "Stimulus color": "White dots, black labels",
-      "Background color": "Grey",
-      "Equipment for presenting": "Computer",
-      "Monitor properties": "15.5'' screen",
-      "Software for experiment": "PsychoPy3",
-      "Viewing distance": "About 57 cm",
-      "Fixation presentation duration": "500 ms",
-      "Stimulus presentation duration": "100 ms",
-      "Response deadline": "1500 ms",
+      "Equipment": {
+        "Presenting": "Computer",
+        "Monitor": "15.5'' screen",
+        "Software": "PsychoPy3"
+      },
+      "Viewing_distance": "About 57 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "/"
+    },
+    "Block_Structure": {
+      "Practice_trials": "24 per block",
+      "Block_number": "2 blocks",
+      "Trial_number": "240 trials per block"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "0 ms",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms",
+      "Response_deadline": "1500 ms",
       "ITI": "/",
-      "Feedback duration": "500 ms",
-      "Number of practice trials": "24 per block",
-      "Block number": "2 blocks",
-      "Trial Number": "240 trials per block"
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "10-cm circular area (~10° visual angle), dots diameter = 0.4 cm (~0.4°)",
+      "Label": "Height 0.5 cm (Arial font)",
+      "Colors": {
+        "Stimulus": "White dots, black labels",
+        "Background": "Grey"
+      }
     },
     "detail": ""
   }
