@@ -123,3 +123,9 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 - Root-level `._*` files and `Contact*.xlsx` are gitignored; study folders
   `Smith_2024_Cortex/`, `Lee_2023_Cognition/`, etc. are also gitignored at repo root
   (only their `1_Data/...` paths are tracked).
+
+## TODO / planned work
+
+- Add detailed instruction about `Codebook_*` files for each dataset (what each
+  `Codebook_<Study>_ExpN_Clean.xlsx` must document — variable definitions, valid
+  values, units, missing-data codes, cleaning decisions).
