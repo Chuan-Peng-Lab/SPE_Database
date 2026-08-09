@@ -104,11 +104,14 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   `Wozniak_2020_PLOS` (DOI `10.1371/journal.pone.0235627`, OSF `osf.io/2q9w7`) but no
   `1_Data/Wozniak_2020_PLOS/` folder exists — expected, data not yet curated.
   Paper = Woźniak & Hohwy, PLOS ONE, 2020.
-- **Year inconsistencies (deferred, need human verification)**: `Kirk_2025_BJP.json` uses a
-  nonstandard nested schema (`Paper_ID > KIRK_2024_BJP`) with `Year: 2024` (online-first;
-  folder 2025 = print year, correct per Crossref); `Navon_2021.json` has `Year: 2023` vs
-  folder `2021` and empty `DOI`/`Author`/`Journal`. Both are flagged by
-  `2_Code/validate_json_metadata.R`.
+- **Kirk JSON schema quirk (not an error)**: `Kirk_2025_BJP.json` is the only paper-level
+  JSON using a nonstandard nested schema (`Paper_ID > KIRK_2025_BJP` with embedded
+  experiment details) instead of flat fields. `Year: 2025` is the official print year
+  (2024 was online-first). `validate_json_metadata.R` reads `Year` recursively to
+  accommodate it.
+- **Navon preprint (not an error)**: `Navon_2021.json` describes an unpublished preprint —
+  `DOI`/`Journal` intentionally empty, `Year: 2021`. Note: `Dataset_inf.xlsx` still lists it
+  under Acta Psychologica (outdated); do not "fix" the metadata as if it were published.
 - **Preprocessing is NOT complete**: cleaning is filtering, not full preprocessing —
   `ACC` may include invalid values (e.g., `-1` no response, `2` incorrect key).
   Users must preprocess per their own analysis goals.
