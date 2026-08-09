@@ -98,13 +98,17 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 - **4 studies lack codebooks** (no `Codebook_*_Clean.xlsx`): `Lee_2023_Cognition`,
   `Orellana-Corrales_2021_APP`, `Smith_2024_Cortex`, `Svensson_2023_QJEP`
   (also have no `*_raw_Subject.csv`).
-- **Year-drift in JSON metadata**: `Liang_2022_HBM/` contains `Liang_2021_HBM.json`;
-  `Zhang_2023_NI/` contains `Zhang_2022_NI.json`.
-- **Diacritic inconsistencies**: `Schäfer_2019_CP/` vs `Schaefer_...`; `Woźniak_*` vs
-  `Wozniak_*` in JSON filenames.
 - **Missing raw data**: `Sun_2025/` has `Sun_2025_Exp1_Clean.csv` (largest cleaned file,
   62 MB) but no `*_raw.csv`.
-- **Experiment-key mismatch**: `Hu_2023_Exp1.json` is keyed `exp2` inside.
+- **Pending study — no data folder yet (do NOT "fix")**: `Dataset_inf.xlsx` lists
+  `Wozniak_2020_PLOS` (DOI `10.1371/journal.pone.0235627`, OSF `osf.io/2q9w7`) but no
+  `1_Data/Wozniak_2020_PLOS/` folder exists — expected, data not yet curated.
+  Paper = Woźniak & Hohwy, PLOS ONE, 2020.
+- **Year inconsistencies (deferred, need human verification)**: `Kirk_2025_BJP.json` uses a
+  nonstandard nested schema (`Paper_ID > KIRK_2024_BJP`) with `Year: 2024` (online-first;
+  folder 2025 = print year, correct per Crossref); `Navon_2021.json` has `Year: 2023` vs
+  folder `2021` and empty `DOI`/`Author`/`Journal`. Both are flagged by
+  `2_Code/validate_json_metadata.R`.
 - **Preprocessing is NOT complete**: cleaning is filtering, not full preprocessing —
   `ACC` may include invalid values (e.g., `-1` no response, `2` incorrect key).
   Users must preprocess per their own analysis goals.
