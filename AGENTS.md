@@ -72,7 +72,11 @@ Re-run the cleanup **before and after** any `git add` / `git commit` / `git stat
       MATLAB `.mat`, PsychoPy `.psydat`).
     - cleaned data: `*_ExpN_Clean.csv`.
     - metadata: `Codebook_*_Clean.xlsx` (variable codebooks, ~100 files),
-      study-level `.json` (paper metadata) and experiment-level `.json` (methodology).
+      study-level `.json` (paper metadata) and experiment-level `.json`
+      (methodology, v2 hierarchical schema: five components under `exp<N>`).
+  - `.opencode/skills/spe-database-curation/` — curation-conventions skill (folder
+    structure, file naming, JSON schemas, five-component task framework). Load via
+    `skill(name="spe-database-curation")` when adding/editing study metadata.
   - `2_Code/` — data cleaning tooling, three parallel implementations of the same
     standardization logic:
     - `Clean_Data.Rmd` (5053 lines) — master per-paper manual pipeline (authoritative).
