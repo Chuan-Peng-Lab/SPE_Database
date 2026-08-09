@@ -106,8 +106,7 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   Paper = Woźniak & Hohwy, PLOS ONE, 2020.
 - **Navon preprint (not an error)**: `Navon_2021.json` describes an unpublished preprint —
   `Journal` set to "Preprint", `DOI` 10.31234/osf.io/9dzm4 (PsyArXiv, Crossref-verified),
-  `Year: 2021`. Note: `Dataset_inf.xlsx` still lists it under Acta Psychologica (outdated);
-  do not "fix" the metadata as if it were published.
+  `Year: 2021`. `Dataset_inf.xlsx` updated to match (2026-08); do not treat as published.
 - **Preprocessing is NOT complete**: cleaning is filtering, not full preprocessing —
   `ACC` may include invalid values (e.g., `-1` no response, `2` incorrect key).
   Users must preprocess per their own analysis goals.
