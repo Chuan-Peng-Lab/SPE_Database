@@ -123,6 +123,21 @@ for (f in sort(json_files)) {
              rel, exp_suffix,
              if (length(keys) > 1) "s" else "", paste0("'", keys, "'", collapse = ", "),
              key_expected)
+
+    eo <- parsed[[key_expected]]
+    if (!is.list(eo)) next
+    if (!identical(eo$schema_version, "2"))
+      report("EXP SCHEMA VERSION: %s (expected '2', found %s)", rel,
+             if (is.null(eo$schema_version)) "<missing>" else paste0("'", eo$schema_version, "'"))
+    components <- c("Physical_Environment", "Experimental_Design", "Block_Structure",
+                    "Trial_Structure", "Stimulus_Properties")
+    missing <- setdiff(components, names(eo))
+    if (length(missing))
+      report("EXP MISSING COMPONENT: %s (%s)", rel, paste(missing, collapse = ", "))
+    allowed <- c(components, "schema_version", "Collected_date", "detail")
+    extra <- setdiff(names(eo), allowed)
+    if (length(extra))
+      report("EXP UNKNOWN KEY: %s (%s)", rel, paste(extra, collapse = ", "))
   }
 }
 
