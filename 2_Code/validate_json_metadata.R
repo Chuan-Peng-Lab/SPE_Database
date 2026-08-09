@@ -42,6 +42,17 @@ year_in <- function(x) {
   if (length(m)) m[[1]] else NA_character_
 }
 
+# Recursively find the first "Year" field (accommodates Kirk's nested schema)
+find_year <- function(x) {
+  if (!is.list(x)) return(NULL)
+  if ("Year" %in% names(x)) return(x[["Year"]])
+  for (nm in names(x)) {
+    y <- find_year(x[[nm]])
+    if (!is.null(y)) return(y)
+  }
+  NULL
+}
+
 violations <- character(0)
 report <- function(fmt, ...) violations <<- c(violations, sprintf(fmt, ...))
 
@@ -88,7 +99,7 @@ for (f in sort(json_files)) {
 
     yr_stem   <- year_in(stem)
     yr_folder <- year_in(study)
-    yr_field  <- parsed$Year
+    yr_field  <- find_year(parsed)
     yr_ok <- !is.null(yr_field) && length(yr_field) == 1L &&
              !is.na(yr_field) && nzchar(as.character(yr_field))
     if (!yr_ok) {
