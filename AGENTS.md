@@ -126,6 +126,4 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 
 ## TODO / planned work
 
-- Add detailed instruction about `Codebook_*` files for each dataset (what each
-  `Codebook_<Study>_ExpN_Clean.xlsx` must document — variable definitions, valid
-  values, units, missing-data codes, cleaning decisions).
+- Add detailed instruction about how to create `Codebook_*` files for each dataset  in the skill `spe-database-curation` (what each `Codebook_<Study>_ExpN_Clean.xlsx` must document — variable definitions, valid values, units, missing-data codes, cleaning decisions, and how to create such files from available data/information).
