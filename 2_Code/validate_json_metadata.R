@@ -11,6 +11,9 @@
 #   experiment-level: <Author>_<Year>_<Journal>_Exp<N>.json
 #                     - top-level JSON key == "exp<N>" (matches _Exp<N> suffix)
 #   all JSON filenames must be pure ASCII (no diacritics such as ä / ź)
+#   cross-check: 1_Data/Dataset_inf.csv File_Name column <-> study folders
+#                 (every folder must be indexed; every indexed File_Name must
+#                  have a folder, except known-pending studies -- see below)
 #
 # Usage:
 #   Rscript validate_json_metadata.R [path/to/1_Data]
@@ -30,7 +33,7 @@ if (length(args) >= 1) {
   file_args <- commandArgs(FALSE)
   flag <- grep("^--file=", file_args)
   script <- if (length(flag)) sub("^--file=", "", file_args[flag[1]]) else "validate_json_metadata.R"
-  data_dir <- normalizePath(file.path(dirname(script), "..", "1_Data"), mustWork = TRUE)
+  data_dir <- here::here("1_Data")
 }
 stopifnot(dir.exists(data_dir))
 
@@ -141,12 +144,67 @@ for (f in sort(json_files)) {
   }
 }
 
+# --- cross-check Dataset_inf.csv (File_Name) vs study folders -------------------
+# Dataset_inf.csv lives inside 1_Data/ and is the master inventory (mirror of
+# Dataset_inf.xlsx). Its File_Name column must agree with the actual study
+# folders: (a) every folder must be listed, and (b) every listed File_Name must
+# have a folder. Studies whose data have not been curated yet are allowed to be
+# listed without a folder; they are tracked here so they stay visible without
+# failing the check.
+dataset_inf <- file.path(data_dir, "Dataset_inf.csv")
+
+# Known-pending studies: listed in Dataset_inf.csv but data not yet curated
+# (documented in AGENTS.md). Add new pending entries here explicitly.
+known_pending <- c("Wozniak_2020_PLOS")
+
+folders <- list.dirs(data_dir, recursive = FALSE, full.names = FALSE)
+folders <- folders[!grepl("^\\._", folders)]  # drop AppleDouble sidecars
+folders <- sort(folders)
+
+if (!file.exists(dataset_inf)) {
+  report("DATASET_INF MISSING: %s (expected master inventory next to 1_Data/)",
+         dataset_inf)
+} else {
+  inf <- tryCatch(
+    read.csv(dataset_inf, stringsAsFactors = FALSE, check.names = FALSE,
+             na.strings = c("", "NA")),
+    error = function(e) NULL)
+  if (is.null(inf)) {
+    report("DATASET_INF UNREADABLE: %s", dataset_inf)
+  } else if (!("File_Name" %in% names(inf))) {
+    report("DATASET_INF MISSING COLUMN: %s has no 'File_Name' column", dataset_inf)
+  } else {
+    listed <- unique(trimws(as.character(inf[["File_Name"]])))
+    listed <- listed[!is.na(listed) & nzchar(listed)]
+
+    # (a) folders with no matching row in Dataset_inf.csv
+    no_listing <- setdiff(folders, listed)
+    if (length(no_listing))
+      report("FOLDER NOT IN DATASET_INF: %s (no File_Name row in %s)",
+             paste(no_listing, collapse = ", "), basename(dataset_inf))
+
+    # (b) listed File_Name with no matching folder
+    no_folder <- setdiff(listed, folders)
+    pending   <- intersect(no_folder, known_pending)
+    if (length(pending))
+      cat(sprintf("  [INFO] %d known-pending study(ies) without folder yet (allowed): %s\n",
+                  length(pending), paste(pending, collapse = ", ")))
+    no_folder <- setdiff(no_folder, known_pending)
+    if (length(no_folder))
+      report("DATASET_INF FILE_NAME WITHOUT FOLDER: %s (missing folder in %s)",
+             paste(no_folder, collapse = ", "), data_dir)
+  }
+}
+
 # --- report -------------------------------------------------------------------
 cat(sprintf("Validated %d JSON files under %s\n", length(json_files), data_dir))
+if (file.exists(dataset_inf))
+  cat(sprintf("Cross-checked %d study folder(s) against %s\n",
+              length(folders), basename(dataset_inf)))
 if (length(violations)) {
   cat("\n", length(violations), " violation(s) found:\n", sep = "")
   for (v in violations) cat("  [FAIL] ", v, "\n", sep = "")
   quit(status = 1)
 }
-cat("All JSON metadata files conform to the naming conventions.\n")
+cat("All JSON metadata files and Dataset_inf.csv conform to the conventions.\n")
 quit(status = 0)
