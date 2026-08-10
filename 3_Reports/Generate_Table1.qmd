@@ -1,0 +1,294 @@
+---
+title: "Generate Table 1 (SPE Database)"
+author: "SPE Database"
+date: today
+format:
+  docx:
+    reference-doc: ref_docx_landscape.docx
+editor: source
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(jsonlite)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(knitr)
+library(kableExtra)
+```
+
+# 目的
+
+本文件按照「逻辑 flow：`1_Data/*` 文件夹 → `Dataset_inf.csv` → Table 1」重新生成稿件中的 Table 1。
+
+- **数据范围**：仅包含在 `1_Data/` 下真实存在文件夹的 34 个研究（58 个实验），剔除 9 个尚未收录的条目。
+- **表头**：与当前稿件 `3_Reports/SPE_database_manu_v16.docx` 中 Table 1 完全一致（11 列）。
+- **输出**：渲染为 docx（APA 格式表格），并与稿件 Table 1 自动比对，输出问题清单。
+
+```{r read-data}
+# ============================================================
+# 1) 读取 Dataset_inf.csv（UTF-8 BOM）
+# ============================================================
+data_dir  <- file.path("..", "1_Data")
+inf_csv   <- file.path(data_dir, "Dataset_inf.csv")
+inf <- read.csv(inf_csv, stringsAsFactors = FALSE, check.names = FALSE,
+                na.strings = c("", "NA"))
+stopifnot("Folder_Name" %in% names(inf), "Paper_ID" %in% names(inf))
+
+# ============================================================
+# 2) 1_Data/ 下真实存在的文件夹
+# ============================================================
+folders <- list.dirs(data_dir, recursive = FALSE, full.names = FALSE)
+folders <- sort(folders[!grepl("^\\._", folders)])
+
+# ============================================================
+# 3) 过滤：仅保留有文件夹的研究（逻辑 flow 第一步）
+# ============================================================
+keep <- inf$Folder_Name %in% folders
+cat("1_Data/ 文件夹数:", length(folders), "\n")
+cat("Dataset_inf.csv 行数:", nrow(inf), "\n")
+cat("保留（有文件夹）行数:", sum(keep), " 剔除行数:", sum(!keep), "\n")
+dropped <- unique(inf$Folder_Name[!keep])
+cat("剔除的 Folder_Name:", paste(dropped, collapse = ", "), "\n")
+d <- inf[keep, ]
+
+# ============================================================
+# 4) Exp_Implement：从实验 JSON 的 Physical_Environment.Setting 推断
+#    Online → "Online Experiment"; Laboratory → "Lab Experiment";
+#    两者皆有 → "Mixed (Lab + Online)"; 缺失/未知("/") → NA
+# ============================================================
+exp_impl <- function(folder) {
+  jsons <- list.files(file.path(data_dir, folder), pattern = "_Exp[0-9]+[.]json$",
+                      recursive = TRUE, full.names = TRUE)
+  jsons <- jsons[!grepl("/[.]_", jsons)]
+  if (!length(jsons)) return(NA_character_)
+  settings <- character(0)
+  for (j in jsons) {
+    p <- tryCatch(fromJSON(j, simplifyVector = FALSE), error = function(e) NULL)
+    if (is.null(p)) next
+    key <- names(p)[1]
+    pe  <- p[[key]]$Physical_Environment
+    s   <- if (!is.null(pe) && !is.null(pe$Setting)) as.character(pe$Setting) else ""
+    s   <- trimws(s)
+    if (!is.na(s) && nzchar(s) && s != "/") settings <- c(settings, tolower(s))
+  }
+  txt <- paste(settings, collapse = " ")
+  has_online <- grepl("online", txt)
+  has_lab    <- grepl("laborat|lab ", txt) || grepl("quiet room|chamber|in-person|testing room", txt)
+  if (has_online && has_lab) return("Mixed (Lab + Online)")
+  if (has_online) return("Online Experiment")
+  if (has_lab)    return("Lab Experiment")
+  NA_character_
+}
+d$Exp_Implement <- vapply(d$Folder_Name, exp_impl, character(1))
+
+# ============================================================
+# 5) Study 标签：FirstAuthor + (Year)
+# ============================================================
+d$Study <- ifelse(
+  !is.na(d$FirstAuthor) & nzchar(d$FirstAuthor) & !is.na(d$Year) & nzchar(d$Year),
+  paste0(d$FirstAuthor, " (", d$Year, ")"),
+  d$Folder_Name
+)
+
+# ============================================================
+# 6) N (M/F) 格式化
+#    CSV 中 Male/Female 可能是 "missing"/""，视为缺失 → 显示 "—"
+# ============================================================
+is_miss <- function(x) is.na(x) | !nzchar(trimws(x)) | tolower(trimws(x)) == "missing"
+has_mf  <- !is_miss(d$Male) & !is_miss(d$Female)
+d$`N (M/F)` <- ifelse(
+  !is_miss(d$Sample_Size),
+  ifelse(has_mf,
+         paste0(d$Sample_Size, " (", d$Male, "/", d$Female, ")"),
+         as.character(d$Sample_Size)),
+  "—"
+)
+
+# ============================================================
+# 7) 组装 Table 1（表头与稿件完全一致：11 列）
+# ============================================================
+tbl1 <- data.frame(
+  Num          = seq_len(nrow(d)),
+  ID           = d$Paper_ID,
+  Study        = d$Study,
+  Exp          = ifelse(is.na(d$Exp) | !nzchar(d$Exp), "", paste0("Exp", d$Exp)),
+  Country      = d$Country,
+  Language     = d$Stim_language,
+  `N (M/F)`    = d$`N (M/F)`,
+  Stimulus     = d$Stim_Type,
+  Trials       = d$numTrials,
+  License      = d$License,
+  Exp_Implement = d$Exp_Implement,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+)
+```
+
+## Table 1 数据预览（前 10 行）
+
+```{r preview}
+knitr::kable(head(tbl1, 10), format = "pipe")
+```
+
+## 生成 APA 格式 Table 1
+
+```{r apa-table}
+# APA 7 格式：三线表（顶线/表头下线/底线）、无竖线
+# docx 输出：以 markdown 管道表渲染，pandoc 转换为 Word 表格
+apa_tbl <- kbl(tbl1, format = "pipe", booktabs = TRUE,
+               caption = "Studies Included in the Database and Key Experimental Characteristics",
+               align = c("c", "l", "l", "c", "l", "l", "c", "l", "c", "l", "l"))
+apa_tbl
+```
+
+## 与稿件 docx Table 1 自动比对
+
+```{r compare}
+# ============================================================
+# 读取稿件 docx 中的 Table 1
+# ============================================================
+manu_docx <- file.path("..", "3_Reports", "SPE_database_manu_v16.docx")
+
+# 用 officer 提取 docx 中所有表格单元格（按 table_index 分组，取最大表格）
+extract_docx_tables <- function(docx_path) {
+  doc <- officer::read_docx(docx_path)
+  tt  <- officer::docx_summary(doc)
+  tt  <- tt[tt$content_type %in% c("table cell"), ]
+  split(tt, tt$table_index)
+}
+docx_tbls <- extract_docx_tables(manu_docx)
+n_cells <- sapply(docx_tbls, nrow)
+t1 <- docx_tbls[[which.max(n_cells)]]
+
+# 按 (row_id, cell_id) 还原表格网格
+t1_wide <- t1 %>%
+  group_by(row_id) %>%
+  arrange(cell_id, .by_group = TRUE) %>%
+  summarise(cells = paste(text, collapse = "\t"), .groups = "drop")
+manu_header <- unlist(strsplit(t1_wide$cells[1], "\t"))
+cat("稿件 Table 1 表头:", paste(manu_header, collapse = " | "), "\n")
+cat("稿件 Table 1 数据行数:", nrow(t1_wide) - 1, "\n")
+
+# 逐行解析稿件 Table 1（宽表）
+manu_t1 <- t1 %>%
+  select(row_id, cell_id, text) %>%
+  pivot_wider(names_from = cell_id, values_from = text) %>%
+  filter(row_id > 1)
+cat("解析稿件 Table 1 数据行数:", nrow(manu_t1), "\n")
+```
+
+### 比对结果
+
+```{r compare-details}
+# 以 ID（Paper_ID）为关联键比对
+# 注意：pivot_wider 后列名为 row_id, "1".."11"（cell_id），"2" 为 ID 列
+manu_ids <- manu_t1[["2"]]
+new_ids  <- tbl1$ID
+
+problems <- character(0)
+add_p <- function(...) problems <<- c(problems, sprintf(...))
+
+# --- 行数差异 ---
+add_p("行数：qmd 生成 %d 行，稿件 Table 1 为 %d 行", nrow(tbl1), nrow(manu_t1))
+
+# --- 仅存在于稿件（qmd 未生成）---
+only_manu <- setdiff(manu_ids, new_ids)
+if (length(only_manu)) {
+  # 按 Folder_Name 分组：ID + 对应文件夹
+  fn_of <- function(ids) {
+    inf$Folder_Name[match(ids, inf$Paper_ID)]
+  }
+  g <- split(only_manu, fn_of(only_manu))
+  desc <- sapply(g, function(ids)
+    sprintf("%s（%s）", paste(ids, collapse = ", "),
+            paste(unique(fn_of(ids)), collapse = "/")))
+  add_p("稿件有但 qmd 未生成（%d 个，因对应文件夹不存在）：%s",
+        length(only_manu), paste(desc, collapse = "；"))
+}
+
+# --- 仅存在于 qmd ---
+only_new <- setdiff(new_ids, manu_ids)
+if (length(only_new))
+  add_p("qmd 生成但稿件没有（%d 个）：%s", length(only_new),
+        paste(only_new, collapse = ", "))
+
+# --- 逐行逐列比对 ---
+common <- intersect(manu_ids, new_ids)
+manu_row <- function(id) manu_t1[manu_t1$`2` == id, ]
+new_row  <- function(id) tbl1[tbl1$ID == id, ]
+
+for (id in common) {
+  m <- manu_row(id); n <- new_row(id)
+  # Exp
+  mexp <- as.character(m$`4`); nexp <- as.character(n$Exp)
+  if (!is.na(mexp) && nzchar(mexp) && !identical(mexp, nexp))
+    add_p("%s：Exp 不一致（稿件 %s vs qmd %s）", id, mexp, nexp)
+  # Country
+  mct <- as.character(m$`5`); nct <- as.character(n$Country)
+  if (!is.na(mct) && nzchar(mct) && !identical(mct, nct))
+    add_p("%s：Country 不一致（稿件 %s vs qmd %s）", id, mct, nct)
+  # Language
+  mlg <- as.character(m$`6`); nlg <- as.character(n$Language)
+  if (!is.na(mlg) && nzchar(mlg) && !identical(mlg, nlg))
+    add_p("%s：Language 不一致（稿件 %s vs qmd %s）", id, mlg, nlg)
+  # N (M/F)
+  mn <- as.character(m$`7`); nn <- as.character(n$`N (M/F)`)
+  if (!is.na(mn) && nzchar(mn) && !identical(mn, nn))
+    add_p("%s：N 不一致（稿件 %s vs qmd %s）", id, mn, nn)
+  # Stimulus
+  ms <- as.character(m$`8`); ns <- as.character(n$Stimulus)
+  if (!is.na(ms) && nzchar(ms) && !identical(ms, ns))
+    add_p("%s：Stimulus 不一致（稿件 %s vs qmd %s）", id, ms, ns)
+  # Trials
+  mt <- as.character(m$`9`); nt <- as.character(n$Trials)
+  if (!is.na(mt) && nzchar(mt) && !identical(mt, nt))
+    add_p("%s：Trials 不一致（稿件 %s vs qmd %s）", id, mt, nt)
+  # License（稿件 "Not specified" 与 qmd 缺失(NA) 视为一致；"CC0" 与 "CC0 1.0 Universal" 视为一致）
+  mlc <- as.character(m$`10`); nlc <- as.character(n$License)
+  lic_missing <- is.na(nlc) || !nzchar(trimws(nlc))
+  lic_unspec  <- !is.na(mlc) && tolower(trimws(mlc)) == "not specified"
+  lic_cc0_eq  <- !is.na(mlc) && !is.na(nlc) &&
+                 grepl("^cc0", tolower(trimws(mlc))) && grepl("^cc0", tolower(trimws(nlc)))
+  if (!is.na(mlc) && nzchar(mlc) && !(lic_unspec && lic_missing) &&
+      !lic_cc0_eq && !identical(mlc, nlc))
+    add_p("%s：License 不一致（稿件 %s vs qmd %s）", id, mlc, nlc)
+  # Exp_Implement
+  mi <- as.character(m$`11`); ni <- as.character(n$Exp_Implement)
+  if (!is.na(mi) && nzchar(mi) && !identical(mi, ni))
+    add_p("%s：Exp_Implement 不一致（稿件 %s vs qmd %s）", id, mi, ni)
+}
+
+# 写入问题清单供最终展示
+writeLines(problems, file.path("..", "3_Reports", "Output", "table1_problems.txt"))
+```
+
+### 需要解决的问题（每点 1 个问题）
+
+```{r problems-list}
+probs <- readLines(file.path("..", "3_Reports", "Output", "table1_problems.txt"))
+if (length(probs)) {
+  # 以文字段落形式输出：每点一行
+  for (i in seq_along(probs)) cat(sprintf("%d. %s\n\n", i, probs[i]))
+} else {
+  cat("未发现问题：qmd 生成的 Table 1 与稿件完全一致。\n")
+}
+```
+
+\newpage
+
+## 渲染说明
+
+- 本 qmd 需在 **RStudio**（自带 quarto）中渲染，或使用：
+  `/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render Generate_Table1.qmd --to docx`
+- 输出：`Table1_generated.docx`（APA 格式表格，可直接复制进稿件）。
+- 比对的问题清单同时写入 `3_Reports/Output/table1_problems.txt`。
+- **已知限制**：
+  - `Study` 列由 `FirstAuthor + (Year)` 生成，稿件中个别行为文件夹名风格（如 `Wozniak_2022_PR`），比对时未逐字比较该列；
+  - `Trials` 列取 CSV `numTrials`，稿件中的 `Trials` 可能来自其他口径（如每个 block 试次数）；
+  - `Exp_Implement` 由 JSON `Setting` 推断，JSON 缺失时留空（`NA`），需合作者确认。

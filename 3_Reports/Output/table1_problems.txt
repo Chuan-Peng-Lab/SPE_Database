@@ -1,0 +1,112 @@
+行数：qmd 生成 58 行，稿件 Table 1 为 70 行
+稿件有但 qmd 未生成（12 个，因对应文件夹不存在）：P19E2, P19E1（Bukowski_2021_AP）；Pn4E2, Pn4E1（Golubickis_2021_AP）；Pt2E1（Hobbs_2023_PM）；P45E1（Mcivor_2020_EJN）；Pn14E1, Pn14E2, Pn14E3（Orellana-Corrales_2021_EP）；Pn16E2, Pn16E3, Pn16E1（Svensson_2021_PR）
+P5E2：Exp 不一致（稿件 Exp4 vs qmd Exp2）
+P5E2：Language 不一致（稿件 English vs qmd Hungarian）
+P5E2：N 不一致（稿件 40 (14/14) vs qmd 28 (6/22)）
+P5E2：Trials 不一致（稿件 80 vs qmd 96）
+P5E2：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+P5E3：Exp 不一致（稿件 Exp4 vs qmd Exp3）
+P5E3：Language 不一致（稿件 English vs qmd Hungarian）
+P5E3：N 不一致（稿件 40 (14/14) vs qmd 28 (8/14)）
+P5E3：Trials 不一致（稿件 80 vs qmd 96）
+P5E3：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+P5E4：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+P46E2：Exp 不一致（稿件 Exp4 vs qmd Exp2）
+P46E2：N 不一致（稿件 40 (14/14) vs qmd 56 (25/31)）
+P46E2：Stimulus 不一致（稿件 geometric shape vs qmd grey scale squares）
+P46E2：Trials 不一致（稿件 80 vs qmd NA）
+P5E1：Exp 不一致（稿件 Exp4 vs qmd Exp1）
+P5E1：Language 不一致（稿件 English vs qmd Hungarian）
+P5E1：N 不一致（稿件 40 (14/14) vs qmd 28 (12/16)）
+P5E1：Trials 不一致（稿件 80 vs qmd 96）
+P5E1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+P6E1：Language 不一致（稿件 English vs qmd Hungarian）
+P6E1：N 不一致（稿件 56 (25/31) vs qmd 92 (19/73)）
+P6E1：Stimulus 不一致（稿件 grey scale squares vs qmd geometric shape）
+P46E1：Exp 不一致（稿件 Exp2 vs qmd Exp1）
+P46E1：N 不一致（稿件 56 (25/31) vs qmd 56 (28/28)）
+Pu2E2：Language 不一致（稿件 Japanese vs qmd Italian）
+Ps2E1：N 不一致（稿件 23 (—) vs qmd 23）
+P34E1：N 不一致（稿件 31 (—) vs qmd 31 (17/14)）
+Pt18E1：N 不一致（稿件 20 (—) vs qmd 20 (12/8)）
+Pu4E2：N 不一致（稿件 126 (—) vs qmd 126）
+Pu4E2：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Pt28E1：N 不一致（稿件 70 vs qmd 70 (49/21)）
+Pu5E2：Exp 不一致（稿件 Exp2 vs qmd ）
+Pu5E2：N 不一致（稿件 65 (—) vs qmd 65）
+Pu5E2：Stimulus 不一致（稿件 geometric shape/ nm. vs qmd geometric shape）
+Pu5E2：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Pu5E1：Exp 不一致（稿件 Exp1 vs qmd ）
+Pu5E1：N 不一致（稿件 65 (—) vs qmd 57）
+Pu5E1：Stimulus 不一致（稿件 geometric shape/ nm. vs qmd geometric shape）
+Pu5E1：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Pt13E1：N 不一致（稿件 84 (—) vs qmd 84 (13/70)）
+Pu2E1：Language 不一致（稿件 Spanish vs qmd Japanese）
+Pu2E1：N 不一致（稿件 32 (5/27) vs qmd 40 (19/21)）
+Pu2E1：Stimulus 不一致（稿件 geometric shape vs qmd face）
+Pu2E1：Trials 不一致（稿件 240 vs qmd NA）
+Pn13E2：N 不一致（稿件 26 (9/18) vs qmd 27 (9/18)）
+Pn13E3：N 不一致（稿件 26 (9/18) vs qmd 27 (12/15)）
+Pn13E1：N 不一致（稿件 26 (9/18) vs qmd 13 (3/10)）
+Pu4E1：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Pu9E1：Exp 不一致（稿件 Exp1 vs qmd ）
+Pu9E1：N 不一致（稿件 36 (7/29) vs qmd 34 (9/25)）
+Pu9E1：Trials 不一致（稿件 240 vs qmd NA）
+Pu9E1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Pu9E2：Exp 不一致（稿件 Exp2 vs qmd ）
+Pu9E2：N 不一致（稿件 36 (7/29) vs qmd 34 (11/23)）
+Pu9E2：Trials 不一致（稿件 240 vs qmd NA）
+Pu9E2：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Pu8E1：Language 不一致（稿件 Chinese vs qmd NA）
+Pu8E1：N 不一致（稿件 40(—) vs qmd —）
+Pu8E1：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Pt7E1：N 不一致（稿件 328 (—) vs qmd 328）
+P51E1：N 不一致（稿件 26 (7/19) vs qmd 26 (10/16)）
+P51E1：Trials 不一致（稿件 100 vs qmd 144）
+P54E2：Exp 不一致（稿件 Exp2 vs qmd ）
+P54E2：N 不一致（稿件 35 (—) vs qmd 36）
+P54E2：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+P54E3：Exp 不一致（稿件 Exp3 vs qmd ）
+P54E3：N 不一致（稿件 35 (—) vs qmd 35）
+P54E3：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+P54E1：N 不一致（稿件 35 (—) vs qmd 32）
+P54E1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Pu3E1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Ps4E2：N 不一致（稿件 20 (—) vs qmd 21）
+Ps4E2：Stimulus 不一致（稿件 geometric shape vs qmd geometric shape and face）
+Ps4E2：Trials 不一致（稿件 60 vs qmd 40）
+Ps4E2：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Ps5E2：N 不一致（稿件 20 (—) vs qmd 18）
+Ps5E3：N 不一致（稿件 20 (—) vs qmd 22）
+Ps5E4：N 不一致（稿件 20 (—) vs qmd 20）
+Ps3E1：N 不一致（稿件 20 (—) vs qmd 24）
+Ps3E1：Trials 不一致（稿件 60 vs qmd 40）
+Ps3E1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Ps5E1：N 不一致（稿件 20 (—) vs qmd 24）
+Ps4E1：N 不一致（稿件 21 (—) vs qmd 20）
+Ps4E1：Stimulus 不一致（稿件 geometric shape and face vs qmd geometric shape）
+Ps4E1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Pu6E1：Exp 不一致（稿件 Exp1 vs qmd ）
+Pu6E1：N 不一致（稿件 506(—) vs qmd —）
+Pu6E1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Pu10E1：Exp 不一致（稿件 Exp1 vs qmd ）
+Pu10E1：Country 不一致（稿件 United Kingdom vs qmd UK）
+Pu10E1：N 不一致（稿件 25 (7/18) vs qmd 65 (20/45)）
+Pu10E1：Stimulus 不一致（稿件 geometric shape vs qmd NA）
+Pu10E1：Trials 不一致（稿件 400 vs qmd NA）
+Pu10E1：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Pt27E2：N 不一致（稿件 32 vs qmd 32 (5/27)）
+Pt6E2：Exp_Implement 不一致（稿件 Mixed (Lab + Online) vs qmd Online Experiment）
+Pt6E1：N 不一致（稿件 104 (14/90) vs qmd 30 (14/16)）
+Pt6E1：Exp_Implement 不一致（稿件 Mixed (Lab + Online) vs qmd Online Experiment）
+Pu1E1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Pt9E2：N 不一致（稿件 21 (—) vs qmd 21 (6/12)）
+Pt9E3：N 不一致（稿件 18 (—) vs qmd 18 (0/18)）
+P95E2：N 不一致（稿件 20 (—) vs qmd 20 (9/9)）
+P95E2：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+P95E1：N 不一致（稿件 20 (9/9) vs qmd 19 (9/9)）
+P95E1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Pt9E1：Country 不一致（稿件 Australia vs qmd NA）
+Pt9E1：N 不一致（稿件 18 (0/18) vs qmd 23 (7/11)）
+Pt10E1：Language 不一致（稿件 Chinese vs qmd English）
+Pt10E1：N 不一致（稿件 380 (—) vs qmd 380 (198/182)）
