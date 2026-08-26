@@ -4,6 +4,13 @@ mode: primary
 
 # AGENTS.md — SPE Database
 
+## 🔒 全局最高级规则（GLOBAL RULE — 优先级高于本文件一切其他规则）
+
+**Agent 永远不要自动执行 `git commit`**，也不要把「提交」当作会话收尾的默认步骤。
+只有用户在对话中**明确确认/指示提交**后，才允许执行 commit（例如用户直接说"提交"/"commit"/"可以提交"等）。
+以下情况**均不构成**确认：会话惯例、收尾清单、任务"完成"的推断、用户只说"修复/更新/插入/列出"等不含提交指令的话。
+**不要每次回复都询问是否提交**：提交事宜只在用户主动询问/指示时处理。任务完成正常汇报结果即可；若有未提交改动，简单提示一句"改动未提交"即可，不重复追问。用户询问提交时，agent 列出待提交文件与 commit message 草案，获得明确确认后再提交。
+
 ## ⚠️ CRITICAL: This project lives on a USB drive (exFAT)
 
 The entire repo is stored on an **exFAT-formatted USB drive** mounted at `/Volumes/T3`.
@@ -72,7 +79,7 @@ If corruption persists: `git gc --prune=now` — never delete real
 ### 会话收尾（强制）
 - 更新根目录 `PROJ_STATE.md`：目标、已完成（已验证）、关键决策、测试结果、已知问题、失败方案、下一步；只记已确认事实。
 - 若本会话沉淀了可复用的约定/流程，同步补充到 `spe-database-curation` 技能（SKILL.md）。
-- 提交前按「清理规则」删 AppleDouble 文件，按逻辑分组 commit（≤3 个）。
+- 如需提交：**必须先获得用户明确确认**（见文首「全局最高级规则」），确认后按「清理规则」删 AppleDouble 文件，再按逻辑分组 commit（≤3 个）。
 
 ## Project context
 
@@ -148,9 +155,9 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 
 - **4 studies lack codebooks AND paper-level JSONs** (no `Codebook_*_Clean.xlsx`,
   no `<Study>.json`): `Lee_2023_Cognition`, `Orellana-Corrales_2021_APP`,
-  `Smith_2024_Cortex`, `Svensson_2023_QJEP` (also have no `*_raw_Subject.csv`;
-  Orellana-Corrales_2021_APP holds only two `*_Clean.csv`, Svensson_2023_QJEP only
-  `*_Clean.csv` + `*_raw.csv`).
+  `Smith_2024_Cortex`, `Svensson_2023_QJEP` (`*_raw_Subject.csv` 已于 2026-08 补齐：
+  Lee/Smith/Svensson 由各自 `*_raw.csv` 生成；Orellana-Corrales_2021_APP 仍无任何原始数据，
+  仅 2 个 `*_Clean.csv`；Svensson_2023_QJEP 仍无任何 JSON)。
 - **Missing raw data**: `Sun_2026_DataExp/` has `Sun_2026_DataExp_Exp1_Clean.csv`
   (largest cleaned file, 62 MB) but no `*_raw.csv` and no experiment-level JSON
   (`Sun_2026_DataExp_Exp1.json` missing).
