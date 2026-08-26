@@ -36,7 +36,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - 1_Data/Dataset_inf.csv — 主索引；1_Data/<Study>_<Year>_<Suffix>/ ×34 — 研究数据
 - 2_Code/validate_json_metadata.R — 元数据校验器（含 9 个待入库白名单）
 - 3_Reports/Generate_Table1.qmd + Generate_Table1.docx + Output/table1_problems.txt — Table 1 再生成与比对（2026-08-27 重渲染：118 → 111 行问题）
-- 3_Reports/Table1_Issues_Solvability.md — Table 1 问题可解性分析（108 项逐项判定：可自动确定 ~68 / 需人工 ~39；2026-08 Ps4E2 已解决后更新，近似数以文档汇总表为准；与本文档双向关联）
+- 3_Reports/Table1_Issues_Solvability.md — Table 1 问题可解性分析（107 项逐项判定：可自动确定 ~68 / 需人工 ~39；近似数以文档汇总表为准；与本文档双向关联）
 - 3_Reports/Process_Data.Rmd — 下游分析（已改用 Folder_Name）
 - .opencode/skills/spe-database-curation/SKILL.md — 通用 curation 技能（自足独立；命名语法、JSON schema、Codebook 规范、DOI/年份核验）
 - AGENTS.md — agent 约定与已知 caveats（含 Document map）
@@ -66,14 +66,12 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - Smith_2024_Cortex：raw 数据仅 48 名被试（含剔除 1 个空 participant），与 CSV Sample_Size=59 / Valid_Subj=58 差约 10 名——raw 导出疑似不全，待人工核对。
 
 - CSV 遗留空白：Exp 空 1 行（Scheller_2026_elife，无 Paper_ID 无法按 E 后缀推导，待人工确认）、Country 空 9、City 空 13、Journal 空 4、Year 空 2（均为无同组源值或待人工确认的条目）；另有 License 空 8（Sui_2014_APP ×4、Pan、Sui_2014_unpub、Sui_2015_unpub ×2）、Stim_language 空 7（Kirk ×2、Scheller、Wang_2016、Wozniak_2020、Hu_2023_SDB、Pan）——2026-08 会话逐行核验补充。
-- 稿件 Table 1 与数据仍有多处差异：12 个 pending 行（无文件夹，待收录）；11 条 Exp 标注错误（P5E1–E3 均标 Exp4、P46E1/2、Kirk/Liang/Wozniak/Martinez-Perez 标 Exp1）；N/Trials/Language/Stimulus/Exp_Implement 不一致若干。问题清单见 table1_problems.txt（2026-08-27 重渲染，118→111 行）；逐项可解性判定（可自动确定 ~64 / 需人工 ~44）见 Table1_Issues_Solvability.md。
+- 稿件 Table 1 与数据仍有多处差异：12 个 pending 行（无文件夹，待收录）；11 条 Exp 标注错误（P5E1–E3 均标 Exp4、P46E1/2、Kirk/Liang/Wozniak/Martinez-Perez 标 Exp1）；N/Trials/Language/Stimulus/Exp_Implement 不一致若干。问题清单见 table1_problems.txt（2026-08-27 重渲染，118→111 行）；逐项可解性判定（107 项：可自动确定 ~68 / 需人工 ~39，已随已解决条目移出更新）见 Table1_Issues_Solvability.md。
 - Orellana-Corrales_2021_APP Exp2：Clean/subj_info 33 名被试 vs CSV Sample_Size 34 / Valid_Subj 31——N 口径待人工确认（稿件 36 亦不符）。
-- ~~Sui_2015_unpub Exp2 测试被试 subject 0~~ **（已解决 2026-08）**：原问题——Exp2 混入 1 名测试被试（`PractExperiment_2_Subject_3_Ses_1_.mat` 内部 num=0、初始 XX、性别 fm、年龄 0、按键映射反转），240 行以 Subject=0 混入 Clean。现处理：Clean 脚本（`Sui_2015_unpub_clean.R`）过滤 Subject != 0，Exp2_Clean.csv 9600→9360 行（subject 1-20，subject 3 仅剩 session 2，与稿件 Exp2=20 一致）；subj_info 已删 subject 0 行并将 subject 3 更正为 20/f（取自 Ses_2 记录 KB/f/20）；Dataset_inf.csv Exp2 Sample_Size/Valid_Subj 21→20。
-- ~~Sui_2015_unpub 的 ACC 编码 3/4 未在 codebook 中解释~~ **（已解决 2026-08）**：含义已核实并写入两个 codebook 的 ACC 行——1=正确、0=错误、**3=超时反应**（RT 全部 ≥1000 ms，probeDur=1 s；Exp1 141 行 / Exp2 81 行）、**4=无反应**（RT=0；Exp1 2 行 / Exp2 4 行）。数据按最小预处理约定保留原值。
 - Pan_2025_unpub：subj_info 的 Age 按 2025−出生年（raw `year` 列 2000–2005）推算、Education 为原始编码 5（含义未文档化）——待作者确认；CSV Sample_Size/Valid_Subj 已按 raw 40 名被试回填。
 - Kirk_2025_BritJPsy.json 嵌套 schema 例外（内部键 KIRK_2025_BJP 保留不动）。
 - Hu_2023_psyarxiv（PsyArXiv 预印本）与 Hu_2023_SDB（Science Data Bank）为两个独立条目，已确认分别保留。
-- 历史管线 Clean_Data.Rmd 内仍引用旧文件夹名（纯历史记录，未改）。
+- 历史管线 Clean_Data.Rmd 内仍引用旧文件夹名（纯历史记录，未改，部分可能在修订过程中进行了修改）。
 
 ## 失败方案（已弃用，勿重试）
 
@@ -93,16 +91,12 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 下一步任务
 
-1. （已完成 2026-08）补 CSV 空 Exp（按 Paper_ID 的 E 后缀回填 10 行；仅剩 Scheller_2026_elife 待人工确认）。
-2. 为 4 个缺 JSON 的研究补 paper 级 JSON（需从论文提取摘要/结论，先出草稿确认）。
-3. 创建 Sun_2026_DataExp_Exp1.json（v2 schema，未知项用 /）。
-4. 合作者确认后：删除 Dataset_inf.xlsx、移除 deprecated 的 Paper_ID/Paper 列并简化 qmd 过渡映射。
-5. 按 Table1_Issues_Solvability.md 的判定逐项修正稿件 Table 1：先修可自动确定项（~64 条，含 11 条 Exp 标注、N/Language/Trials/Country 等），再人工核实 ~44 条（按「论文原文 → 原始数据 → 合作者确认」）；问题清单随 Generate_Table1.qmd 重渲染刷新。
-6. 人工补全剩余 Country/City/Journal/Year/License/Stim_language 空白（含 Pan 的 Stim_language——稿件已给 Chinese；Pt9E1 Country=Hungary——paper JSON 已有）。
-7. 核实 Zhang_2023_NeuroImage 原始数据是否存于外部仓库（查 paper JSON 的 Repo_Link / OSF）；确认后补 raw.csv 或记录结论。
-8. 待人工确认 Smith_2024_Cortex 样本差异（raw 48 vs CSV Sample_Size 59 / Valid_Subj 58）。
-9. （已完成 2026-08）Martinez-Perez_2024_ConsciousCog：确认仅纳入 Exp2（Exp1 无 self-matching task），CSV 已修正并在 Note 记录；稿件 Table 1 的 Exp1 标注待同步改为 Exp2。
-10. （已完成 2026-08-27）核实 Pan_2025_unpub subj_info 仅 1 行异常——已由 raw.csv 重新生成 40 行（= 稿件 40），CSV Sample_Size/Valid_Subj 补 40；Age 推算口径待作者确认。
-11. 核实 Lee_2023_Cognition（subj_info 47/51 vs qmd 57/65）与 Kirk_2025_BritJPsy Exp2（subj_info 90 vs qmd/稿件 126）的 N 口径差异（可能含排除标准或 subj_info 生成规则差异）。
-12. 核实 Orellana-Corrales_2021_APP 的 N 口径：Exp2 Clean/subj_info 33 vs CSV Sample_Size 34 / Valid_Subj 31；Exp1 Clean 34 vs Valid_Subj 28（如有可能从 OSF 仓库 osf.io/g7wrc、osf.io/4cwrv 获取原始数据以补人口学）。
-13. （已完成 2026-08）Sui_2015_unpub Exp2 subject 0 处理：按「排除」执行——独立脚本 `1_Data/Sui_2015_unpub/Sui_2015_unpub_clean.R`（含 read.mat 与 subject 0 过滤）已生成，`Clean_Data.Rmd` 两段已同步（路径+过滤）；subj_info 删 subject 0 行（subject 3 更正 20/f）、CSV Exp2 21→20、codebook 补 ACC 3/4 说明（1=正确/0=错误/3=超时/4=无反应）；Exp2_Clean.csv 9600→9360 行（Exp1 不变）。
+1. 为 4 个缺 JSON 的研究补 paper 级 JSON（需从论文提取摘要/结论，先出草稿确认）。
+2. 创建 Sun_2026_DataExp_Exp1.json（v2 schema，未知项用 /）。
+3. 合作者确认后：删除 Dataset_inf.xlsx、移除 deprecated 的 Paper_ID/Paper 列并简化 qmd 过渡映射。
+4. 按 Table1_Issues_Solvability.md 的判定逐项修正稿件 Table 1：先修可自动确定项（~68 条，含 11 条 Exp 标注、N/Language/Trials/Country 等），再人工核实 ~39 条（按「论文原文 → 原始数据 → 合作者确认」）；问题清单随 Generate_Table1.qmd 重渲染刷新。
+5. 人工补全剩余 Country/City/Journal/Year/License/Stim_language 空白（含 Pan 的 Stim_language——稿件已给 Chinese；Pt9E1 Country=Hungary——paper JSON 已有）。
+6. 核实 Zhang_2023_NeuroImage 原始数据是否存于外部仓库（查 paper JSON 的 Repo_Link / OSF）；确认后补 raw.csv 或记录结论。
+7. 待人工确认 Smith_2024_Cortex 样本差异（raw 48 vs CSV Sample_Size 59 / Valid_Subj 58）。
+8. 核实 Lee_2023_Cognition（subj_info 47/51 vs qmd 57/65）与 Kirk_2025_BritJPsy Exp2（subj_info 90 vs qmd/稿件 126）的 N 口径差异（可能含排除标准或 subj_info 生成规则差异）。
+9. 核实 Orellana-Corrales_2021_APP 的 N 口径：Exp2 Clean/subj_info 33 vs CSV Sample_Size 34 / Valid_Subj 31；Exp1 Clean 34 vs Valid_Subj 28（如有可能从 OSF 仓库 osf.io/g7wrc、osf.io/4cwrv 获取原始数据以补人口学）。

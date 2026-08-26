@@ -78,7 +78,6 @@
 | Pu9E1 | 36 (7/29) | 34 (9/25) | **34** | subj_info=34（2026-08-27 由 Clean.csv 唯一 Subject 生成，无原始数据，人口学 /），**qmd 对**，稿件错 |
 | Pu9E2 | 36 (7/29) | 34 (11/23) | **33** | subj_info=33（Clean 生成），与 qmd 34 / 稿件 36 均不符，需人工确认（CSV Sample_Size=34 亦不符） |
 | Ps4E1 | 21 (—) | 20 | **20** | subj_info=20（由 *_Raw/ 人口学记录生成；80 个 .mat 全为正常被试），**qmd 对**，稿件 21 无数据支持 |
-| Ps4E2 | 20 (—) | 20 | **20 正常** | **已解决（2026-08）**：subject 0（测试运行，.mat 内部编号 0/默认人口学/按键反转）已从 Clean 排除（Exp2_Clean.csv 9600→9360 行），CSV Sample_Size/Valid_Subj 已 21→20，subj_info 已删 subject 0 行；稿件 20 与数据一致，清单余行为稿件 (—) 格式噪音 |
 | Pu8E1 | 40(—) | 40 | **40** | subj_info=40（2026-08-27 由 raw.csv 重新生成，替换原 1 行异常文件），**一致**（CSV Sample_Size/Valid_Subj 已补 40） |
 | Pu6E1 | 506(—) | — | **334** | subj_info=334（与 raw 一致），稿件 506 可能是全部样本，需人工确认 |
 | Pu10E1 | 25 (7/18) | 65 (20/45) | **65** | subj_info=65（Svensson Exp1，2026-08 补齐），**qmd 对，稿件错** |
@@ -161,10 +160,8 @@
 1. **12 个"稿件有但 qmd 未生成"的 ID**（Bukowski/Golubickis/Hobbs/Mcivor/Orellana-Corrales_2023_QJEP/Svensson_2022_PsychRes）— 对应 6 个文件夹不存在，需**收录数据**后解决
 2. **N 中 raw/subj_info 与稿件、CSV 三方均不符者**（P6E1=46, Pt13E1=102, Pt28E1=67, Pn13E3=28, P51E1=24, Pt9E2=18, P95E1/2=18, Pt10E1=347, Pt7E1=288, Pu6E1=334；2026-08 subj_info 补齐后新增：Pu5E1=47, Pu5E2=51, Pu4E2=90, Pu9E2=33）— 可能含排除标准/全部样本 vs 有效样本，需人工判定口径
 3. **subj_info 已全覆盖（2026-08-27）**：全库 56 个 `*_subj_info.csv`——Orellana-Corrales_2021_APP ×2 与 Sui_2015_unpub ×2 由 Clean.csv 唯一 Subject / `*_Raw/` 人口学记录生成（无原始数据，人口学部分为 /；见 PROJ_STATE.md「已完成」）
-4. **Pu8E1 (Pan_2025_unpub)**: 已解决（2026-08-27）——subj_info 由 raw.csv 重新生成（40 行 = 稿件 40）；CSV Sample_Size/Valid_Subj 已补 40；Age 按 2025−出生年推算，待作者确认
-5. **Stimulus/Language/Trials 中无 JSON 且 raw 无明确信息者** — 需查阅论文原文
-6. **Smith_2024_Cortex (Pu3E1)**: subj_info/raw 仅 48 名被试（含剔除 1 个空 participant），与 CSV Sample_Size=59 / Valid_Subj=58 差约 10 名——raw 导出疑似不全，待人工核对（见 PROJ_STATE.md 已知问题）
-7. ~~**Sui_2015_unpub Exp2 (Ps4E2)**~~ **（已解决 2026-08）**：subject 0 为测试运行（.mat 内部证据：编号 0、默认人口学 XX/fm/0、按键反转 [2,1]），已按排除处理——`Sui_2015_unpub_clean.R` 过滤 Subject != 0（Exp2_Clean.csv 9600→9360 行）、subj_info 删 subject 0 行（subject 3 更正 20/f）、CSV Sample_Size/Valid_Subj 21→20、`Clean_Data.Rmd` 两段同步（见 PROJ_STATE.md 已完成条目）
+4. **Stimulus/Language/Trials 中无 JSON 且 raw 无明确信息者** — 需查阅论文原文
+5. **Smith_2024_Cortex (Pu3E1)**: subj_info/raw 仅 48 名被试（含剔除 1 个空 participant），与 CSV Sample_Size=59 / Valid_Subj=58 差约 10 名——raw 导出疑似不全，待人工核对（见 PROJ_STATE.md 已知问题）
 
 ---
 
@@ -173,15 +170,15 @@
 | 类别 | 总数 | 可自动确定 | 需人工 |
 |---|---|---|---|
 | Exp 编号 | 11 | **11** | 0 |
-| N (被试数) | 43 | ~29 | ~13（Ps4E2 已解决） |
+| N (被试数) | 42 | ~29 | ~13 |
 | Language | 8 | **5** | 3 |
 | Stimulus | 8 | 2 | 6 |
 | Trials | 11 | 4 | 7 |
 | Country | 2 | **2** | 0 |
 | Exp_Implement | 25 | ~15 | ~10 |
-| **合计** | **108** | **~68** | **~39**（Ps4E2 已解决） |
+| **合计** | **107** | **~68** | **~39** |
 
-注：相较初稿（2026-08-10，110 项）：8 条「CSV Exp 空」类 Exp 不一致已因回填消解（不再计入），补入原清单已有但初稿未收录的 Kirk/Liang ×2/Wozniak ×2 共 5 条及新出现的 Martinez 1 条稿件 Exp 标注错误（净 −2）；N 类 9 条由「文件缺失/异常」升级为具体行数（Pu5E1=47、Pu5E2=51、Pu10E1=65、Pu4E2=90、Pu9E1=34、Pu9E2=33、Ps4E1=20、Ps4E2=21、Pu8E1=40），其中 4 条新增为可自动确定（Pu9E1、Ps4E1、Ps4E2、Pu8E1；Pu10E1 于上次复核已计入），合计维持 108 项（可自动 ~68 / 需人工 ~40）。（2026-08 增补：Sui_2015_unpub Exp2 N 已消解——CSV 21→20、Clean/subj_info 排除 subject 0，Ps4E2 判定由需人工转为已解决；其余条目不变）
+注：相较初稿（2026-08-10，110 项）：8 条「CSV Exp 空」类 Exp 不一致已因回填消解（不再计入），补入原清单已有但初稿未收录的 Kirk/Liang ×2/Wozniak ×2 共 5 条及新出现的 Martinez 1 条稿件 Exp 标注错误（净 −2）；N 类 9 条由「文件缺失/异常」升级为具体行数（Pu5E1=47、Pu5E2=51、Pu10E1=65、Pu4E2=90、Pu9E1=34、Pu9E2=33、Ps4E1=20、Ps4E2=21、Pu8E1=40），其中 4 条新增为可自动确定（Pu9E1、Ps4E1、Ps4E2、Pu8E1；Pu10E1 于上次复核已计入），合计 107 项（可自动 ~68 / 需人工 ~39；Sui_2015_unpub Exp2 N 已解决移出）。（2026-08 增补：Sui_2015_unpub Exp2 N 已解决并移出清单，条目 108→107）
 
 ---
 
