@@ -115,7 +115,7 @@ d$`N (M/F)` <- ifelse(
 # ============================================================
 tbl1 <- data.frame(
   Num          = seq_len(nrow(d)),
-  ID           = d$Paper_ID,
+  ID           = d$Folder_Name,  # Folder_Name = project-wide key ID (Paper_ID deprecated)
   Study        = d$Study,
   Exp          = ifelse(is.na(d$Exp) | !nzchar(d$Exp), "", paste0("Exp", d$Exp)),
   Country      = d$Country,
@@ -186,10 +186,27 @@ cat("解析稿件 Table 1 数据行数:", nrow(manu_t1), "\n")
 ### 比对结果
 
 ```{r compare-details}
-# 以 ID（Paper_ID）为关联键比对
-# 注意：pivot_wider 后列名为 row_id, "1".."11"（cell_id），"2" 为 ID 列
+# 比对键 = Dataset_inf.csv 行号（两侧均唯一、一一对应）。
+# 稿件侧：稿件 ID 列仍为旧 Paper_ID（P5E1 风格），经 CSV 过渡映射
+# （Paper_ID -> CSV 行号；Paper_ID 列已 deprecated，过渡期后从 CSV 移除）。
+# 注意：CSV 的 (Folder_Name, Exp) 组合存在重复（已知 Exp 编号问题，如
+# Kirk_2025_BJP / Liang_2022_HBM / Wozniak_2022_PR 各有多个 Exp=1 行），
+# 故不能以 (Folder_Name, Exp) 为键，统一改用 CSV 行号。
 manu_ids <- manu_t1[["2"]]
-new_ids  <- tbl1$ID
+manu_key <- function(id) {
+  idx <- match(id, inf$Paper_ID)
+  if (is.na(idx)) return(paste0("<unknown>|", id))   # 稿件 ID 不在 CSV：原样兜底
+  as.character(idx)                                  # CSV 行号
+}
+manu_keys <- vapply(manu_ids, manu_key, character(1))
+new_keys  <- as.character(which(keep))               # 保留行的 CSV 行号（与 d 行序一致）
+
+key_label <- function(k) {
+  if (grepl("^<unknown>", k)) return(k)
+  i <- as.integer(k)
+  sprintf("%s|Exp%s", inf$Folder_Name[i],
+          ifelse(is.na(inf$Exp[i]) | !nzchar(inf$Exp[i]), "?", inf$Exp[i]))
+}
 
 problems <- character(0)
 add_p <- function(...) problems <<- c(problems, sprintf(...))
@@ -198,57 +215,50 @@ add_p <- function(...) problems <<- c(problems, sprintf(...))
 add_p("行数：qmd 生成 %d 行，稿件 Table 1 为 %d 行", nrow(tbl1), nrow(manu_t1))
 
 # --- 仅存在于稿件（qmd 未生成）---
-only_manu <- setdiff(manu_ids, new_ids)
-if (length(only_manu)) {
-  # 按 Folder_Name 分组：ID + 对应文件夹
-  fn_of <- function(ids) {
-    inf$Folder_Name[match(ids, inf$Paper_ID)]
-  }
-  g <- split(only_manu, fn_of(only_manu))
-  desc <- sapply(g, function(ids)
-    sprintf("%s（%s）", paste(ids, collapse = ", "),
-            paste(unique(fn_of(ids)), collapse = "/")))
+only_manu <- unique(manu_keys[!manu_keys %in% new_keys])
+if (length(only_manu))
   add_p("稿件有但 qmd 未生成（%d 个，因对应文件夹不存在）：%s",
-        length(only_manu), paste(desc, collapse = "；"))
-}
+        length(only_manu), paste(vapply(only_manu, key_label, character(1)),
+                                 collapse = ", "))
 
 # --- 仅存在于 qmd ---
-only_new <- setdiff(new_ids, manu_ids)
+only_new <- setdiff(new_keys, manu_keys)
 if (length(only_new))
   add_p("qmd 生成但稿件没有（%d 个）：%s", length(only_new),
-        paste(only_new, collapse = ", "))
+        paste(vapply(only_new, key_label, character(1)), collapse = ", "))
 
 # --- 逐行逐列比对 ---
-common <- intersect(manu_ids, new_ids)
-manu_row <- function(id) manu_t1[manu_t1$`2` == id, ]
-new_row  <- function(id) tbl1[tbl1$ID == id, ]
+common <- intersect(manu_keys, new_keys)
+manu_row <- function(key) manu_t1[manu_keys == key, ]
+new_row  <- function(key) tbl1[new_keys == key, ]
 
 for (id in common) {
   m <- manu_row(id); n <- new_row(id)
+  lbl <- key_label(id)   # 可读标签：Folder_Name|ExpN
   # Exp
   mexp <- as.character(m$`4`); nexp <- as.character(n$Exp)
   if (!is.na(mexp) && nzchar(mexp) && !identical(mexp, nexp))
-    add_p("%s：Exp 不一致（稿件 %s vs qmd %s）", id, mexp, nexp)
+    add_p("%s：Exp 不一致（稿件 %s vs qmd %s）", lbl, mexp, nexp)
   # Country
   mct <- as.character(m$`5`); nct <- as.character(n$Country)
   if (!is.na(mct) && nzchar(mct) && !identical(mct, nct))
-    add_p("%s：Country 不一致（稿件 %s vs qmd %s）", id, mct, nct)
+    add_p("%s：Country 不一致（稿件 %s vs qmd %s）", lbl, mct, nct)
   # Language
   mlg <- as.character(m$`6`); nlg <- as.character(n$Language)
   if (!is.na(mlg) && nzchar(mlg) && !identical(mlg, nlg))
-    add_p("%s：Language 不一致（稿件 %s vs qmd %s）", id, mlg, nlg)
+    add_p("%s：Language 不一致（稿件 %s vs qmd %s）", lbl, mlg, nlg)
   # N (M/F)
   mn <- as.character(m$`7`); nn <- as.character(n$`N (M/F)`)
   if (!is.na(mn) && nzchar(mn) && !identical(mn, nn))
-    add_p("%s：N 不一致（稿件 %s vs qmd %s）", id, mn, nn)
+    add_p("%s：N 不一致（稿件 %s vs qmd %s）", lbl, mn, nn)
   # Stimulus
   ms <- as.character(m$`8`); ns <- as.character(n$Stimulus)
   if (!is.na(ms) && nzchar(ms) && !identical(ms, ns))
-    add_p("%s：Stimulus 不一致（稿件 %s vs qmd %s）", id, ms, ns)
+    add_p("%s：Stimulus 不一致（稿件 %s vs qmd %s）", lbl, ms, ns)
   # Trials
   mt <- as.character(m$`9`); nt <- as.character(n$Trials)
   if (!is.na(mt) && nzchar(mt) && !identical(mt, nt))
-    add_p("%s：Trials 不一致（稿件 %s vs qmd %s）", id, mt, nt)
+    add_p("%s：Trials 不一致（稿件 %s vs qmd %s）", lbl, mt, nt)
   # License（稿件 "Not specified" 与 qmd 缺失(NA) 视为一致；"CC0" 与 "CC0 1.0 Universal" 视为一致）
   mlc <- as.character(m$`10`); nlc <- as.character(n$License)
   lic_missing <- is.na(nlc) || !nzchar(trimws(nlc))
@@ -257,11 +267,11 @@ for (id in common) {
                  grepl("^cc0", tolower(trimws(mlc))) && grepl("^cc0", tolower(trimws(nlc)))
   if (!is.na(mlc) && nzchar(mlc) && !(lic_unspec && lic_missing) &&
       !lic_cc0_eq && !identical(mlc, nlc))
-    add_p("%s：License 不一致（稿件 %s vs qmd %s）", id, mlc, nlc)
+    add_p("%s：License 不一致（稿件 %s vs qmd %s）", lbl, mlc, nlc)
   # Exp_Implement
   mi <- as.character(m$`11`); ni <- as.character(n$Exp_Implement)
   if (!is.na(mi) && nzchar(mi) && !identical(mi, ni))
-    add_p("%s：Exp_Implement 不一致（稿件 %s vs qmd %s）", id, mi, ni)
+    add_p("%s：Exp_Implement 不一致（稿件 %s vs qmd %s）", lbl, mi, ni)
 }
 
 # 写入问题清单供最终展示
@@ -288,6 +298,9 @@ if (length(probs)) {
   `/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render Generate_Table1.qmd --to docx`
 - 输出：`Table1_generated.docx`（APA 格式表格，可直接复制进稿件）。
 - 比对的问题清单同时写入 `3_Reports/Output/table1_problems.txt`。
+- **ID 列**：`ID` 为 `Folder_Name`（项目关键 ID）。与旧稿件的逐行比对经
+  `Paper_ID → CSV 行号` 过渡映射完成（问题清单中以 `Folder_Name|ExpN` 显示；
+  `Paper_ID` 与 `Paper` 列已 deprecated，过渡期后从 `Dataset_inf.csv` 移除）。
 - **已知限制**：
   - `Study` 列由 `FirstAuthor + (Year)` 生成，稿件中个别行为文件夹名风格（如 `Wozniak_2022_PR`），比对时未逐字比较该列；
   - `Trials` 列取 CSV `numTrials`，稿件中的 `Trials` 可能来自其他口径（如每个 block 试次数）；

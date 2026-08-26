@@ -69,20 +69,26 @@ Re-run the cleanup **before and after** any `git add` / `git commit` / `git stat
   44 papers / 70 datasets / 3603 participants using the self-matching task
   (Sui, He & Humphreys 2012). Companion to a preregistered meta-analysis (OSF: euqmf).
 - **Structure**:
-  - `1_Data/` — 34 study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.xlsx`
-    inventory. Each folder contains:
+  - `1_Data/` — 34 study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
+    master index (legacy `Dataset_inf.xlsx` outdated — pending deletion after
+    collaborators confirm the CSV). Each folder contains:
     - raw data: `*_raw.csv` (trial-level), `*_raw_Subject.csv` (subject-level),
       sometimes `*_Raw/` subfolders with per-participant exports (E-Prime `.edat2`,
       MATLAB `.mat`, PsychoPy `.psydat`).
     - cleaned data: `*_ExpN_Clean.csv`.
-    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks, ~100 files),
+    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 50 files total:
+      22 canonical `Codebook_` + 28 legacy `CodeBook_`),
       study-level `.json` (paper metadata) and experiment-level `.json`
       (methodology, v2 hierarchical schema: five components under `exp<N>`).
-  - `1_Data/Dataset_inf.csv` — CSV mirror of `Dataset_inf.xlsx` (Label sheet), **UTF-8
-    with BOM** (do NOT strip the BOM — Chinese collaborators open it in Excel on
-    Chinese Windows which defaults to GBK; the BOM is what keeps diacritics like
-    `ö`/`é`/`ü` from garbling). 40-column structure, key columns:
-    `Folder_Name` (== study folder), `Paper_ID` (e.g. `P5E1`), `Exp`, `Country`,
+  - `1_Data/Dataset_inf.csv` — **master index** (newest version; `Dataset_inf.xlsx`
+    is outdated, no `Folder_Name` column, and is scheduled for deletion once
+    collaborators confirm the CSV), **UTF-8 with BOM** (do NOT strip the BOM —
+    Chinese collaborators open it in Excel on Chinese Windows which defaults to GBK;
+    the BOM is what keeps diacritics like `ö`/`é`/`ü` from garbling).
+    39-column structure (incl. `DOI`), key columns:
+    `Folder_Name` (== study folder; **project-wide key ID for papers/preprints** —
+    one row per experiment: `Folder_Name` + `Exp`), `Paper_ID` (**deprecated** —
+    legacy link to the old manuscript Table 1; do NOT create new values), `Country`,
     `Stim_language`, `Stim_Type`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`.
     NOTE: `Environmental_Info` stores the **stimulus-presentation software**
     (E-prime/Gorilla/PsychoPy/Matlab), NOT Lab-vs-Online setting — do not conflate the
@@ -106,7 +112,10 @@ Re-run the cleanup **before and after** any `git add` / `git commit` / `git stat
       `Physical_Environment.Setting`, renders an APA table to **landscape docx**
       (`ref_docx_landscape.docx` reference-doc), auto-compares against the manuscript
       `SPE_database_manu_v16.docx` Table 1 (via `officer::docx_summary`, grouped by
-      `table_index`), and outputs numbered text paragraphs of remaining problems +
+      `table_index`; Table 1 `ID` column = `Folder_Name` — the key ID — and the
+      comparison with the old manuscript runs through a `Paper_ID → Folder_Name`
+      legacy mapping, `Paper_ID`/`Paper` being deprecated in `Dataset_inf.csv`),
+      and outputs numbered text paragraphs of remaining problems +
       `Output/table1_problems.txt`. Render with
       `/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render`.
       Comparison rules treat manuscript "Not specified" vs missing as equal, and
@@ -132,18 +141,19 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 - **4 studies lack codebooks** (no `Codebook_*_Clean.xlsx`): `Lee_2023_Cognition`,
   `Orellana-Corrales_2021_APP`, `Smith_2024_Cortex`, `Svensson_2023_QJEP`
   (also have no `*_raw_Subject.csv`).
-- **Missing raw data**: `Sun_2025/` has `Sun_2025_Exp1_Clean.csv` (largest cleaned file,
-  62 MB) but no `*_raw.csv`.
-- **Pending study — no data folder yet (do NOT "fix")**: `Dataset_inf.xlsx` lists
+- **Missing raw data**: `Sun_2026_DataExp/` has `Sun_2026_DataExp_Exp1_Clean.csv`
+  (largest cleaned file, 62 MB) but no `*_raw.csv`.
+- **Pending study — no data folder yet (do NOT "fix")**: `Dataset_inf.csv` lists
   `Wozniak_2020_PLOS` (DOI `10.1371/journal.pone.0235627`, OSF `osf.io/2q9w7`) but no
   `1_Data/Wozniak_2020_PLOS/` folder exists — expected, data not yet curated.
   Paper = Woźniak & Hohwy, PLOS ONE, 2020.
-- **8 more CSV `Folder_Name` entries have no folder (verified 2026-08)**: `Bukowski_2021_AP`,
-  `Golubickis_2021_AP`, `Hobbs_2023_PM`, `Hu_2023_SDB`, `Mcivor_2020_EJN`,
-  `Orellana-Corrales_2021_EP`, `Scheller_2024_elife`, `Svensson_2021_PR` — listed in
-  Dataset_inf.csv but no `1_Data/` folder; expected pending/uncatalogued, do NOT "fix".
-  The validator (`validate_json_metadata.R`) whitelists `Wozniak_2020_PLOS` only;
-  `Generate_Table1.qmd` excludes all 9 from the generated Table 1.
+- **9 more CSV `Folder_Name` entries have no folder (verified 2026-08)**: `Bukowski_2021_ActaPsych`,
+  `Golubickis_2021_ActaPsych`, `Hobbs_2023_PsychMed`, `Hu_2023_SDB`, `Mcivor_2021_EJN`,
+  `Orellana-Corrales_2023_QJEP`, `Scheller_2026_elife`, `Svensson_2022_PsychRes`,
+  `Wozniak_2020_PLOS` — listed in Dataset_inf.csv but no `1_Data/` folder; expected
+  pending/uncatalogued, do NOT "fix". The validator (`validate_json_metadata.R`)
+  whitelists all of them (`known_pending` list); `Generate_Table1.qmd` excludes all 9
+  from the generated Table 1.
 - **Manuscript Table 1 vs data has known discrepancies (verified 2026-08)**: Exp-number
   copy-paste errors (e.g. `P5E1`–`P5E4` all labeled "Exp4" in the manuscript),
   N-count differences (manuscript "—" vs CSV concrete values), Trials wording
@@ -156,9 +166,9 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   Users must preprocess per their own analysis goals.
 - **Missing code references**: `2_Code/README_Auto_Clean.md` references
   `SPE_Auto_Clean.R` and `Test_Auto_Clean.R`, which do not exist in the repo.
-- **Large files (>10 MB)**: `Sun_2025_Exp1_Clean.csv` (62 MB), `Processed_Data_Filtered.csv`
-  (60 MB), `Haciahmet_2023_Psy_Exp1_raw.csv` (42 MB), `Share_Data.RData` (31 MB).
-  Avoid loading these into memory / context casually.
+- **Large files (>10 MB)**: `Sun_2026_DataExp_Exp1_Clean.csv` (62 MB),
+  `Processed_Data_Filtered.csv` (60 MB), `Haciahmet_2023_Psychophysiol_Exp1_raw.csv`
+  (42 MB), `Share_Data.RData` (31 MB). Avoid loading these into memory / context casually.
 
 ## Repo state (verified 2026-08)
 
@@ -169,4 +179,8 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 
 ## TODO / planned work
 
-- Add detailed instruction about how to create `Codebook_*` files for each dataset  in the skill `spe-database-curation` (what each `Codebook_<Study>_ExpN_Clean.xlsx` must document — variable definitions, valid values, units, missing-data codes, cleaning decisions, and how to create such files from available data/information).
+- (Done 2026-08) Codebook authoring rules added to `spe-database-curation` SKILL.md:
+  §Codebook authoring rules specifies the single-`Sheet1` 4-column template
+  (`Variable_name | Variable_description | Variable_value | Variable_category`),
+  per-column content rules (definitions, valid values, units, missing/invalid codes)
+  and the creation workflow from the Clean.csv header + paper methods + data values.

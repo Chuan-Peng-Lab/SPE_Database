@@ -790,9 +790,10 @@ library(treemapify)
 df <- read_csv("Dataset_inf.csv", show_col_types = FALSE)
 
 # ✅ 数据清理：每个 Paper 只保留一个 Stim_Type 组合，避免重复
+# （键为 Folder_Name —— 论文级关键 ID；Paper_ID 已 deprecated）
 df_clean <- df %>%
   filter(!is.na(Stim_Type)) %>%
-  distinct(Paper_ID, Stim_Type, .keep_all = TRUE)
+  distinct(Folder_Name, Stim_Type, .keep_all = TRUE)
 
 # 统计每种 Stim_Type 的唯一数量
 stim_summary <- df_clean %>%

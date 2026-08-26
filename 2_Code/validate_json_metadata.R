@@ -11,8 +11,8 @@
 #   experiment-level: <Author>_<Year>_<Journal>_Exp<N>.json
 #                     - top-level JSON key == "exp<N>" (matches _Exp<N> suffix)
 #   all JSON filenames must be pure ASCII (no diacritics such as ä / ź)
-#   cross-check: 1_Data/Dataset_inf.csv File_Name column <-> study folders
-#                 (every folder must be indexed; every indexed File_Name must
+#   cross-check: 1_Data/Dataset_inf.csv Folder_Name column <-> study folders
+#                 (every folder must be indexed; every indexed Folder_Name must
 #                  have a folder, except known-pending studies -- see below)
 #
 # Usage:
@@ -144,18 +144,23 @@ for (f in sort(json_files)) {
   }
 }
 
-# --- cross-check Dataset_inf.csv (File_Name) vs study folders -------------------
-# Dataset_inf.csv lives inside 1_Data/ and is the master inventory (mirror of
-# Dataset_inf.xlsx). Its File_Name column must agree with the actual study
-# folders: (a) every folder must be listed, and (b) every listed File_Name must
-# have a folder. Studies whose data have not been curated yet are allowed to be
-# listed without a folder; they are tracked here so they stay visible without
-# failing the check.
+# --- cross-check Dataset_inf.csv (Folder_Name) vs study folders ----------------
+# Dataset_inf.csv lives inside 1_Data/ and is the master inventory (the legacy
+# Dataset_inf.xlsx is outdated and pending deletion). Its Folder_Name column is
+# the project-wide key ID for papers/preprints and must agree with the actual
+# study folders: (a) every folder must be listed, and (b) every listed
+# Folder_Name must have a folder. Studies whose data have not been curated yet
+# are allowed to be listed without a folder; they are tracked in known_pending
+# so they stay visible without failing the check.
 dataset_inf <- file.path(data_dir, "Dataset_inf.csv")
 
 # Known-pending studies: listed in Dataset_inf.csv but data not yet curated
 # (documented in AGENTS.md). Add new pending entries here explicitly.
-known_pending <- c("Wozniak_2020_PLOS")
+known_pending <- c(
+  "Bukowski_2021_ActaPsych", "Golubickis_2021_ActaPsych", "Hobbs_2023_PsychMed",
+  "Hu_2023_SDB", "Mcivor_2021_EJN", "Orellana-Corrales_2023_QJEP",
+  "Scheller_2026_elife", "Svensson_2022_PsychRes", "Wozniak_2020_PLOS"
+)
 
 folders <- list.dirs(data_dir, recursive = FALSE, full.names = FALSE)
 folders <- folders[!grepl("^\\._", folders)]  # drop AppleDouble sidecars
@@ -171,16 +176,16 @@ if (!file.exists(dataset_inf)) {
     error = function(e) NULL)
   if (is.null(inf)) {
     report("DATASET_INF UNREADABLE: %s", dataset_inf)
-  } else if (!("File_Name" %in% names(inf))) {
-    report("DATASET_INF MISSING COLUMN: %s has no 'File_Name' column", dataset_inf)
+  } else if (!("Folder_Name" %in% names(inf))) {
+    report("DATASET_INF MISSING COLUMN: %s has no 'Folder_Name' column", dataset_inf)
   } else {
-    listed <- unique(trimws(as.character(inf[["File_Name"]])))
+    listed <- unique(trimws(as.character(inf[["Folder_Name"]])))
     listed <- listed[!is.na(listed) & nzchar(listed)]
 
     # (a) folders with no matching row in Dataset_inf.csv
     no_listing <- setdiff(folders, listed)
     if (length(no_listing))
-      report("FOLDER NOT IN DATASET_INF: %s (no File_Name row in %s)",
+      report("FOLDER NOT IN DATASET_INF: %s (no Folder_Name row in %s)",
              paste(no_listing, collapse = ", "), basename(dataset_inf))
 
     # (b) listed File_Name with no matching folder
@@ -191,7 +196,7 @@ if (!file.exists(dataset_inf)) {
                   length(pending), paste(pending, collapse = ", ")))
     no_folder <- setdiff(no_folder, known_pending)
     if (length(no_folder))
-      report("DATASET_INF FILE_NAME WITHOUT FOLDER: %s (missing folder in %s)",
+      report("DATASET_INF FOLDER_NAME WITHOUT FOLDER: %s (missing folder in %s)",
              paste(no_folder, collapse = ", "), data_dir)
   }
 }

@@ -135,8 +135,8 @@ Contributors
 root
 │  .gitignore
 │  README.md
-│  Dataset_inf.xlsx  
 ├─1_Data 
+│   └─ Dataset_inf.csv  # master index (UTF-8 with BOM); legacy Dataset_inf.xlsx pending removal
 │   └─ <Author>_<Year>_<Journal>
 │       └─ <Author>_<Year>_<Journal>_<Exp-id>_Clean.csv
 │       └─ <Author>_<Year>_<Journal>_<Exp-id>_raw_Subject.csv
