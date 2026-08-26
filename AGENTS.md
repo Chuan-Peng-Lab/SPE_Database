@@ -8,42 +8,24 @@ mode: primary
 
 The entire repo is stored on an **exFAT-formatted USB drive** mounted at `/Volumes/T3`.
 
-### Why this matters
+### Why it matters (one line)
 
-1. **exFAT does not support macOS extended attributes (xattrs).** To preserve file
-   metadata (icons, quarantine flags, etc.), macOS writes hidden **AppleDouble sidecar
-   files** named `._<original-name>` next to every file it touches.
-2. **These `._*` files leak into the git object store.** When git operations or any
-   macOS tooling touches packed objects, macOS may create files like:
-   ```
-   .git/objects/pack/._pack-<hash>.pack
-   .git/objects/pack/._pack-<hash>.idx
-   .git/objects/pack/._pack-<hash>.rev
-   ```
-3. **They break git.** Git scans `.git/objects/pack/` and tries to parse
-   `._pack-*.idx` as a real index → errors like:
-   ```
-   error: non-monotonic index .git/objects/pack/._pack-....idx
-   ```
+exFAT has no macOS xattrs, so macOS writes hidden `._*` AppleDouble sidecars that
+leak into `.git/objects/pack/` and break git ("non-monotonic index" errors).
 
 ### Mandatory cleanup rule
 
-**At the START of every session** (first tool call), run:
+**At the START of every session** (first tool call), and **before/after any
+`git add`/`commit`/`status`/`log` that errors**, run:
 
 ```bash
 rm -f .git/objects/pack/._pack-*
-```
-
-Also purge any other stray AppleDouble files before git operations:
-
-```bash
 find . -name '._*' -not -path './.git/objects/pack/._pack-*' -delete 2>/dev/null
-# then remove the ones in .git (find skips hidden dirs by default unless specified)
 find .git -name '._*' -delete 2>/dev/null
 ```
 
-Re-run the cleanup **before and after** any `git add` / `git commit` / `git status`
-/ `git log` command if errors appear.
+If corruption persists: `git gc --prune=now` — never delete real
+`.git/objects/pack/pack-*` files.
 
 ### Guidelines for agents
 
@@ -55,9 +37,6 @@ Re-run the cleanup **before and after** any `git add` / `git commit` / `git stat
 - **Safely eject / unmount** the drive is the user's responsibility — never attempt to
   unmount, remount, or format the drive yourself.
 - Expect slow disk I/O on this drive (USB/exFAT). Batch reads/writes when possible.
-- If `git` reports `non-monotonic index` or `error: git upload-pack` style corruption,
-  first try the cleanup above, then `git gc --prune=now` — do **not** delete real
-  `.git/objects/pack/pack-*` files.
 - **Never** start an exploration task or fire background exploration without explicit user
   approval.
 - **Never** fire background exploration tasks that may take more than a few hours.
@@ -142,25 +121,14 @@ Re-run the cleanup **before and after** any `git add` / `git commit` / `git stat
     `R_rainclouds.R`, plus `1_Identity_Analysis/`, `2_Mismatch_Analysis/`,
     `3_Exploratory_Analysis/` (each a self-contained Rmd), `4_Post/`, and `Output/`
     (aggregated CSVs in `Output/data/`, figures in `Output/Pic/`).
-    - `Generate_Table1.qmd` — regenerates the manuscript Table 1 following the logical
-      flow `1_Data/* folders → Dataset_inf.csv → Table 1`: filters to the 34 existing
-      study folders, infers `Exp_Implement` from experiment JSON
-      `Physical_Environment.Setting`, renders an APA table to **landscape docx**
-      (`ref_docx_landscape.docx` reference-doc), auto-compares against the manuscript
-      `SPE_database_manu_v16.docx` Table 1 (via `officer::docx_summary`, grouped by
-      `table_index`; Table 1 `ID` column = `Folder_Name` — the key ID — and the
-      comparison with the old manuscript runs through a `Paper_ID → Folder_Name`
-      legacy mapping, `Paper_ID`/`Paper` being deprecated in `Dataset_inf.csv`),
-      and outputs numbered text paragraphs of remaining problems +
-      `Output/table1_problems.txt`. Render with
-      `/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render`.
-      Comparison rules treat manuscript "Not specified" vs missing as equal, and
-      `CC0` vs `CC0 1.0 Universal` as equal. Known remaining issue classes: N-count
-      discrepancies, missing `Exp_Implement` (JSON `Setting` is `/`), Exp numbering
-      copy-paste errors, Trials/Stimulus/Language/Country wording differences.
+    - `Generate_Table1.qmd` — regenerates the manuscript Table 1 (flow:
+      `1_Data/* folders → Dataset_inf.csv → Table 1`; Table 1 `ID` column =
+      `Folder_Name`; comparison treats manuscript "Not specified"=missing and
+      `CC0`=`CC0 1.0 Universal` as equal). Outputs `Generate_Table1.docx` +
+      `Output/table1_problems.txt` (known issue classes listed there); render with
+      RStudio's bundled quarto. Operational details: PROJ_STATE.md.
     - `Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md` — Chinese report of the
-      3-way consistency check (Table 1 docx vs Dataset_inf.csv vs 1_Data/ folders);
-      8 open issues documented there.
+      3-way consistency check (manuscript Table 1 vs CSV vs folders).
 - **Stack**: R / R Markdown / Shiny. RStudio project (`SPE_Database.Rproj`).
 - **Key conventions**: cleaned variables standardized to `Subject`, `Shape`, `Label`,
   `Matching`, `ACC`, `RT_ms`, and 3-level Identity columns
