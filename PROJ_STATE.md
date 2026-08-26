@@ -35,15 +35,15 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 测试结果（已实测）
 
-- validator：EXIT=0（73 个 JSON、34 个文件夹、CSV 全部一致；9 个 pending 白名单放行）。
+- validator：EXIT=0（73 个 JSON、34 个文件夹、CSV 全部一致；9 个 pending 白名单放行）；2026-08 补 Exp 后复测仍 EXIT=0。
 - Table 1 渲染：RENDER_EXIT=0；比对结果 58 行（qmd）vs 70 行（稿件），差异清单在 table1_problems.txt。
-- git：3 个 commit（docs / data / reports），工作区干净，未 push。
+- git：5 个 commit（docs / data / reports + 2026-08 补 Exp 的 data / docs 两个 commit），工作区干净，未 push。
 
 ## 已知问题（未解决）
 
 - 4 个研究缺 codebook 且缺 paper 级 JSON：Lee_2023_Cognition、Orellana-Corrales_2021_APP、Smith_2024_Cortex、Svensson_2023_QJEP（其中 Orellana-APP 仅 2 个 Clean.csv、Svensson-2023 仅 Clean+raw，无任何 JSON）。
 - Sun_2026_DataExp：无 *_raw.csv（仅 62MB Clean 文件）、无实验级 JSON、CSV 行信息稀疏。
-- CSV 遗留空白：Exp 空 1 行（Scheller_2026_elife，无 Paper_ID 无法按 E 后缀推导，待人工确认）、Country 空 9、City 空 13、Journal 空 4、Year 空 2（均为无同组源值或待人工确认的条目）。
+- CSV 遗留空白：Exp 空 1 行（Scheller_2026_elife，无 Paper_ID 无法按 E 后缀推导，待人工确认）、Country 空 9、City 空 13、Journal 空 4、Year 空 2（均为无同组源值或待人工确认的条目）；另有 License 空 8（Sui_2014_APP ×4、Pan、Sui_2014_unpub、Sui_2015_unpub ×2）、Stim_language 空 7（Kirk ×2、Scheller、Wang_2016、Wozniak_2020、Hu_2023_SDB、Pan）——2026-08 会话逐行核验补充。
 - 稿件 Table 1 与数据仍有多处差异（12 个 pending 行、Exp 编号错位如 P5E1–E4 均标 Exp4、N/Trials/Language/Exp_Implement 不一致），详见 table1_problems.txt。
 - Kirk_2025_BritJPsy.json 嵌套 schema 例外（内部键 KIRK_2025_BJP 保留不动）。
 - Hu_2023_psyarxiv（PsyArXiv 预印本）与 Hu_2023_SDB（Science Data Bank）为两个独立条目，已确认分别保留。
