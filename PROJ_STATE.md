@@ -15,9 +15,11 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **Table 1 管线**：Generate_Table1.qmd 输出 ID 列改为 Folder_Name；与稿件 v16 的逐行比对改用 CSV 行号键 + Paper_ID→行号 过渡映射，问题清单以 Folder_Name|ExpN 显示。
 - **补 CSV 空 Exp（2026-08 会话）**：按 Paper_ID 的 E 后缀回填 10 行空 Exp——Lee Pu5E1/E2→1/2、Orellana-Corrales_2021_APP Pu9E1/E2→1/2、Schaefer P54E2/E3→2/3、Svensson_2023_QJEP Pu10E1→1、Sun_2026_DataExp Pu6E1→1、Hu_2023_SDB Pt5E1→1、Pan_2025_unpub Pu8E1→1；与文件夹/Table 1 对应值一致。Scheller_2026_elife 无 Paper_ID，无法推导，保留空白（见已知问题）。编辑保持字节保真（BOM+CRLF+无末尾换行，往返测试通过）；validator EXIT=0。
 - **C 类命名修复（2026-08）**：Wang_2016_JEPHPP 与 Smith_2024_Cortex 的 trial 级原始文件由 `*_Exp1_Raw.csv`（大写 R）规范化为 `*_Exp1_raw.csv`（git mv 保留历史）；`Clean_Data.Rmd` 内旧引用为历史死引用（Wang 一条指向旧文件夹名 EPHPP），按惯例未改；复测 validator EXIT=0。
-- **raw_Subject 补齐 + Exp_id 统一（2026-08）**：① 为 Lee_2023_Cognition（Exp1/2，47/51 行，age/sex/education/handedness 取自 raw.csv）、Smith_2024_Cortex（Exp1，48 行，剔除空 participant；age/gender 取自 raw.csv，未记录者填 /）、Svensson_2023_QJEP（Exp1，65 行，人口学填 /）生成 `*_raw_Subject.csv`，行数与 CSV Valid_Subj 吻合；② 全部 52 个 `*_raw_Subject.csv` 的 `Exp_id` 由旧 Paper_ID 统一为新格式 `<Folder_Name>_Exp<N>`（如 `Lee_2023_Cognition_Exp1`），48 个被跟踪文件经严格列级 diff 验证仅 Exp_id 列变化（BOM/行尾/引号风格保真）；validator EXIT=0。
-- **Kirk_2025_BritJPsy raw_Subject 补全（2026-08）**：由 raw.csv 生成（Exp1 用 Participant Private ID，35 行 = CSV Valid_Subj；Exp2 用 NewGorillaID，90 行 = CSV Valid_Subj；人口学无来源填 /），替换原 2 个空占位文件。至此缺 raw_Subject 仅剩 Orellana-Corrales_2021_APP。
+- **subj_info 补齐 + Exp_id 统一（2026-08）**：① 为 Lee_2023_Cognition（Exp1/2，47/51 行，age/sex/education/handedness 取自 raw.csv）、Smith_2024_Cortex（Exp1，48 行，剔除空 participant；age/gender 取自 raw.csv，未记录者填 /）、Svensson_2023_QJEP（Exp1，65 行，人口学填 /）生成 `*_subj_info.csv`，行数与 CSV Valid_Subj 吻合；② 全部 52 个 `*_subj_info.csv` 的 `Exp_id` 由旧 Paper_ID 统一为新格式 `<Folder_Name>_Exp<N>`（如 `Lee_2023_Cognition_Exp1`），48 个被跟踪文件经严格列级 diff 验证仅 Exp_id 列变化（BOM/行尾/引号风格保真）；validator EXIT=0。
+- **Kirk_2025_BritJPsy subj_info 补全（2026-08）**：由 raw.csv 生成（Exp1 用 Participant Private ID，35 行 = CSV Valid_Subj；Exp2 用 NewGorillaID，90 行 = CSV Valid_Subj；人口学无来源填 /），替换原 2 个空占位文件。至此缺 subj_info 仅剩 Orellana-Corrales_2021_APP。
 - **Martinez-Perez CSV 修正（2026-08，经合作者确认）**：该研究仅纳入 Exp2（其 Exp1 不含 self-matching task 故排除）；CSV 行 Exp 1→2（与 Paper_ID Pt27E2、文件夹 Exp2 文件一致），Note 列记录 "Exp1 excluded: no self-matching task; this row = Exp2"。字节保真编辑（BOM+CRLF+无末尾换行保持，diff 仅目标行 2 个单元格），validator EXIT=0。
+- **subj_info 命名统一（2026-08）**：确认 `*_subj_info.csv`（原 `*_raw_Subject.csv`）内容为每实验被试基本信息/人口学表（Subject_ID/Exp_id + 人口学，个别含量表列，无聚合统计）；全库 52 个文件批量重命名（48 个 git mv 保留历史 + 4 个新文件），同步更新 SKILL.md/AGENTS.md/README.md/PROJ_STATE.md/Subject_Table.Rmd/Table1_Issues_Solvability.md 共 42 处引用（后两者的旧文件夹名仍属历史引用，未动）；validator EXIT=0。
+- **.gitignore 更新（2026-08）**：12 个研究文件夹模式更新为当前命名（2026-08 改名后的 `<Author>_<Year>_<Suffix>`）并加前导 `/` 锚定根目录（消除无前导斜杠对 1_Data/ 新文件的误忽略，此后新文件提交无需 `git add -f`）；删除 2 条失效路径（Sun_2025、Zhang_2023_NI 旧命名文件，均不存在）。
 
 ## 关键决策
 
@@ -50,10 +52,10 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 | 条目名（作者-年-期刊缩写） | 问题描述 | 缺少文件的数量 | 问题严重程度 |
 |---|---|---|---|
-| Lee_2023_Cognition | 无 codebook ×2、无 paper/实验级 JSON ×3（raw_Subject 已于 2026-08 补齐） | 5 | 中度 |
-| Smith_2024_Cortex | 无 codebook ×1、无 paper/实验级 JSON ×2（raw_Subject 已于 2026-08 补齐） | 3 | 中度 |
-| Svensson_2023_QJEP | 无 codebook ×1、无 paper/实验级 JSON ×2（raw_Subject 已于 2026-08 补齐） | 3 | 中度 |
-| Orellana-Corrales_2021_APP | 无 raw.csv ×2、无 codebook ×2、无 JSON ×3、无 raw_Subject ×2（仅 2 个 Clean.csv，无任何原始数据） | 9 | 重度 |
+| Lee_2023_Cognition | 无 codebook ×2、无 paper/实验级 JSON ×3（subj_info 已于 2026-08 补齐） | 5 | 中度 |
+| Smith_2024_Cortex | 无 codebook ×1、无 paper/实验级 JSON ×2（subj_info 已于 2026-08 补齐） | 3 | 中度 |
+| Svensson_2023_QJEP | 无 codebook ×1、无 paper/实验级 JSON ×2（subj_info 已于 2026-08 补齐） | 3 | 中度 |
+| Orellana-Corrales_2021_APP | 无 raw.csv ×2、无 codebook ×2、无 JSON ×3、无 subj_info ×2（仅 2 个 Clean.csv，无任何原始数据） | 9 | 重度 |
 | Sun_2026_DataExp | 无 raw.csv ×1、无实验级 JSON ×1（CSV 行信息稀疏；62 MB Clean 在库） | 2 | 重度 |
 | Zhang_2023_NeuroImage | 无 raw.csv ×1（本次扫描新发现，待核实原始数据是否在外部仓库） | 1 | 重度 |
 

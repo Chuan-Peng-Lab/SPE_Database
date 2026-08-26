@@ -93,7 +93,7 @@ If corruption persists: `git gc --prune=now` — never delete real
   - `1_Data/` — 34 study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
     master index (legacy `Dataset_inf.xlsx` outdated — pending deletion after
     collaborators confirm the CSV). Each folder contains:
-    - raw data: `*_raw.csv` (trial-level), `*_raw_Subject.csv` (subject-level),
+    - raw data: `*_raw.csv` (trial-level), `*_subj_info.csv` (subject-level),
       sometimes `*_Raw/` subfolders with per-participant exports (E-Prime `.edat2`,
       MATLAB `.mat`, PsychoPy `.psydat`).
     - cleaned data: `*_ExpN_Clean.csv`.
@@ -155,7 +155,7 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 
 - **4 studies lack codebooks AND paper-level JSONs** (no `Codebook_*_Clean.xlsx`,
   no `<Study>.json`): `Lee_2023_Cognition`, `Orellana-Corrales_2021_APP`,
-  `Smith_2024_Cortex`, `Svensson_2023_QJEP` (`*_raw_Subject.csv` 已于 2026-08 补齐：
+  `Smith_2024_Cortex`, `Svensson_2023_QJEP` (`*_subj_info.csv` 已于 2026-08 补齐：
   Lee/Smith/Svensson 由各自 `*_raw.csv` 生成；Orellana-Corrales_2021_APP 仍无任何原始数据，
   仅 2 个 `*_Clean.csv`；Svensson_2023_QJEP 仍无任何 JSON)。
 - **Missing raw data**: `Sun_2026_DataExp/` has `Sun_2026_DataExp_Exp1_Clean.csv`

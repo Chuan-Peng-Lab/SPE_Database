@@ -35,20 +35,18 @@ desktop.ini
 *.synctex.gz
 
 
-Smith_2024_Cortex/
-Haciahmet_2022_Psy/
-Orellana-Corrales_2021_APP/
-Lee_2023_Cognition/
-Svensson_2023_QJEP/
-Kirk_2025_BJP/
-Bukowski_2021_AP/
-Golubickis_2021_AP/
-Hobbs_2023_PM/
-Mcivor_2020_EJN/
-Orellana-Corrales_2021_EP/
-Svensson_2021_PR/
-1_Data/Sun_2025/Sun_2025_Exp1_raw.csv
-1_Data/Zhang_2023_NI/Zhang_2023_NI_Exp1_raw.csv
+/Smith_2024_Cortex/
+/Haciahmet_2023_Psychophysiol/
+/Orellana-Corrales_2021_APP/
+/Lee_2023_Cognition/
+/Svensson_2023_QJEP/
+/Kirk_2025_BritJPsy/
+/Bukowski_2021_ActaPsych/
+/Golubickis_2021_ActaPsych/
+/Hobbs_2023_PsychMed/
+/Mcivor_2021_EJN/
+/Orellana-Corrales_2023_QJEP/
+/Svensson_2022_PsychRes/
 3_Reports/wqh_analysis_data.RData
 /2_Code/Coding_Version
 /3_Reports/Coding_Version

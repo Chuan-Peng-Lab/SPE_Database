@@ -30,7 +30,7 @@ paths appear only as operational notes.
 Use me when you are:
 - Adding a new study or experiment folder under `1_Data/`
 - Authoring or editing any `.json` metadata (paper-level or experiment-level)
-- Naming or renaming `*_raw.csv`, `*_raw_Subject.csv`, `*_Clean.csv`, `Codebook_*.xlsx`
+- Naming or renaming `*_raw.csv`, `*_subj_info.csv`, `*_Clean.csv`, `Codebook_*.xlsx`
 - Creating or updating a `Codebook_*_Clean.xlsx`
 - Standardizing Identity columns (Origin → English → Standardized)
 - Filling in experiment design `table`/component fields
@@ -66,7 +66,7 @@ Use me when you are:
   Amodeo_2024_CABN.json                       # paper metadata
   Amodeo_2024_CABN_Exp1.json                  # experiment metadata (v2)
   Amodeo_2024_CABN_Exp1_raw.csv               # raw trial-level data
-  Amodeo_2024_CABN_Exp1_raw_Subject.csv       # participant-level data
+  Amodeo_2024_CABN_Exp1_subj_info.csv       # participant-level data
   Amodeo_2024_CABN_Exp1_Clean.csv             # minimally preprocessed data
   Codebook_Amodeo_2024_CABN_Exp1_Clean.xlsx   # codebook
   ```
@@ -109,7 +109,7 @@ Use me when you are:
     (e.g., `Navon_2021_psyarxiv`, `Hu_2023_psyarxiv`); `unpub` for
     unpublished data without a preprint server (e.g., `Sui_2014_unpub`,
     `Sui_2015_unpub`, `Pan_2025_unpub`).
-- **Tags**: `_raw` (unprocessed), `_raw_Subject` (participant level), `_Clean`
+- **Tags**: `_raw` (unprocessed), `_subj_info` (participant level), `_Clean`
   (minimally preprocessed), `Codebook_*_Clean.xlsx` for codebooks.
 - **Canonical casing**: `Codebook_` (lowercase b), `_raw_` (lowercase).
   Existing outliers (`CodeBook_…` — 28 legacy files, `Raw/` subfolders) are
@@ -256,7 +256,7 @@ Boundary rules for ambiguous keys:
 
 1. Fix the folder name per the naming grammar (print year, ASCII-only, journal/database suffix).
 2. Create the study folder with raw files: `*_raw.csv` (trial-level) and
-   `*_raw_Subject.csv` (participant-level). Keep per-participant exports in a
+   `*_subj_info.csv` (participant-level). Keep per-participant exports in a
    `*_Raw/` subfolder only when they already exist (legacy layout — do not create new ones).
 3. Produce `*_ExpN_Clean.csv` per the minimal-preprocessing conventions.
 4. Author the paper-level JSON (11 flat fields; `Year` == folder year;

@@ -1,0 +1,48 @@
+Subject_ID,Exp_id,Age,Gender,Handedness,Ethnicity,Employment_Status,Country,First_Language,Education
+1,Lee_2023_Cognition_Exp1,19,female,right-handed,/,/,/,/,/,College or Technical school
+2,Lee_2023_Cognition_Exp1,21,female,right-handed,/,/,/,/,/,College or Technical school
+3,Lee_2023_Cognition_Exp1,20,female,right-handed,/,/,/,/,/,High school or equivalent 
+6,Lee_2023_Cognition_Exp1,28,female,right-handed,/,/,/,/,/,College or Technical school
+7,Lee_2023_Cognition_Exp1,20,female,right-handed,/,/,/,/,/,Master/Doctorate
+8,Lee_2023_Cognition_Exp1,20,female,right-handed,/,/,/,/,/,High school or equivalent 
+10,Lee_2023_Cognition_Exp1,20,male,right-handed,/,/,/,/,/,High school or equivalent 
+11,Lee_2023_Cognition_Exp1,19,female,right-handed,/,/,/,/,/,College or Technical school
+12,Lee_2023_Cognition_Exp1,20,male,right-handed,/,/,/,/,/,High school or equivalent 
+13,Lee_2023_Cognition_Exp1,18,female,right-handed,/,/,/,/,/,High school or equivalent 
+14,Lee_2023_Cognition_Exp1,18,female,right-handed,/,/,/,/,/,College or Technical school
+15,Lee_2023_Cognition_Exp1,19,female,right-handed,/,/,/,/,/,College or Technical school
+16,Lee_2023_Cognition_Exp1,23,female,right-handed,/,/,/,/,/,High school or equivalent 
+17,Lee_2023_Cognition_Exp1,20,female,ambidextrous,/,/,/,/,/,Bachelor degree
+18,Lee_2023_Cognition_Exp1,19,female,right-handed,/,/,/,/,/,High school or equivalent 
+19,Lee_2023_Cognition_Exp1,21,female,right-handed,/,/,/,/,/,Bachelor degree
+20,Lee_2023_Cognition_Exp1,20,male,right-handed,/,/,/,/,/,Bachelor degree
+21,Lee_2023_Cognition_Exp1,22,female,right-handed,/,/,/,/,/,High school or equivalent 
+22,Lee_2023_Cognition_Exp1,20,female,right-handed,/,/,/,/,/,High school or equivalent 
+23,Lee_2023_Cognition_Exp1,18,female,right-handed,/,/,/,/,/,High school or equivalent 
+24,Lee_2023_Cognition_Exp1,20,male,right-handed,/,/,/,/,/,High school or equivalent 
+25,Lee_2023_Cognition_Exp1,18,female,right-handed,/,/,/,/,/,High school or equivalent 
+26,Lee_2023_Cognition_Exp1,19,female,right-handed,/,/,/,/,/,High school or equivalent 
+27,Lee_2023_Cognition_Exp1,18,male,right-handed,/,/,/,/,/,High school or equivalent 
+28,Lee_2023_Cognition_Exp1,20,male,right-handed,/,/,/,/,/,High school or equivalent 
+29,Lee_2023_Cognition_Exp1,22,male,right-handed,/,/,/,/,/,High school or equivalent 
+31,Lee_2023_Cognition_Exp1,18,male,right-handed,/,/,/,/,/,High school or equivalent 
+32,Lee_2023_Cognition_Exp1,20,female,right-handed,/,/,/,/,/,High school or equivalent 
+33,Lee_2023_Cognition_Exp1,21,female,right-handed,/,/,/,/,/,Bachelor degree
+34,Lee_2023_Cognition_Exp1,21,female,right-handed,/,/,/,/,/,High school or equivalent 
+36,Lee_2023_Cognition_Exp1,20,female,right-handed,/,/,/,/,/,College or Technical school
+37,Lee_2023_Cognition_Exp1,18,female,right-handed,/,/,/,/,/,High school or equivalent 
+38,Lee_2023_Cognition_Exp1,19,female,right-handed,/,/,/,/,/,High school or equivalent 
+39,Lee_2023_Cognition_Exp1,20,female,right-handed,/,/,/,/,/,High school or equivalent 
+40,Lee_2023_Cognition_Exp1,21,female,right-handed,/,/,/,/,/,High school or equivalent 
+42,Lee_2023_Cognition_Exp1,22,female,right-handed,/,/,/,/,/,High school or equivalent 
+43,Lee_2023_Cognition_Exp1,21,female,right-handed,/,/,/,/,/,Bachelor degree
+44,Lee_2023_Cognition_Exp1,22,female,right-handed,/,/,/,/,/,High school or equivalent 
+45,Lee_2023_Cognition_Exp1,21,female,right-handed,/,/,/,/,/,High school or equivalent 
+46,Lee_2023_Cognition_Exp1,22,female,right-handed,/,/,/,/,/,High school or equivalent 
+47,Lee_2023_Cognition_Exp1,18,female,right-handed,/,/,/,/,/,High school or equivalent 
+49,Lee_2023_Cognition_Exp1,20,female,right-handed,/,/,/,/,/,High school or equivalent 
+50,Lee_2023_Cognition_Exp1,22,female,right-handed,/,/,/,/,/,High school or equivalent 
+52,Lee_2023_Cognition_Exp1,18,female,right-handed,/,/,/,/,/,Bachelor degree
+53,Lee_2023_Cognition_Exp1,19,female,right-handed,/,/,/,/,/,High school or equivalent 
+56,Lee_2023_Cognition_Exp1,25,female,right-handed,/,/,/,/,/,Bachelor degree
+57,Lee_2023_Cognition_Exp1,21,female,right-handed,/,/,/,/,/,Bachelor degree

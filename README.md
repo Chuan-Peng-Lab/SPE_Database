@@ -147,7 +147,7 @@ root
 │   └─ Dataset_inf.csv  # master index (UTF-8 with BOM); legacy Dataset_inf.xlsx pending removal
 │   └─ <Author>_<Year>_<Suffix>   # Suffix = readable journal/database abbreviation (e.g. JEPHPP, ActaPsych, ConsciousCog, QJEP), full short journal name (Cognition, Cortex), psyarxiv/unpub tag, or data-repo abbreviation (SDB)
 │       └─ <Author>_<Year>_<Suffix>_<Exp-id>_Clean.csv
-│       └─ <Author>_<Year>_<Suffix>_<Exp-id>_raw_Subject.csv
+│       └─ <Author>_<Year>_<Suffix>_<Exp-id>_subj_info.csv
 │       └─ Codebook_<Author>_<Year>_<Suffix>_<Exp-id>_Clean.xlsx
 │       └─ <Author>_<Year>_<Suffix>.json  # Including Meta data for each paper.
 │       └─ <Author>_<Year>_<Suffix>_<Exp-id>.json  # Including methodological information for the specific experiment.

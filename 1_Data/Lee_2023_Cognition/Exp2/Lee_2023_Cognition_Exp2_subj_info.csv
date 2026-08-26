@@ -1,0 +1,52 @@
+Subject_ID,Exp_id,Age,Gender,Handedness,Ethnicity,Employment_Status,Country,First_Language,Education
+1,Lee_2023_Cognition_Exp2,21,male,right-handed,/,/,/,/,/,High school or equivalent 
+2,Lee_2023_Cognition_Exp2,35,male,right-handed,/,/,/,/,/,Master/Doctorate
+3,Lee_2023_Cognition_Exp2,24,male,ambidextrous,/,/,/,/,/,College or Technical school
+5,Lee_2023_Cognition_Exp2,24,male,right-handed,/,/,/,/,/,Master/Doctorate
+6,Lee_2023_Cognition_Exp2,20,female,right-handed,/,/,/,/,/,Bachelor degree
+7,Lee_2023_Cognition_Exp2,26,female,right-handed,/,/,/,/,/,Master/Doctorate
+8,Lee_2023_Cognition_Exp2,51,female,left-handed,/,/,/,/,/,Bachelor degree
+9,Lee_2023_Cognition_Exp2,19,female,right-handed,/,/,/,/,/,High school or equivalent 
+10,Lee_2023_Cognition_Exp2,28,female,right-handed,/,/,/,/,/,Bachelor degree
+11,Lee_2023_Cognition_Exp2,25,female,right-handed,/,/,/,/,/,Bachelor degree
+12,Lee_2023_Cognition_Exp2,23,male,right-handed,/,/,/,/,/,High school or equivalent 
+14,Lee_2023_Cognition_Exp2,29,female,right-handed,/,/,/,/,/,Master/Doctorate
+15,Lee_2023_Cognition_Exp2,27,female,left-handed,/,/,/,/,/,High school or equivalent 
+16,Lee_2023_Cognition_Exp2,30,female,right-handed,/,/,/,/,/,Master/Doctorate
+19,Lee_2023_Cognition_Exp2,47,female,right-handed,/,/,/,/,/,Bachelor degree
+21,Lee_2023_Cognition_Exp2,24,male,right-handed,/,/,/,/,/,Bachelor degree
+23,Lee_2023_Cognition_Exp2,25,male,right-handed,/,/,/,/,/,College or Technical school
+24,Lee_2023_Cognition_Exp2,27,male,right-handed,/,/,/,/,/,High school or equivalent 
+26,Lee_2023_Cognition_Exp2,26,male,left-handed,/,/,/,/,/,Bachelor degree
+27,Lee_2023_Cognition_Exp2,29,male,right-handed,/,/,/,/,/,High school or equivalent 
+28,Lee_2023_Cognition_Exp2,23,female,right-handed,/,/,/,/,/,College or Technical school
+29,Lee_2023_Cognition_Exp2,21,male,right-handed,/,/,/,/,/,High school or equivalent 
+30,Lee_2023_Cognition_Exp2,67,male,right-handed,/,/,/,/,/,Bachelor degree
+31,Lee_2023_Cognition_Exp2,37,female,right-handed,/,/,/,/,/,Bachelor degree
+35,Lee_2023_Cognition_Exp2,35,female,right-handed,/,/,/,/,/,Bachelor degree
+36,Lee_2023_Cognition_Exp2,28,male,right-handed,/,/,/,/,/,Master/Doctorate
+37,Lee_2023_Cognition_Exp2,53,female,right-handed,/,/,/,/,/,High school or equivalent 
+38,Lee_2023_Cognition_Exp2,40,female,right-handed,/,/,/,/,/,Bachelor degree
+39,Lee_2023_Cognition_Exp2,30,female,left-handed,/,/,/,/,/,Bachelor degree
+40,Lee_2023_Cognition_Exp2,18,female,right-handed,/,/,/,/,/,High school or equivalent 
+42,Lee_2023_Cognition_Exp2,26,female,right-handed,/,/,/,/,/,Master/Doctorate
+43,Lee_2023_Cognition_Exp2,20,male,right-handed,/,/,/,/,/,High school or equivalent 
+44,Lee_2023_Cognition_Exp2,21,male,right-handed,/,/,/,/,/,Bachelor degree
+45,Lee_2023_Cognition_Exp2,26,male,right-handed,/,/,/,/,/,High school or equivalent 
+47,Lee_2023_Cognition_Exp2,21,female,right-handed,/,/,/,/,/,Bachelor degree
+48,Lee_2023_Cognition_Exp2,28,female,right-handed,/,/,/,/,/,Bachelor degree
+49,Lee_2023_Cognition_Exp2,27,male,right-handed,/,/,/,/,/,Bachelor degree
+50,Lee_2023_Cognition_Exp2,23,male,right-handed,/,/,/,/,/,College or Technical school
+52,Lee_2023_Cognition_Exp2,29,female,left-handed,/,/,/,/,/,Master/Doctorate
+53,Lee_2023_Cognition_Exp2,21,female,right-handed,/,/,/,/,/,Bachelor degree
+54,Lee_2023_Cognition_Exp2,27,female,right-handed,/,/,/,/,/,College or Technical school
+55,Lee_2023_Cognition_Exp2,39,male,left-handed,/,/,/,/,/,Bachelor degree
+56,Lee_2023_Cognition_Exp2,23,male,right-handed,/,/,/,/,/,High school or equivalent 
+57,Lee_2023_Cognition_Exp2,26,female,right-handed,/,/,/,/,/,High school or equivalent 
+58,Lee_2023_Cognition_Exp2,60,male,right-handed,/,/,/,/,/,Master/Doctorate
+59,Lee_2023_Cognition_Exp2,26,female,right-handed,/,/,/,/,/,High school or equivalent 
+60,Lee_2023_Cognition_Exp2,32,male,left-handed,/,/,/,/,/,Bachelor degree
+61,Lee_2023_Cognition_Exp2,27,female,right-handed,/,/,/,/,/,College or Technical school
+62,Lee_2023_Cognition_Exp2,20,male,right-handed,/,/,/,/,/,High school or equivalent 
+63,Lee_2023_Cognition_Exp2,23,male,right-handed,/,/,/,/,/,College or Technical school
+64,Lee_2023_Cognition_Exp2,21,male,right-handed,/,/,/,/,/,College or Technical school
