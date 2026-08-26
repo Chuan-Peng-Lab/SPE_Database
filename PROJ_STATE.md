@@ -14,6 +14,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **四文档分工建立**：README.md（人类读者：数据使用指引+新命名目录树）、AGENTS.md（agent 效率约定：省 token、防无效搜索——Crossref/OSF 用法、会话收尾强制更新 PROJ_STATE.md）、SKILL.md（DOI 与年份核验流程、清洗工具指引、Dataset_inf.csv 39 列说明、validator 盲区说明、多语言 Identity 对照）、PROJ_STATE.md（会话状态快照）。AGENTS.md 已按四标准（省时/省token/准确/一致）审查修正：数字口径改为实测（43/73）、过滤措辞统一、<Suffix> 命名统一、已知问题补全（4 研究缺 paper JSON、Sun 缺实验 JSON）。
 - **Table 1 管线**：Generate_Table1.qmd 输出 ID 列改为 Folder_Name；与稿件 v16 的逐行比对改用 CSV 行号键 + Paper_ID→行号 过渡映射，问题清单以 Folder_Name|ExpN 显示。
 - **补 CSV 空 Exp（2026-08 会话）**：按 Paper_ID 的 E 后缀回填 10 行空 Exp——Lee Pu5E1/E2→1/2、Orellana-Corrales_2021_APP Pu9E1/E2→1/2、Schaefer P54E2/E3→2/3、Svensson_2023_QJEP Pu10E1→1、Sun_2026_DataExp Pu6E1→1、Hu_2023_SDB Pt5E1→1、Pan_2025_unpub Pu8E1→1；与文件夹/Table 1 对应值一致。Scheller_2026_elife 无 Paper_ID，无法推导，保留空白（见已知问题）。编辑保持字节保真（BOM+CRLF+无末尾换行，往返测试通过）；validator EXIT=0。
+- **C 类命名修复（2026-08）**：Wang_2016_JEPHPP 与 Smith_2024_Cortex 的 trial 级原始文件由 `*_Exp1_Raw.csv`（大写 R）规范化为 `*_Exp1_raw.csv`（git mv 保留历史）；`Clean_Data.Rmd` 内旧引用为历史死引用（Wang 一条指向旧文件夹名 EPHPP），按惯例未改；复测 validator EXIT=0。
 
 ## 关键决策
 
@@ -41,8 +42,18 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 已知问题（未解决）
 
-- 4 个研究缺 codebook 且缺 paper 级 JSON：Lee_2023_Cognition、Orellana-Corrales_2021_APP、Smith_2024_Cortex、Svensson_2023_QJEP（其中 Orellana-APP 仅 2 个 Clean.csv、Svensson-2023 仅 Clean+raw，无任何 JSON）。
-- Sun_2026_DataExp：无 *_raw.csv（仅 62MB Clean 文件）、无实验级 JSON、CSV 行信息稀疏。
+**条目级缺失汇总（2026-08 全量递归扫描，覆盖缺元数据/缺原始数据/缺 subject 级数据三类）**
+分级标准：中度 = 缺元数据（codebook / JSON）；重度 = 缺 trial 级原始数据（`*_raw.csv`）。同一严重程度内按条目名 alphabetical 排列，整体由轻到重。
+
+| 条目名（作者-年-期刊缩写） | 问题描述 | 缺少文件的数量 | 问题严重程度 |
+|---|---|---|---|
+| Lee_2023_Cognition | 无 codebook ×2、无 paper/实验级 JSON ×3、无 raw_Subject ×2 | 7 | 中度 |
+| Smith_2024_Cortex | 无 codebook ×1、无 paper/实验级 JSON ×2、无 raw_Subject ×1 | 4 | 中度 |
+| Svensson_2023_QJEP | 无 codebook ×1、无 paper/实验级 JSON ×2、无 raw_Subject ×1（仅 Clean + raw.csv，无任何 JSON） | 4 | 中度 |
+| Orellana-Corrales_2021_APP | 无 raw.csv ×2、无 codebook ×2、无 JSON ×3、无 raw_Subject ×2（仅 2 个 Clean.csv，无任何原始数据） | 9 | 重度 |
+| Sun_2026_DataExp | 无 raw.csv ×1、无实验级 JSON ×1（CSV 行信息稀疏；62 MB Clean 在库） | 2 | 重度 |
+| Zhang_2023_NeuroImage | 无 raw.csv ×1（本次扫描新发现，待核实原始数据是否在外部仓库） | 1 | 重度 |
+
 - CSV 遗留空白：Exp 空 1 行（Scheller_2026_elife，无 Paper_ID 无法按 E 后缀推导，待人工确认）、Country 空 9、City 空 13、Journal 空 4、Year 空 2（均为无同组源值或待人工确认的条目）；另有 License 空 8（Sui_2014_APP ×4、Pan、Sui_2014_unpub、Sui_2015_unpub ×2）、Stim_language 空 7（Kirk ×2、Scheller、Wang_2016、Wozniak_2020、Hu_2023_SDB、Pan）——2026-08 会话逐行核验补充。
 - 稿件 Table 1 与数据仍有多处差异（12 个 pending 行、Exp 编号错位如 P5E1–E4 均标 Exp4、N/Trials/Language/Exp_Implement 不一致），详见 table1_problems.txt。
 - Kirk_2025_BritJPsy.json 嵌套 schema 例外（内部键 KIRK_2025_BJP 保留不动）。
@@ -63,3 +74,4 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 4. 合作者确认后：删除 Dataset_inf.xlsx、移除 deprecated 的 Paper_ID/Paper 列并简化 qmd 过渡映射。
 5. 按 table1_problems.txt 逐项修正稿件 Table 1。
 6. 人工补全剩余 Country/City/Journal/Year 空白。
+7. 核实 Zhang_2023_NeuroImage 原始数据是否存于外部仓库（查 paper JSON 的 Repo_Link / OSF）；确认后补 raw.csv 或记录结论。
