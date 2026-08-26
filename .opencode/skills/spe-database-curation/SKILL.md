@@ -4,7 +4,8 @@ description: SPE Database curation conventions — FAIR folder structure, file n
   grammar (journal/database abbreviations), JSON metadata schemas (paper + experiment
   v2 hierarchical), five-component self-matching task framework, Identity
   standardization (Origin → English → Standardized), Codebook_*.xlsx authoring rules,
-  minimal-preprocessing conventions, and Dataset_inf.csv master-index rules. Use when adding or curating
+  minimal-preprocessing conventions, DOI/year verification (Crossref), and Dataset_inf.csv
+  master-index rules. Use when adding or curating
   a study/experiment folder under 1_Data/, authoring or editing *_raw/_Clean CSVs,
   Codebook_*.xlsx, .json metadata, identity columns, or filling experiment design
   table fields.
@@ -18,6 +19,11 @@ metadata:
 SPE Database (self-matching task, Sui et al. 2012) curation rules. The database
 follows the FAIR principle (Wilkinson et al. 2016) with a three-level structure:
 root → study → experiment. Every level carries machine-readable JSON metadata.
+
+This skill is **self-contained**: it does not depend on repository-level documents
+(README/AGENTS/PROJ_STATE) and is meant to stay general — the same conventions
+apply to any SPE-style database using this folder/JSON layout. Repo-specific tool
+paths appear only as operational notes.
 
 ## When to use me
 
@@ -44,6 +50,14 @@ Use me when you are:
   schema: no `Folder_Name`; sheets `Label` + `Sheet1`) — do NOT edit; scheduled
   for deletion once collaborators confirm the CSV (audit 2026-08: it holds no data
   beyond the CSV).
+- **`Dataset_inf.csv` 列说明（39 列，按用途分组）**：
+  - 键列：`ID`（行号）、`Folder_Name`（关键 ID）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
+  - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
+  - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
+  - 设计：`Design`、`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
+  - 流程：`Practice_Block`、`Practice_Trial`、`numBlocks`、`numTrials`、`Environmental_Info`（**刺激呈现软件**，非 Lab/Online 设置）
+  - 状态：`Status`、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
+  同论文多实验行共享的字段（作者/邮箱/年/期刊/DOI 等）只填一次，其余行留空或同步传播均可——以组内非空值一致为准。
 - **Study folder**: `<Author>_<Year>_<Journal>` containing the paper-level
   `<Author>_<Year>_<Journal>.json` at its root.
 - **Single experiment** → files live flat in the study folder
@@ -160,7 +174,7 @@ Boundary rules for ambiguous keys:
   `Setting` must use a controlled vocabulary: `Laboratory`, `Online`, or a combined
   value (e.g., `Laboratory + Online`); use `"/"` only when truly unknown. Do NOT
   invent free-text variants (e.g., "quiet room", "chamber", "remote"): the manuscript
-  pipeline (`3_Reports/Generate_Table1.qmd`) infers the Table 1 column
+  Table 1 pipeline (repo tool: `Generate_Table1.qmd`) infers the Table 1 column
   `Exp_Implement` (Lab Experiment / Online Experiment / Mixed) by regex-matching
   `Setting`, so non-standard wording silently degrades to NA.
 - **Experimental_Design** — what is manipulated/compared; `Conditions` extracted from
@@ -183,7 +197,11 @@ Boundary rules for ambiguous keys:
   `X_Standardized_Identity` (canonical 6-category vocabulary:
   `NonPerson`, `Self`, `Close`, `Acquaintance`, `Celebrity`, `Stranger`).
   Verified mapping example (Amodeo_2024_CABN): `Ikzelf→Self`, `Vreemde→Stranger`,
-  `Bekende→Friend→Close`. Analyses must use the `*_Standardized_Identity` column.
+  `Bekende→Friend→Close`. Typical origin-language mappings seen in the DB:
+  Chinese `我→Self`, `她/他→Close`; Dutch `Ikzelf→Self`, `Vreemde→Stranger`,
+  `Bekende→Close`; German `Ich→Self`, `Mutter→Close`, `Bekannter→Stranger`;
+  English `self→Self`, `friend→Close`, `stranger→Stranger`.
+  Analyses must use the `*_Standardized_Identity` column.
 - **Minimal preprocessing, NO filtering**: cleaning only renames/reorganizes variables
   and standardizes Identity; it keeps ALL trials, participants and values. Invalid
   values stay in the file (e.g., `ACC = -1` no response, `2` wrong key; `RT_ms`
@@ -191,6 +209,16 @@ Boundary rules for ambiguous keys:
   rather than dropped. Such codes are documented in the codebook, not removed;
   full preprocessing (filtering, outlier removal, accuracy coding) is the user's
   responsibility.
+
+## DOI 与年份核验（添加/更新论文时必做）
+
+- **DOI 填论文的 DOI，不是数据链接**：`Repo_Link` 存数据存储库链接（OSF/Zenodo/ScienceDB），`DOI` 列与 paper JSON 的 `DOI` 字段一律填正式论文的 DOI。
+- **本地优先**：先查 paper JSON 的 `DOI` 字段；其次查 `Repo_Link` 中是否含 `doi.org/10....`；都没有才外查。
+- **外查用 Crossref API，不用通用网页搜索**（网页搜索噪声大、难确证）：
+  `https://api.crossref.org/works?query.bibliographic=<题名>&query.author=<作者>&filter=container-title:<期刊名>&rows=3`
+  核对返回记录的 作者 / 期刊 / 年份 / 卷期 全部吻合才采用；DOI 存裸格式（去掉 `https://doi.org/` 前缀）。
+- **年份 = 正式印刷年**：Crossref 记录的 `published-print`（卷期所属年份）；纯在线期刊（PLOS/eLife/MDPI/Collabra 等）无印刷卷期时用 `issued`（在线发表年）；仍为预印本的用**最新版本年份**。
+- **预印本版本年查询**：OSF API 按 GUID 直取——`https://api.osf.io/v2/preprints/<guid>/versions/`（`filter[doi]` 查询返回 HTTP 400，勿用）；GUID 即 PsyArXiv DOI 的后段（如 `10.31234/osf.io/9dzm4` → `9dzm4`）。
 
 ## Codebook authoring rules
 
@@ -217,6 +245,13 @@ Boundary rules for ambiguous keys:
      hand-edit xlsx XML).
   5. Verify every Clean.csv column has exactly one codebook row.
 
+## 清洗工具（三套并行实现，逻辑一致）
+
+- `2_Code/Clean_Data.Rmd` — 逐论文手工管线（**权威**）；按论文逐个清洗，含旧文件夹名注释（历史记录，不改）。
+- `2_Code/SPE_Interactive_Clean_V3.R` — 控制台交互清洗（单个/批量 `*_raw.csv`，变量映射 + Identity 标准化）。
+- `2_Code/SPE_Shiny_App_V4.2.R` — Shiny 网页版（交互界面、批量处理、ZIP 下载）。
+- 三者产出相同的标准化列（`Subject/Shape/Label/Matching/ACC/RT_ms` + 三级 Identity）与 `*_ExpN_Clean.csv` 命名；**清洗 = 最小预处理，不过滤**（见 Data standardization 一节）。
+
 ## End-to-end checklist: adding a new study
 
 1. Fix the folder name per the naming grammar (print year, ASCII-only, journal/database suffix).
@@ -237,8 +272,8 @@ Boundary rules for ambiguous keys:
    like `ö`/`é`/`ü` from garbling). Do NOT edit the legacy `Dataset_inf.xlsx`.
 8. Run `Rscript 2_Code/validate_json_metadata.R` and fix every violation (naming,
    year drift, exp-key match, v2 component completeness).
-9. Render `3_Reports/Generate_Table1.qmd` and inspect `Output/table1_problems.txt`
-   for NEW discrepancies vs the manuscript Table 1.
+9. Render the manuscript Table 1 pipeline (repo tool: `Generate_Table1.qmd`) and
+   inspect its problem output for NEW discrepancies vs the manuscript Table 1.
 10. exFAT hygiene: purge `._*` files before git ops; never commit `._*`/`.DS_Store`.
 
 ## Validation and hygiene
@@ -252,7 +287,9 @@ Boundary rules for ambiguous keys:
    `Scheller_2026_elife`, `Svensson_2022_PsychRes`, `Wozniak_2020_PLOS`) that
    are allowed to lack a folder; once such a study is curated, remove it from the
    whitelist.
-3. One-time schema migrations live in `2_Code/migrate_exp_json_to_v2.py`
+3. **Validator blind spots**（校验器只校验存在的文件，以下缺失不会被发现，需人工核对）：
+   缺 paper 级 JSON、缺 codebook、CSV 中重复的 `(Folder_Name, Exp)` 组合。
+4. One-time schema migrations live in `2_Code/migrate_exp_json_to_v2.py`
    (v1 flat `table` → v2 hierarchical); re-run only if legacy files reappear.
 4. exFAT drive: purge AppleDouble files (`find . -name '._*' -delete`) before git ops;
    never commit `._*` files.

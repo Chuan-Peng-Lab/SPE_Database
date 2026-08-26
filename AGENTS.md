@@ -63,11 +63,46 @@ Re-run the cleanup **before and after** any `git add` / `git commit` / `git stat
 - **Never** fire background exploration tasks that may take more than a few hours.
 - **Always** run `git gc --prune=now` before starting a new exploration task.
 
+## Document map（四文档分工与引用关系）
+
+- `README.md` — 面向**人类读者**：项目介绍、数据使用指引。代理也应按需引用。
+- `AGENTS.md`（本文件）— 面向**agent**：环境约束（exFAT）、效率约定、caveats。
+- `PROJ_STATE.md` — **会话状态快照**：每次工作后必须更新；新会话先读它再开工。
+- `.opencode/skills/spe-database-curation/SKILL.md` — **通用 curation 技能**：自足独立、
+  不依赖本仓库文档；任何数据整理/入库任务一律加载
+  `skill(name="spe-database-curation")`。
+- 引用方向：README ↔ AGENTS ↔ PROJ_STATE 三份相互引用，并**统一指向技能**；
+  技能不反向依赖这三份文档。
+
+## Agent efficiency conventions（省 token / 防无效搜索）
+
+### 省 token
+- 大文件（>10 MB，见 caveats 清单）**绝不整读入上下文**：用 `head` 看表头、Python 流式/按列提取、只取所需结果。
+- 优先 `grep`/`glob` 定位，不整文件读取；USB 盘 I/O 慢，读写尽量批量。
+- **不要重复"发现"已知问题**：caveats 与 PROJ_STATE.md 里已记录的，直接当作事实引用。
+- `Generate_Table1.qmd` 渲染耗时数分钟：仅当输入（文件夹/Dataset_inf.csv/qmd 本身）变化时才重渲染；日常校验用秒级 `Rscript 2_Code/validate_json_metadata.R`。
+- 编辑 `Dataset_inf.csv` 保持字节保真：UTF-8 BOM、CRLF 行尾、文件末尾无换行；改前先做往返测试，改后核对 diff 只含目标单元格。
+- 一次会话内对同一文件的多处修改合并为一次写入/一次提交。
+- 长任务（qmd 渲染、批量改名、大批量网络查询）放后台 job 执行，期间并行推进独立的只读步骤。
+
+### 防无效搜索
+- 查论文 DOI：**Crossref API**（`api.crossref.org/works?query.bibliographic=...&query.author=...&filter=container-title:...`）按作者+期刊+年份核对——通用网页搜索噪声大且难确证，勿用。
+- 查预印本版本年：OSF API 按 GUID 直取 `api.osf.io/v2/preprints/<guid>/versions/`；`filter[doi]` 返回 HTTP 400，勿用。
+- 外查前先查本地权威源：paper JSON（`DOI`/`Year`/`Journal`）、`Repo_Link`、`Dataset_inf.csv`。
+
+### 会话收尾（强制）
+- 更新根目录 `PROJ_STATE.md`：目标、已完成（已验证）、关键决策、测试结果、已知问题、失败方案、下一步；只记已确认事实。
+- 若本会话沉淀了可复用的约定/流程，同步补充到 `spe-database-curation` 技能（SKILL.md）。
+- 提交前按「清理规则」删 AppleDouble 文件，按逻辑分组 commit（≤3 个）。
+
 ## Project context
 
 - **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
-  44 papers / 70 datasets / 3603 participants using the self-matching task
-  (Sui, He & Humphreys 2012). Companion to a preregistered meta-analysis (OSF: euqmf).
+  **43 studies / 73 experiment-level rows** per `Dataset_inf.csv` (34 curated
+  folders on disk + 9 pending entries) using the self-matching task
+  (Sui, He & Humphreys 2012). Earlier published counts (44 papers / 70 datasets /
+  3603 participants) refer to the manuscript and have NOT been re-verified against
+  the CSV. Companion to a preregistered meta-analysis (OSF: euqmf).
 - **Structure**:
   - `1_Data/` — 34 study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
     master index (legacy `Dataset_inf.xlsx` outdated — pending deletion after
@@ -95,8 +130,9 @@ Re-run the cleanup **before and after** any `git add` / `git commit` / `git stat
     two. The manuscript Table 1 column `Exp_Implement` (Lab/Online/Mixed) does NOT exist
     in the CSV; derive it from experiment JSON `Physical_Environment.Setting`.
   - `.opencode/skills/spe-database-curation/` — curation-conventions skill (folder
-    structure, file naming, JSON schemas, five-component task framework). Load via
-    `skill(name="spe-database-curation")` when adding/editing study metadata.
+    structure, file naming grammar, JSON schemas, five-component task framework,
+    Identity standardization, codebook authoring, DOI/year verification workflow).
+    Load via `skill(name="spe-database-curation")` when adding/editing study metadata.
   - `2_Code/` — data cleaning tooling, three parallel implementations of the same
     standardization logic:
     - `Clean_Data.Rmd` (5053 lines) — master per-paper manual pipeline (authoritative).
@@ -129,20 +165,27 @@ Re-run the cleanup **before and after** any `git add` / `git commit` / `git stat
 - **Key conventions**: cleaned variables standardized to `Subject`, `Shape`, `Label`,
   `Matching`, `ACC`, `RT_ms`, and 3-level Identity columns
   (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger).
-  Cleaned file naming: `<Author>_<Year>_<Journal>_ExpN_Clean.csv`.
+  Cleaned file naming: `<Author>_<Year>_<Suffix>_ExpN_Clean.csv` (Suffix = readable
+  journal/database abbreviation, full short journal name, or psyarxiv/unpub tag;
+  see the curation skill).
 - **Raw data formats**: CSV dominant (331 files); also E-Prime `.edat2`/`.emrg`,
   MATLAB `.mat`/`.m`, PsychoPy `.psydat`/`.dat`. No parquet anywhere.
 - **Version**: v0.1.5 (2026-06-28). See `README.md` for full changelog.
+- **Current state**: see `PROJ_STATE.md` (root) for the latest verified status,
+  known issues, failed approaches and next steps; update it at the end of every session.
 
 ## Known data-quality caveats (verified 2026-08)
 
 Treat these as known issues, not new discoveries — do not "find" them again:
 
-- **4 studies lack codebooks** (no `Codebook_*_Clean.xlsx`): `Lee_2023_Cognition`,
-  `Orellana-Corrales_2021_APP`, `Smith_2024_Cortex`, `Svensson_2023_QJEP`
-  (also have no `*_raw_Subject.csv`).
+- **4 studies lack codebooks AND paper-level JSONs** (no `Codebook_*_Clean.xlsx`,
+  no `<Study>.json`): `Lee_2023_Cognition`, `Orellana-Corrales_2021_APP`,
+  `Smith_2024_Cortex`, `Svensson_2023_QJEP` (also have no `*_raw_Subject.csv`;
+  Orellana-Corrales_2021_APP holds only two `*_Clean.csv`, Svensson_2023_QJEP only
+  `*_Clean.csv` + `*_raw.csv`).
 - **Missing raw data**: `Sun_2026_DataExp/` has `Sun_2026_DataExp_Exp1_Clean.csv`
-  (largest cleaned file, 62 MB) but no `*_raw.csv`.
+  (largest cleaned file, 62 MB) but no `*_raw.csv` and no experiment-level JSON
+  (`Sun_2026_DataExp_Exp1.json` missing).
 - **Pending study — no data folder yet (do NOT "fix")**: `Dataset_inf.csv` lists
   `Wozniak_2020_PLOS` (DOI `10.1371/journal.pone.0235627`, OSF `osf.io/2q9w7`) but no
   `1_Data/Wozniak_2020_PLOS/` folder exists — expected, data not yet curated.
@@ -161,9 +204,10 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   (`P46E2`, `Pu2E1`, `Pt9E1`). These are tracked as open issues in
   `Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md` and surfaced by
   `Generate_Table1.qmd` — do not re-report them as new findings.
-- **Preprocessing is NOT complete**: cleaning is filtering, not full preprocessing —
-  `ACC` may include invalid values (e.g., `-1` no response, `2` incorrect key).
-  Users must preprocess per their own analysis goals.
+- **Preprocessing is NOT complete**: cleaning is minimal preprocessing (variable
+  selection & standardization only, NO trial/value filtering) — `ACC` may include
+  invalid values (e.g., `-1` no response, `2` incorrect key), kept on purpose and
+  documented in codebooks. Users must preprocess per their own analysis goals.
 - **Missing code references**: `2_Code/README_Auto_Clean.md` references
   `SPE_Auto_Clean.R` and `Test_Auto_Clean.R`, which do not exist in the repo.
 - **Large files (>10 MB)**: `Sun_2026_DataExp_Exp1_Clean.csv` (62 MB),
