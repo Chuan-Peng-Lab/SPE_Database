@@ -34,14 +34,12 @@ Kirk_2025_BritJPsy|Exp2：Exp 不一致（稿件 Exp1 vs qmd Exp2）
 Kirk_2025_BritJPsy|Exp2：N 不一致（稿件 126 (—) vs qmd 126）
 Kirk_2025_BritJPsy|Exp2：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
 Amodeo_2024_CABN|Exp1：N 不一致（稿件 70 vs qmd 70 (49/21)）
-Lee_2023_Cognition|Exp?：Exp 不一致（稿件 Exp2 vs qmd ）
-Lee_2023_Cognition|Exp?：N 不一致（稿件 65 (—) vs qmd 65）
-Lee_2023_Cognition|Exp?：Stimulus 不一致（稿件 geometric shape/ nm. vs qmd geometric shape）
-Lee_2023_Cognition|Exp?：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
-Lee_2023_Cognition|Exp?：Exp 不一致（稿件 Exp1 vs qmd ）
-Lee_2023_Cognition|Exp?：N 不一致（稿件 65 (—) vs qmd 57）
-Lee_2023_Cognition|Exp?：Stimulus 不一致（稿件 geometric shape/ nm. vs qmd geometric shape）
-Lee_2023_Cognition|Exp?：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Lee_2023_Cognition|Exp2：N 不一致（稿件 65 (—) vs qmd 65）
+Lee_2023_Cognition|Exp2：Stimulus 不一致（稿件 geometric shape/ nm. vs qmd geometric shape）
+Lee_2023_Cognition|Exp2：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Lee_2023_Cognition|Exp1：N 不一致（稿件 65 (—) vs qmd 57）
+Lee_2023_Cognition|Exp1：Stimulus 不一致（稿件 geometric shape/ nm. vs qmd geometric shape）
+Lee_2023_Cognition|Exp1：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
 Liang_2022_HumBrainMap|Exp2：Exp 不一致（稿件 Exp1 vs qmd Exp2）
 Liang_2022_HumBrainMap|Exp3：Exp 不一致（稿件 Exp1 vs qmd Exp3）
 Feldborg_2021_IJERPH|Exp1：N 不一致（稿件 84 (—) vs qmd 84 (13/70)）
@@ -53,30 +51,26 @@ Navon_2021_psyarxiv|Exp2：N 不一致（稿件 26 (9/18) vs qmd 27 (9/18)）
 Navon_2021_psyarxiv|Exp3：N 不一致（稿件 26 (9/18) vs qmd 27 (12/15)）
 Navon_2021_psyarxiv|Exp1：N 不一致（稿件 26 (9/18) vs qmd 13 (3/10)）
 Kirk_2025_BritJPsy|Exp1：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
-Orellana-Corrales_2021_APP|Exp?：Exp 不一致（稿件 Exp1 vs qmd ）
-Orellana-Corrales_2021_APP|Exp?：N 不一致（稿件 36 (7/29) vs qmd 34 (9/25)）
-Orellana-Corrales_2021_APP|Exp?：Trials 不一致（稿件 240 vs qmd NA）
-Orellana-Corrales_2021_APP|Exp?：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
-Orellana-Corrales_2021_APP|Exp?：Exp 不一致（稿件 Exp2 vs qmd ）
-Orellana-Corrales_2021_APP|Exp?：N 不一致（稿件 36 (7/29) vs qmd 34 (11/23)）
-Orellana-Corrales_2021_APP|Exp?：Trials 不一致（稿件 240 vs qmd NA）
-Orellana-Corrales_2021_APP|Exp?：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
-Pan_2025_unpub|Exp?：Language 不一致（稿件 Chinese vs qmd NA）
-Pan_2025_unpub|Exp?：N 不一致（稿件 40(—) vs qmd —）
-Pan_2025_unpub|Exp?：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Orellana-Corrales_2021_APP|Exp1：N 不一致（稿件 36 (7/29) vs qmd 34 (9/25)）
+Orellana-Corrales_2021_APP|Exp1：Trials 不一致（稿件 240 vs qmd NA）
+Orellana-Corrales_2021_APP|Exp1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Orellana-Corrales_2021_APP|Exp2：N 不一致（稿件 36 (7/29) vs qmd 34 (11/23)）
+Orellana-Corrales_2021_APP|Exp2：Trials 不一致（稿件 240 vs qmd NA）
+Orellana-Corrales_2021_APP|Exp2：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Pan_2025_unpub|Exp1：Language 不一致（稿件 Chinese vs qmd NA）
+Pan_2025_unpub|Exp1：N 不一致（稿件 40(—) vs qmd 40）
+Pan_2025_unpub|Exp1：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
 Perrykkad_2022_BMCPsych|Exp1：N 不一致（稿件 328 (—) vs qmd 328）
 Qian_2020_QJEP|Exp1：N 不一致（稿件 26 (7/19) vs qmd 26 (10/16)）
 Qian_2020_QJEP|Exp1：Trials 不一致（稿件 100 vs qmd 144）
-Schaefer_2019_JCogPsych|Exp?：Exp 不一致（稿件 Exp2 vs qmd ）
-Schaefer_2019_JCogPsych|Exp?：N 不一致（稿件 35 (—) vs qmd 36）
-Schaefer_2019_JCogPsych|Exp?：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
-Schaefer_2019_JCogPsych|Exp?：Exp 不一致（稿件 Exp3 vs qmd ）
-Schaefer_2019_JCogPsych|Exp?：N 不一致（稿件 35 (—) vs qmd 35）
-Schaefer_2019_JCogPsych|Exp?：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Schaefer_2019_JCogPsych|Exp2：N 不一致（稿件 35 (—) vs qmd 36）
+Schaefer_2019_JCogPsych|Exp2：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Schaefer_2019_JCogPsych|Exp3：N 不一致（稿件 35 (—) vs qmd 35）
+Schaefer_2019_JCogPsych|Exp3：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
 Schaefer_2019_JCogPsych|Exp1：N 不一致（稿件 35 (—) vs qmd 32）
 Schaefer_2019_JCogPsych|Exp1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
 Smith_2024_Cortex|Exp1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
-Sui_2015_unpub|Exp2：N 不一致（稿件 20 (—) vs qmd 21）
+Sui_2015_unpub|Exp2：N 不一致（稿件 20 (—) vs qmd 20）
 Sui_2015_unpub|Exp2：Stimulus 不一致（稿件 geometric shape vs qmd geometric shape and face）
 Sui_2015_unpub|Exp2：Trials 不一致（稿件 60 vs qmd 40）
 Sui_2015_unpub|Exp2：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
@@ -90,16 +84,15 @@ Sui_2014_APP|Exp1：N 不一致（稿件 20 (—) vs qmd 24）
 Sui_2015_unpub|Exp1：N 不一致（稿件 21 (—) vs qmd 20）
 Sui_2015_unpub|Exp1：Stimulus 不一致（稿件 geometric shape and face vs qmd geometric shape）
 Sui_2015_unpub|Exp1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
-Sun_2026_DataExp|Exp?：Exp 不一致（稿件 Exp1 vs qmd ）
-Sun_2026_DataExp|Exp?：N 不一致（稿件 506(—) vs qmd —）
-Sun_2026_DataExp|Exp?：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
-Svensson_2023_QJEP|Exp?：Exp 不一致（稿件 Exp1 vs qmd ）
-Svensson_2023_QJEP|Exp?：Country 不一致（稿件 United Kingdom vs qmd UK）
-Svensson_2023_QJEP|Exp?：N 不一致（稿件 25 (7/18) vs qmd 65 (20/45)）
-Svensson_2023_QJEP|Exp?：Stimulus 不一致（稿件 geometric shape vs qmd NA）
-Svensson_2023_QJEP|Exp?：Trials 不一致（稿件 400 vs qmd NA）
-Svensson_2023_QJEP|Exp?：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
-Martinez-Perez_2024_ConsciousCog|Exp1：N 不一致（稿件 32 vs qmd 32 (5/27)）
+Sun_2026_DataExp|Exp1：N 不一致（稿件 506(—) vs qmd —）
+Sun_2026_DataExp|Exp1：Exp_Implement 不一致（稿件 Lab Experiment vs qmd NA）
+Svensson_2023_QJEP|Exp1：Country 不一致（稿件 United Kingdom vs qmd UK）
+Svensson_2023_QJEP|Exp1：N 不一致（稿件 25 (7/18) vs qmd 65 (20/45)）
+Svensson_2023_QJEP|Exp1：Stimulus 不一致（稿件 geometric shape vs qmd NA）
+Svensson_2023_QJEP|Exp1：Trials 不一致（稿件 400 vs qmd NA）
+Svensson_2023_QJEP|Exp1：Exp_Implement 不一致（稿件 Online Experiment vs qmd NA）
+Martinez-Perez_2024_ConsciousCog|Exp2：Exp 不一致（稿件 Exp1 vs qmd Exp2）
+Martinez-Perez_2024_ConsciousCog|Exp2：N 不一致（稿件 32 vs qmd 32 (5/27)）
 Vicovaro_2022_JEPHPP|Exp2：Exp_Implement 不一致（稿件 Mixed (Lab + Online) vs qmd Online Experiment）
 Vicovaro_2022_JEPHPP|Exp1：N 不一致（稿件 104 (14/90) vs qmd 30 (14/16)）
 Vicovaro_2022_JEPHPP|Exp1：Exp_Implement 不一致（稿件 Mixed (Lab + Online) vs qmd Online Experiment）

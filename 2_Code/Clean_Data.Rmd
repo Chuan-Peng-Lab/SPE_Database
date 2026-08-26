@@ -3501,7 +3501,7 @@ write.csv(x = df[[48]], file = "../1_Data/Sui_2014/Sui_2014_Exp1_Clean.csv",row.
 ```{r Paper s4 Experiment 1}
 # 获取文件夹内所有满足条件的文件名
 file_list <- list.files(
-  path = "../1_Data/Sui_2015/Sui_2015_Raw/Source/",
+  path = "../1_Data/Sui_2015_unpub/Sui_2015_unpub_Raw/Source/",
   pattern = "^PractExperiment_1.*\\.mat$",
   full.names = TRUE
 )
@@ -3575,16 +3575,16 @@ rm(list_mat_e1, mat_data)
 
 names(df)[49] <- "Sui_2015_Exp1"
 summary(df[[49]])
-write.csv(x = df[[49]], file = "../1_Data/Sui_2015/Exp1/Sui_2015_Exp1_Clean.csv",row.names = FALSE)
+write.csv(x = df[[49]], file = "../1_Data/Sui_2015_unpub/Exp1/Sui_2015_unpub_Exp1_Clean.csv",row.names = FALSE)
 ```
 
-# Sui_2015
+# Sui_2015 (Unpublish)
 ## Experiment 2 (Identtiy = 3)
 "Self", "Friend", "Stranger"    →   "Self","Close","Stranger"(No  trial mess)
 ```{r Paper s4 Experiment 2}
 # 获取文件夹内所有满足条件的文件名
 file_list <- list.files(
-  path = "../1_Data/Sui_2015/Sui_2015_Raw/Source/",
+  path = "../1_Data/Sui_2015_unpub/Sui_2015_unpub_Raw/Source/",
   pattern = "^PractExperiment_2.*\\.mat$",
   full.names = TRUE
 )
@@ -3650,13 +3650,14 @@ df[[50]] <- read.mat(list = list_mat_e2) %>%
   ) %>%
   dplyr::arrange(
     Subject, 
-  )
+  ) %>%
+  dplyr::filter(Subject != 0) # 排除测试被试 subject 0（测试运行，见 PROJ_STATE.md 已知问题）
 
 rm(list_mat_e2, mat_data)
 
 names(df)[50] <- "Sui_2015_Exp2"
 summary(df[[50]])
-write.csv(x = df[[50]], file = "../1_Data/Sui_2015/Exp2/Sui_2015_Exp2_Clean.csv",row.names = FALSE)
+write.csv(x = df[[50]], file = "../1_Data/Sui_2015_unpub/Exp2/Sui_2015_unpub_Exp2_Clean.csv",row.names = FALSE)
 ```
 
 # Dalmaso_2024_CC [Face]
@@ -5045,7 +5046,6 @@ write.csv(x = df[[70]], file = "../1_Data/Pan_2025/Pan_2025_Exp1_Clean.csv", row
 # Clean up functions
 rm(data_preprocessing, jspsycsv2df, pan_data)
 ```
-
 
 
 

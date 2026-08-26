@@ -44,6 +44,7 @@ If corruption persists: `git gc --prune=now` — never delete real
 - **Safely eject / unmount** the drive is the user's responsibility — never attempt to
   unmount, remount, or format the drive yourself.
 - Expect slow disk I/O on this drive (USB/exFAT). Batch reads/writes when possible.
+- **write/edit 工具在 exFAT 上原子写会失败（ENOTSUP: link）**：写盘上文件的操作用 bash 先写到 /tmp（APFS）再 cp 到目标路径；第一次失败后立即固化此模式，不要反复重试 write 工具。
 - **Never** start an exploration task or fire background exploration without explicit user
   approval.
 - **Never** fire background exploration tasks that may take more than a few hours.
@@ -54,11 +55,12 @@ If corruption persists: `git gc --prune=now` — never delete real
 - `README.md` — 面向**人类读者**：项目介绍、数据使用指引。代理也应按需引用。
 - `AGENTS.md`（本文件）— 面向**agent**：环境约束（exFAT）、效率约定、caveats。
 - `PROJ_STATE.md` — **会话状态快照**：每次工作后必须更新；新会话先读它再开工。
+- `3_Reports/Table1_Issues_Solvability.md` — **Table 1 问题可解性分析**：逐项判定稿件 Table 1 差异的可解性（可自动确定 / 需人工），与 PROJ_STATE.md 双向关联（未解决清单 ↔ 可解性判定）；依据 `Generate_Table1.qmd` 输出的 `table1_problems.txt`。
 - `.opencode/skills/spe-database-curation/SKILL.md` — **通用 curation 技能**：自足独立、
   不依赖本仓库文档；任何数据整理/入库任务一律加载
   `skill(name="spe-database-curation")`。
 - 引用方向：README ↔ AGENTS ↔ PROJ_STATE 三份相互引用，并**统一指向技能**；
-  技能不反向依赖这三份文档。
+  Table1_Issues_Solvability.md ↔ PROJ_STATE.md 双向关联；技能不反向依赖这三份文档。
 
 ## Agent efficiency conventions（省 token / 防无效搜索）
 
@@ -70,6 +72,10 @@ If corruption persists: `git gc --prune=now` — never delete real
 - 编辑 `Dataset_inf.csv` 保持字节保真：UTF-8 BOM、CRLF 行尾、文件末尾无换行；改前先做往返测试，改后核对 diff 只含目标单元格。
 - 一次会话内对同一文件的多处修改合并为一次写入/一次提交。
 - 长任务（qmd 渲染、批量改名、大批量网络查询）放后台 job 执行，期间并行推进独立的只读步骤。
+- **CRLF/LF 差异直接无视**（用户明确指示）：不检查、不转换、不保持行尾一致；git 的 text=auto 会归一化行尾比较，diff 天然只显示内容改动；处理 CRLF 文件时注意 grep/awk 等工具的行为差异即可，无需为行尾重写或恢复文件。
+- 数值等价（浮点容差内）即视为一致：脚本输出与旧文件的末位显示差异（R %.15g vs Python repr 等）不追根源、不改数据、不重写旧文件。
+- 验证命令输出要截断（head/wc -l/diff | wc -l），禁止裸跑大 diff 或长 R 输出进上下文。
+- 对 PROJ_STATE.md / 前序 agent 已核实的事实做一次轻量抽查即可，不要完整重验；已记录的结论直接引用。
 
 ### 防无效搜索
 - 查论文 DOI：**Crossref API**（`api.crossref.org/works?query.bibliographic=...&query.author=...&filter=container-title:...`）按作者+期刊+年份核对——通用网页搜索噪声大且难确证，勿用。
@@ -155,9 +161,10 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 
 - **4 studies lack codebooks AND paper-level JSONs** (no `Codebook_*_Clean.xlsx`,
   no `<Study>.json`): `Lee_2023_Cognition`, `Orellana-Corrales_2021_APP`,
-  `Smith_2024_Cortex`, `Svensson_2023_QJEP` (`*_subj_info.csv` 已于 2026-08 补齐：
-  Lee/Smith/Svensson 由各自 `*_raw.csv` 生成；Orellana-Corrales_2021_APP 仍无任何原始数据，
-  仅 2 个 `*_Clean.csv`；Svensson_2023_QJEP 仍无任何 JSON)。
+  `Smith_2024_Cortex`, `Svensson_2023_QJEP` (`*_subj_info.csv` 已全覆盖：
+  Lee/Smith/Svensson 由各自 `*_raw.csv` 生成（2026-08），Sui_2015_unpub 由 `*_Raw/`
+  人口学记录生成（2026-08-27），Orellana-Corrales_2021_APP 由 Clean.csv 唯一 Subject
+  生成（2026-08-27，仍无任何原始数据，人口学 /）；Svensson_2023_QJEP 仍无任何 JSON)。
 - **Missing raw data**: `Sun_2026_DataExp/` has `Sun_2026_DataExp_Exp1_Clean.csv`
   (largest cleaned file, 62 MB) but no `*_raw.csv` and no experiment-level JSON
   (`Sun_2026_DataExp_Exp1.json` missing).
@@ -173,12 +180,14 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   whitelists all of them (`known_pending` list); `Generate_Table1.qmd` excludes all 9
   from the generated Table 1.
 - **Manuscript Table 1 vs data has known discrepancies (verified 2026-08)**: Exp-number
-  copy-paste errors (e.g. `P5E1`–`P5E4` all labeled "Exp4" in the manuscript),
+  copy-paste errors (e.g. `P5E1`–`P5E3` all labeled "Exp4" in the manuscript),
   N-count differences (manuscript "—" vs CSV concrete values), Trials wording
   differences (`numTrials` vs per-block counts), and some Study-label attributions
   (`P46E2`, `Pu2E1`, `Pt9E1`). These are tracked as open issues in
   `Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md` and surfaced by
-  `Generate_Table1.qmd` — do not re-report them as new findings.
+  `Generate_Table1.qmd` — do not re-report them as new findings. Per-item solvability
+  judgments (auto-resolvable vs need-human) live in
+  `3_Reports/Table1_Issues_Solvability.md` (linked from PROJ_STATE.md).
 - **Preprocessing is NOT complete**: cleaning is minimal preprocessing (variable
   selection & standardization only, NO trial/value filtering) — `ACC` may include
   invalid values (e.g., `-1` no response, `2` incorrect key), kept on purpose and
