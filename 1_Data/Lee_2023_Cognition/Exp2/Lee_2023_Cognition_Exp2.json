@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "/",
+      "Setting": "Online",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "Testable (Rezlescu, Danaila, Miron, & Amariei, 2020)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (individual associations: self, friend, high reward, low reward; conditions 1 & 2 pairing self with high/low reward)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "3 practice blocks of 8 trials (first block with 1000 ms stimulus + instructions, second with 500 ms, third at real speed)",
+      "Block_number": "3 blocks per matching-task run",
+      "Trial_number": "48 trials per run (16 per block; 6 trials per shape-label association); data include two runs (PMT1 + PMT2) = 96 trials per participant"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "150 ms (shape-label pair)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1500 ms",
+      "ITI": "Blank screen until response or 1500 ms elapsed",
+      "Feedback_duration": "500 ms (correct, incorrect, too slow; after each trial)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Geometric shapes (octagon, rhomboid, diamond, triangle, pentagon, trapeze, kite, square)",
+      "Label": "English words: you, friend, high reward, low reward",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Procedure identical to Experiment 1 except happy/neutral labels replaced by reward values (high reward = 9, low reward = 1). Database contains only the shape-label matching task data (PMT1 + PMT2 runs, 96 trials per participant, 51 participants). Source: paper main text + Supplementary Material."
+  }
+}

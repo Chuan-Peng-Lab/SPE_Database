@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "University of Tübingen",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "Standard computer mice",
+        "Monitor": "Acer Aspire E15 35-573G-54SK 15.6-in laptop",
+        "Software": "E-Prime 2.0 (Schneider et al., 2002)"
+      },
+      "Viewing_distance": "50 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (shape: self-associated vs stranger-associated)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "4 practice trials",
+      "Block_number": "1 block",
+      "Trial_number": "128 experimental trials"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "Until response or maximum 1500 ms (shape-label pair)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1500 ms",
+      "ITI": "500 ms black screen at trial start",
+      "Feedback_duration": "/ (feedback 'incorrect'/'please respond faster' on error or timeout)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Geometric shapes (square and triangle), approx 5 degrees x 5 degrees visual angle",
+      "Label": "German words: Ich (I), Fremder (stranger); Courier New 18-pt, approx 0.7 degrees visual angle",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Black"
+      }
+    },
+    "detail": "Association phase: participants instructed that a shape (square/triangle) denotes them and another denotes a stranger (no images presented). Matching task always presented last, after the dot-probe task. Response keys: d (match), k (nonmatch). Data contain 34 participants x 128 trials (CSV Valid_Subj 28; N caliber difference tracked in PROJ_STATE.md stage 4). Method source: paper full text (Springer)."
+  }
+}

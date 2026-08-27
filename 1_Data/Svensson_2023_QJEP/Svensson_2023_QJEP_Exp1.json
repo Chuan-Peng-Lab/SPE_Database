@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "/",
+      "Setting": "Online",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "/"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (shape association: self vs friend)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "12 practice trials",
+      "Block_number": "1 block",
+      "Trial_number": "120 experimental trials (60 matching, 60 nonmatching; randomised order)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms (shape and label)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1200 ms (100 ms stimulus + 1100 ms blank or until response)",
+      "ITI": "Variable 500-1000 ms",
+      "Feedback_duration": "500 ms (after each trial)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Black square and triangle (150 x 150 pixels, presented at 5% of screen size)",
+      "Label": "English words: self, friend",
+      "Colors": {
+        "Stimulus": "Black",
+        "Background": "White"
+      }
+    },
+    "detail": "Participants recruited via Prolific (online testing; online participants may be located anywhere, so Location/City is not applicable per SKILL.md rule), compensated at 7.50 GBP/h. Response keys: V (matching) and B (nonmatching), counterbalanced. Shape-association task was the first of two tasks (second was a modified Attention Network Test, not included in the database). 70 participants recruited, 5 excluded for failing to follow instructions -> 65 in database (consistent with CSV Sample_Size 65 / Valid_Subj 65). Trial counts per participant range 89-120 in the clean data. Method source: paper full text (PMC10119901)."
+  }
+}

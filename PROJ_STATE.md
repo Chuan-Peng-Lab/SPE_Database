@@ -31,6 +31,11 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **清洗脚本落盘与统一（2026-08，本次会话）**：四个独立清洗脚本正式落盘（Vicovaro_2022_JEPHPP / Navon_2021_psyarxiv / Sui_2014_unpub / Sui_2015_unpub 各 <Study>_clean.R），统一架构：引导块定位脚本目录 → source 1_Data/utils.R（通用函数 spe_root/write_clean_csv，与脚本同库、不跨文件夹引用）→ 清洗逻辑 → 输出守卫；utils.R 由 2_Code/ 迁至 1_Data/。重构后全量重跑验证：Vicovaro/Navon/Sui_2014 输出与正式产物逐值一致；Sui_2015 仅 80/67 行 RT 末位显示差异（~1e-15 相对差，按数值等价约定视为一致）。
 - **AGENTS.md 效率治理（2026-08，本次会话）**：新增「⚡ 效率全局原则」（与全局最高级规则同级：低效=严重问题——同类错误反复试错 / 重复验证 / 经验不调用 / 验证假象 / 不固化模式五项违规）；「工具链纪律」5 条（代码文件写 /tmp 纯文本、bash 验证看真实退出码与 stderr、文件移动用 bash mv/cp、R 语法备忘、subagent 结果靠通知）；清理过时内容 8 处（Clean_Data.Rmd 降级为历史配方参考、*_Raw/ 输入区化、Generate_Table1 比对默认关闭、caveats 稿件 v16 废弃与 Sun JSON 已补、两级校验、exFAT 规则扩展至一切写盘操作）。
 - **SKILL.md 同库约定（2026-08）**：§清洗工具 新增「通用函数与独立脚本同库」——1_Data/utils.R 与 <Study>_clean.R 同在 1_Data/ 下 source 引用，不跨文件夹。
+- **阶段 1 元数据补齐完成（2026-08-27，本次会话）**：① 4 个 paper JSON（Lee_2023_Cognition / Smith_2024_Cortex / Svensson_2023_QJEP / Orellana-Corrales_2021_APP）——[C] 字段经 Crossref 核对（标题/作者/期刊/年份/DOI 与 CSV 一致）、Summary/Conclusion 由论文摘要/全文/补充材料生成、Country/City/Email 取 CSV 现值（Svensson Email 取自论文通讯信息）；② 6 个实验级 JSON（v2 五组件）——方法细节来源分级：Lee 由论文正文+OSF 补充材料（匹配任务 PMT1+PMT2，fixation 500ms→配对 150ms→空白至响应/1500ms→反馈 500ms；3 practice×8 + 正式 3×16/轮，数据含两轮=96 试次/被试）、Smith 由 REF/ 论文 HTML+OSF 预注册（PsychoPy2、3 面孔、20s 学习、500/500/100ms、12 熟悉化+3×120、键 c/m；Dell monitor 仅预注册有）、Svensson 由 PMC 全文（Prolific 在线、500/100ms、12 practice+120 试次、V/B 键；软件字段未知留 /）、Orellana 由 Springer 全文（E-Prime 2.0、50cm、4 practice+128 试次、d/k 键；Study 2 非词关联 4×3000ms）；③ 6 个 Codebook（单 Sheet1 4 列，行数=Clean 列数，枚举值取自数据含 NA/timeout/None 等特殊值）；④ 两级校验：结构级 90 JSON EXIT=0、内容级 59 文件 0 ERROR/40 WARN（无新增）。
+- **阶段 1 流程沉淀（2026-08-27，本次会话）**：① 本次获取的论文全文/资料落盘 `REF/`（Lee_2023_Cognition.pdf + _supp.docx、Orellana-Corrales_2021_APP.html、Svensson_2023_QJEP_PMC.xml、Smith_2024_Cortex_prereg.pdf + _OSF_README.docx，叠加用户已有的 Smith_2024_Cortex.html/.pdf）；② SKILL.md 以「Metadata & ingestion workflow（元数据入库/补齐统一流程）」替换并融合原「End-to-end workflow」与「Metadata draft workflow」两节——双场景统一 10 步流程（场景 A backfill=已有数据补元数据 / 场景 B ingestion=全新入库），汇合点元数据核心（[C] Crossref / [P] 论文全文 / [D] 数据推导 / 人工确认 / Codebook），收尾两级校验+文档同步；**关键约定：论文全文查找顺序强制为 ① 查 REF/ → ② 先问用户是否已有全文 → ③ 才走 OA 渠道**，避免重复搜索。
+- **元数据规则约定（2026-08-27）**：**Setting = Online 时，`Physical_Environment.Location` 与 Dataset_inf.csv / paper JSON 的 `City` 可不填**（在线被试可分布于任何地点，位置无意义）——填 `/` 或 `N/A` 均可，无需追查。已沉淀入 SKILL.md §Five-component task framework，并落实于 Svensson_2023_QJEP exp JSON detail。
+- **工具脚本落盘（2026-08-27，本次会话）**：阶段 1 沉淀的两个可复用工具保存至 `2_Code/`——`make_codebooks.R`（Codebook 生成器，阶段 5 新研究入库复用；SKILL.md §Codebook authoring rules 已引用）与 `analyze_csv_blanks.py`（Dataset_inf.csv 空白扫描器，阶段 2 前置重扫基线用）。
+- **项目迁移至内部磁盘 + AGENTS.md 外接硬盘内容移除（2026-08，本次会话）**：项目已迁至内部 APFS 磁盘（`/dev/disk3s5`，工作路径 `~/Downloads/Collaborations/SPE_Database/SPE_Database`），不再位于外接 exFAT 盘 `/Volumes/T3`（T3 仍挂载但无仓库副本，已核实）。据此删除 AGENTS.md 全部外接硬盘专属内容：整个 exFAT 章节（强制 `._*` 清理命令、`git gc --prune=now` 规则、write/edit 的 /tmp+cp 变通、卸盘职责、慢 I/O 提示）、Document map「环境约束（exFAT）」、省 token 节「USB 盘 I/O 慢」、「会话收尾」中「清理规则」引用；通用规则保留并移入新的「会话约定（通用）」节（探索需用户批准 / 后台任务时限 / 不提交 macOS cruft、不把 `._*` 当数据）。验证：grep 确认 AGENTS.md 已无 exFAT/T3/USB 残留。
 
 ## 关键决策
 
@@ -54,11 +59,11 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 测试结果（已实测）
 
-- validator：EXIT=0（结构级）；2026-08 末复测：80 个 JSON 全绿（新增 Sui_2014/Sui_2015×2/Pan/Sun/Kirk×2 共 7 个实验级 JSON；缺失实验级 JSON 检测生效，剩余 6 个需读论文类 WARN 列出；34 文件夹 ↔ CSV 交叉一致）。
+- validator：EXIT=0（结构级）；2026-08-27 复测：**90 个 JSON 全绿**（阶段 1 新增 Lee/Smith/Svensson/Orellana 的 4 paper + 6 exp JSON；此前 80 全绿；34 文件夹 ↔ CSV 交叉一致）。
 - 内容级校验器 validate_clean_csv.R：59 文件 0 ERROR / 16 KNOWN / 40 WARN（口径差异与替代列提示）；支持 --data-dir（新产物串测用）。
 - git：8b1d4b8（start to work on whole pipeline）之后工作区有 21 项未提交改动（4 脚本 + utils.R + 7 个新 JSON + 双校验器 + AGENTS/SKILL/PROJ_STATE 等），未 push。
 - Table 1 渲染（2026-08-27 两次重渲染）：RENDER_EXIT=0；qmd 58 行 vs 稿件 70 行（12 个 pending 无文件夹）；table1_problems.txt 118 → 111 行（CSV Exp 回填后 8 条 Exp 不一致消失、新增 Martinez 1 条；Pan N 回填后其行显示 稿件 40(—) vs qmd 40）。
-- git：5 个 commit（docs / data / reports + 2026-08 补 Exp 的 data / docs 两个 commit），工作区干净，未 push。
+- git：5 个 commit（docs / data / reports + 2026-08 补 Exp 的 data / docs 两个 commit）；2026-08-27 阶段 1 之后工作区有 **22 项未提交改动**（4 修改：.gitignore、SKILL.md、AGENTS.md、PROJ_STATE.md；18 新增：阶段 1 四研究 JSON×10 + Codebook×6 + 2_Code 的 analyze_csv_blanks.py / make_codebooks.R），未 push。
 
 ## 已知问题（未解决）
 
@@ -67,10 +72,10 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 | 条目名（作者-年-期刊缩写） | 问题描述 | 缺少文件的数量 | 问题严重程度 |
 |---|---|---|---|
-| Lee_2023_Cognition | 无 codebook ×2、无 paper/实验级 JSON ×3（subj_info 已于 2026-08 补齐） | 5 | 中度 |
-| Smith_2024_Cortex | 无 codebook ×1、无 paper/实验级 JSON ×2（subj_info 已于 2026-08 补齐） | 3 | 中度 |
-| Svensson_2023_QJEP | 无 codebook ×1、无 paper/实验级 JSON ×2（subj_info 已于 2026-08 补齐） | 3 | 中度 |
-| Orellana-Corrales_2021_APP | 无 raw.csv ×2、无 codebook ×2、无 JSON ×3（subj_info 已于 2026-08-27 由 Clean.csv 唯一 Subject 生成，Exp1 34 行 / Exp2 33 行，人口学 /；raw 追补归阶段 4，用户+agent 共同决定） | 7 | 重度 |
+| Lee_2023_Cognition | 元数据已齐（2026-08-27 阶段 1 补齐 paper/exp JSON ×3 + Codebook ×2）；raw/subj_info/Clean 齐全 | 0 | 已解决 |
+| Smith_2024_Cortex | 元数据已齐（2026-08-27 阶段 1 补齐 paper/exp JSON ×2 + Codebook ×1）；raw 导出疑似不全（48 vs CSV 59/58，归阶段 4 判定） | 1 | 重度 |
+| Svensson_2023_QJEP | 已全部补齐（2026-08-27 阶段 1：paper/exp JSON ×2 + Codebook ×1） | 0 | 已解决 |
+| Orellana-Corrales_2021_APP | 无 raw.csv ×2（subj_info 已于 2026-08-27 由 Clean.csv 唯一 Subject 生成，Exp1 34 行 / Exp2 33 行，人口学 /；元数据 2026-08-27 阶段 1 已补齐；raw 追补归阶段 4，用户+agent 共同决定） | 2 | 重度 |
 | Sun_2026_DataExp | 无 raw.csv ×1（62 MB Clean 在库；raw 追补归阶段 4，用户+agent 共同决定）、无实验级 JSON ×1（CSV 行信息稀疏） | 2 | 重度 |
 | Zhang_2023_NeuroImage | 无 raw.csv ×1（本次扫描新发现；归阶段 4：核实外部仓库后决定追补或豁免） | 1 | 重度 |
 
@@ -97,7 +102,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 1. **过度验证已核实的结论**：前序 agent 已确认 subject 0 与 ACC 编码，仍完整重验（扫 80 个 .mat + 重建对比 + 字节对比 3 轮）。→ 对已记录事实只做一次轻量抽查。
 2. **纠结数值无关紧要的格式差异**：脚本输出与旧文件浮点末位显示不同（R %.15g vs Python repr，~1e-13 相对差），花多轮追根源（R 版本/printf/scipy），用户喊停。→ 数值等价即一致，格式差异一句话记录，不重写旧文件。
 3. **在 CRLF/LF 行尾上浪费多轮**：脚本输出 LF 覆盖 CRLF 文件后反复恢复/转换，用 grep 验证还丢回车。→ **CRLF/LF 差异直接无视**（用户明确指示）：git text=auto 归一化行尾比较，diff 只显示内容改动，无需为行尾重写/恢复文件（注意 grep/awk 等工具处理 CRLF 的行为差异即可）。
-4. **write/edit 工具在 exFAT 上原子写失败**（ENOTSUP: link）浪费一轮。→ 固化 /tmp 中转 + cp 模式。
+4. **write/edit 工具在 exFAT 上原子写失败**（ENOTSUP: link）浪费一轮。→ 固化 /tmp 中转 + cp 模式。（2026-08 项目迁至内部 APFS 磁盘后此条不再适用：write/edit 直接可用，勿再 /tmp+cp）
 5. **验证输出不截断**：裸跑整文件 diff 输出数万字节污染上下文。→ 用 head/wc/diff | wc -l。
 6. 教训：执行前把「哪些差异需要解决、哪些可忽略」列清楚，比反复探查更省时间。
 
@@ -105,13 +110,9 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 推进逻辑：按数据完整度分层——L1 完整规范（有文件夹 + 标准 `*_raw.csv`）→ 阶段 1–3；
 L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（9 个 pending）→ 阶段 5。先精细化、后补底子、
-再收口。**git 提交类事项不列为任务**（仅用户指示时处理；当前工作区 21 项未提交改动，见「测试结果」）。
+再收口。**git 提交类事项不列为任务**（仅用户指示时处理；当前工作区 22 项未提交改动，见「测试结果」）。
 
-### 阶段 1：元数据补齐（对象：已有数据但缺 JSON/Codebook 的研究 ×4）
-- 1a. paper JSON ×4：Lee_2023_Cognition、Smith_2024_Cortex、Svensson_2023_QJEP、Orellana-Corrales_2021_APP（摘要/结论提取，先草稿确认）
-- 1b. 实验级 JSON ×6：Lee×2、Smith×1、Svensson_2023×1、Orellana×2（v2 五组件；`[P]` LLM 草稿+人工核对、`[H]` 走决策清单）
-- 1c. Codebook ×6（同四研究；单 Sheet1 4 列，覆盖 Clean 全部列）
-- 验收：validate_json_metadata.R EXIT=0；JSON 80→90；Codebook 行数==Clean 列数；paper JSON Year==文件夹年份、DOI==CSV 值；`[P]`/`[H]` 留痕
+### ~~阶段 1：元数据补齐~~ **已完成（2026-08-27）**：4 paper JSON + 6 exp JSON + 6 Codebook 全部落盘；两级校验全绿（90 JSON EXIT=0；59 Clean 0 ERROR）。验收达标：JSON 80→90、Codebook 行数==Clean 列数、paper JSON Year/DOI 与 CSV 一致。遗留说明：Svensson exp JSON `Equipment.Software` 论文未披露留 `/`；Lee 数据为匹配任务（PMT1+PMT2）而非论文主任务（分类任务），已在 exp JSON detail 注明。
 
 ### 阶段 2：CSV 文献/流程字段补全（对象：仅 L1 完整规范研究，实测 7 研究 13 行）
 - 前置：以 2026-08-27 实测基线为准（见「已知问题」）
@@ -131,7 +132,7 @@ L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（9 个 pending�
 - 验收：每项产出 raw.csv（输入区→清洗脚本→两级校验 EXIT=0）**或**确认豁免并记录结论；严重度表/白名单同步
 
 ### 阶段 5：pending 条目入库（对象：L3 九条目 — 用户加入原始数据后 skill 自动/半自动入库）
-- 用户将原始数据放入输入区后，加载 spe-database-curation 技能走 End-to-end 10 步流程
+- 用户将原始数据放入输入区后，加载 spe-database-curation 技能走 Metadata & ingestion workflow 场景 B（统一 10 步流程，SKILL.md 2026-08-27 版）
 - 其 CSV 空白（Scheller/Wozniak_2020/Hu_2023_SDB 的 Country/City/Stim_language）在入库时随行自然填齐
 - 验收（每研究）：五件套齐全（raw/Clean/subj_info/Codebook/paper+exp JSON）、命名合规；从 known_pending 移除；两级校验 EXIT=0；Generate_Table1.qmd 重渲染 RENDER_EXIT=0、qmd 行数相应增加
 
@@ -146,5 +147,5 @@ L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（9 个 pending�
 ### 横切约束（每阶段适用）
 - 元数据改动 → validate_json_metadata.R EXIT=0；数据改动 → 加跑 validate_clean_csv.R 0 ERROR
 - Dataset_inf.csv 字节保真（改前往返测试、改后 diff 仅目标单元格）；同一文件多处修改合并一次写入
-- 写盘操作 /tmp 中转 + cp（exFAT 无原子写）；文件移动用 bash mv/cp
+- 写盘操作直接 write/edit（内部 APFS 磁盘原子写正常，无需 /tmp 中转）；文件移动用 bash mv/cp
 - 与已核实事实冲突的判断暂停问人，不自行覆盖

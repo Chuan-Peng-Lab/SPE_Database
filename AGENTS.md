@@ -11,67 +11,20 @@ mode: primary
 以下情况**均不构成**确认：会话惯例、收尾清单、任务"完成"的推断、用户只说"修复/更新/插入/列出"等不含提交指令的话。
 **不要每次回复都询问是否提交**：提交事宜只在用户主动询问/指示时处理。任务完成正常汇报结果即可；若有未提交改动，简单提示一句"改动未提交"即可，不重复追问。用户询问提交时，agent 列出待提交文件与 commit message 草案，获得明确确认后再提交。
 
-## ⚡ 效率全局原则（EFFICIENCY — 与「全局最高级规则」同级，优先级高于本文件其余规则）
+## 会话约定（通用）
 
-**低效是严重问题**，等同违规，须避免并在发生时立即纠正：
-
-1. **同类错误反复试错**：同一类工具/语法/流程错误第二次出现时，必须停下来固化解法
-   （写入本文件或本会话纪律），禁止“再试一次碰运气”式重试。
-2. **重复验证已核实事实**：PROJ_STATE.md / caveats / 本文件已记录的结论直接引用，
-   只做轻量抽查，禁止完整重验。
-3. **有记录经验不调用**：执行前先对照本文件效率约定；踩过的坑对应的经验必须体现在后续动作中。
-4. **验证假象**：任何验证必须看到真实退出码与 stderr（用 `cmd > file 2>&1; echo EXIT=$?`，
-   禁止 `cmd | tail; echo $?`——那是 tail 的退出码）；输出展示禁止用 `stdout || stderr` 吞掉错误；
-   对比类验证写成 /tmp 脚本文件执行，不用 bash 内联（引号嵌套易产生“0 差异”假象）。
-5. **不固化模式**：第一次失败后立即固化（如 exFAT 的 /tmp+cp），不要反复重试同一工具。
-
-发现自己在绕圈时，先停下来把“该怎么做”写清楚，再继续执行。
-
-## ⚠️ CRITICAL: This project lives on a USB drive (exFAT)
-
-The entire repo is stored on an **exFAT-formatted USB drive** mounted at `/Volumes/T3`.
-
-### Why it matters (one line)
-
-exFAT has no macOS xattrs, so macOS writes hidden `._*` AppleDouble sidecars that
-leak into `.git/objects/pack/` and break git ("non-monotonic index" errors).
-
-### Mandatory cleanup rule
-
-**At the START of every session** (first tool call), and **before/after any
-`git add`/`commit`/`status`/`log` that errors**, run:
-
-```bash
-rm -f .git/objects/pack/._pack-*
-find . -name '._*' -not -path './.git/objects/pack/._pack-*' -delete 2>/dev/null
-find .git -name '._*' -delete 2>/dev/null
-```
-
-If corruption persists: `git gc --prune=now` — never delete real
-`.git/objects/pack/pack-*` files.
-
-### Guidelines for agents
-
-- **Never** `git add` or commit `._*` files or other macOS cruft (`.DS_Store`,
-  `.Rhistory`, `.Rproj.user`, `Thumbs.db`). `.gitignore` already covers most of them.
-- **Never** open/read `._*` files as if they were real data files — they are AppleDouble
-  metadata, not content. When globbing/listing, filter them out (the repo already uses
-  `._*` ignore patterns).
-- **Safely eject / unmount** the drive is the user's responsibility — never attempt to
-  unmount, remount, or format the drive yourself.
-- Expect slow disk I/O on this drive (USB/exFAT). Batch reads/writes when possible.
-- **exFAT 上原子写会失败（ENOTSUP: link）**：write/edit 工具、python shutil.move/open(w) 等都可能失败——**一切写盘上文件的操作**：先在 /tmp（APFS）生成/修改，再 `cp` 到目标路径；第一次失败后立即固化此模式，不要反复重试同一工具。
 - **Never** start an exploration task or fire background exploration without explicit user
   approval.
 - **Never** fire background exploration tasks that may take more than a few hours.
-- **Always** run `git gc --prune=now` before starting a new exploration task.
+- **Never** `git add`/commit macOS cruft（`.DS_Store`、`.Rhistory`、`.Rproj.user`、
+  `Thumbs.db`；`.gitignore` 已覆盖多数），也不要把 `._*` AppleDouble sidecar 当真实数据读取。
 
 ## Document map（四文档分工与引用关系）
 
 - `README.md` — 面向**人类读者**：项目介绍、数据使用指引。代理也应按需引用。
-- `AGENTS.md`（本文件）— 面向**agent**：环境约束（exFAT）、效率约定、caveats。
+- `AGENTS.md`（本文件）— 面向**agent**：环境约束、效率约定、caveats。
 - `PROJ_STATE.md` — **会话状态快照**：每次工作后必须更新；新会话先读它再开工。
-- `3_Reports/Table1_Issues_Solvability.md` — **Table 1 问题可解性分析**：逐项判定稿件 Table 1 差异的可解性（可自动确定 / 需人工），与 PROJ_STATE.md 双向关联（未解决清单 ↔ 可解性判定）；依据 `Generate_Table1.qmd` 输出的 `table1_problems.txt`（稿件 v16 已废弃，比对默认关闭；该文档判定冻结，仅作未来稿件版本更新的修正参考）。
+- `3_Reports/Table1_Issues_Solvability.md` — **Table 1 问题可解性分析**：逐项判定稿件 Table 1 差异的可解性（可自动确定 / 需人工），与 PROJ_STATE.md 双向关联（未解决清单 ↔ 可解性判定）；依据 `Generate_Table1.qmd` 输出的 `table1_problems.txt`。
 - `.opencode/skills/spe-database-curation/SKILL.md` — **通用 curation 技能**：自足独立、
   不依赖本仓库文档；任何数据整理/入库任务一律加载
   `skill(name="spe-database-curation")`。
@@ -109,9 +62,9 @@ If corruption persists: `git gc --prune=now` — never delete real
 
 ### 省 token
 - 大文件（>10 MB，见 caveats 清单）**绝不整读入上下文**：用 `head` 看表头、Python 流式/按列提取、只取所需结果。
-- 优先 `grep`/`glob` 定位，不整文件读取；USB 盘 I/O 慢，读写尽量批量。
+- 优先 `grep`/`glob` 定位，不整文件读取；读写尽量批量。
 - **不要重复"发现"已知问题**：caveats 与 PROJ_STATE.md 里已记录的，直接当作事实引用。
-- `Generate_Table1.qmd` 渲染耗时数分钟：仅当输入（文件夹/Dataset_inf.csv/qmd 本身）变化时才重渲染；日常校验用秒级**两级校验**：`Rscript 2_Code/validate_json_metadata.R`（结构级）+ `Rscript 2_Code/validate_clean_csv.R`（内容级，2026-08 新增）。
+- `Generate_Table1.qmd` 渲染耗时数分钟：仅当输入（文件夹/Dataset_inf.csv/qmd 本身）变化时才重渲染；日常校验用秒级 `Rscript 2_Code/validate_json_metadata.R`。
 - 编辑 `Dataset_inf.csv` 保持字节保真：UTF-8 BOM、CRLF 行尾、文件末尾无换行；改前先做往返测试，改后核对 diff 只含目标单元格。
 - 一次会话内对同一文件的多处修改合并为一次写入/一次提交。
 - 长任务（qmd 渲染、批量改名、大批量网络查询）放后台 job 执行，期间并行推进独立的只读步骤。
@@ -119,16 +72,6 @@ If corruption persists: `git gc --prune=now` — never delete real
 - 数值等价（浮点容差内）即视为一致：脚本输出与旧文件的末位显示差异（R %.15g vs Python repr 等）不追根源、不改数据、不重写旧文件。
 - 验证命令输出要截断（head/wc -l/diff | wc -l），禁止裸跑大 diff 或长 R 输出进上下文。
 - 对 PROJ_STATE.md / 前序 agent 已核实的事实做一次轻量抽查即可，不要完整重验；已记录的结论直接引用。
-
-### 工具链纪律（2026-08 沉淀，防反复试错）
-- **写代码/脚本文件**：用 write 工具写 /tmp 纯文本文件（内容为字面文本，不经转义），再 bash 执行；
-  禁止在 run_code 模板字符串里内嵌多行 python/R 代码（反引号/引号/换行转义极易出错，曾浪费多轮）。
-- **bash 验证**：stderr 单独查看（不要用 stdout||stderr 吞错）；退出码用 `cmd > file 2>&1; echo EXIT=$?`；
-  复杂数据对比写成 /tmp 脚本执行，不用 bash 内联 `python3 -c`（引号嵌套易产生“0 差异”假象）。
-- **文件移动/复制**：用 bash `mv`/`cp`，不用 python `shutil.move`（exFAT 上静默失败且错误难发现）。
-- **R 语法备忘**：`if/else` 必须用花括号（换行 else 报 “unexpected 'else'”）；字符串拼接用 `paste0`
-  （R 不支持相邻字符串字面量）；跨行 `sprintf` 会报错。
-- **后台 subagent（continuable）**：结果靠完成通知获取，`job_output` 不适用其 subagentId。
 
 ### 防无效搜索
 - 查论文 DOI：**Crossref API**（`api.crossref.org/works?query.bibliographic=...&query.author=...&filter=container-title:...`）按作者+期刊+年份核对——通用网页搜索噪声大且难确证，勿用。
@@ -138,7 +81,7 @@ If corruption persists: `git gc --prune=now` — never delete real
 ### 会话收尾（强制）
 - 更新根目录 `PROJ_STATE.md`：目标、已完成（已验证）、关键决策、测试结果、已知问题、失败方案、下一步；只记已确认事实。
 - 若本会话沉淀了可复用的约定/流程，同步补充到 `spe-database-curation` 技能（SKILL.md）。
-- 如需提交：**必须先获得用户明确确认**（见文首「全局最高级规则」），确认后按「清理规则」删 AppleDouble 文件，再按逻辑分组 commit（≤3 个）。
+- 如需提交：**必须先获得用户明确确认**（见文首「全局最高级规则」），确认后按逻辑分组 commit（≤3 个）。
 
 ## Project context
 
@@ -153,11 +96,11 @@ If corruption persists: `git gc --prune=now` — never delete real
     master index (legacy `Dataset_inf.xlsx` outdated — pending deletion after
     collaborators confirm the CSV). Each folder contains:
     - raw data: `*_raw.csv` (trial-level), `*_subj_info.csv` (subject-level),
-      `<Study>_Raw/` = **输入区**（下载的原始导出，只读、不参与校验；E-Prime `.edat2`,
-      MATLAB `.mat`, PsychoPy `.psydat` 等；见 SKILL.md Raw input zone）。
+      sometimes `*_Raw/` subfolders with per-participant exports (E-Prime `.edat2`,
+      MATLAB `.mat`, PsychoPy `.psydat`).
     - cleaned data: `*_ExpN_Clean.csv`.
-    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 50 files total:
-      22 canonical `Codebook_` + 28 legacy `CodeBook_`),
+    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 56 files total:
+      28 canonical `Codebook_` + 28 legacy `CodeBook_`; 2026-08-27 阶段 1 新增 6 个 canonical),
       study-level `.json` (paper metadata) and experiment-level `.json`
       (methodology, v2 hierarchical schema: five components under `exp<N>`).
   - `1_Data/Dataset_inf.csv` — **master index** (newest version; `Dataset_inf.xlsx`
@@ -178,23 +121,21 @@ If corruption persists: `git gc --prune=now` — never delete real
     structure, file naming grammar, JSON schemas, five-component task framework,
     Identity standardization, codebook authoring, DOI/year verification workflow).
     Load via `skill(name="spe-database-curation")` when adding/editing study metadata.
-  - `2_Code/` — 校验器与历史清洗工具：
-    - `validate_json_metadata.R` — 结构级校验器（JSON/命名/文件夹↔CSV 交叉；2026-08 增缺失实验级 JSON 检测）。
-    - `validate_clean_csv.R` — 内容级校验器（2026-08 新增：标准列/Identity 三级/Subject 数等；支持 --data-dir）。
-    - `Clean_Data.Rmd` (5053 lines) — **历史配方参考**（已降级，非现行执行路径；其逐研究段逐步提取为
-      独立 `1_Data/<Study>/<Study>_clean.R`，通用函数 `1_Data/utils.R` 与脚本同库）。
-    - `SPE_Interactive_Clean_V3.R` / `SPE_Shiny_App_V4.2.R` — 历史交互/网页版清洗器（并行实现，逻辑参考）。
+  - `2_Code/` — data cleaning tooling, three parallel implementations of the same
+    standardization logic:
+    - `Clean_Data.Rmd` (5053 lines) — master per-paper manual pipeline (authoritative).
+    - `SPE_Interactive_Clean_V3.R` — console-based interactive cleaner (single/batch).
+    - `SPE_Shiny_App_V4.2.R` — Shiny web app (single/batch, ZIP download).
   - `3_Reports/` — analysis: `Reports.Rmd`, `Process_Data.Rmd`, `Subject_Table.Rmd`,
     `R_rainclouds.R`, plus `1_Identity_Analysis/`, `2_Mismatch_Analysis/`,
     `3_Exploratory_Analysis/` (each a self-contained Rmd), `4_Post/`, and `Output/`
     (aggregated CSVs in `Output/data/`, figures in `Output/Pic/`).
-    - `Generate_Table1.qmd` — regenerates Table 1 (flow:
+    - `Generate_Table1.qmd` — regenerates the manuscript Table 1 (flow:
       `1_Data/* folders → Dataset_inf.csv → Table 1`; Table 1 `ID` column =
       `Folder_Name`; comparison treats manuscript "Not specified"=missing and
       `CC0`=`CC0 1.0 Universal` as equal). Outputs `Generate_Table1.docx` +
-      `Output/table1_problems.txt`; render with RStudio's bundled quarto.
-      **与稿件 docx 的比对默认关闭**（params `compare_manu: false`，稿件 v16 已废弃；
-      稿件版本更新时 `--param compare_manu:true` 启用）。
+      `Output/table1_problems.txt` (known issue classes listed there); render with
+      RStudio's bundled quarto. Operational details: PROJ_STATE.md.
     - `Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md` — Chinese report of the
       3-way consistency check (manuscript Table 1 vs CSV vs folders).
 - **Stack**: R / R Markdown / Shiny. RStudio project (`SPE_Database.Rproj`).
@@ -214,14 +155,10 @@ If corruption persists: `git gc --prune=now` — never delete real
 
 Treat these as known issues, not new discoveries — do not "find" them again:
 
-- **4 studies lack codebooks AND paper-level JSONs** (no `Codebook_*_Clean.xlsx`,
-  no `<Study>.json`): `Lee_2023_Cognition`, `Orellana-Corrales_2021_APP`,
-  `Smith_2024_Cortex`, `Svensson_2023_QJEP` (`*_subj_info.csv` 已全覆盖：
-  Lee/Smith/Svensson 由各自 `*_raw.csv` 生成（2026-08），Sui_2015_unpub 由 `*_Raw/`
-  人口学记录生成（2026-08-27），Orellana-Corrales_2021_APP 由 Clean.csv 唯一 Subject
-  生成（2026-08-27，仍无任何原始数据，人口学 /）；Svensson_2023_QJEP 仍无任何 JSON)。
+- **4 studies previously lacked codebooks AND paper-level JSONs — 已补齐（2026-08-27 阶段 1）**: `Lee_2023_Cognition`, `Orellana-Corrales_2021_APP`, `Smith_2024_Cortex`, `Svensson_2023_QJEP` 现均有 paper JSON + 实验级 JSON + `Codebook_*_Clean.xlsx`（各研究 subj_info 当时已全覆盖：Lee/Smith/Svensson 由各自 `*_raw.csv` 生成（2026-08），Orellana-Corrales_2021_APP 由 Clean.csv 唯一 Subject 生成（2026-08-27，仍无任何原始数据，人口学 /）；Svensson exp JSON 的 `Equipment.Software` 论文未披露留 `/`）。
 - **Missing raw data**: `Sun_2026_DataExp/` has `Sun_2026_DataExp_Exp1_Clean.csv`
-  (largest cleaned file, 62 MB) but no `*_raw.csv`（实验级 JSON 已于 2026-08 补齐）。
+  (largest cleaned file, 62 MB) but no `*_raw.csv`（实验级 JSON 已于 2026-08 补齐；
+  raw 追补归阶段 4，用户+agent 共同决定）。
 - **Pending study — no data folder yet (do NOT "fix")**: `Dataset_inf.csv` lists
   `Wozniak_2020_PLOS` (DOI `10.1371/journal.pone.0235627`, OSF `osf.io/2q9w7`) but no
   `1_Data/Wozniak_2020_PLOS/` folder exists — expected, data not yet curated.
@@ -239,9 +176,7 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   differences (`numTrials` vs per-block counts), and some Study-label attributions
   (`P46E2`, `Pu2E1`, `Pt9E1`). These are tracked as open issues in
   `Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md` and surfaced by
-  `Generate_Table1.qmd` — do not re-report them as new findings. **稿件 v16 已废弃（2026-08）**：
-  不再与其逐行比对；历史清单与 Table1_Issues_Solvability.md 判定冻结，仅作未来稿件版本更新的修正参考。
-  Per-item solvability
+  `Generate_Table1.qmd` — do not re-report them as new findings. Per-item solvability
   judgments (auto-resolvable vs need-human) live in
   `3_Reports/Table1_Issues_Solvability.md` (linked from PROJ_STATE.md).
 - **Preprocessing is NOT complete**: cleaning is minimal preprocessing (variable

@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "University of Tübingen",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "Standard computer mice",
+        "Monitor": "Acer Aspire E15 35-573G-54SK 15.6-in laptop",
+        "Software": "E-Prime 2.0 (Schneider et al., 2002)"
+      },
+      "Viewing_distance": "50 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (association: self vs stranger, using nonword stimuli)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "4 practice trials",
+      "Block_number": "1 block",
+      "Trial_number": "128 experimental trials"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "Until response or maximum 1500 ms (nonword-label pair)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1500 ms",
+      "ITI": "500 ms black screen at trial start",
+      "Feedback_duration": "/ (feedback 'incorrect'/'please respond faster' on error or timeout)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Nonwords phonologically resembling German words: sfartku, ambelde, teirnen, kes, muf, lor (3 or 7 characters)",
+      "Label": "German words: Ich (I), Fremder (stranger); Courier New 18-pt",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Black"
+      }
+    },
+    "detail": "Association phase: nonword-concept pairs presented 4 times for 3000 ms each, alternating between self-associated and stranger-associated pairs. Study 2 was preregistered (osf.io/s68pm). Data contain 33 participants x 128 trials (CSV Sample_Size 34 / Valid_Subj 31; N caliber difference tracked in PROJ_STATE.md stage 4). Method source: paper full text (Springer)."
+  }
+}

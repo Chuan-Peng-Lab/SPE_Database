@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "University of Kent, Canterbury",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "Dell monitor",
+        "Software": "PsychoPy2 (Peirce et al., 2019)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, mismatch (referents: self, friend, stranger)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "12 familiarisation trials per block (with feedback, 400 ms)",
+      "Block_number": "3 blocks",
+      "Trial_number": "360 trials total (120 per block: 60 match, 60 mismatch; 20 match per referent, 10 mismatch per referent pair)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms (face and label pair)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1400-1800 ms (randomised) after the 100 ms presentation",
+      "ITI": "500 ms blank screen at trial start",
+      "Feedback_duration": "400 ms (familiarisation trials only; no feedback on experimental trials)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central white fixation cross",
+      "Shape": "3 neutral faces (Chicago Face Database, Ma et al., 2015), non-face features removed, direct gaze",
+      "Label": "English words: You, Friend, Stranger (Calibri bold white font)",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Learning phase: each face-label match presented for 20 s. Response keys: c (match), m (mismatch). Database file corresponds to the paper's Experiment 1 (individual differences approach, neurotypical University of Kent students; 59 recruited, 1 excluded for <33% accuracy -> 58 final, 13 male / 45 female, age 18-27 M=19.22). Data contain 48 participants x 360 trials (CSV Sample_Size 59 / Valid_Subj 58; raw export appears incomplete, N discrepancy tracked in PROJ_STATE.md stage 4). Monitor 'Dell' from pre-registration (not stated in paper main text). Method source: paper full text (REF/ Smith_2024_Cortex.html) + pre-registration (OSF)."
+  }
+}
