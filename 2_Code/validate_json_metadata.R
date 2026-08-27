@@ -201,6 +201,31 @@ if (!file.exists(dataset_inf)) {
   }
 }
 
+# ------------------------------------------------------------------------------
+# Experiment-level JSON completeness (2026-08 enhancement): every standard-named
+# *_Exp<N>_Clean.csv must have a matching <Study>_Exp<N>.json (v2 schema) in the
+# same folder or the study root. Missing files are reported as WARN (known gaps
+# are documented in PROJ_STATE.md; new studies must not add more). Non-standard
+# variants (e.g. _Exp1.1_ files) are excluded from the check.
+# ------------------------------------------------------------------------------
+clean_files <- list.files(data_dir, pattern = "_Exp[0-9]+_Clean[.]csv$",
+                          recursive = TRUE, full.names = TRUE)
+clean_files <- clean_files[!grepl("/[.]_", clean_files)]
+clean_files <- clean_files[!grepl("(_Raw/|_raw/|/Raw/|/Source/)", clean_files)]
+missing_exp_json <- character(0)
+for (cf in clean_files) {
+  base <- sub("_Clean[.]csv$", "", basename(cf))   # <Study>_Exp<N>
+  if (!file.exists(file.path(dirname(cf), paste0(base, ".json"))) &&
+      !file.exists(file.path(dirname(dirname(cf)), paste0(base, ".json")))) {
+    missing_exp_json <- c(missing_exp_json, sub(paste0(data_dir, "/"), "", cf))
+  }
+}
+if (length(missing_exp_json)) {
+  cat(sprintf(paste0("  [WARN] %d *_Exp<N>_Clean.csv without experiment-level JSON ",
+                     "(create <base>.json, v2 schema):\n"), length(missing_exp_json)))
+  for (m in missing_exp_json) cat("         ", m, "\n", sep = "")
+}
+
 # --- report -------------------------------------------------------------------
 cat(sprintf("Validated %d JSON files under %s\n", length(json_files), data_dir))
 if (file.exists(dataset_inf))

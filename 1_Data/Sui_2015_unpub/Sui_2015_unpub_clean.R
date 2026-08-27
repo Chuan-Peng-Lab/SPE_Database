@@ -23,14 +23,22 @@
 # 依赖包：R.matlab, dplyr, tidyr
 # ============================================================================
 
-# ---- 设置工作目录为脚本所在目录（兼容 Rscript 与 RStudio Source） ----
-args <- commandArgs(trailingOnly = FALSE)
-file_arg <- args[grepl("^--file=", args)]
-if (length(file_arg) > 0) {
-  setwd(dirname(normalizePath(sub("^--file=", "", file_arg[1]))))
+# ---- 定位脚本目录（引导块，utils.R 依赖） ----
+.args <- commandArgs(trailingOnly = FALSE)
+.fa <- .args[grepl("^--file=", .args)]
+.script_dir <- if (length(.fa)) {
+  dirname(normalizePath(sub("^--file=", "", .fa[1])))
 } else if (!is.null(sys.frame(1)$ofile)) {
-  setwd(dirname(normalizePath(sys.frame(1)$ofile)))
+  dirname(normalizePath(sys.frame(1)$ofile))
+} else {
+  getwd()
 }
+# ---- 加载通用函数（1_Data/utils.R，与脚本同库） ----
+.ut <- file.path(dirname(dirname(.script_dir)), "1_Data", "utils.R")
+if (!file.exists(.ut)) .ut <- file.path(.script_dir, "utils.R")
+stopifnot(file.exists(.ut))
+source(.ut)
+rm(.args, .fa, .script_dir, .ut)
 
 suppressMessages({
   library(R.matlab)
@@ -38,18 +46,10 @@ suppressMessages({
   library(tidyr)
 })
 
-# ---- read.mat：从 Rmd 同名辅助函数原样提取（把 .mat 的
-#      TestRt/Correct/Tshape/Tlabel 四列块纵向展开为长表） ----
-# ---- write_clean_csv：写 CSV 时使用 CRLF 行尾（与库内 *_Clean.csv 惯例一致） ----
-write_clean_csv <- function(df, path) {
-  tmp <- tempfile(fileext = ".csv")
-  write.csv(df, tmp, row.names = FALSE)
-  txt <- readLines(tmp, warn = FALSE)
-  con <- file(path, open = "wb")
-  writeLines(txt, con, sep = "\r\n", useBytes = TRUE)
-  close(con)
-  unlink(tmp)
-}
+STUDY_DIR <- file.path(spe_root(), "1_Data", "Sui_2015_unpub")
+stopifnot(dir.exists(STUDY_DIR))
+
+
 
 # ---- read.mat：从 Rmd 同名辅助函数原样提取（把 .mat 的
 #      TestRt/Correct/Tshape/Tlabel 四列块纵向展开为长表） ----
@@ -149,7 +149,7 @@ read.mat <- function(list) {
 # "Self", "Friend", "Stranger" -> "Self", "Close", "Stranger"（无 trial 混乱）
 # ============================================================================
 file_list <- list.files(
-  path = "Sui_2015_unpub_Raw/Source/",
+  path = file.path(STUDY_DIR, "Sui_2015_unpub_Raw", "Source"),
   pattern = "^PractExperiment_1.*\\.mat$",
   full.names = TRUE
 )
@@ -221,7 +221,7 @@ df_e1 <- read.mat(
 
 rm(list_mat_e1, mat_data)
 
-write_clean_csv(df_e1, "Exp1/Sui_2015_unpub_Exp1_Clean.csv")
+write_clean_csv(df_e1, file.path(STUDY_DIR, "Exp1", "Sui_2015_unpub_Exp1_Clean.csv"))
 
 # ============================================================================
 # Experiment 2（Identity = 3）
@@ -231,7 +231,7 @@ write_clean_csv(df_e1, "Exp1/Sui_2015_unpub_Exp1_Clean.csv")
 # 不进入 Clean 文件；对应 subject 3 仅保留 session 2。
 # ============================================================================
 file_list <- list.files(
-  path = "Sui_2015_unpub_Raw/Source/",
+  path = file.path(STUDY_DIR, "Sui_2015_unpub_Raw", "Source"),
   pattern = "^PractExperiment_2.*\\.mat$",
   full.names = TRUE
 )
@@ -302,7 +302,7 @@ df_e2 <- read.mat(list = list_mat_e2) %>%
 
 rm(list_mat_e2, mat_data)
 
-write_clean_csv(df_e2, "Exp2/Sui_2015_unpub_Exp2_Clean.csv")
+write_clean_csv(df_e2, file.path(STUDY_DIR, "Exp2", "Sui_2015_unpub_Exp2_Clean.csv"))
 
 # ============================================================================
 # 输出校验

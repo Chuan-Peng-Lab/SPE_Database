@@ -1061,7 +1061,7 @@ df[[15]] <- read.csv(
     ),
     Label_Standardized_Identity = case_when(
       Label == "Self" ~ "Self",
-      Label == "Friend" ~ "Close",
+      Label == "Father" ~ "Close",
       Label == "Stranger" ~ "Stranger",
     ),
   ) %>%

@@ -222,14 +222,14 @@
 1,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",634.958903833649,0.634958903833649,0
 1,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",582.514835289658,0.582514835289658,1
 1,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",747.085628775494,0.747085628775494,1
-1,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",573.088160062071,0.573088160062071,1
+1,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",573.08816006207,0.57308816006207,1
 1,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",730.380521919869,0.730380521919869,1
 1,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",617.819137602964,0.617819137602964,1
 1,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",501.776554264325,0.501776554264325,1
 1,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",471.111637101785,0.471111637101785,1
 1,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",982.392406231156,0.982392406231156,1
 1,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",417.622574973393,0.417622574973393,1
-1,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",682.302063488351,0.682302063488351,0
+1,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",682.30206348835,0.68230206348835,0
 1,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",668.985186841383,0.668985186841383,1
 1,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",463.083719896531,0.463083719896531,1
 1,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",897.634733361883,0.897634733361883,1
@@ -447,7 +447,7 @@
 1,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",761.452329096755,0.761452329096755,1
 1,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",737.341109421322,0.737341109421322,1
 1,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",655.397252319744,0.655397252319744,1
-1,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",578.067123392429,0.578067123392429,1
+1,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",578.06712339243,0.57806712339243,1
 1,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",443.33811087472,0.44333811087472,1
 1,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",660.755032829002,0.660755032829002,0
 1,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",477.43110202282,0.47743110202282,1
@@ -627,12 +627,12 @@
 2,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",685.53898097548,0.68553898097548,1
 2,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",436.985665908196,0.436985665908196,1
 2,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",618.859113463031,0.618859113463031,1
-2,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",634.275427595639,0.634275427595639,1
+2,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",634.27542759564,0.63427542759564,1
 2,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",705.594104568945,0.705594104568945,1
 2,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",658.836547260535,0.658836547260535,1
 2,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",578.287641597854,0.578287641597854,1
 2,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",672.180368827185,0.672180368827185,0
-2,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",676.864153731231,0.676864153731231,1
+2,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",676.86415373123,0.67686415373123,1
 2,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",495.71453914632,0.49571453914632,1
 2,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",570.191156292822,0.570191156292822,1
 2,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",949.531852518703,0.949531852518703,1
@@ -686,7 +686,7 @@
 2,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",606.917680545394,0.606917680545394,1
 2,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",815.577173880456,0.815577173880456,1
 2,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",593.568425703779,0.593568425703779,1
-2,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",730.865474016809,0.730865474016809,1
+2,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",730.86547401681,0.73086547401681,1
 2,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",662.943499468156,0.662943499468156,1
 2,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",526.346136236498,0.526346136236498,1
 2,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",529.666470962411,0.529666470962411,1
@@ -951,7 +951,7 @@
 2,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",463.788615462363,0.463788615462363,1
 2,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",509.10575119633,0.50910575119633,1
 2,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",442.579524627035,0.442579524627035,1
-2,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",787.137903507301,0.787137903507301,1
+2,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",787.1379035073,0.7871379035073,1
 2,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",467.655598023612,0.467655598023612,1
 2,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",512.686279424997,0.512686279424997,1
 2,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",568.489937771119,0.568489937771119,0
@@ -1127,7 +1127,7 @@
 3,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",583.328312928643,0.583328312928643,1
 3,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",390.568953338516,0.390568953338516,1
 3,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",413.749579362047,0.413749579362047,1
-3,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",253.141430525829,0.253141430525829,1
+3,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",253.14143052583,0.25314143052583,1
 3,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",376.562054932037,0.376562054932037,1
 3,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",461.786684784784,0.461786684784784,1
 3,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",453.789555951516,0.453789555951516,1
@@ -1164,9 +1164,9 @@
 3,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",526.383406910099,0.526383406910099,1
 3,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",432.4689098421,0.4324689098421,1
 3,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",453.050031318526,0.453050031318526,1
-3,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",599.754513349581,0.599754513349581,1
+3,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",599.75451334958,0.59975451334958,1
 3,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",657.810517399412,0.657810517399412,1
-3,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",552.502511427519,0.552502511427519,1
+3,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",552.50251142752,0.55250251142752,1
 3,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",499.126641843759,0.499126641843759,1
 3,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",536.390231665791,0.536390231665791,1
 3,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",383.151068494044,0.383151068494044,1
@@ -1775,7 +1775,7 @@
 5,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",639.635370599535,0.639635370599535,1
 5,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",491.064214551443,0.491064214551443,1
 5,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",458.433858235367,0.458433858235367,1
-5,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",735.800187660971,0.735800187660971,1
+5,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",735.80018766097,0.73580018766097,1
 5,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",710.393587275576,0.710393587275576,1
 5,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",615.102309812755,0.615102309812755,1
 5,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",471.088108606637,0.471088108606637,1
@@ -1864,7 +1864,7 @@
 5,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",565.217584440688,0.565217584440688,1
 5,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",531.064721651092,0.531064721651092,1
 5,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",460.381362550834,0.460381362550834,1
-5,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",442.439994141751,0.442439994141751,1
+5,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",442.43999414175,0.44243999414175,1
 5,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",478.434111784736,0.478434111784736,1
 5,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",917.735183516015,0.917735183516015,1
 5,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",481.664457597617,0.481664457597617,1
@@ -1996,7 +1996,7 @@
 5,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",482.829880533245,0.482829880533245,1
 5,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",474.267441769371,0.474267441769371,1
 5,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",1092.03410225928,1.09203410225928,3
-5,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",472.082083549139,0.472082083549139,1
+5,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",472.08208354914,0.47208208354914,1
 5,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",544.143667185381,0.544143667185381,1
 5,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",695.364117309509,0.695364117309509,1
 5,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",624.725733122432,0.624725733122432,1
@@ -2143,10 +2143,10 @@
 5,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",477.500504187446,0.477500504187446,1
 5,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",660.738867004511,0.660738867004511,1
 5,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",591.471161225854,0.591471161225854,1
-5,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",746.262136541191,0.746262136541191,1
+5,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",746.26213654119,0.74626213654119,1
 5,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",514.729771808561,0.514729771808561,1
 5,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",482.057760874341,0.482057760874341,1
-5,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",568.008443014151,0.568008443014151,1
+5,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",568.00844301415,0.56800844301415,1
 5,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",485.452008552784,0.485452008552784,1
 5,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",429.392136982642,0.429392136982642,1
 5,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",376.032873145959,0.376032873145959,1
@@ -2160,7 +2160,7 @@
 5,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",640.221251024741,0.640221251024741,1
 5,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",544.21067678868,0.54421067678868,1
 6,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",593.272599563534,0.593272599563534,1
-6,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",637.245772547431,0.637245772547431,1
+6,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",637.24577254743,0.63724577254743,1
 6,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",636.088488464338,0.636088488464338,1
 6,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",482.301009167713,0.482301009167713,1
 6,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",674.548413201592,0.674548413201592,1
@@ -2173,7 +2173,7 @@
 6,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",402.641288117593,0.402641288117593,1
 6,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",577.954130619219,0.577954130619219,1
 6,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",512.661152713918,0.512661152713918,1
-6,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",639.963911089581,0.639963911089581,1
+6,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",639.96391108958,0.63996391108958,1
 6,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",377.948636991277,0.377948636991277,1
 6,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",572.582750792208,0.572582750792208,1
 6,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",629.205757200907,0.629205757200907,1
@@ -2198,7 +2198,7 @@
 6,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",315.34029253271,0.31534029253271,1
 6,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",417.408583160068,0.417408583160068,1
 6,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",325.251763621054,0.325251763621054,1
-6,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",477.355234597781,0.477355234597781,1
+6,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",477.35523459778,0.47735523459778,1
 6,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",446.546847216268,0.446546847216268,1
 6,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",465.333848084811,0.465333848084811,1
 6,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",390.69234505132,0.39069234505132,1
@@ -2307,7 +2307,7 @@
 6,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",350.067266759652,0.350067266759652,1
 6,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",559.89246977515,0.55989246977515,1
 6,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",432.582467055909,0.432582467055909,1
-6,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",587.266434023149,0.587266434023149,1
+6,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",587.26643402315,0.58726643402315,1
 6,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",439.352910973867,0.439352910973867,0
 6,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",489.334966127899,0.489334966127899,1
 6,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",478.549645948078,0.478549645948078,1
@@ -2403,7 +2403,7 @@
 6,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",687.26378253632,0.68726378253632,1
 6,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",604.673422163614,0.604673422163614,1
 6,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",461.993334542967,0.461993334542967,1
-6,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",285.964509294899,0.285964509294899,0
+6,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",285.9645092949,0.2859645092949,0
 6,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",429.296889796206,0.429296889796206,1
 6,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",430.030983402503,0.430030983402503,1
 6,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",315.972698423138,0.315972698423138,1
@@ -2742,7 +2742,7 @@
 7,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",405.861615332469,0.405861615332469,1
 7,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",847.183179986132,0.847183179986132,1
 7,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",643.095233042914,0.643095233042914,1
-7,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",407.823363802891,0.407823363802891,0
+7,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",407.82336380289,0.40782336380289,0
 7,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",581.127646717505,0.581127646717505,1
 7,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",573.242317390395,0.573242317390395,1
 7,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",577.154947591225,0.577154947591225,1
@@ -2799,7 +2799,7 @@
 7,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",379.766647871293,0.379766647871293,0
 7,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",438.430141449317,0.438430141449317,0
 7,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",179.10564820977,0.17910564820977,1
-7,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",555.256956700759,0.555256956700759,1
+7,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",555.25695670076,0.55525695670076,1
 7,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",435.781071657402,0.435781071657402,1
 7,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",557.084078333901,0.557084078333901,1
 7,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",292.518797749835,0.292518797749835,0
@@ -2940,7 +2940,7 @@
 7,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",494.246246852526,0.494246246852526,1
 7,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",614.094015895716,0.614094015895716,1
 7,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",992.230013753215,0.992230013753215,1
-7,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",562.871522708519,0.562871522708519,1
+7,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",562.87152270852,0.56287152270852,1
 7,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",563.496662127363,0.563496662127363,0
 7,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",502.073922085401,0.502073922085401,0
 7,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",904.79350494752,0.90479350494752,1
@@ -2968,7 +2968,7 @@
 7,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",480.849065383154,0.480849065383154,1
 7,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",684.717564544371,0.684717564544371,1
 7,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",672.821804353589,0.672821804353589,1
-7,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",528.167983985441,0.528167983985441,1
+7,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",528.16798398544,0.52816798398544,1
 7,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",502.799276997393,0.502799276997393,1
 7,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",561.476052147555,0.561476052147555,1
 7,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",702.090765532375,0.702090765532375,1
@@ -3017,7 +3017,7 @@
 7,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",530.778416477915,0.530778416477915,1
 7,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",588.800772381546,0.588800772381546,0
 7,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",554.70728038199,0.55470728038199,1
-7,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",639.492002711449,0.639492002711449,1
+7,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",639.49200271145,0.63949200271145,1
 7,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",581.446404057715,0.581446404057715,1
 7,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",36.8319454373705,0.0368319454373705,1
 7,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",477.620436110556,0.477620436110556,1
@@ -3077,7 +3077,7 @@
 7,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",621.584822180012,0.621584822180012,1
 7,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",1200.08177692762,1.20008177692762,3
 7,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",494.307221340023,0.494307221340023,1
-7,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",567.020202656749,0.567020202656749,1
+7,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",567.02020265675,0.56702020265675,1
 7,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",620.020313437635,0.620020313437635,0
 7,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",575.349257211201,0.575349257211201,1
 7,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",538.896173305147,0.538896173305147,0
@@ -3199,7 +3199,7 @@
 8,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",280.215864810089,0.280215864810089,1
 8,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",464.245118330837,0.464245118330837,1
 8,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",678.879002572103,0.678879002572103,1
-8,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",524.390939187469,0.524390939187469,1
+8,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",524.39093918747,0.52439093918747,1
 8,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",348.174336594639,0.348174336594639,1
 8,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",645.54226832206,0.64554226832206,0
 8,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",500.77821146715,0.50077821146715,1
@@ -3262,7 +3262,7 @@
 8,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",859.489730795758,0.859489730795758,1
 8,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",720.735939476981,0.720735939476981,1
 8,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",528.771481273907,0.528771481273907,1
-8,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",674.184529686499,0.674184529686499,1
+8,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",674.1845296865,0.6741845296865,1
 8,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",577.578061263921,0.577578061263921,1
 8,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",524.242727627097,0.524242727627097,1
 8,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",610.853820493503,0.610853820493503,1
@@ -3403,7 +3403,7 @@
 8,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",599.999673184357,0.599999673184357,0
 8,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",393.921610669167,0.393921610669167,1
 8,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",403.919401079293,0.403919401079293,1
-8,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",603.925619323491,0.603925619323491,1
+8,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",603.92561932349,0.60392561932349,1
 8,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",575.88858031977,0.57588858031977,1
 8,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",465.927073064449,0.465927073064449,1
 8,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",418.451680409817,0.418451680409817,1
@@ -3438,7 +3438,7 @@
 8,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",421.927558450079,0.421927558450079,1
 8,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",505.40658787304,0.50540658787304,1
 8,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",455.309269324971,0.455309269324971,1
-8,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",703.139826382539,0.703139826382539,1
+8,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",703.13982638254,0.70313982638254,1
 8,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",755.837337153935,0.755837337153935,1
 8,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",604.739726408297,0.604739726408297,1
 8,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",444.484693855884,0.444484693855884,1
@@ -3804,7 +3804,7 @@
 9,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",554.433864539533,0.554433864539533,0
 9,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",966.510537014983,0.966510537014983,1
 9,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",747.285610823383,0.747285610823383,1
-9,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",473.136204962429,0.473136204962429,1
+9,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",473.13620496243,0.47313620496243,1
 9,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",429.289770863761,0.429289770863761,1
 9,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",558.447509180951,0.558447509180951,1
 9,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",507.21460459954,0.50721460459954,1
@@ -4009,8 +4009,8 @@
 9,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",788.138930781315,0.788138930781315,1
 9,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",398.037241923703,0.398037241923703,1
 9,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",567.215819680314,0.567215819680314,1
-9,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",623.927528795321,0.623927528795321,1
-9,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",436.052617348651,0.436052617348651,1
+9,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",623.92752879532,0.62392752879532,1
+9,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",436.05261734865,0.43605261734865,1
 9,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",572.679531918766,0.572679531918766,1
 9,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",591.233394354276,0.591233394354276,1
 9,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",613.940957918203,0.613940957918203,1
@@ -4184,7 +4184,7 @@
 10,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",475.966094273645,0.475966094273645,1
 10,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",543.28618269119,0.54328618269119,1
 10,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",459.379211225496,0.459379211225496,1
-10,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",518.014511393631,0.518014511393631,1
+10,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",518.01451139363,0.51801451139363,1
 10,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",561.358764604847,0.561358764604847,0
 10,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",600.797700479234,0.600797700479234,1
 10,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",448.664491063937,0.448664491063937,1
@@ -4523,7 +4523,7 @@
 10,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",531.931241257553,0.531931241257553,1
 10,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",595.258778091193,0.595258778091193,1
 10,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",474.080445628715,0.474080445628715,1
-10,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",579.288269907011,0.579288269907011,1
+10,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",579.28826990701,0.57928826990701,1
 10,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",533.937930825232,0.533937930825232,1
 10,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",411.36324668696,0.41136324668696,1
 10,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",445.505343128389,0.445505343128389,1
@@ -4649,7 +4649,7 @@
 11,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",567.295203234607,0.567295203234607,0
 11,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",433.928224146257,0.433928224146257,0
 11,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",471.179929500977,0.471179929500977,1
-11,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",703.873822464629,0.703873822464629,1
+11,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",703.87382246463,0.70387382246463,1
 11,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",210.598495859813,0.210598495859813,0
 11,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",385.945897826787,0.385945897826787,0
 11,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",340.503906416416,0.340503906416416,1
@@ -4878,7 +4878,7 @@
 11,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",420.963654850311,0.420963654850311,1
 11,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",338.487287118369,0.338487287118369,0
 11,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",333.284369717148,0.333284369717148,0
-11,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",289.878630600469,0.289878630600469,1
+11,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",289.87863060047,0.28987863060047,1
 11,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",412.471221069609,0.412471221069609,1
 11,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",461.939534648081,0.461939534648081,1
 11,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",337.90170611428,0.33790170611428,1
@@ -5038,7 +5038,7 @@
 11,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",367.253199301558,0.367253199301558,1
 11,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",461.353349952333,0.461353349952333,1
 11,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",337.010053391168,0.337010053391168,1
-11,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",580.212408754051,0.580212408754051,1
+11,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",580.21240875405,0.58021240875405,1
 12,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",573.193946995161,0.573193946995161,0
 12,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",557.19385764769,0.55719385764769,1
 12,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",744.546461197388,0.744546461197388,1
@@ -5098,7 +5098,7 @@
 12,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",515.800452013536,0.515800452013536,1
 12,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",762.547504989925,0.762547504989925,1
 12,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",532.444686297822,0.532444686297822,1
-12,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",481.208299292121,0.481208299292121,1
+12,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",481.20829929212,0.48120829929212,1
 12,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",536.511794488433,0.536511794488433,1
 12,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",700.380274219242,0.700380274219242,1
 12,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",726.536663795741,0.726536663795741,1
@@ -5378,7 +5378,7 @@
 12,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",721.087391091714,0.721087391091714,1
 12,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",699.991493486777,0.699991493486777,1
 12,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",425.120903532843,0.425120903532843,1
-12,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",754.036883668959,0.754036883668959,1
+12,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",754.03688366896,0.75403688366896,1
 12,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",699.072968162,0.699072968162,1
 12,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",1080.52449172828,1.08052449172828,3
 12,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",527.147545294611,0.527147545294611,1
@@ -5450,7 +5450,7 @@
 12,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",649.813689561597,0.649813689561597,1
 12,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",679.057084887972,0.679057084887972,1
 12,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",443.123154719615,0.443123154719615,1
-12,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",723.056651433581,0.723056651433581,1
+12,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",723.05665143358,0.72305665143358,1
 12,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",663.885871827915,0.663885871827915,1
 12,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",564.846022076381,0.564846022076381,1
 12,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",649.725549767027,0.649725549767027,1
@@ -5488,7 +5488,7 @@
 12,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",546.479439614814,0.546479439614814,1
 12,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",507.843421046346,0.507843421046346,1
 12,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",890.480907806705,0.890480907806705,1
-12,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",587.767198235269,0.587767198235269,1
+12,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",587.76719823527,0.58776719823527,1
 12,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",565.801674780232,0.565801674780232,1
 12,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",544.886282643347,0.544886282643347,1
 12,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",774.463281055432,0.774463281055432,1
@@ -5650,7 +5650,7 @@
 13,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",554.040142757003,0.554040142757003,1
 13,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",738.040415628348,0.738040415628348,1
 13,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",260.766144810987,0.260766144810987,1
-13,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",359.415402460399,0.359415402460399,1
+13,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",359.4154024604,0.3594154024604,1
 13,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",565.393876428061,0.565393876428061,1
 13,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",716.136469290177,0.716136469290177,1
 13,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",210.056483632798,0.210056483632798,0
@@ -5671,7 +5671,7 @@
 13,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",1002.65962304002,1.00265962304002,3
 13,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",551.441528061332,0.551441528061332,1
 13,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",378.810383140262,0.378810383140262,0
-13,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",637.350057669209,0.637350057669209,1
+13,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",637.35005766921,0.63735005766921,1
 13,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",571.376817756573,0.571376817756573,1
 13,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",666.106571184173,0.666106571184173,1
 13,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",556.047737871268,0.556047737871268,1
@@ -5697,7 +5697,7 @@
 13,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",458.104805974472,0.458104805974472,1
 13,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",460.832913724516,0.460832913724516,0
 13,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",434.05199937024,0.43405199937024,1
-13,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",628.093568149779,0.628093568149779,1
+13,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",628.09356814978,0.62809356814978,1
 13,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",296.744084506827,0.296744084506827,1
 13,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",579.426516525928,0.579426516525928,1
 13,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",552.804072693107,0.552804072693107,1
@@ -6078,7 +6078,7 @@
 14,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",560.252466864767,0.560252466864767,1
 14,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",578.402069480035,0.578402069480035,1
 14,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",421.6640355462,0.4216640355462,1
-14,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",576.933873844609,0.576933873844609,1
+14,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",576.93387384461,0.57693387384461,1
 14,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",634.867231528006,0.634867231528006,0
 14,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",580.967185947884,0.580967185947884,1
 14,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",390.328140516431,0.390328140516431,1
@@ -6129,7 +6129,7 @@
 14,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",476.999978870481,0.476999978870481,1
 14,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",376.957418100574,0.376957418100574,0
 14,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",818.365123109288,0.818365123109288,1
-14,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",626.241884023329,0.626241884023329,1
+14,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",626.24188402333,0.62624188402333,1
 14,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",466.994877615434,0.466994877615434,1
 14,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",539.019170457323,0.539019170457323,1
 14,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",451.679943011186,0.451679943011186,1
@@ -6243,7 +6243,7 @@
 14,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",511.606749866587,0.511606749866587,1
 14,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",479.894750446874,0.479894750446874,1
 14,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",674.373320646737,0.674373320646737,1
-14,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",441.713212161631,0.441713212161631,1
+14,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",441.71321216163,0.44171321216163,1
 14,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",860.983883565495,0.860983883565495,1
 14,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",430.381180805853,0.430381180805853,1
 14,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",480.949714209601,0.480949714209601,1
@@ -6393,7 +6393,7 @@
 14,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",314.291700559806,0.314291700559806,1
 14,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",288.415658047597,0.288415658047597,1
 14,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",501.019984757477,0.501019984757477,1
-14,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",568.972630619101,0.568972630619101,1
+14,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",568.9726306191,0.5689726306191,1
 14,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",439.023130028545,0.439023130028545,1
 14,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",430.918774643033,0.430918774643033,1
 14,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",418.325616362381,0.418325616362381,1
@@ -6533,7 +6533,7 @@
 15,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",732.552235996081,0.732552235996081,1
 15,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",714.561117459198,0.714561117459198,0
 15,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",725.254248210149,0.725254248210149,1
-15,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",844.637532322849,0.844637532322849,0
+15,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",844.63753232285,0.84463753232285,0
 15,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",431.232995967548,0.431232995967548,1
 15,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",775.186514383677,0.775186514383677,1
 15,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",721.278960793825,0.721278960793825,1
@@ -6673,7 +6673,7 @@
 15,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",449.230755077224,0.449230755077224,1
 15,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",643.852314959076,0.643852314959076,1
 15,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",502.612194317408,0.502612194317408,1
-15,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",821.201447217391,0.821201447217391,1
+15,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",821.20144721739,0.82120144721739,1
 15,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",415.949721272227,0.415949721272227,1
 15,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",610.579732790029,0.610579732790029,1
 15,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",883.866405043591,0.883866405043591,1
@@ -6855,7 +6855,7 @@
 15,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",624.566551805401,0.624566551805401,1
 15,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",444.632728115721,0.444632728115721,1
 15,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",599.249072130988,0.599249072130988,1
-15,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",359.343947782691,0.359343947782691,1
+15,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",359.34394778269,0.35934394778269,1
 15,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",577.190905556563,0.577190905556563,1
 15,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",515.428763574164,0.515428763574164,1
 15,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",601.208342489372,0.601208342489372,1
@@ -6967,7 +6967,7 @@
 16,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",364.772683024057,0.364772683024057,1
 16,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",452.689146070043,0.452689146070043,1
 16,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",408.931794191631,0.408931794191631,1
-16,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",398.049279052429,0.398049279052429,0
+16,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",398.04927905243,0.39804927905243,0
 16,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",573.403172842518,0.573403172842518,1
 16,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",396.049538037005,0.396049538037005,1
 16,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",367.992190595942,0.367992190595942,1
@@ -7354,7 +7354,7 @@
 16,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",449.101419134422,0.449101419134422,1
 16,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",447.706580910562,0.447706580910562,1
 16,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",471.105210944188,0.471105210944188,1
-16,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",521.693678128941,0.521693678128941,1
+16,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",521.69367812894,0.52169367812894,1
 16,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",551.079457298329,0.551079457298329,1
 16,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",517.726191956172,0.517726191956172,1
 16,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",475.675185127329,0.475675185127329,1
@@ -7496,10 +7496,10 @@
 17,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",368.951890715834,0.368951890715834,1
 17,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",461.536523543145,0.461536523543145,1
 17,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",404.242407529637,0.404242407529637,1
-17,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",411.602295581361,0.411602295581361,1
+17,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",411.60229558136,0.41160229558136,1
 17,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",418.882194691832,0.418882194691832,1
 17,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",371.501877767514,0.371501877767514,1
-17,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",476.827692341431,0.476827692341431,0
+17,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",476.82769234143,0.47682769234143,0
 17,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",284.201948218652,0.284201948218652,1
 17,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",450.932706651656,0.450932706651656,1
 17,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",494.162654028514,0.494162654028514,0
@@ -7614,7 +7614,7 @@
 17,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",588.41226419554,0.58841226419554,0
 17,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",338.964489729733,0.338964489729733,1
 17,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",533.699527119097,0.533699527119097,1
-17,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",440.330398985679,0.440330398985679,1
+17,"1",1,1,"Matching","Self","Self","Self","Self","Self","Self",440.33039898568,0.44033039898568,1
 17,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",582.243154897697,0.582243154897697,1
 17,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",303.034665083032,0.303034665083032,1
 17,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",520.935405146702,0.520935405146702,1
@@ -7646,7 +7646,7 @@
 17,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",528.384639335854,0.528384639335854,1
 17,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",385.641205824868,0.385641205824868,1
 17,"1",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",490.242592258255,0.490242592258255,1
-17,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",580.262447627319,0.580262447627319,1
+17,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",580.26244762732,0.58026244762732,1
 17,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",588.924495258652,0.588924495258652,1
 17,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",284.275598412023,0.284275598412023,1
 17,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",488.192158778475,0.488192158778475,1
@@ -7700,7 +7700,7 @@
 17,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",330.898888037154,0.330898888037154,1
 17,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",338.437770208657,0.338437770208657,1
 17,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",418.623513583952,0.418623513583952,1
-17,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",516.676069637469,0.516676069637469,0
+17,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",516.67606963747,0.51667606963747,0
 17,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",341.808775817299,0.341808775817299,0
 17,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",342.046327878052,0.342046327878052,1
 17,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",395.374501673359,0.395374501673359,0
@@ -7842,7 +7842,7 @@
 17,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",581.899957172027,0.581899957172027,1
 17,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",353.380609809392,0.353380609809392,1
 17,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",389.825080279479,0.389825080279479,1
-17,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",410.146798816641,0.410146798816641,1
+17,"2",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",410.14679881664,0.41014679881664,1
 17,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",415.886080751079,0.415886080751079,1
 17,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",347.138454008928,0.347138454008928,1
 17,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",465.113991277576,0.465113991277576,1
@@ -8315,7 +8315,7 @@
 18,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",485.525659574705,0.485525659574705,1
 18,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",228.227800683271,0.228227800683271,1
 18,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",412.113621148819,0.412113621148819,1
-18,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",434.085828463139,0.434085828463139,1
+18,"2",2,1,"Nonmatching","Self","Self","Self","Friend","Friend","Close",434.08582846314,0.43408582846314,1
 18,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",466.177089505436,0.466177089505436,1
 18,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",242.236127984143,0.242236127984143,1
 18,"2",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",492.904563865523,0.492904563865523,1
@@ -8406,7 +8406,7 @@
 19,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",621.048733122734,0.621048733122734,1
 19,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",386.96593025179,0.38696593025179,1
 19,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",323.623448653052,0.323623448653052,1
-19,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",372.968842563751,0.372968842563751,1
+19,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",372.96884256375,0.37296884256375,1
 19,"1",1,3,"Nonmatching","Stranger","Stranger","Stranger","Self","Self","Self",667.643912111089,0.667643912111089,1
 19,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",402.920859448386,0.402920859448386,1
 19,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",511.711767046108,0.511711767046108,1
@@ -8496,7 +8496,7 @@
 19,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",640.29570972707,0.64029570972707,1
 19,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",398.373994409667,0.398373994409667,1
 19,"1",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",476.925517697964,0.476925517697964,0
-19,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",454.323405668219,0.454323405668219,1
+19,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",454.32340566822,0.45432340566822,1
 19,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",1069.61479382244,1.06961479382244,3
 19,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",414.303869512878,0.414303869512878,1
 19,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",337.398671785195,0.337398671785195,1
@@ -8612,7 +8612,7 @@
 19,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",316.927666916854,0.316927666916854,1
 19,"1",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",298.359565666942,0.298359565666942,1
 19,"1",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",566.353837636598,0.566353837636598,1
-19,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",511.689429662511,0.511689429662511,1
+19,"1",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",511.68942966251,0.51168942966251,1
 19,"1",2,3,"Nonmatching","Stranger","Stranger","Stranger","Friend","Friend","Close",720.383380939893,0.720383380939893,1
 19,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",455.009223724119,0.455009223724119,1
 19,"1",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",375.640272928649,0.375640272928649,1
@@ -8672,7 +8672,7 @@
 19,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",651.790709216584,0.651790709216584,1
 19,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",548.479403360943,0.548479403360943,1
 19,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",685.895970214006,0.685895970214006,1
-19,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",710.676882738881,0.710676882738881,1
+19,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",710.67688273888,0.71067688273888,1
 19,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",481.77122135894,0.48177122135894,1
 19,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",519.742359043448,0.519742359043448,1
 19,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",362.470876517364,0.362470876517364,1
@@ -8868,7 +8868,7 @@
 19,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",469.076040920299,0.469076040920299,1
 19,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",604.483450653788,0.604483450653788,1
 19,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",397.142722236822,0.397142722236822,1
-19,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",654.423501944621,0.654423501944621,1
+19,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",654.42350194462,0.65442350194462,1
 19,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",401.836289554012,0.401836289554012,1
 19,"2",3,1,"Nonmatching","Self","Self","Self","Stranger","Stranger","Stranger",811.910811896269,0.811910811896269,1
 19,"2",3,3,"Matching","Stranger","Stranger","Stranger","Stranger","Stranger","Stranger",381.873912952869,0.381873912952869,1
@@ -9163,7 +9163,7 @@
 20,"2",3,2,"Nonmatching","Friend","Friend","Close","Stranger","Stranger","Stranger",400.413988732907,0.400413988732907,1
 20,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",655.8109501525,0.6558109501525,0
 20,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",509.993759382724,0.509993759382724,1
-20,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",498.448990388169,0.498448990388169,1
+20,"2",1,2,"Nonmatching","Friend","Friend","Close","Self","Self","Self",498.44899038817,0.49844899038817,1
 20,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",464.224290734364,0.464224290734364,1
 20,"2",2,2,"Matching","Friend","Friend","Close","Friend","Friend","Close",594.412109428959,0.594412109428959,1
 20,"2",1,1,"Matching","Self","Self","Self","Self","Self","Self",423.141309481252,0.423141309481252,1

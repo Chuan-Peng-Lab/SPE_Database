@@ -1,0 +1,35 @@
+{
+  "exp2": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "Online (Prolific platform)",
+      "Setting": "Online",
+      "Equipment": { "Presenting": "/", "Monitor": "/", "Software": "Gorilla Experiment Builder" },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "voice-label matching: own voice vs external voices (self, friend, stranger)"
+    },
+    "Block_Structure": {
+      "Block_number": "3 blocks",
+      "Trial_number": "Familiarization: 12 trials; Test: 216 trials (72 per block)",
+      "Practice_trials": "12 trials"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "SOA": "Familiarization: 500 ms; Test: 0 ms (voice offset to label onset)",
+      "Stimulus_order": "Familiarization: label first; Test: voice first",
+      "Response_deadline": "/", "ITI": "/", "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Auditory (voice) and visual (label)",
+      "Fixation": "/",
+      "Shape": "Not applicable (voice task)",
+      "Label": "/",
+      "Colors": { "Stimulus": "Black labels", "Background": "White" }
+    },
+    "detail": "derived from nested paper JSON (KIRK_2025_BJP.Experiments.TY2); one voice cue = participant own voice"
+  }
+}

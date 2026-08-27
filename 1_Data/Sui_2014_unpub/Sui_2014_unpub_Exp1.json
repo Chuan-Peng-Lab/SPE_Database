@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "/",
+      "Setting": "/",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "E-Prime"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching"
+    },
+    "Block_Structure": {
+      "Block_number": "/",
+      "Trial_number": "720 trials per participant (24 subjects, 17280 rows; Group = shape-label pairing counterbalance, 3 groups x 8 subjects; CSV numTrials=40 caliber to verify)",
+      "Practice_trials": "/"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "SOA": "/",
+      "Stimulus_order": "/",
+      "Response_deadline": "/",
+      "ITI": "/",
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "geometric shape",
+      "Label": "/",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "unpublished data; experimental details (Session/Group structure, timing) not documented, fields marked / pending author confirmation"
+  }
+}

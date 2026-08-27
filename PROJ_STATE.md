@@ -3,6 +3,7 @@
 ## 当前目标
 
 SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的文件夹名（<Author>_<Year>_<期刊缩写>）作为全项目论文/预印本的关键 ID，以 1_Data/Dataset_inf.csv 为主索引，使 34 个已入库研究、9 个待入库条目的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 的再生成与比对提供可靠数据源。
+当前最重要推进线路见「下一步任务」分层清单（L1 精细化 → L2 数据判定 → L3 入库 → 清理收口）。
 
 ## 已完成（均已验证）
 
@@ -25,6 +26,11 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **Sui_2015_unpub 清洗脚本化 + 数据修复（2026-08，本次会话）**：① 新增 `1_Data/Sui_2015_unpub/Sui_2015_unpub_clean.R`（由 `Clean_Data.Rmd` 的 Sui_2015 两段提取：内嵌 read.mat、修正失效路径 `Sui_2015_Raw/Source/`→`Sui_2015_unpub_Raw/Source/`、写入 `Exp1|Exp2/Sui_2015_unpub_ExpN_Clean.csv`，CRLF 行尾与库内惯例一致）；② Exp2 排除测试被试 subject 0（`PractExperiment_2_Subject_3_Ses_1_.mat` 内部 num=0 的测试运行，240 行），Exp2_Clean.csv 9600→9360 行（subject 1-20，subject 3 仅剩 session 2），Exp1 不变（9600 行，与旧文件逐值一致）；③ Exp2_subj_info.csv 删除 subject 0 行、subject 3 人口学更正（0/fm→20/f，取自 Ses_2 真实记录 KB/f/20），21→20 行；④ Dataset_inf.csv Exp2 Sample_Size/Valid_Subj 21→20（字节保真编辑，BOM/CRLF/无末尾换行保持，diff 仅目标行 2 单元格），validator EXIT=0；⑤ 两个 codebook 补 ACC 3/4 说明（3=超时 RT≥1000 ms、4=无反应 RT=0）；⑥ `Clean_Data.Rmd` 两段同步修正（路径+subject 0 过滤+标题），diff 仅此 6 处。
 - **12 个待收录条目信息登记（2026-08，本次会话）**：稿件 `SPE_database_manu_v16.docx` Table 1 中 12 个无数据文件夹条目（Bukowski×2、Golubickis×2、Hobbs、Mcivor、Orellana-Corrales_2023_QJEP×3、Svensson_2022×3）经核对全部已存在于 Dataset_inf.csv（Paper_ID 一一对应：P19E1/2、Pn4E1/2、Pt2E1、P45E1、Pn14E1-3、Pn16E1-3）；本次将稿件提供的 Exp_Implement 登记入 Note 列（`Manu_Table1: Lab/Online Experiment (pending)`，12 行；Golubickis Exp1 追加）；N/Trials 冲突均以 CSV 现值为准（稿件多处复制错误：Svensson 三行同值 25/400、Bukowski 两行同值 111、Orellana E2=E3 同值 36）；Crossref 核实 6 个 pending DOI 年份全部与 CSV 一致（Orellana-Corrales_2023_QJEP=2023，稿件 Study 标签 (2020) 错误）。字节保真编辑（BOM+CRLF+无末尾换行保持，diff 仅 12 行 Note 单元格），validator EXIT=0。
 - **决策：稿件 v16 废弃（2026-08，本次会话）**：`SPE_database_manu_v16.docx` 不再作为 Table 1 比对基准（其核心信息——12 个待收录条目——已登记入 CSV Note 列）；`Generate_Table1.qmd` 稿件比对环节默认关闭（YAML `params: compare_manu: false`），稿件版本更新时以 `--param compare_manu:true` 启用；历史问题清单 `table1_problems.txt`（111 行）与 `Table1_Issues_Solvability.md` 判定冻结，仅作未来稿件更新时的修正清单。
+- **自动化地基（2026-08，本次会话）**：① SKILL.md 新增 Raw input zone（输入区规范：`1_Data/<Study>/<Study>_Raw/` 放下载原始数据，只读、不参与校验）与 Metadata draft workflow（元数据草稿流程：Crossref 预填 paper JSON、数据推导 exp JSON 字段、来源分级 [D]/[C]/[P]/[H]）；② 新增内容级校验器 `2_Code/validate_clean_csv.R`（E1 缺 Subject / E2 Identity 三级不完整 / E3 nSubj vs subj_info；W1-W4 提示；支持 --data-dir 参数；known 白名单 16 条历史遗留），首扫 59 文件 0 ERROR；③ SKILL.md 新增 Human decision points（10 条人工决策清单）与 End-to-end workflow（自动化入库 10 步）。
+- **自动化试点（2026-08，本次会话，三研究）**：从 Clean_Data.Rmd 提取独立清洗脚本并全量验证与现有产物一致——Sui_2014_unpub（17280 行逐值全等）、Navon_2021_psyarxiv（四实验 MD5 全同，4680/9720/10080/9720 行）、Vicovaro_2022_JEPHPP（295,680 单元格 0 差异）；脚本暂存 /tmp（vicovaro_clean.R / navon_clean.R / sui2014_clean.R），1_Data/ 零改动；串测：7 个新产物过 validate_clean_csv.R 全部 0 ERROR；元数据草稿 Crossref 预填与现有 paper JSON 一致（Vicovaro/Navon）。
+- **清洗脚本落盘与统一（2026-08，本次会话）**：四个独立清洗脚本正式落盘（Vicovaro_2022_JEPHPP / Navon_2021_psyarxiv / Sui_2014_unpub / Sui_2015_unpub 各 <Study>_clean.R），统一架构：引导块定位脚本目录 → source 1_Data/utils.R（通用函数 spe_root/write_clean_csv，与脚本同库、不跨文件夹引用）→ 清洗逻辑 → 输出守卫；utils.R 由 2_Code/ 迁至 1_Data/。重构后全量重跑验证：Vicovaro/Navon/Sui_2014 输出与正式产物逐值一致；Sui_2015 仅 80/67 行 RT 末位显示差异（~1e-15 相对差，按数值等价约定视为一致）。
+- **AGENTS.md 效率治理（2026-08，本次会话）**：新增「⚡ 效率全局原则」（与全局最高级规则同级：低效=严重问题——同类错误反复试错 / 重复验证 / 经验不调用 / 验证假象 / 不固化模式五项违规）；「工具链纪律」5 条（代码文件写 /tmp 纯文本、bash 验证看真实退出码与 stderr、文件移动用 bash mv/cp、R 语法备忘、subagent 结果靠通知）；清理过时内容 8 处（Clean_Data.Rmd 降级为历史配方参考、*_Raw/ 输入区化、Generate_Table1 比对默认关闭、caveats 稿件 v16 废弃与 Sun JSON 已补、两级校验、exFAT 规则扩展至一切写盘操作）。
+- **SKILL.md 同库约定（2026-08）**：§清洗工具 新增「通用函数与独立脚本同库」——1_Data/utils.R 与 <Study>_clean.R 同在 1_Data/ 下 source 引用，不跨文件夹。
 
 ## 关键决策
 
@@ -48,7 +54,9 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 测试结果（已实测）
 
-- validator：EXIT=0（73 个 JSON、34 个文件夹、CSV 全部一致；9 个 pending 白名单放行）；2026-08 补 Exp 后复测仍 EXIT=0；2026-08-27 subj_info 全覆盖 + Pan 样本量回填后复测仍 EXIT=0。
+- validator：EXIT=0（结构级）；2026-08 末复测：80 个 JSON 全绿（新增 Sui_2014/Sui_2015×2/Pan/Sun/Kirk×2 共 7 个实验级 JSON；缺失实验级 JSON 检测生效，剩余 6 个需读论文类 WARN 列出；34 文件夹 ↔ CSV 交叉一致）。
+- 内容级校验器 validate_clean_csv.R：59 文件 0 ERROR / 16 KNOWN / 40 WARN（口径差异与替代列提示）；支持 --data-dir（新产物串测用）。
+- git：8b1d4b8（start to work on whole pipeline）之后工作区有 21 项未提交改动（4 脚本 + utils.R + 7 个新 JSON + 双校验器 + AGENTS/SKILL/PROJ_STATE 等），未 push。
 - Table 1 渲染（2026-08-27 两次重渲染）：RENDER_EXIT=0；qmd 58 行 vs 稿件 70 行（12 个 pending 无文件夹）；table1_problems.txt 118 → 111 行（CSV Exp 回填后 8 条 Exp 不一致消失、新增 Martinez 1 条；Pan N 回填后其行显示 稿件 40(—) vs qmd 40）。
 - git：5 个 commit（docs / data / reports + 2026-08 补 Exp 的 data / docs 两个 commit），工作区干净，未 push。
 
@@ -62,19 +70,20 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 | Lee_2023_Cognition | 无 codebook ×2、无 paper/实验级 JSON ×3（subj_info 已于 2026-08 补齐） | 5 | 中度 |
 | Smith_2024_Cortex | 无 codebook ×1、无 paper/实验级 JSON ×2（subj_info 已于 2026-08 补齐） | 3 | 中度 |
 | Svensson_2023_QJEP | 无 codebook ×1、无 paper/实验级 JSON ×2（subj_info 已于 2026-08 补齐） | 3 | 中度 |
-| Orellana-Corrales_2021_APP | 无 raw.csv ×2、无 codebook ×2、无 JSON ×3（subj_info 已于 2026-08-27 由 Clean.csv 唯一 Subject 生成，Exp1 34 行 / Exp2 33 行，人口学 /） | 7 | 重度 |
-| Sun_2026_DataExp | 无 raw.csv ×1、无实验级 JSON ×1（CSV 行信息稀疏；62 MB Clean 在库） | 2 | 重度 |
-| Zhang_2023_NeuroImage | 无 raw.csv ×1（本次扫描新发现，待核实原始数据是否在外部仓库） | 1 | 重度 |
+| Orellana-Corrales_2021_APP | 无 raw.csv ×2、无 codebook ×2、无 JSON ×3（subj_info 已于 2026-08-27 由 Clean.csv 唯一 Subject 生成，Exp1 34 行 / Exp2 33 行，人口学 /；raw 追补归阶段 4，用户+agent 共同决定） | 7 | 重度 |
+| Sun_2026_DataExp | 无 raw.csv ×1（62 MB Clean 在库；raw 追补归阶段 4，用户+agent 共同决定）、无实验级 JSON ×1（CSV 行信息稀疏） | 2 | 重度 |
+| Zhang_2023_NeuroImage | 无 raw.csv ×1（本次扫描新发现；归阶段 4：核实外部仓库后决定追补或豁免） | 1 | 重度 |
 
-- Smith_2024_Cortex：raw 数据仅 48 名被试（含剔除 1 个空 participant），与 CSV Sample_Size=59 / Valid_Subj=58 差约 10 名——raw 导出疑似不全，待人工核对。
+- Smith_2024_Cortex：raw 数据仅 48 名被试（含剔除 1 个空 participant），与 CSV Sample_Size=59 / Valid_Subj=58 差约 10 名——raw 导出疑似不全，归阶段 4 由用户+agent 共同决定（追补 raw 或确认豁免并记录口径）。
 
-- CSV 遗留空白：Exp 空 1 行（Scheller_2026_elife，无 Paper_ID 无法按 E 后缀推导，待人工确认）、Country 空 9、City 空 13、Journal 空 4、Year 空 2（均为无同组源值或待人工确认的条目）；另有 License 空 8（Sui_2014_APP ×4、Pan、Sui_2014_unpub、Sui_2015_unpub ×2）、Stim_language 空 7（Kirk ×2、Scheller、Wang_2016、Wozniak_2020、Hu_2023_SDB、Pan）——2026-08 会话逐行核验补充。
+- CSV 遗留空白（2026-08-27 实测基线，取代旧统计）：Exp 无空白（Scheller 两行 Exp=1/2 均已填）；Year 无空白；Journal 空 2（Orellana-Corrales_2021_APP ×2）；License 空 8（Sui_2014_APP ×4、Pan、Sui_2014_unpub、Sui_2015_unpub ×2）；Stim_language 空 8（Kirk ×2、Scheller ×2、Wang_2016、Wozniak_2020、Hu_2023_SDB、Pan）；Country 空 10（Kirk ×2、Martinez-Perez ×1、Scheller ×2、Wang_2016、Wozniak_2020、Wozniak_2022 ×3）；City 空 14（Kirk ×2、Martinez-Perez、Scheller ×2、Sun、Wozniak_2020、Wozniak_2022 ×3、Sui_2014_unpub、Sui_2015_unpub ×2）。分层处理：L1 完整规范研究 13 行 → 阶段 2 补全；L2 缺 raw 研究（Orellana/Sun/Sui_2015_unpub）→ 阶段 4 判定后收尾；L3 pending（Scheller/Wozniak_2020/Hu_2023_SDB）→ 阶段 5 入库时填齐。
 - 稿件 Table 1 与数据差异（11 条 Exp 标注、N/Trials/Language/Stimulus/Exp_Implement 不一致等）：**稿件 v16 已废弃（2026-08），不再与其比对**；历史问题清单（table1_problems.txt，111 行）与逐项可解性判定（Table1_Issues_Solvability.md，107 项：可自动 ~68 / 需人工 ~39）冻结保留，待稿件版本更新时作为修正清单使用（渲染 qmd 传 --param compare_manu:true 刷新）。12 个 pending 条目（无文件夹）的稿件 Exp_Implement 信息已登记入 CSV Note 列。
-- Orellana-Corrales_2021_APP Exp2：Clean/subj_info 33 名被试 vs CSV Sample_Size 34 / Valid_Subj 31——N 口径待人工确认（稿件 36 亦不符）。
+- Orellana-Corrales_2021_APP Exp2：Clean/subj_info 33 名被试 vs CSV Sample_Size 34 / Valid_Subj 31——N 口径待人工确认（稿件 36 亦不符；归阶段 4 数据判定后一并处理）。
 - Pan_2025_unpub：subj_info 的 Age 按 2025−出生年（raw `year` 列 2000–2005）推算、Education 为原始编码 5（含义未文档化）——待作者确认；CSV Sample_Size/Valid_Subj 已按 raw 40 名被试回填。
 - Kirk_2025_BritJPsy.json 嵌套 schema 例外（内部键 KIRK_2025_BJP 保留不动）。
 - Hu_2023_psyarxiv（PsyArXiv 预印本）与 Hu_2023_SDB（Science Data Bank）为两个独立条目，已确认分别保留。
 - 历史管线 Clean_Data.Rmd 内仍引用旧文件夹名（纯历史记录，未改，部分可能在修订过程中进行了修改）。
+- **自动化试点新发现（2026-08，待决策）**：① ~~Navon Exp3 Label 标准化 bug~~ **已修复（2026-08）**：脚本与 Rmd 的 case_when "Friend"→"Father"，Exp3 Clean 3360 行 NA→Close，Exp1/2/4 零变化（下游分析结果将变化，属预期修正）；② Vicovaro Exp2：原始空 participant ID 块（240 行）重编号为 Subject 1（无人口学）；4 名被试（AC99/LS99/MS98/SD99）selfS 块 480 行含重复行未去重；Asymmetry 块被配方丢弃；③ ~~Sui_2014_unpub 缺实验级 JSON~~ **已补（2026-08）**：新建 Sui_2014_unpub_Exp1.json（v2 五组件，数据可推导字段填充、未知 /；validator 通过）；④ ~~Navon paper JSON DOI 前缀~~ **已修正（2026-08）**为裸格式 10.31234/osf.io/9dzm4。
 
 ## 失败方案（已弃用，勿重试）
 
@@ -92,14 +101,50 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 5. **验证输出不截断**：裸跑整文件 diff 输出数万字节污染上下文。→ 用 head/wc/diff | wc -l。
 6. 教训：执行前把「哪些差异需要解决、哪些可忽略」列清楚，比反复探查更省时间。
 
-## 下一步任务
+## 下一步任务（当前最重要推进线路 — 分层清单 2026-08-27）
 
-1. 为 4 个缺 JSON 的研究补 paper 级 JSON（需从论文提取摘要/结论，先出草稿确认）。
-2. 创建 Sun_2026_DataExp_Exp1.json（v2 schema，未知项用 /）。
-3. 合作者确认后：删除 Dataset_inf.xlsx、移除 deprecated 的 Paper_ID/Paper 列并简化 qmd 过渡映射。
-4. 稿件 v16 已废弃（2026-08），不再手工修正其 Table 1；若合作者更新稿件版本，按 Table1_Issues_Solvability.md 判定逐项修正（先可自动确定 ~68 条，再人工 ~39 条），渲染 Generate_Table1.qmd 时传 --param compare_manu:true 启用比对刷新问题清单。
-5. 人工补全剩余 Country/City/Journal/Year/License/Stim_language 空白（含 Pan 的 Stim_language——稿件已给 Chinese；Pt9E1 Country=Hungary——paper JSON 已有）。
-6. 核实 Zhang_2023_NeuroImage 原始数据是否存于外部仓库（查 paper JSON 的 Repo_Link / OSF）；确认后补 raw.csv 或记录结论。
-7. 待人工确认 Smith_2024_Cortex 样本差异（raw 48 vs CSV Sample_Size 59 / Valid_Subj 58）。
-8. 核实 Lee_2023_Cognition（subj_info 47/51 vs qmd 57/65）与 Kirk_2025_BritJPsy Exp2（subj_info 90 vs qmd/稿件 126）的 N 口径差异（可能含排除标准或 subj_info 生成规则差异）。
-9. 核实 Orellana-Corrales_2021_APP 的 N 口径：Exp2 Clean/subj_info 33 vs CSV Sample_Size 34 / Valid_Subj 31；Exp1 Clean 34 vs Valid_Subj 28（如有可能从 OSF 仓库 osf.io/g7wrc、osf.io/4cwrv 获取原始数据以补人口学）。
+推进逻辑：按数据完整度分层——L1 完整规范（有文件夹 + 标准 `*_raw.csv`）→ 阶段 1–3；
+L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（9 个 pending）→ 阶段 5。先精细化、后补底子、
+再收口。**git 提交类事项不列为任务**（仅用户指示时处理；当前工作区 21 项未提交改动，见「测试结果」）。
+
+### 阶段 1：元数据补齐（对象：已有数据但缺 JSON/Codebook 的研究 ×4）
+- 1a. paper JSON ×4：Lee_2023_Cognition、Smith_2024_Cortex、Svensson_2023_QJEP、Orellana-Corrales_2021_APP（摘要/结论提取，先草稿确认）
+- 1b. 实验级 JSON ×6：Lee×2、Smith×1、Svensson_2023×1、Orellana×2（v2 五组件；`[P]` LLM 草稿+人工核对、`[H]` 走决策清单）
+- 1c. Codebook ×6（同四研究；单 Sheet1 4 列，覆盖 Clean 全部列）
+- 验收：validate_json_metadata.R EXIT=0；JSON 80→90；Codebook 行数==Clean 列数；paper JSON Year==文件夹年份、DOI==CSV 值；`[P]`/`[H]` 留痕
+
+### 阶段 2：CSV 文献/流程字段补全（对象：仅 L1 完整规范研究，实测 7 研究 13 行）
+- 前置：以 2026-08-27 实测基线为准（见「已知问题」）
+- 可补：Kirk×2（Country/City/Stim_language）、Martinez-Perez×1（Country/City）、Sui_2014_APP×4（License）、Wang_2016×1（Country/City/Stim_language）、Wozniak_2022×3（Country/City）、Pan×1（License/Stim_language=Chinese，稿件已给）、Sui_2014_unpub×1（City/License）
+- 不做：L2（Orellana Journal×2、Sun City×1、Sui_2015_unpub City/License×2 → 阶段 4 收尾）；L3（Scheller×2、Wozniak_2020、Hu_2023_SDB → 阶段 5 入库时填齐）
+- 验收：字节保真（BOM+CRLF+无末尾换行，diff 仅目标单元格）；剩余空值仅存于 L2/L3 且各有理由；validator EXIT=0
+
+### 阶段 3：N 口径核实（对象：仅 L1 口径矛盾研究）
+- Lee（subj_info 47/51 vs qmd 57/65）、Kirk Exp2（90 vs 126）、Pan（Age 推算/Education 编码 5 待作者确认）、Vicovaro Exp2（空 ID→Subject 1、4 被试 selfS 重复行、Asymmetry 块被弃 → 数据决策）
+- 推迟：Smith（raw 导出不全）、Orellana（依赖原始数据）→ 阶段 4
+- 验收：每项结论（修正附证据 / 记录口径入 Note）；数据修改则两级校验 EXIT=0 + 脚本注释写明证据
+
+### 阶段 4：原始数据追补（对象：L2 五研究 — 用户+agent 共同决定）
+- 判定原则：**Clean 数据已完成且说明文件（Codebook/JSON）齐全的研究，可豁免 `*_raw.csv`，不强制追补**
+- 逐项：Sun_2026_DataExp、Zhang_2023_NeuroImage（查 paper JSON Repo_Link/OSF）、Orellana-Corrales_2021_APP（osf.io/g7wrc、osf.io/4cwrv）、Smith_2024_Cortex（raw 48 vs 59 导出不全）、Sui_2015_unpub（输入区有 .mat，判定是否生成标准 raw.csv）
+- 收尾：该研究 CSV 空白与 N 口径一并收口，不重复编辑同一 CSV
+- 验收：每项产出 raw.csv（输入区→清洗脚本→两级校验 EXIT=0）**或**确认豁免并记录结论；严重度表/白名单同步
+
+### 阶段 5：pending 条目入库（对象：L3 九条目 — 用户加入原始数据后 skill 自动/半自动入库）
+- 用户将原始数据放入输入区后，加载 spe-database-curation 技能走 End-to-end 10 步流程
+- 其 CSV 空白（Scheller/Wozniak_2020/Hu_2023_SDB 的 Country/City/Stim_language）在入库时随行自然填齐
+- 验收（每研究）：五件套齐全（raw/Clean/subj_info/Codebook/paper+exp JSON）、命名合规；从 known_pending 移除；两级校验 EXIT=0；Generate_Table1.qmd 重渲染 RENDER_EXIT=0、qmd 行数相应增加
+
+### 阶段 6：清理与简化（依赖合作者确认 CSV）
+- 删除 Dataset_inf.xlsx（先二次确认无独有信息）；移除 deprecated Paper_ID/Paper 列并简化 Generate_Table1.qmd 过渡映射；README/AGENTS/SKILL 引用同步（历史文档旧引用按惯例保留并标注）
+- 验收：validator EXIT=0；qmd 渲染 EXIT=0 且问题清单无新增行
+
+### 阶段 7：稿件更新支持（触发式，非例行）
+- 稿件版本更新时：Generate_Table1.qmd --param compare_manu:true 渲染 → 按 Table1_Issues_Solvability.md 先「可自动确定」批（~68 项）后「需人工」批（~39 项）
+- 验收：渲染 EXIT=0；每项消项关联数据侧改动证据（两级校验 EXIT=0）或人工判定记录；修正只改数据/元数据，永不反向以稿件覆盖 1_Data/
+
+### 横切约束（每阶段适用）
+- 元数据改动 → validate_json_metadata.R EXIT=0；数据改动 → 加跑 validate_clean_csv.R 0 ERROR
+- Dataset_inf.csv 字节保真（改前往返测试、改后 diff 仅目标单元格）；同一文件多处修改合并一次写入
+- 写盘操作 /tmp 中转 + cp（exFAT 无原子写）；文件移动用 bash mv/cp
+- 与已核实事实冲突的判断暂停问人，不自行覆盖

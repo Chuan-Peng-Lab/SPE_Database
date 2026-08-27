@@ -268,6 +268,8 @@ Boundary rules for ambiguous keys:
   - 输出 *_Clean.csv 带一致性守卫（如 stopifnot 行数/被试数）；行尾 CRLF/LF 差异直接无视，不做转换。
   - 排除已确认的问题被试（如测试运行）时，在脚本注释中写明证据（内部编号/默认人口学/按键反转等）与依据条目（PROJ_STATE.md 已知问题）。
   - 修改数据文件后同步更新同目录 subj_info、Dataset_inf.csv（字节保真）与 codebook；Clean_Data.Rmd 对应段如需同步修改，diff 应只含目标改动。
+- **通用函数与独立脚本同库（2026-08）**：独立清洗脚本与 `1_Data/utils.R`（spe_root/write_clean_csv）
+  同在 `1_Data/` 下，`source()` 同库引用，**不跨文件夹引用**（不要放 2_Code/ 再跨层 source）。
 - **自动化整理（2026-08 方向）**：新研究入库/重整理由 agent 加载本技能完成——
   下载的原始数据放 `<Study>_Raw/` 输入区 → 扫描识别实验/被试/会话结构 → 生成
   独立清洗脚本 `<Study>_clean.R`（先例 `Sui_2015_unpub_clean.R`，配方参考
@@ -276,30 +278,60 @@ Boundary rules for ambiguous keys:
   （validate_json_metadata.R + validate_clean_csv.R）。`Clean_Data.Rmd` 降级为
   历史配方参考，其逐研究段逐步提取为独立脚本/配置。
 
-## End-to-end checklist: adding a new study
+## End-to-end workflow: adding a new study（入库工作流，2026-08 自动化版）
 
-1. Fix the folder name per the naming grammar (print year, ASCII-only, journal/database suffix).
-2. Download the public raw data of each study into the **raw input zone**
-   `1_Data/<Study>/<Study>_Raw/` (see "Raw input zone" above), then produce
-   `*_raw.csv` (standardized trial-level, one per experiment) and
-   `*_subj_info.csv` (participant-level) from it.
-3. Produce `*_ExpN_Clean.csv` per the minimal-preprocessing conventions.
-4. Author the paper-level JSON (11 flat fields; `Year` == folder year;
-   `"Journal": "Preprint"` variant for preprints).
-5. Author the experiment-level JSON (v2 schema; top-level key `exp<N>` matches
-   `_Exp<N>`; five components; controlled `Setting` vocabulary; `"/"` for unknown;
-   units inside strings).
-6. Author the codebook (single `Sheet1`, 4 columns, every variable covered).
-7. Update `Dataset_inf.csv` (the master index) — add one row per experiment:
-   `Folder_Name` (the key ID) + `Exp` numbering. Keep it UTF-8 **with BOM**
-   (Chinese collaborators open
-   it in Excel on Chinese Windows, which defaults to GBK; the BOM keeps diacritics
-   like `ö`/`é`/`ü` from garbling). Do NOT edit the legacy `Dataset_inf.xlsx`.
-8. Run `Rscript 2_Code/validate_json_metadata.R` and fix every violation (naming,
-   year drift, exp-key match, v2 component completeness).
-9. Render the manuscript Table 1 pipeline (repo tool: `Generate_Table1.qmd`) and
-   inspect its problem output for NEW discrepancies vs the manuscript Table 1.
-10. exFAT hygiene: purge `._*` files before git ops; never commit `._*`/`.DS_Store`.
+1. 建文件夹并**下载数据到输入区** `1_Data/<Study>/<Study>_Raw/`（命名语法：印刷年、纯 ASCII、期刊/库缩写）。
+2. **扫描输入区**（agent）：识别 实验/被试/会话 结构；格式异常或多格式混存 → 暂停（Human decision points #7）。
+3. **生成并运行独立清洗脚本** `<Study>_clean.R`（从 `Clean_Data.Rmd` 对应段提取配方，或对照标准列新写；
+   模式见 §清洗工具提取规范与先例 `Sui_2015_unpub_clean.R`）→ 产出 `*_raw.csv`（标准 trial 级）与
+   `*_ExpN_Clean.csv`；`*_subj_info.csv` 从 raw/输入区人口学生成。
+4. **内容级校验**：`Rscript 2_Code/validate_clean_csv.R`（E1–E3 必须 0 ERROR；W 级提示记录）。
+5. **元数据草稿**：按 §Metadata draft workflow 生成 paper JSON（Crossref 预填）+ 实验 JSON（v2 五组件），
+   `[P]`/`[H]` 字段过 §Human decision points 人工确认。
+6. **Codebook**：按 §Codebook authoring rules 生成（单 `Sheet1` 4 列，覆盖全部 Clean 列）。
+7. **更新 `Dataset_inf.csv`**（主索引）：每实验一行 `Folder_Name` + `Exp`；UTF-8 **带 BOM** 字节保真；
+   不动 legacy `Dataset_inf.xlsx`。
+8. **结构级校验**：`Rscript 2_Code/validate_json_metadata.R`（命名、年份漂移、exp-key、v2 组件完整性）并修复。
+9. **收尾**：若原在 `known_pending` 白名单 → 移出；`Generate_Table1.qmd` 重渲染（稿件比对默认关闭，
+   仅稿件版本更新时 `--param compare_manu:true`）；更新 PROJ_STATE.md。
+10. exFAT 卫生：git 操作前清理 `._*`；绝不提交 `._*`/`.DS_Store`。
+
+## Metadata draft workflow（入库元数据草稿生成流程，2026-08 试点）
+
+新研究入库时按以下顺序生成元数据草稿（字段标注来源分级：
+`[D]` 数据可推导 / `[C]` Crossref 可预填 / `[P]` 需读论文 Methods（LLM 提取后人工核对）/ `[H]` 仅人工）：
+
+1. **paper JSON 草稿**（11 字段）:
+   - `[C]` `Paper_name`/`Author`/`Year`/`Journal`/`DOI` 由 Crossref API 预填（`works/<DOI>`）；
+     Journal 用 `container-title`；preprint（`posted-content`）固定 `Journal: "Preprint"` 且 DOI 存裸格式（去掉 `https://doi.org/` 前缀）；unpublished 无 DOI → 模板手工填。
+   - `[P]` `Summary`/`Conclusion` 由论文摘要/结论生成；`[H]` `Country`/`City`/`Email` 需人工；`Extra_Var` 无则 `/`。
+   - 校验：`Year` == 文件夹年份（Crossref 年份规则见 §DOI 与年份核验）。
+2. **experiment JSON 草稿**（v2 五组件）:
+   - `[D]` `Block_Structure.Trial_number` 从 Clean 行数÷被试数推算（与论文/CSV `numTrials` 交叉核对口径：per-block vs total）；
+     `Stimulus_Properties.Modality` 从 CSV `Stim_Type` 映射；`Equipment.Software` 从 CSV `Environmental_Info`。
+   - `[P]` `Physical_Environment`/`Trial_Structure`/`Experimental_Design`/`Stimulus_Properties` 细节从论文 Methods 提取；
+     `Setting` 必须用受控词表（Laboratory/Online/组合，见 §Five-component task framework）。
+3. **人工确认**：所有 `[P]`/`[H]` 字段过一遍 Human decision points 清单。
+4. **校验**：`validate_json_metadata.R` + `validate_clean_csv.R`（新增 exp JSON 后重跑）。
+
+试点验证（2026-08，三个测试研究）：Vicovaro_2022_JEPHPP（Journal）与 Navon_2021_psyarxiv（Preprint）的
+paper JSON 草稿字段（title/authors/year/journal）与现有文件完全一致；Sui_2014_unpub（unpublished）走手工模板。
+
+## Human decision points（人工决策清单 — 遇到即暂停，等待确认）
+
+自动化整理中以下环节**必须人工确认**，agent 不得自行推断覆盖：
+
+1. **年份口径**：Crossref 无 `published-print` 且非纯在线期刊、预印本版本年有争议时，暂停确认。
+2. **期刊缩写**：无现成缩写对照时（新期刊/新库），人工定缩写（可读性原则）。
+3. **N 口径冲突**：`Sample_Size`（入组）vs `Valid_Subj`（有效）vs `*_subj_info.csv` 行数 vs Clean Subject 数，
+   任一不一致 → 暂停人工确认；排除被试（测试运行/无数据/默认人口学）必须在脚本注释中写明证据。
+4. **License**：数据页/论文未明确声明时，填 "No License" 需人工确认（与稿件 "Not specified" 的语义等同关系）。
+5. **Identity 映射歧义**：原文多义（如 `fm`、friend vs close 边界）→ 保留原文到 Origin 列，English/Standardized 暂填并注释待确认。
+6. **实验编号**：无 Paper_ID 且文件夹结构无法推导 Exp 时，留空待人工。
+7. **输入区异常**：多格式混存、损坏文件、per-participant 命名无法对应实验/会话时，暂停人工判断。
+8. **数据获取**：Repo_Link 缺失/失效、数据未公开时，暂停（不得用稿件/旧产物反推数据）。
+9. **unpublished 研究**：无 DOI，paper JSON 手工填写（Summary/Conclusion 可 `"/"`），年份以数据收集年为准。
+10. **稿件/旧产物**：一律仅作参考线索，永不作为数据来源覆盖 1_Data/（稿件 v16 已废弃）。
 
 ## Validation and hygiene
 

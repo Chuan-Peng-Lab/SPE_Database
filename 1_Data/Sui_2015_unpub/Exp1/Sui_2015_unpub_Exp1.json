@@ -1,0 +1,32 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "/",
+      "Setting": "/",
+      "Equipment": { "Presenting": "/", "Monitor": "/", "Software": "/" },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching"
+    },
+    "Block_Structure": {
+      "Block_number": "2 sessions",
+      "Trial_number": "240 trials per session x 2 sessions (480 per participant; 9600 rows / 20 subjects; CSV numTrials=40 per-block caliber to verify)",
+      "Practice_trials": "/"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "/", "Stimulus_duration": "/", "SOA": "/",
+      "Stimulus_order": "/", "Response_deadline": "/", "ITI": "/", "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "geometric shape",
+      "Label": "/",
+      "Colors": { "Stimulus": "/", "Background": "/" }
+    },
+    "detail": "unpublished data; timing/equipment not documented; derived from Clean.csv structure"
+  }
+}

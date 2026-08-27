@@ -1,0 +1,32 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "/",
+      "Setting": "/",
+      "Equipment": { "Presenting": "/", "Monitor": "/", "Software": "/" },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching"
+    },
+    "Block_Structure": {
+      "Block_number": "/",
+      "Trial_number": "28037 rows total (40 subjects; practice + test phases, Phase column)",
+      "Practice_trials": "/"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "/", "Stimulus_duration": "/", "SOA": "/",
+      "Stimulus_order": "/", "Response_deadline": "/", "ITI": "/", "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "geometric shape",
+      "Label": "/",
+      "Colors": { "Stimulus": "/", "Background": "/" }
+    },
+    "detail": "unpublished data; age derived from birth year (raw year column 2000-2005); timing/equipment not documented"
+  }
+}

@@ -21,7 +21,8 @@
 suppressMessages(library(data.table))
 options(warn = -1)
 
-data_dir <- "1_Data"
+args <- commandArgs(TRUE)
+data_dir <- if (length(args)) args[1] else "1_Data"
 if (!dir.exists(data_dir)) data_dir <- file.path("..", "1_Data")
 stopifnot(dir.exists(data_dir))
 

@@ -1,0 +1,32 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "/",
+      "Setting": "/",
+      "Equipment": { "Presenting": "/", "Monitor": "/", "Software": "/" },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching (with valence/domain dimensions, Valence and Domain columns)"
+    },
+    "Block_Structure": {
+      "Block_number": "/",
+      "Trial_number": "/ (phase-structured: Phase column, e.g. prac_ALT2_ability; 448800 rows / 506 subjects)",
+      "Practice_trials": "/"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "/", "Stimulus_duration": "/", "SOA": "/",
+      "Stimulus_order": "/", "Response_deadline": "/", "ITI": "/", "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "circle, triangle (geometric shapes)",
+      "Label": "/",
+      "Colors": { "Stimulus": "/", "Background": "/" }
+    },
+    "detail": "Data Express; methodology details not documented; derived from Clean.csv structure"
+  }
+}
