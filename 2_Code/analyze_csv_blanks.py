@@ -6,8 +6,8 @@
 """Analyze blank fields in Dataset_inf.csv, cross-reference with folder/raw existence."""
 import csv, os
 
-CSV_PATH = "/Volumes/T3/Dell5510/HCP_cloud/My_Lab/Projects/SPE_Database/1_Data/Dataset_inf.csv"
-DATA_ROOT = "/Volumes/T3/Dell5510/HCP_cloud/My_Lab/Projects/SPE_Database/1_Data"
+CSV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "1_Data", "Dataset_inf.csv")
+DATA_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "1_Data")
 
 # Read CSV (BOM + CRLF tolerant)
 with open(CSV_PATH, encoding="utf-8-sig", newline="") as f:

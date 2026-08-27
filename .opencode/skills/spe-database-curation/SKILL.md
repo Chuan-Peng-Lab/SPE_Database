@@ -138,6 +138,8 @@ Use me when you are:
 }
 ```
 - `Year` must equal the folder year.
+- **`Country`/`City` 语义 = 数据采集地，不是作者单位**（2026-08 澄清）：paper JSON 曾误填作者单位（如通讯作者牛津但数据清华采集）；以数据来源为准——被试语言/姓名/采集年/第一作者单位。Dataset_inf.csv 与 paper JSON 需一致；发现 paper JSON 与 CSV 不一致时，先核数据采集地再决定是否同步更新 paper JSON。`Setting`=Online 时 `City` 可填 `/`。
+- **`Email` 以 Dataset_inf.csv 现值为准**：CSV Email 常为通讯作者当前单位邮箱，与论文发表时邮箱可能不同；paper JSON 与 CSV 不一致时不自动"修正"，问用户。
 - Preprint variant (e.g., `Hu_2023_psyarxiv.json`, `Navon_2021_psyarxiv.json`):
   `"Journal": "Preprint"` + a PsyArXiv/OSF DOI (e.g., `10.31234/osf.io/9dzm4`).
 - Known exception: `Kirk_2025_BritJPsy.json` uses a nested schema
@@ -326,13 +328,15 @@ Boundary rules for ambiguous keys:
 2. **期刊缩写**：无现成缩写对照时（新期刊/新库），人工定缩写（可读性原则）。
 3. **N 口径冲突**：`Sample_Size`（入组）vs `Valid_Subj`（有效）vs `*_subj_info.csv` 行数 vs Clean Subject 数，
    任一不一致 → 暂停人工确认；排除被试（测试运行/无数据/默认人口学）必须在脚本注释中写明证据。
-4. **License**：数据页/论文未明确声明时，填 "No License" 需人工确认（与稿件 "Not specified" 的语义等同关系）。
+4. **License**：**License 列 = 数据许可，不是论文/文章许可**——只看数据存储库/数据页声明（OSF 等），期刊文章页的 Creative Commons 图标属于文章许可，两者不可混。无 OSF/数据链接信息时填 `/`（2026-08 用户决策）；数据页/论文明确声明时按声明填写（如 CC BY 4.0、CC BY-NC-ND、No License）。
 5. **Identity 映射歧义**：原文多义（如 `fm`、friend vs close 边界）→ 保留原文到 Origin 列，English/Standardized 暂填并注释待确认。
 6. **实验编号**：无 Paper_ID 且文件夹结构无法推导 Exp 时，留空待人工。
 7. **输入区异常**：多格式混存、损坏文件、per-participant 命名无法对应实验/会话时，暂停人工判断。
 8. **数据获取**：Repo_Link 缺失/失效、数据未公开时，暂停（不得用稿件/旧产物反推数据）。
 9. **unpublished 研究**：无 DOI，paper JSON 手工填写（Summary/Conclusion 可 `"/"`），年份以数据收集年为准。
 10. **稿件/旧产物**：一律仅作参考线索，永不作为数据来源覆盖 1_Data/（稿件 v16 已废弃）。
+11. **多任务论文口径**：同一论文含多个任务（如 AB + 匹配）时，`Practice_Trial`/`numBlocks`/`numTrials` 取产生该行数据那个任务的值；发现论文中存在但 CSV 未收录的实验行（如 Wang_2016 Exp2/control），登记待入库，不擅自补行。
+12. **已发表论文核查对照全文，不只扫空白**：元数据补全/核查时直接对照 `REF/` 全文（期刊名拼写、身份列拼写、Others 措辞、N 口径、实验行数都可能与空白清单外的问题共存，2026-08 案例：Kirk `Psycholog`/`Slef`、Sui_2014 N 不符、Wang 缺 Exp2）。（2026-08 阶段 2 沉淀）
 
 ## Validation and hygiene
 

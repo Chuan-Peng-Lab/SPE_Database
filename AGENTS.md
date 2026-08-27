@@ -78,9 +78,15 @@ mode: primary
 - 查预印本版本年：OSF API 按 GUID 直取 `api.osf.io/v2/preprints/<guid>/versions/`；`filter[doi]` 返回 HTTP 400，勿用。
 - 外查前先查本地权威源：paper JSON（`DOI`/`Year`/`Journal`）、`Repo_Link`、`Dataset_inf.csv`。
 
+### 防坑（2026-08 阶段 2 会话沉淀，agent 操作纪律）
+- **工具若含绝对路径，先确认它读的就是当前文件**：校验器/扫描脚本可能硬编码已迁移的旧路径（如 `analyze_csv_blanks.py` 曾指向 `/Volumes/T3/...`），运行时读到旧副本且输出"恰好与预期一致"会掩盖错误。改数据前 `grep` 工具源码确认数据源路径；改后重跑若输出异常，先怀疑工具路径而非数据本身。
+- **编辑文档追加条目时用将被保留的现有文本作锚点**：edit 的 oldString 不要误取整条历史记录（曾把 PROJ_STATE「项目迁移」条目整体替换掉）；改后立即 grep 确认旧内容仍在。
+- 字段语义类约定（License=数据许可 / Country-City=数据采集地 / Email 以 CSV 为准 / 多任务口径 / 全文核查）见 `spe-database-curation` 技能（SKILL.md），此处不重复。
+
 ### 会话收尾（强制）
 - 更新根目录 `PROJ_STATE.md`：目标、已完成（已验证）、关键决策、测试结果、已知问题、失败方案、下一步；只记已确认事实。
 - 若本会话沉淀了可复用的约定/流程，同步补充到 `spe-database-curation` 技能（SKILL.md）。
+- **沉淀去重（2026-08 阶段 2 教训）**：四文档按分工各存专属正文、相互指针引用，**不复制同样内容到多个文件**——每条规则正文只写一个归属文件（AGENTS.md=agent 操作纪律 / SKILL.md=curation 字段语义 / PROJ_STATE.md=会话事实快照），其余文件只放一行指针（含目标节/编号）。操作要求：① 写入前 `grep` 目标文件确认该规则尚无正文，避免文件内重复；② 删除/重编号后立即同步更新所有指针中的引用位置；③ 沉淀后 `grep` 复核每条规则只有一处正文、其余为指针。
 - 如需提交：**必须先获得用户明确确认**（见文首「全局最高级规则」），确认后按逻辑分组 commit（≤3 个）。
 
 ## Project context
