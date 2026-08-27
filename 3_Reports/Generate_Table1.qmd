@@ -10,6 +10,9 @@ execute:
   echo: false
   warning: false
   message: false
+params:
+  compare_manu: false   # 默认不比对稿件 docx（SPE_database_manu_v16.docx 已废弃）；
+                        # 稿件版本更新时渲染传 --param compare_manu:true 启用比对
 ---
 
 ```{r setup, include=FALSE}
@@ -151,8 +154,9 @@ apa_tbl
 
 ```{r compare}
 # ============================================================
-# 读取稿件 docx 中的 Table 1
+# 读取稿件 docx 中的 Table 1（仅在稿件版本更新时启用比对）
 # ============================================================
+if (params$compare_manu) {
 manu_docx <- file.path("..", "3_Reports", "SPE_database_manu_v16.docx")
 
 # 用 officer 提取 docx 中所有表格单元格（按 table_index 分组，取最大表格）
@@ -181,11 +185,13 @@ manu_t1 <- t1 %>%
   pivot_wider(names_from = cell_id, values_from = text) %>%
   filter(row_id > 1)
 cat("解析稿件 Table 1 数据行数:", nrow(manu_t1), "\n")
+}
 ```
 
 ### 比对结果
 
 ```{r compare-details}
+if (params$compare_manu) {
 # 比对键 = Dataset_inf.csv 行号（两侧均唯一、一一对应）。
 # 稿件侧：稿件 ID 列仍为旧 Paper_ID（P5E1 风格），经 CSV 过渡映射
 # （Paper_ID -> CSV 行号；Paper_ID 列已 deprecated，过渡期后从 CSV 移除）。
@@ -276,17 +282,22 @@ for (id in common) {
 
 # 写入问题清单供最终展示
 writeLines(problems, file.path("..", "3_Reports", "Output", "table1_problems.txt"))
+}
 ```
 
 ### 需要解决的问题（每点 1 个问题）
 
 ```{r problems-list}
-probs <- readLines(file.path("..", "3_Reports", "Output", "table1_problems.txt"))
-if (length(probs)) {
-  # 以文字段落形式输出：每点一行
-  for (i in seq_along(probs)) cat(sprintf("%d. %s\n\n", i, probs[i]))
+if (params$compare_manu && file.exists(file.path("..", "3_Reports", "Output", "table1_problems.txt"))) {
+  probs <- readLines(file.path("..", "3_Reports", "Output", "table1_problems.txt"))
+  if (length(probs)) {
+    # 以文字段落形式输出：每点一行
+    for (i in seq_along(probs)) cat(sprintf("%d. %s\n\n", i, probs[i]))
+  } else {
+    cat("未发现问题：qmd 生成的 Table 1 与稿件完全一致。\n")
+  }
 } else {
-  cat("未发现问题：qmd 生成的 Table 1 与稿件完全一致。\n")
+  cat("稿件比对已停用：SPE_database_manu_v16.docx 已过时废弃（其 12 个待收录条目信息已登记入 Dataset_inf.csv Note 列）。\n")
 }
 ```
 
@@ -297,7 +308,9 @@ if (length(probs)) {
 - 本 qmd 需在 **RStudio**（自带 quarto）中渲染，或使用：
   `/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render Generate_Table1.qmd --to docx`
 - 输出：`Table1_generated.docx`（APA 格式表格，可直接复制进稿件）。
-- 比对的问题清单同时写入 `3_Reports/Output/table1_problems.txt`。
+- 与稿件 docx 的自动比对**默认关闭**（稿件 `SPE_database_manu_v16.docx` 已废弃；
+  其 12 个待收录条目已在 `Dataset_inf.csv` Note 列登记来源信息）。如需比对，
+  渲染时传 `--param compare_manu:true`，问题清单写入 `3_Reports/Output/table1_problems.txt`。
 - **ID 列**：`ID` 为 `Folder_Name`（项目关键 ID）。与旧稿件的逐行比对经
   `Paper_ID → CSV 行号` 过渡映射完成（问题清单中以 `Folder_Name|ExpN` 显示；
   `Paper_ID` 与 `Paper` 列已 deprecated，过渡期后从 `Dataset_inf.csv` 移除）。

@@ -62,6 +62,33 @@ If corruption persists: `git gc --prune=now` — never delete real
 - 引用方向：README ↔ AGENTS ↔ PROJ_STATE 三份相互引用，并**统一指向技能**；
   Table1_Issues_Solvability.md ↔ PROJ_STATE.md 双向关联；技能不反向依赖这三份文档。
 
+## 项目总体逻辑（单向数据管道）
+
+本项目是一条**单向数据管道**：`原始公开数据 → 规范数据 → 稿件产出`。
+数据只向前流动；稿件永不反向作为数据源（稿件 v16 已废弃，其 12 个
+待收录条目信息已登记入 Dataset_inf.csv Note 列，见 PROJ_STATE.md）。
+
+**阶段一：整理与入库（agent + skill 自动化，2026-08 起）**
+- 输入：各研究公开数据（论文/preprint/unpublished）下载至**输入区**
+  `1_Data/<Study>/<Study>_Raw/`（只读，不参与校验；详见 SKILL.md Raw input zone）
+- 执行：agent 加载 `spe-database-curation` 技能 → 扫描输入区识别
+  实验/被试/会话 → 生成独立清洗脚本 `<Study>_clean.R`（列映射 +
+  Identity 三级标准化；配方参考 Clean_Data.Rmd，其降级为历史参考）→
+  产出 `*_raw.csv` / `*_ExpN_Clean.csv` / `*_subj_info.csv` /
+  Codebook / paper+实验 JSON → 更新 Dataset_inf.csv（字节保真）
+- 校验（两级，任何改动后必跑）：`Rscript 2_Code/validate_json_metadata.R`
+  （结构级）+ `Rscript 2_Code/validate_clean_csv.R`（内容级，2026-08 新增）
+
+**阶段二：信息提取与分析产出**
+- 工具：`3_Reports/` 各 Rmd（Process_Data、Subject_Table、Reports、
+  Generate_Table1、1_Identity、2_Mismatch、3_Exploratory）
+- 产物：`Output/data/` 聚合 CSV、`Output/Pic/` 图、`Generate_Table1.docx`
+- 与稿件比对默认关闭（`--param compare_manu:true` 按版本触发）；禁止以稿件/旧产物反推数据
+
+**任务判别**：整理/入库 → 加载 skill，产出写 `1_Data/`；分析/出数 →
+直接用 `3_Reports/` 代码与规范数据，产出写 `3_Reports/Output/`。
+历史遗留（manu_v16、Dataset_inf.xlsx、非标准命名变体等）不主动修改。
+
 ## Agent efficiency conventions（省 token / 防无效搜索）
 
 ### 省 token

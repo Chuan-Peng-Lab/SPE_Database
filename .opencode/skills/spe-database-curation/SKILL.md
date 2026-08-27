@@ -75,6 +75,17 @@ Use me when you are:
   (e.g., `1_Data/Sui_2014_APP/Exp1/…Exp4/`).
 - Known deviation (do NOT propagate): `1_Data/Martinez-Perez_2024_CC/` keeps
   multi-experiment files flat at the study root.
+- **Raw input zone（输入区，2026-08 起规范）**: downloaded original exports go into
+  `1_Data/<Study>/<Study>_Raw/` (study level; all experiments together; a `Source/`
+  subfolder for the original download is allowed). Supported formats: `.csv`, `.mat`,
+  `.edat2`/`.emrg`, `.psydat`/`.dat`, `.txt`, `.xlsx`. The input zone is **read-only
+  input** — it does NOT participate in validation (`validate_json_metadata.R` and
+  `validate_clean_csv.R` both skip `*_Raw/` and `Source/`), and its files are not
+  standardized products. The standardized trial-level product derived from it is
+  `<Study>_Exp<N>_raw.csv` (in `Exp<N>/` or the study root) — do not confuse the two:
+  `*_Raw/` = downloaded originals (as-is), `*_raw.csv` = processed standard file.
+  Workflow: download → drop into `<Study>_Raw/` → agent scans the input zone →
+  produces `*_raw.csv`, `*_ExpN_Clean.csv`, `*_subj_info.csv` → validates.
 
 ## File naming grammar
 
@@ -257,13 +268,21 @@ Boundary rules for ambiguous keys:
   - 输出 *_Clean.csv 带一致性守卫（如 stopifnot 行数/被试数）；行尾 CRLF/LF 差异直接无视，不做转换。
   - 排除已确认的问题被试（如测试运行）时，在脚本注释中写明证据（内部编号/默认人口学/按键反转等）与依据条目（PROJ_STATE.md 已知问题）。
   - 修改数据文件后同步更新同目录 subj_info、Dataset_inf.csv（字节保真）与 codebook；Clean_Data.Rmd 对应段如需同步修改，diff 应只含目标改动。
+- **自动化整理（2026-08 方向）**：新研究入库/重整理由 agent 加载本技能完成——
+  下载的原始数据放 `<Study>_Raw/` 输入区 → 扫描识别实验/被试/会话结构 → 生成
+  独立清洗脚本 `<Study>_clean.R`（先例 `Sui_2015_unpub_clean.R`，配方参考
+  `Clean_Data.Rmd` 对应段）→ 产出 `*_ExpN_Clean.csv` / `*_subj_info.csv` →
+  元数据（paper/exp JSON、Codebook、Dataset_inf.csv）→ 两级校验
+  （validate_json_metadata.R + validate_clean_csv.R）。`Clean_Data.Rmd` 降级为
+  历史配方参考，其逐研究段逐步提取为独立脚本/配置。
 
 ## End-to-end checklist: adding a new study
 
 1. Fix the folder name per the naming grammar (print year, ASCII-only, journal/database suffix).
-2. Create the study folder with raw files: `*_raw.csv` (trial-level) and
-   `*_subj_info.csv` (participant-level). Keep per-participant exports in a
-   `*_Raw/` subfolder only when they already exist (legacy layout — do not create new ones).
+2. Download the public raw data of each study into the **raw input zone**
+   `1_Data/<Study>/<Study>_Raw/` (see "Raw input zone" above), then produce
+   `*_raw.csv` (standardized trial-level, one per experiment) and
+   `*_subj_info.csv` (participant-level) from it.
 3. Produce `*_ExpN_Clean.csv` per the minimal-preprocessing conventions.
 4. Author the paper-level JSON (11 flat fields; `Year` == folder year;
    `"Journal": "Preprint"` variant for preprints).
@@ -287,6 +306,15 @@ Boundary rules for ambiguous keys:
 1. After any metadata change run:
    `Rscript 2_Code/validate_json_metadata.R` (checks naming, year drift, exp-key match,
    v2 component completeness; exits non-zero on violations).
+2. After any clean-data change run the **content-level checker** (2026-08):
+   `Rscript 2_Code/validate_clean_csv.R` — for every `*_Clean.csv` outside the raw
+   input zone: E1 missing `Subject` column; E2 incomplete Identity triple
+   (`X_Origin_Identity` without `X_English_Identity`/`X_Standardized_Identity`);
+   E3 Subject count vs `*_subj_info.csv` rows; W1 missing standard columns (with
+   alternative-column hints); W2 Subject count vs CSV `Valid_Subj`/`Sample_Size`
+   (known caliber differences); W3 ACC value domain; W4 non-standard filenames.
+   ERROR → exit 1; historical exceptions are listed in the script `known` vector
+   (KNOWN, exempted; remove the entry once fixed — same pattern as `known_pending`).
 2. The validator whitelists not-yet-curated studies (`known_pending`, currently
    9: `Bukowski_2021_ActaPsych`, `Golubickis_2021_ActaPsych`, `Hobbs_2023_PsychMed`,
    `Hu_2023_SDB`, `Mcivor_2021_EJN`, `Orellana-Corrales_2023_QJEP`,
