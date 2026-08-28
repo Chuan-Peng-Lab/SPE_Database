@@ -54,7 +54,7 @@ Use me when you are:
   - 键列：`ID`（行号）、`Folder_Name`（关键 ID）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
   - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
   - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
-  - 设计：`Design`、`subj_Group`（被试分组：同一实验为组间设计时填原文 group 名称、多组用分号分隔，如 `LpSTS;DLPFC;sham`；无组间分组填 `All`）、`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
+  - 设计：`Design`、`subj_Group`（被试分组：同一实验为组间设计时填原文 group 名称、多组用分号分隔，如 `LpSTS;DLPFC;sham`；无组间分组填 `All`）。**判定注意（2026-08 沉淀）：`Design` 列含 between-subjects/Group 标记是直接依据，但 Design 未标注不代表无组间——需以全文核对**（案例：Xu_2022 4 组、Constable_2020 Switch Identity、Vicovaro E2 self-symmetry/asymmetry 均仅见于全文，Design 列未标）；在线研究（MTurk/Prolific 等）按平台被试主体标 Country（如 MTurk→United States，2026-08 用户指示）。`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
   - 流程：`Practice_Block`、`Practice_Trial`、`numBlocks`、`numTrials`、`Environmental_Info`（**刺激呈现软件**，非 Lab/Online 设置）
   - 状态：`Status`、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
   同论文多实验行共享的字段（作者/邮箱/年/期刊/DOI 等）只填一次，其余行留空或同步传播均可——以组内非空值一致为准。
@@ -139,6 +139,7 @@ Use me when you are:
 ```
 - `Year` must equal the folder year.
 - **`Country`/`City` 语义 = 数据采集地，不是作者单位**（2026-08 澄清）：paper JSON 曾误填作者单位（如通讯作者牛津但数据清华采集）；以数据来源为准——被试语言/姓名/采集年/第一作者单位。Dataset_inf.csv 与 paper JSON 需一致；发现 paper JSON 与 CSV 不一致时，先核数据采集地再决定是否同步更新 paper JSON。`Setting`=Online 时 `City` 可填 `/`。
+  **采集地判定依据（2026-08 沉淀）**：① 论文直写采集地/被试语言/货币/招募机构（最强）；② **伦理委员会批准机构 = 数据采集机构**（惯例：论文声明获批的伦理机构即采集所在地，2026-08 案例：Constable_2020/Wozniak_2018 均经 Central European University 批准 → 采集地 Budapest）；③ 作者单位 + 全文环境描述（实验室采集）为佐证；④ 作者履历单位（如 Wozniak 的 Australia/Poland/Hungary）**不是**采集地依据。
 - **`Email` 以 Dataset_inf.csv 现值为准**：CSV Email 常为通讯作者当前单位邮箱，与论文发表时邮箱可能不同；paper JSON 与 CSV 不一致时不自动"修正"，问用户。
 - Preprint variant (e.g., `Hu_2023_psyarxiv.json`, `Navon_2021_psyarxiv.json`):
   `"Journal": "Preprint"` + a PsyArXiv/OSF DOI (e.g., `10.31234/osf.io/9dzm4`).
@@ -348,8 +349,7 @@ Boundary rules for ambiguous keys:
 
 1. **年份口径**：Crossref 无 `published-print` 且非纯在线期刊、预印本版本年有争议时，暂停确认。
 2. **期刊缩写**：无现成缩写对照时（新期刊/新库），人工定缩写（可读性原则）。
-3. **N 口径冲突**：`Sample_Size`（入组）vs `Valid_Subj`（有效）vs `*_subj_info.csv` 行数 vs Clean Subject 数，
-   任一不一致 → 暂停人工确认；排除被试（测试运行/无数据/默认人口学）必须在脚本注释中写明证据。
+ 3. **N 口径（数据口径优先，2026-08 确认）**：`Sample_Size` = Clean 中被试总数（= Clean `unique(Subject)` 数）；`Valid_Subj`/`Drop_Subj` 为派生值——清洗 = 最小预处理不过滤，故通常 `Valid_Subj` = `Sample_Size`、`Drop_Subj` = 0；清洗脚本实际移除的问题被试（测试运行/无数据/默认人口学，需在脚本注释写明证据）计入 `Drop_Subj`。`*_subj_info.csv` 行数应等于 Clean Subject 数。论文的招募/排除口径记入 Note 列（`Paper_N: ...` 前缀）供追溯，不以论文口径覆盖数据口径。任一不一致 → 暂停人工确认。
 4. **License**：**License 列 = 数据许可，不是论文/文章许可**——只看数据存储库/数据页声明（OSF 等），期刊文章页的 Creative Commons 图标属于文章许可，两者不可混。无 OSF/数据链接信息时填 `/`（2026-08 用户决策）；数据页/论文明确声明时按声明填写（如 CC BY 4.0、CC BY-NC-ND、No License）。
 5. **Identity 映射歧义**：原文多义（如 `fm`、friend vs close 边界）→ 保留原文到 Origin 列，English/Standardized 暂填并注释待确认。
 6. **实验编号**：无 Paper_ID 且文件夹结构无法推导 Exp 时，留空待人工。

@@ -4,7 +4,7 @@
     "Collected_date": "August 2021",
     "Physical_Environment": {
       "Location": "Online (UK residents)",
-      "Setting": "Online (participants' own devices)",
+      "Setting": "Online",
       "Equipment": {
         "Presenting": "Participants' own laptops/desktop computers",
         "Monitor": "/",
@@ -16,7 +16,7 @@
       "Conditions": "/"
     },
     "Block_Structure": {
-      "Practice_trials": "Practice trial administered (exact number not specified)",
+      "Practice_trials": "1 practice trial",
       "Block_number": "/",
       "Trial_number": "64 trials total"
     },

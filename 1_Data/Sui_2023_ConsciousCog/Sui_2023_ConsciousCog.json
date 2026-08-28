@@ -1,13 +1,13 @@
 {
-    "Paper_name": "Electrophysiological correlates of self-prioritization",
-    "Summary": "The study investigated how early in the processing stream self-relevance influences decision-making. Using a shape-label matching task combined with EEG and computational modeling, the researchers found a standard self-prioritization effect where responses to self-related items were faster and more accurate. A hierarchical drift diffusion model analysis showed this effect was driven by enhanced evidence accumulation for self-related stimuli. Self-other discrimination was observed at both early N1 and late P3 ERP components, with N1 linked to information accumulation rate and P3 to evidential requirements for response selection.",
-    "Year": "2023",
-    "Author": "Jie Sui, Xun He, Marius Golubickis, Saga L. Svensson, C. Neil Macrae",
-    "Journal": "Consciousness and Cognition",
-    "Country": "UK",
-    "City": "/",
-    "Extra_Var": "/",
-    "Email": "jie.sui@abdn.ac.uk",
-    "DOI": "https://doi.org/10.1016/j.concog.2023.103475",
-    "Conclusion": "The main results demonstrate that self-prioritization is underpinned by enhanced evidence accumulation for self-related stimuli, observable in both early (N1) and late (P3) electrophysiological components. The N1 component is associated with the rate of information accumulation during decision-making, while the P3 component is linked to the evidential requirements for response selection. These findings elucidate the temporal dynamics and neural correlates of how self-relevance influences decisional operations."
+  "Paper_name": "Electrophysiological correlates of self-prioritization",
+  "Summary": "The study investigated how early in the processing stream self-relevance influences decision-making. Using a shape-label matching task combined with EEG and computational modeling, the researchers found a standard self-prioritization effect where responses to self-related items were faster and more accurate. A hierarchical drift diffusion model analysis showed this effect was driven by enhanced evidence accumulation for self-related stimuli. Self-other discrimination was observed at both early N1 and late P3 ERP components, with N1 linked to information accumulation rate and P3 to evidential requirements for response selection.",
+  "Year": "2023",
+  "Author": "Jie Sui, Xun He, Marius Golubickis, Saga L. Svensson, C. Neil Macrae",
+  "Journal": "Consciousness and Cognition",
+  "Country": "UK",
+  "City": "Aberdeen",
+  "Extra_Var": "/",
+  "Email": "jie.sui@abdn.ac.uk",
+  "DOI": "10.1016/j.concog.2023.103475",
+  "Conclusion": "The main results demonstrate that self-prioritization is underpinned by enhanced evidence accumulation for self-related stimuli, observable in both early (N1) and late (P3) electrophysiological components. The N1 component is associated with the rate of information accumulation during decision-making, while the P3 component is linked to the evidential requirements for response selection. These findings elucidate the temporal dynamics and neural correlates of how self-relevance influences decisional operations."
 }

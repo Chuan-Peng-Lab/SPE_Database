@@ -1,13 +1,13 @@
 {
-    "Paper_name": "Good Me Bad Me: Prioritization of the Good-Self During Perceptual Decision-Making",
-    "Summary": "The study investigates which aspects of the self-concept drive the prioritization of self-related stimuli. Using a shape-label association task, participants learned to link shapes to 'good-self', 'bad-self', 'good-other', and 'bad-other' concepts. Results showed that responses were consistently faster and more accurate for shapes associated with the 'good-self' compared to all other shapes, regardless of whether the task focused on self-relevance or valence. A hierarchical drift diffusion model analysis revealed that this 'good-self prioritization effect' was driven by a faster rate of evidence accumulation (information uptake) for good-self stimuli. This demonstrates that the positive, identity-centered aspect of the self is crucial for facilitating perceptual decision-making.",
-    "Year": "2020",
-    "Author": "Chuan-Peng Hu, Yuxuan Lan, C. Neil Macrae, Jie Sui",
-    "Journal": "Collabra: Psychology",
-    "Country": "/",
-    "City": "/",
-    "Extra_Var": "/",
-    "Email": "hcp4715@gmail.com",
-    "DOI": "https://doi.org/10.1525/collabra.301",
-    "Conclusion": "The main finding is that perceptual decision-making is exclusively facilitated by activation of the 'good-self' representation. The self-prioritization effect is not a general bias for all self-related information but is specifically driven by the positive, identity-based aspect of the self-concept ('good me'). Computational modeling indicated this effect stems from a more efficient rate of information processing for good-self stimuli, not from changes in response caution or non-decision time. This clarifies that the core, morally good self is the crucial component producing self-bias in perceptual tasks."
+  "Paper_name": "Good Me Bad Me: Prioritization of the Good-Self During Perceptual Decision-Making",
+  "Summary": "The study investigates which aspects of the self-concept drive the prioritization of self-related stimuli. Using a shape-label association task, participants learned to link shapes to 'good-self', 'bad-self', 'good-other', and 'bad-other' concepts. Results showed that responses were consistently faster and more accurate for shapes associated with the 'good-self' compared to all other shapes, regardless of whether the task focused on self-relevance or valence. A hierarchical drift diffusion model analysis revealed that this 'good-self prioritization effect' was driven by a faster rate of evidence accumulation (information uptake) for good-self stimuli. This demonstrates that the positive, identity-centered aspect of the self is crucial for facilitating perceptual decision-making.",
+  "Year": "2020",
+  "Author": "Chuan-Peng Hu, Yuxuan Lan, C. Neil Macrae, Jie Sui",
+  "Journal": "Collabra: Psychology",
+  "Country": "/",
+  "City": "Beijing",
+  "Extra_Var": "/",
+  "Email": "hcp4715@gmail.com",
+  "DOI": "10.1525/collabra.301",
+  "Conclusion": "The main finding is that perceptual decision-making is exclusively facilitated by activation of the 'good-self' representation. The self-prioritization effect is not a general bias for all self-related information but is specifically driven by the positive, identity-based aspect of the self-concept ('good me'). Computational modeling indicated this effect stems from a more efficient rate of information processing for good-self stimuli, not from changes in response caution or non-decision time. This clarifies that the core, morally good self is the crucial component producing self-bias in perceptual tasks."
 }

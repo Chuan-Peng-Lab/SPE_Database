@@ -1,13 +1,13 @@
 {
-    "Paper_name": "To see or not to see: the parallel processing of self-relevance and facial expressions",
-    "Summary": "This study investigates whether the self-prioritization effect, where self-relevant information is processed more efficiently, extends to the recognition of emotional facial expressions. Using a self-association paradigm with a large sample to control for familiarity and overlearning, the researchers replicated the effect of self-relevance on general face processing. However, they found no evidence that self-relevance modulates the recognition of facial emotions. The authors propose theoretical explanations for these findings and suggest that further research with varied designs is needed to fully understand the mechanism.",
-    "Year": "2023",
-    "Author": "Tuo Liu, Jie Sui, Andrea Hildebrandt",
-    "Journal": "Cognitive Research: Principles and Implications",
-    "Country": "Germany",
-    "City": "Oldenburg",
-    "Extra_Var": "/",
-    "Email": "tuo.liu@uol.de",
-    "DOI": "10.1186/s41235-023-00524-8",
-    "Conclusion": "The main result is that while self-relevance facilitates general face processing, it does not enhance the specific recognition of emotional facial expressions. This suggests that self-relevance and facial emotion recognition are processed in parallel rather than interactively. The study highlights the need for further research to disentangle these cognitive mechanisms."
+  "Paper_name": "To see or not to see: the parallel processing of self-relevance and facial expressions",
+  "Summary": "This study investigates whether the self-prioritization effect, where self-relevant information is processed more efficiently, extends to the recognition of emotional facial expressions. Using a self-association paradigm with a large sample to control for familiarity and overlearning, the researchers replicated the effect of self-relevance on general face processing. However, they found no evidence that self-relevance modulates the recognition of facial emotions. The authors propose theoretical explanations for these findings and suggest that further research with varied designs is needed to fully understand the mechanism.",
+  "Year": "2023",
+  "Author": "Tuo Liu, Jie Sui, Andrea Hildebrandt",
+  "Journal": "Cognitive Research: Principles and Implications",
+  "Country": "UK",
+  "City": "/",
+  "Extra_Var": "/",
+  "Email": "tuo.liu@uol.de",
+  "DOI": "10.1186/s41235-023-00524-8",
+  "Conclusion": "The main result is that while self-relevance facilitates general face processing, it does not enhance the specific recognition of emotional facial expressions. This suggests that self-relevance and facial emotion recognition are processed in parallel rather than interactively. The study highlights the need for further research to disentangle these cognitive mechanisms."
 }
