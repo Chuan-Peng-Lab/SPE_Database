@@ -36,7 +36,6 @@ clean_files <- clean_files[!grepl("(_Raw/|_raw/|/Raw/|/Source/)", clean_files)]
 known <- c(
   "Constable_2020_ActaPsych_Exp1"    = "缺 Label/Shape 的 English/Standardized 四个 Identity 三级列（历史文件，待补）",
   "Hu_2023_psyarxiv_Exp1"            = "nSubj 20 vs subj_info 23 行（subj_info 含无 trial 被试？待核）",
-  "Vicovaro_2022_JEPHPP_Exp2"        = "nSubj 48 vs subj_info 95 行（Clean 覆盖不全？待核）",
   "Sun_2026_DataExp_Exp1"            = "nSubj 506 vs subj_info 334 行（全样本 vs 有效样本口径，已知）",
   "Zhang_2023_NeuroImage_Exp1"       = "nSubj 346 vs subj_info 347 行（差 1，待核）",
   "Liang_2022_HumBrainMap_Exp1"      = "nSubj 35 vs subj_info 109 行（Clean 为历史三分片之一，待核）",

@@ -275,6 +275,11 @@ Boundary rules for ambiguous keys:
   - 输出 *_Clean.csv 带一致性守卫（如 stopifnot 行数/被试数）；行尾 CRLF/LF 差异直接无视，不做转换。
   - 排除已确认的问题被试（如测试运行）时，在脚本注释中写明证据（内部编号/默认人口学/按键反转等）与依据条目（PROJ_STATE.md 已知问题）。
   - 修改数据文件后同步更新同目录 subj_info、Dataset_inf.csv（字节保真）与 codebook；Clean_Data.Rmd 对应段如需同步修改，diff 应只含目标改动。
+- **Subject 编号与数据对齐规则（2026-08 阶段 3 沉淀，Vicovaro_2022_JEPHPP Exp2 教训）**：
+  1. **编号只承载唯一性，条件信息由数据列承载**：Subject 编号不编码 block/条件（Symmetry/Matching 等由 Clean 数据列表达）。raw participant_id 重复（多段/跨 block 共用同一 ID）时，统一按段号加后缀 `_1`/`_2`…，不引入条件后缀分支（如不写 `_selfS`/`_selfA`）；条件归属查数据列即可。
+  2. **重复 ID 判定看"该 ID 总段数 > 1"，而非当前段号**：凡 participant_id 名下段数 > 1 → **所有段**都加段号后缀（不能只给后段加，否则第一段不唯一）；守卫 `stopifnot(length(unique(Subject)) == 预期被试数)`。
+  3. **subj_info 与 Clean 的 Subject 对齐用键，不用行序**：构建期保留临时映射列（如 `Subject_raw = participant_id|block|seg_no`），subj_info 人口学按映射键对齐；**禁止依赖文件行序**（行序脆弱，键稳定）。写出 Clean 前删除临时列。
+  4. **构建期中间映射内嵌脚本，不落盘独立文件**：Subject↔原始 ID 映射由脚本内存对象生成，明细写入脚本注释；研究文件夹只允许标准产物（raw/Clean/subj_info/Codebook/JSON + <Study>_clean.R），不产生 subject_map 等中间 CSV。
 - **通用函数与独立脚本同库（2026-08）**：独立清洗脚本与 `1_Data/utils.R`（spe_root/write_clean_csv）
   同在 `1_Data/` 下，`source()` 同库引用，**不跨文件夹引用**（不要放 2_Code/ 再跨层 source）。
 - **自动化整理（2026-08 方向）**：新研究入库/重整理由 agent 加载本技能完成——

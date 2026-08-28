@@ -23,7 +23,7 @@ mode: primary
 
 - `README.md` — 面向**人类读者**：项目介绍、数据使用指引。代理也应按需引用。
 - `AGENTS.md`（本文件）— 面向**agent**：环境约束、效率约定、caveats。
-- `PROJ_STATE.md` — **会话状态快照**：每次工作后必须更新；新会话先读它再开工。
+- `PROJ_STATE.md` — **会话状态快照**：**每个 session 结束时统一更新一次**（工作过程中不逐条实时记录，避免文档冗长）；新会话先读它再开工。
 - `3_Reports/Table1_Issues_Solvability.md` — **Table 1 问题可解性分析**：逐项判定稿件 Table 1 差异的可解性（可自动确定 / 需人工），与 PROJ_STATE.md 双向关联（未解决清单 ↔ 可解性判定）；依据 `Generate_Table1.qmd` 输出的 `table1_problems.txt`。
 - `REF/README_html2md.md` — **REF 全文 HTML → MD 转换管线使用说明**：`REF/html2Json.py`（HTML→JSON）+ `REF/json2md.py`（JSON→MD）的批量用法、摘要验收清单、新模板适配；全文正文归属本文件，AGENTS/PROJ_STATE 只放指针。
 - `.opencode/skills/spe-database-curation/SKILL.md` — **通用 curation 技能**：自足独立、
@@ -88,6 +88,7 @@ mode: primary
 
 ### 会话收尾（强制）
 - 更新根目录 `PROJ_STATE.md`：目标、已完成（已验证）、关键决策、测试结果、已知问题、失败方案、下一步；只记已确认事实。
+- **更新时机：只在 session 收尾统一更新一次**，工作过程中不逐条实时写入 PROJ_STATE.md（避免文档膨胀）；同一 session 内的多次修改合并为收尾时一条「已完成」条目。若 session 尚未结束，改动先记在对话/待办中，不写文档。
 - 若本会话沉淀了可复用的约定/流程，同步补充到 `spe-database-curation` 技能（SKILL.md）。
 - **沉淀去重（2026-08 阶段 2 教训）**：四文档按分工各存专属正文、相互指针引用，**不复制同样内容到多个文件**——每条规则正文只写一个归属文件（AGENTS.md=agent 操作纪律 / SKILL.md=curation 字段语义 / PROJ_STATE.md=会话事实快照），其余文件只放一行指针（含目标节/编号）。操作要求：① 写入前 `grep` 目标文件确认该规则尚无正文，避免文件内重复；② 删除/重编号后立即同步更新所有指针中的引用位置；③ 沉淀后 `grep` 复核每条规则只有一处正文、其余为指针。
 - 如需提交：**必须先获得用户明确确认**（见文首「全局最高级规则」），确认后按逻辑分组 commit（≤3 个）。
