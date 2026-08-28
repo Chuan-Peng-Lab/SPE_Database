@@ -18,6 +18,48 @@ METADATA_OVERRIDES = {
         'volume': '116', 'issue': '1', 'pages': '131-148',
         'published_date': '2025-02',
     },
+    '10.1111/psyp.14396': {  # Haciahmet_2023_Psychophysiol：Wiley 页面 meta 缺失，取自 Crossref
+        'title': 'The oscillatory fingerprints of self-prioritization: Novel markers in spectral EEG for self-relevant processing',
+        'authors': ['Céline C. Haciahmet', 'Marius Golubickis', 'Sarah Schäfer', 'Christian Frings', 'Bernhard Pastötter'],
+        'journal': 'Psychophysiology',
+        'volume': '60', 'issue': '12', 'pages': '',
+        'published_date': '2023-12',
+    },
+    '10.1002/hbm.25129': {  # Kolvoort_2020_HumBrainMap：同上，取自 Crossref
+        'title': 'Temporal integration as "common currency" of brain and self: Scale-free activity in resting-state EEG correlates with temporal delay effects on self-relatedness',
+        'authors': ['Ivar R. Kolvoort', 'Soren Wainio-Theberge', 'Annemarie Wolff', 'Georg Northoff'],
+        'journal': 'Human Brain Mapping',
+        'volume': '41', 'issue': '15', 'pages': '4355-4374',
+        'published_date': '2020-10-15',
+    },
+    '10.1002/hbm.25730': {  # Liang_2022_HumBrainMap：同上，取自 Crossref
+        'title': 'The roles of the LpSTS and DLPFC in self-prioritization: A transcranial magnetic stimulation study',
+        'authors': ['Qiongdan Liang', 'Bozhen Zhang', 'Sinan Fu', 'Jie Sui', 'Fei Wang'],
+        'journal': 'Human Brain Mapping',
+        'volume': '43', 'issue': '4', 'pages': '1381-1393',
+        'published_date': '2022-03',
+    },
+    '10.1177/17470218221112238': {  # Svensson_2023_QJEP：SAGE 页面仅保存 journal meta，其余取自 Crossref
+        'title': 'Self-relevance and the activation of attentional networks',
+        'authors': ['Saga Svensson', 'Marius Golubickis', 'Sam Johnson', 'Johanna K. Falbén', 'C. Neil Macrae'],
+        'journal': 'Quarterly Journal of Experimental Psychology',
+        'volume': '76', 'issue': '5', 'pages': '1120-1130',
+        'published_date': '2023-05',
+    },
+    '10.1111/ejn.14782': {  # Mcivor_2021_EJN：Wiley 页面 meta 缺失，取自 Crossref
+        'title': 'Self-referential processing and emotion context insensitivity in major depressive disorder',
+        'authors': ['Lucy McIvor', 'Jie Sui', 'Tina Malhotra', 'David Drury', 'Sanjay Kumar'],
+        'journal': 'European Journal of Neuroscience',
+        'volume': '53', 'issue': '1', 'pages': '311-329',
+        'published_date': '2021-01',
+    },
+    '10.1177/17470218221124928': {  # Orellana-Corrales_2023_QJEP：SAGE 页面 meta 缺失，取自 Crossref
+        'title': 'Does an experimentally induced self-association elicit affective self-prioritisation?',
+        'authors': ['Gabriela Orellana-Corrales', 'Christina Matschke', 'Sarah Schäfer', 'Ann-Katrin Wesslein'],
+        'journal': 'Quarterly Journal of Experimental Psychology',
+        'volume': '76', 'issue': '6', 'pages': '1379-1390',
+        'published_date': '2023-06',
+    },
 }
 
 
@@ -133,6 +175,24 @@ def inline(el, refmap):
             if m:
                 n = refmap.get(m.group(1))
                 return f'[{n}]' if n else ''.join(inline(c, refmap) for c in el.children)
+        # SAGE: #bibrN-xxx / data-xml-rid="bibrN-xxx" → [n]
+        m = re.search(r'#bibr(\d+)', href) or re.search(r'bibr(\d+)-', el.get('data-xml-rid') or '')
+        if m:
+            n = refmap.get('bibr' + m.group(1))
+            return f'[{n}]' if n else ''.join(inline(c, refmap) for c in el.children)
+        # SAGE: 脚注 #fnN-xxx → 上标
+        m = re.search(r'#fn(\d+)', href)
+        if m:
+            return f'^{m.group(1)}^'
+        # MDPI: #BN-xxx（html-bibr）→ [n]
+        m = re.search(r'#(B\d+)-', href)
+        if m and 'html-bibr' in cls:
+            n = refmap.get(m.group(1))
+            return f'[{n}]' if n else ''.join(inline(c, refmap) for c in el.children)
+        # PLOS: #xxx.refNNN → [n]
+        m = re.search(r'\.ref(\d+)', href)
+        if m:
+            return f'[{int(m.group(1))}]'
         # 其余链接：只保留文字
         return ''.join(inline(c, refmap) for c in el.children)
     if name in ('em', 'i', 'cite'):
@@ -370,7 +430,7 @@ def extract_springer(soup, raw_html):
         data['published_date'] = norm_date(meta.get('citation_publication_date'))
     # 参考文献（id=ref-CRn → 编号 n）
     refs = []
-    for li in soup.select('ul.c-article-references li.c-article-references__item'):
+    for li in soup.select('ul.c-article-references li.c-article-references__item, ol.c-article-references li.c-article-references__item'):
         p = li.select_one('p.c-article-references__text') or li
         refs.append(clean_text(p.get_text(' ')))
     data['references'] = refs
@@ -668,6 +728,383 @@ def block_wiley(el, refmap):
 
 
 # ============================================================
+# MDPI（Feldborg_2021_IJERPH）
+# ============================================================
+def extract_mdpi(soup, raw_html):
+    data = {}
+    meta = {m.get('name'): m.get('content') for m in soup.find_all('meta') if (m.get('name') or '').startswith('citation_')}
+    data['title'] = meta.get('citation_title')
+    data['authors'] = [m.get('content') for m in soup.find_all('meta', attrs={'name': 'citation_author'}) if m.get('content')]
+    data['affiliations'] = []
+    data['journal'] = meta.get('citation_journal_title')
+    data['volume'] = meta.get('citation_volume')
+    data['issue'] = meta.get('citation_issue')
+    p1, p2 = meta.get('citation_firstpage'), meta.get('citation_lastpage')
+    data['pages'] = f'{p1}-{p2}' if p1 and p2 else None
+    data['doi'] = meta.get('citation_doi')
+    data['published_date'] = norm_date(meta.get('citation_publication_date') or meta.get('citation_online_date'))
+    # 摘要（MDPI 无 citation_abstract，从页面 .html-abstract 取）
+    ab = soup.select_one('.html-abstract')
+    if ab:
+        h = ab.find(['h2', 'h3'])
+        if h:
+            h.decompose()
+        data['abstract'] = clean_text(ab.get_text(' '))
+    else:
+        data['abstract'] = ''
+    data['keywords'] = []
+    # 参考文献（section#html-references_list 内 ol.html-xx > li）
+    refs = []
+    refmap = {}
+    ref_ol = soup.select_one('section#html-references_list ol.html-xx')
+    if ref_ol:
+        for i, li in enumerate(ref_ol.find_all('li', recursive=False), 1):
+            aid = li.get('id')
+            if aid:
+                refmap[aid] = i
+            refs.append(clean_text(li.get_text(' ')))
+    data['references'] = refs
+    # 正文（div.html-body 内顶层递归）
+    data['body'] = []
+    body_el = soup.select_one('div.html-body')
+    if body_el:
+        for el in body_el.children:
+            data['body'].extend(block_mdpi(el, refmap))
+    # 脚注/致谢等 html-notes 小节保留在正文中（heading + paragraph 形式）
+    data['footnotes'] = []
+    data['acknowledgements'] = ''
+    data['correspondence'] = ''
+    return data
+
+
+def block_mdpi(el, refmap):
+    if not getattr(el, 'name', None):
+        return []
+    name = el.name
+    cls = ' '.join(el.get('class') or [])
+    out = []
+    if name in ('h2', 'h3') and 'html-italic' in cls or (name in ('h2', 'h3') and 'html-' not in cls):
+        t = clean_text(el.get_text(' '))
+        # MDPI 编号如 "1. " / "2.1. " / "2.1.1. " → 用点号数定级别
+        lvl = 2
+        m = re.match(r'^([\d.]+)\s+', t)
+        if m:
+            lvl = min(2 + m.group(1).strip('.').count('.'), 6)
+            t = re.sub(r'^[\d.]+\s*', '', t)
+        if t:
+            out.append({'type': 'heading', 'level': lvl, 'text': t})
+        return out
+    if name == 'div' and 'html-p' in cls:
+        t = clean_text(''.join(inline(c, refmap) for c in el.children))
+        if t:
+            out.append({'type': 'paragraph', 'text': t})
+        return out
+    if name == 'div' and 'html-caption' in cls:
+        # 图注（紧邻的 img 在前一个 figure 中，或独立成块）
+        t = clean_text(el.get_text(' '))
+        if t:
+            if re.match(r'^\s*Table\b', t, re.I):
+                out.append({'type': 'figdesc', 'text': t})
+            else:
+                out.append({'type': 'figdesc', 'text': t})
+        return out
+    if name == 'img' and el.get('src'):
+        out.append({'type': 'figure', 'caption': '', 'src': el['src']})
+        return out
+    if name == 'div' and 'html-table_show' in cls:
+        tbl = el.find('table')
+        if tbl:
+            cap = el.select_one('.html-caption')
+            t = table_block(tbl, refmap)
+            t['caption'] = clean_text(cap.get_text(' ')) if cap else ''
+            out.append(t)
+        return out
+    if name in ('div', 'section'):
+        if 'html-notes' in cls:
+            # 致谢/资助/声明等：标题 + 段落
+            h = el.find(['h2', 'h3'])
+            if h:
+                ht = clean_text(h.get_text(' '))
+                if ht:
+                    out.append({'type': 'heading', 'level': 2, 'text': ht})
+            for p in el.find_all('div', class_='html-p'):
+                t = clean_text(''.join(inline(c, refmap) for c in p.children))
+                if t:
+                    out.append({'type': 'paragraph', 'text': t})
+            return out
+        for c in el.children:
+            out.extend(block_mdpi(c, refmap))
+        return out
+    return []
+
+
+# ============================================================
+# UC Press / Collabra（Hu_2020_CollabraPsy）
+# ============================================================
+def extract_collabra(soup, raw_html):
+    data = {}
+    meta = {m.get('name'): m.get('content') for m in soup.find_all('meta') if (m.get('name') or '').startswith('citation_')}
+    data['title'] = meta.get('citation_title')
+    data['authors'] = []
+    for m in soup.find_all('meta', attrs={'name': 'citation_author'}):
+        nm = (m.get('content') or '').strip()
+        if nm and nm not in data['authors']:
+            data['authors'].append(nm)
+    data['affiliations'] = []
+    data['journal'] = meta.get('citation_journal_title')
+    data['volume'] = meta.get('citation_volume')
+    data['issue'] = meta.get('citation_issue')
+    data['pages'] = None
+    data['doi'] = meta.get('citation_doi')
+    data['published_date'] = norm_date(meta.get('citation_publication_date'))
+    ab = soup.select_one('section.abstract')
+    data['abstract'] = clean_text(ab.get_text(' ')) if ab else ''
+    data['keywords'] = []
+    # 参考文献（ref-list > .ref > .ref-body）
+    refs = []
+    for r in soup.select('.ref-list .ref .ref-body'):
+        t = clean_text(r.get_text(' '))
+        if t:
+            refs.append(t)
+    data['references'] = refs
+    # 正文：article-body 内顶层递归（section-title h2 前置于其后的 content wrapper）
+    data['body'] = []
+    body_el = soup.select_one('div.article-body')
+    if body_el:
+        for el in body_el.children:
+            data['body'].extend(block_collabra(el, {}))
+    data['footnotes'] = []
+    data['acknowledgements'] = ''
+    data['correspondence'] = ''
+    return data
+
+
+def block_collabra(el, refmap):
+    if not getattr(el, 'name', None):
+        return []
+    name = el.name
+    cls = ' '.join(el.get('class') or [])
+    out = []
+    if name == 'h2' and 'section-title' in cls:
+        t = clean_text(el.get('data-section-title') or el.get_text(' '))
+        if t:
+            out.append({'type': 'heading', 'level': 2, 'text': t})
+        return out
+    if name == 'div' and 'article-section-wrapper' in cls:
+        for c in el.children:
+            out.extend(block_collabra(c, refmap))
+        return out
+    if name == 'section' and 'abstract' in cls:
+        t = clean_text(el.get_text(' '))
+        if t:
+            out.append({'type': 'paragraph', 'text': t})
+        return out
+    if name == 'p':
+        t = clean_text(''.join(inline(c, refmap) for c in el.children))
+        if t:
+            out.append({'type': 'paragraph', 'text': t})
+        return out
+    if name == 'div' and 'fig' in cls:
+        # 图：fig-label + graphic-wrap img
+        lab = el.select_one('.fig-label')
+        cap = clean_text(lab.get_text(' ')) if lab else ''
+        img = el.select_one('.graphic-wrap img')
+        src = img.get('src') if img else None
+        if src:
+            out.append({'type': 'figure', 'caption': cap, 'src': src})
+        elif cap:
+            out.append({'type': 'figdesc', 'text': cap})
+        return out
+    if name == 'div' and 'table-wrap' in cls:
+        cap = el.select_one('.table-wrap-title')
+        tbl = el.find('table')
+        if tbl:
+            t = table_block(tbl, refmap)
+            t['caption'] = clean_text(cap.get_text(' ')) if cap else ''
+            out.append(t)
+        return out
+    if name in ('div', 'section'):
+        for c in el.children:
+            out.extend(block_collabra(c, refmap))
+        return out
+    return []
+
+
+# ============================================================
+# SAGE（Svensson_2023_QJEP）
+# ============================================================
+def extract_sage(soup, raw_html):
+    data = {}
+    doi = None
+    m = re.search(r'10\.\d{4,9}/[a-zA-Z0-9.\-]+', raw_html)
+    if m:
+        doi = m.group(0).rstrip('.')
+    ov = METADATA_OVERRIDES.get(doi, {}) if doi else {}
+    data['title'] = ov.get('title') or (soup.find('h1').get_text(' ').strip() if soup.find('h1') else '')
+    data['authors'] = ov.get('authors', [])
+    data['affiliations'] = []
+    data['journal'] = ov.get('journal')
+    data['volume'] = ov.get('volume')
+    data['issue'] = ov.get('issue')
+    data['pages'] = ov.get('pages')
+    data['published_date'] = ov.get('published_date')
+    data['doi'] = doi
+    ab = soup.select_one('section[data-type="abstract"]')
+    data['abstract'] = clean_text(ab.get_text(' ')) if ab else ''
+    data['keywords'] = []
+    # 参考文献（div.biblioentry > .citation-content）
+    refs = []
+    for b in soup.select('div.biblioentry'):
+        c = b.select_one('.citation-content')
+        t = clean_text(c.get_text(' ')) if c else ''
+        if t:
+            refs.append(t)
+    data['references'] = refs
+    # 正文（article 内顶层 section，跳过 teaser 推荐区块）
+    data['body'] = []
+    art = soup.find('article')
+    scope = art if art else soup
+    for sec in scope.find_all('section', recursive=True):
+        if sec.find_parent('section') is not None:
+            continue  # 只取顶层 section，避免嵌套重复
+        sid = sec.get('id') or ''
+        if 'teaser' in ' '.join(sec.get('class') or []) or sid.startswith('tab-'):
+            continue
+        for el in sec.children:
+            data['body'].extend(block_sage(el, {}))
+    data['footnotes'] = []
+    data['acknowledgements'] = ''
+    data['correspondence'] = ''
+    return data
+
+
+def block_sage(el, refmap):
+    if not getattr(el, 'name', None):
+        return []
+    name = el.name
+    cls = ' '.join(el.get('class') or [])
+    out = []
+    if name in ('h1', 'h2', 'h3', 'h4'):
+        t = clean_text(el.get_text(' '))
+        if t:
+            lvl = {'h1': 1, 'h2': 2, 'h3': 3, 'h4': 4}[name]
+            out.append({'type': 'heading', 'level': lvl, 'text': t})
+        return out
+    if name == 'div' and 'paragraph' in (el.get('role') or ''):
+        t = clean_text(''.join(inline(c, refmap) for c in el.children))
+        if t:
+            out.append({'type': 'paragraph', 'text': t})
+        return out
+    if name == 'figure':
+        is_table = 'table' in cls
+        if is_table:
+            tbl = el.find('table')
+            cap = el.find('figcaption')
+            if tbl:
+                t = table_block(tbl, refmap)
+                t['caption'] = clean_text(cap.get_text(' ')) if cap else ''
+                out.append(t)
+            return out
+        img = el.find('img')
+        cap = el.find('figcaption')
+        src = img.get('src') if img else None
+        cap_txt = clean_text(cap.get_text(' ')) if cap else ''
+        if src:
+            out.append({'type': 'figure', 'caption': cap_txt, 'src': src})
+        elif cap_txt:
+            out.append({'type': 'figdesc', 'text': cap_txt})
+        return out
+    if name in ('div', 'section', 'p'):
+        for c in el.children:
+            out.extend(block_sage(c, refmap))
+        return out
+    return []
+
+
+# ============================================================
+# PLOS（Wozniak_2018_PLOS）
+# ============================================================
+def extract_plos(soup, raw_html):
+    data = {}
+    meta = {m.get('name'): m.get('content') for m in soup.find_all('meta') if (m.get('name') or '').startswith('citation_')}
+    data['title'] = meta.get('citation_title')
+    data['authors'] = [m.get('content') for m in soup.find_all('meta', attrs={'name': 'citation_author'}) if m.get('content')]
+    data['affiliations'] = []
+    data['journal'] = meta.get('citation_journal_title')
+    data['volume'] = meta.get('citation_volume')
+    data['issue'] = meta.get('citation_issue')
+    p1, p2 = meta.get('citation_firstpage'), meta.get('citation_lastpage')
+    data['pages'] = f'{p1}-{p2}' if p1 and p2 else None
+    data['doi'] = meta.get('citation_doi')
+    data['published_date'] = norm_date(meta.get('citation_date') or meta.get('citation_publication_date'))
+    data['abstract'] = meta.get('citation_abstract') or ''
+    data['keywords'] = []
+    # 参考文献（ol.references）
+    refs = []
+    ref_ol = soup.select_one('ol.references')
+    if ref_ol:
+        for li in ref_ol.find_all('li', recursive=False):
+            t = clean_text(li.get_text(' '))
+            if t:
+                refs.append(t)
+    data['references'] = refs
+    # 正文（div.section.toc-section，跳过 id=references 等元区块）
+    data['body'] = []
+    for sec in soup.select('div.section.toc-section'):
+        sid = sec.get('id') or ''
+        if sid in ('references',) or 'subjInfo' in sid:
+            continue
+        for el in sec.children:
+            data['body'].extend(block_plos(el, {}))
+    data['footnotes'] = []
+    data['acknowledgements'] = ''
+    data['correspondence'] = ''
+    return data
+
+
+def block_plos(el, refmap):
+    if not getattr(el, 'name', None):
+        return []
+    name = el.name
+    cls = ' '.join(el.get('class') or [])
+    out = []
+    if name in ('h2', 'h3', 'h4', 'h5'):
+        t = clean_text(el.get_text(' '))
+        if t:
+            lvl = {'h2': 2, 'h3': 3, 'h4': 4, 'h5': 5}[name]
+            out.append({'type': 'heading', 'level': lvl, 'text': t})
+        return out
+    if name == 'p':
+        t = clean_text(''.join(inline(c, refmap) for c in el.children))
+        if t and 'caption_' not in cls:
+            out.append({'type': 'paragraph', 'text': t})
+        return out
+    if name == 'div' and 'figure' in cls:
+        img = el.select_one('.img-box img')
+        cap = el.select_one('.figcaption')
+        src = img.get('src') if img else None
+        cap_txt = clean_text(cap.get_text(' ')) if cap else ''
+        if src:
+            out.append({'type': 'figure', 'caption': cap_txt, 'src': src})
+        elif cap_txt:
+            out.append({'type': 'figdesc', 'text': cap_txt})
+        return out
+    if name == 'div' and 'table' in cls and 'toc' not in cls:
+        tbl = el.find('table')
+        if tbl:
+            cap = el.select_one('.caption') or el.find('caption')
+            t = table_block(tbl, refmap)
+            t['caption'] = clean_text(cap.get_text(' ')) if cap else ''
+            out.append(t)
+        return out
+    if name in ('div', 'section'):
+        for c in el.children:
+            out.extend(block_plos(c, refmap))
+        return out
+    return []
+
+
+# ============================================================
 # 主入口：单个 HTML → JSON（模板原结构 + 学术结构增强）
 # ============================================================
 def process_html_file(html_path: str):
@@ -717,6 +1154,14 @@ def process_html_file(html_path: str):
             data = extract_elife(soup, html_content, base_dir, name)
         elif 'id="body"' in html_content or 'class="Body' in html_content:
             data = extract_elsevier(soup, html_content)
+        elif 'html-bibr' in html_content or 'html-p' in html_content:
+            data = extract_mdpi(soup, html_content)
+        elif 'article-section-wrapper' in html_content:
+            data = extract_collabra(soup, html_content)
+        elif 'biblioentry' in html_content:
+            data = extract_sage(soup, html_content)
+        elif 'ref-tip' in html_content or 'toc-section' in html_content:
+            data = extract_plos(soup, html_content)
         else:
             data = {}
             print(f"⚠️ 未能识别的页面模板：{name}（仅保留基础字段）")

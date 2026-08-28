@@ -56,10 +56,18 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - 3_Reports/Generate_Table1.qmd + Generate_Table1.docx + Output/table1_problems.txt — Table 1 再生成与比对（2026-08-27 重渲染：118 → 111 行问题）
 - 3_Reports/Table1_Issues_Solvability.md — Table 1 问题可解性分析（107 项逐项判定：可自动确定 ~68 / 需人工 ~39；近似数以文档汇总表为准；与本文档双向关联）
 - 3_Reports/Process_Data.Rmd — 下游分析（已改用 Folder_Name）
+- REF/README_html2md.md — REF 全文 HTML→MD 管线使用说明（html2Json.py/json2md.py/pdf2md.py 用法、验收清单、模板适配；全文正文归属本文件，AGENTS/PROJ_STATE 只放指针）
 - .opencode/skills/spe-database-curation/SKILL.md — 通用 curation 技能（自足独立；命名语法、JSON schema、Codebook 规范、DOI/年份核验）
 - AGENTS.md — agent 约定与已知 caveats（含 Document map）
 - README.md — 人类读者入口（项目介绍/数据使用）
 - 引用关系：本文档与 README.md、AGENTS.md 相互引用；与 3_Reports/Table1_Issues_Solvability.md 双向关联（未解决清单 ↔ 可解性判定）；数据整理任务统一加载 spe-database-curation 技能
+
+## REF/ 全文收录统计（2026-08-28 快照）
+
+- **现状**：REF/ 覆盖 **39 个研究**全文材料（31 已入库 + 8 pending）；格式：html ×30、pdf ×9、md ×37（含 7 个 `*_DS.md`）、json ×29、Rmd ×2（Hu_2023_psyarxiv）、PMC.xml ×1、docx ×2。md/rmd 覆盖：40 个应有全文（43 − 3 unpublished）中 **38 个已有**；仅 Wang_2016_JEPHPP 为人工转换（PsycNet 模板未适配）。
+- **`*_DS.md`**：7 个文件（Constable_2019/2021、Navon、Qian、Schaefer、Vicovaro、Hobbs）**经 DeepSeek 在线对话生成**，质量优于 pdf2md.py 原版（完整 frontmatter/结构化标题/Markdown 表格/无混排），原版已删；pdf2md.py 保留备用。
+- **暂不考虑（无 md/rmd）**：`Sun_2026_DataExp`（数据论文，无传统全文）、`Hu_2023_SDB`（用户指示暂缓）。
+- **重要教训（沉淀于 REF/README_html2md.md）**：① 转换优先走 `html2Json.py + json2md.py` 自动管线（已适配 Springer/Elsevier/Wiley/eLife/MDPI/Collabra/SAGE/PLOS 8 模板）；② Wiley/SAGE 页面 meta 缺失 → 用 Crossref 补 `METADATA_OVERRIDES`；③ BMC 参考文献是 `<ol>` 非 `<ul>`（曾漏 80 条）；④ PDF 用 pymupdf `words` 模式（span 层丢 APA 字距空格）；⑤ PDF 双栏交错/表格重复是源版式固有边界，DeepSeek `_DS` 版更优；⑥ pdf2md 自动跳过已有 md 的 PDF（html 版优先）。全文归属见 AGENTS.md Document map（管线详见 REF/README_html2md.md）。
 
 ## 测试结果（已实测）
 
@@ -67,7 +75,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - 内容级校验器 validate_clean_csv.R：59 文件 0 ERROR / 16 KNOWN / 40 WARN（口径差异与替代列提示）；支持 --data-dir（新产物串测用）。
 - git：8b1d4b8（start to work on whole pipeline）之后工作区有 21 项未提交改动（4 脚本 + utils.R + 7 个新 JSON + 双校验器 + AGENTS/SKILL/PROJ_STATE 等），未 push。
 - Table 1 渲染（2026-08-27 两次重渲染）：RENDER_EXIT=0；qmd 58 行 vs 稿件 70 行（12 个 pending 无文件夹）；table1_problems.txt 118 → 111 行（CSV Exp 回填后 8 条 Exp 不一致消失、新增 Martinez 1 条；Pan N 回填后其行显示 稿件 40(—) vs qmd 40）。
-- git：5 个 commit（docs / data / reports + 2026-08 补 Exp 的 data / docs 两个 commit）；2026-08-27 阶段 1 之后工作区有 **22 项未提交改动**（4 修改：.gitignore、SKILL.md、AGENTS.md、PROJ_STATE.md；18 新增：阶段 1 四研究 JSON×10 + Codebook×6 + 2_Code 的 analyze_csv_blanks.py / make_codebooks.R），未 push。阶段 2（2026-08）新增未提交：Dataset_inf.csv（阶段 2 24 单元格 + 全文核查修复 31 单元格）、Sui_2014_APP.json + Wang_2016_JEPHPP.json（Country/City）、analyze_csv_blanks.py（路径修复）、PROJ_STATE.md（本文件）。
+- git：5 个 commit（docs / data / reports + 2026-08 补 Exp 的 data / docs 两个 commit）；2026-08-27 阶段 1 之后工作区有 **22 项未提交改动**（4 修改：.gitignore、SKILL.md、AGENTS.md、PROJ_STATE.md；18 新增：阶段 1 四研究 JSON×10 + Codebook×6 + 2_Code 的 analyze_csv_blanks.py / make_codebooks.R），未 push。阶段 2（2026-08）新增未提交：Dataset_inf.csv（阶段 2 24 单元格 + 全文核查修复 31 单元格）、Sui_2014_APP.json + Wang_2016_JEPHPP.json（Country/City）、analyze_csv_blanks.py（路径修复）、PROJ_STATE.md（本文件）。**2026-08-28 REF 全文会话收尾**：工作区 3 个修改文件（PROJ_STATE.md、REF/README_html2md.md、REF/html2Json.py），未 push；REF/ 内容（含 37 个 md、29 个 json、pdf2md.py）按 .gitignore 策略不跟踪（仅 4 个工具文件强制跟踪），新转 md 不纳入版本控制属预期。
 
 ## 已知问题（未解决）
 

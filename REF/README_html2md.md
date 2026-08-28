@@ -6,9 +6,16 @@
 - `html2Json.py`：HTML → 同名 `.json`（统一学术结构 + shadow_web 通用解析备份）
 - `json2md.py`：JSON → 同名 `.md`（YAML frontmatter + 正文 + 图 + 表 + 参考文献 + 脚注）
 
+另有 `pdf2md.py`：仅 PDF 全文的论文 → 同名 `.md`（pymupdf 词级提取 + 字号/加粗标题启发式 +
+双栏自动检测；**跳过已有 md 的 PDF**，html 版优先）。注意 PDF 版 md 是"可用但非完美"：
+双栏排版（APA 期刊）可能有行级交错，标题层级为启发式近似；单栏 PDF（psyarxiv/SAGE）质量优秀。
+
 已适配模板：**Springer**（`c-article-body`）、**Elsevier 新旧版**（`div#body`）、**Wiley**
 （`article-section__content`）、**eLife**（`captioned-asset` + `reference__authors_list`，
-2026-08-28 新增：元数据取 `dc.*` meta、图取 IIIF 大图链接、跳过 assessment/下载链接/版权等 UI 区块）。
+2026-08-28 新增：元数据取 `dc.*` meta、图取 IIIF 大图链接、跳过 assessment/下载链接/版权等 UI 区块）、
+**MDPI**（`html-bibr`/`html-p`，2026-08-28 新增）、**UC Press/Collabra**（`article-section-wrapper`，
+2026-08-28 新增）、**SAGE**（`biblioentry`，2026-08-28 新增，页面 meta 不全时用 METADATA_OVERRIDES）、
+**PLOS**（`ref-tip`/`toc-section`，2026-08-28 新增）。
 PsycNet（Wang_2016_JEPHPP）未适配——其 md 为人工转换，勿用本管线覆盖。
 
 ## 最快流程（新 HTML 进来时）
@@ -81,6 +88,11 @@ grep -n '^## \|^### ' REF/xxx.md | head  # 只看章节结构
 
 ## 已知边界（勿当新问题报告）
 
+- **PDF 版 md**：6 个无 html 的正文 PDF（Constable_2019/2021、Navon、Qian、Schaefer、Vicovaro）
+  的 md 现为 `*_DS.md`（**DeepSeek 在线对话生成**，2026-08-28 对比后质量全面优于 pdf2md.py 原版，
+  原版已删）；`pdf2md.py`（pymupdf 词级提取 + 字号/加粗标题启发式 + 双栏检测）**保留备用**——
+  已知局限：标题/作者区可能被加粗误判为标题、APA 双栏页有行级交错、结果表格文本可能重复。
+  全文可读可检索，但精度低于 html 版。**html 存在时永远优先 html（pdf2md 自动跳过已有 md）。**
 - **Elsevier 复杂表格**：rowspan/colspan 按行展平，表头可能错位，但数据完整；
 - **Springer 表格**：页面不含表格数据（独立链接提供），md 中只保留标题 + `> **表注：**` 说明；
 - **Orellana 图片**：2026-08-28 用户重新保存页面后已本地化（`Orellana-Corrales_2021_APP_files/13414_2021_2367_Fig*.png`）；
