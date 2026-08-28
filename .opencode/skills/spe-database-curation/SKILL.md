@@ -50,11 +50,11 @@ Use me when you are:
   schema: no `Folder_Name`; sheets `Label` + `Sheet1`) — do NOT edit; scheduled
   for deletion once collaborators confirm the CSV (audit 2026-08: it holds no data
   beyond the CSV).
-- **`Dataset_inf.csv` 列说明（39 列，按用途分组）**：
+- **`Dataset_inf.csv` 列说明（40 列，按用途分组）**：
   - 键列：`ID`（行号）、`Folder_Name`（关键 ID）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
   - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
   - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
-  - 设计：`Design`、`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
+  - 设计：`Design`、`subj_Group`（被试分组：同一实验为组间设计时填原文 group 名称、多组用分号分隔，如 `LpSTS;DLPFC;sham`；无组间分组填 `All`）、`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
   - 流程：`Practice_Block`、`Practice_Trial`、`numBlocks`、`numTrials`、`Environmental_Info`（**刺激呈现软件**，非 Lab/Online 设置）
   - 状态：`Status`、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
   同论文多实验行共享的字段（作者/邮箱/年/期刊/DOI 等）只填一次，其余行留空或同步传播均可——以组内非空值一致为准。
@@ -288,7 +288,24 @@ Boundary rules for ambiguous keys:
   `Clean_Data.Rmd` 对应段）→ 产出 `*_ExpN_Clean.csv` / `*_subj_info.csv` →
   元数据（paper/exp JSON、Codebook、Dataset_inf.csv）→ 两级校验
   （validate_json_metadata.R + validate_clean_csv.R）。`Clean_Data.Rmd` 降级为
-  历史配方参考，其逐研究段逐步提取为独立脚本/配置。
+   历史配方参考，其逐研究段逐步提取为独立脚本/配置。
+
+## Dataset_inf.csv 标准读取模板（2026-08）
+
+主索引格式约束（UTF-8 BOM + CRLF + QUOTE_MINIMAL + 末行无换行）对标准读取透明，
+**优先用统一封装**，勿每次手写读取逻辑：
+
+- **Python（推荐）**：`from read_dataset_inf import read_dataset_inf, find_rows`
+  （`2_Code/read_dataset_inf.py`，已封装 BOM/引号/列名定位；`find_rows(rows, Folder_Name, exp=...)`
+  按关键 ID 过滤）。不 import 时等价写法：
+  `rows = list(csv.DictReader(open("1_Data/Dataset_inf.csv", encoding="utf-8-sig", newline="")))`
+- **R**：`source("1_Data/utils.R"); inf <- read_dataset_inf()`（自动
+  `fileEncoding="UTF-8-BOM"` + `check.names=FALSE`，第一列名不残留 `\ufeff`）。
+  等价写法：`read.csv("1_Data/Dataset_inf.csv", check.names=FALSE, fileEncoding="UTF-8-BOM")`
+- **取值一律用列名**：Python `row["Folder_Name"]` / R `inf$Folder_Name`，**禁止按列位置
+  `r[0]`/`[1]` 取值**（ID 在第 1 列、Folder_Name 在第 2 列，位置易错——见 AGENTS.md
+  §防坑「CSV 字节保真编辑纪律」）；改 CSV 前的往返测试与写后 truncate 纪律同见该节。
+- CLI 速查：`python 2_Code/read_dataset_inf.py [--folder NAME] [--exp N]`
 
 ## Metadata & ingestion workflow（元数据入库/补齐统一流程，2026-08-27 沉淀）
 

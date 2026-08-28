@@ -84,6 +84,7 @@ mode: primary
 - **删除文件必须万分谨慎，尤其是不在 git 中记录的文件**（2026-08-28 教训：`REF/` 全目录被 `.gitignore` 忽略，一次清理 `_files` 删 390 文件 + 误删 Scheller html/json/md 均不可恢复，用户重新下载才找回）。操作纪律：① 删除前先 `git check-ignore <路径>` / `git ls-files` 确认是否被跟踪——不被跟踪的文件 `rm` 即永久丢失；② 批量删除前先列出「将被删除清单」并向用户确认保留策略（如"只删 js/css，图片全保留"），不要自作主张按引用白名单删；③ 非明确垃圾（0 字节残留、浏览器缓存）以外的删除，先 `mv` 到 `REF/_trash_<日期>/` 暂存，用户确认后再物理删除；④ 删除后立即汇报删了什么（文件数+类别），便于用户及时发现误删；⑤ 对用户的删除指令理解不确定时（如"删整个文件夹"），先复述删除范围再执行，不要扩大范围。
 - **工具若含绝对路径，先确认它读的就是当前文件**：校验器/扫描脚本可能硬编码已迁移的旧路径（如 `analyze_csv_blanks.py` 曾指向 `/Volumes/T3/...`），运行时读到旧副本且输出"恰好与预期一致"会掩盖错误。改数据前 `grep` 工具源码确认数据源路径；改后重跑若输出异常，先怀疑工具路径而非数据本身。
 - **编辑文档追加条目时用将被保留的现有文本作锚点**：edit 的 oldString 不要误取整条历史记录（曾把 PROJ_STATE「项目迁移」条目整体替换掉）；改后立即 grep 确认旧内容仍在。
+- **CSV 字节保真编辑（Dataset_inf.csv）读取/写入纪律**（2026-08-28 教训：加 `subj_Group` 列时 `r[0]` 误当 Folder_Name（实为 ID 列）致 74 行组名全失配填 All——值合法、validator 不报错，靠抽查非默认值行数才暴露）。操作纪律：① 引号风格为 **QUOTE_MINIMAL**（仅含逗号/特殊字符的字段加引号），勿凭 `head` 拆分输出臆断为全字段引号；改前先做往返测试（读入原样写出，diff 应为 0）确认格式可复现；② 原文件**末行无换行符**，csv.writer 默认每行加行尾——写入后 truncate 掉末尾 `\r\n` 才字节保真；③ 读字段一律用 `header.index('列名')` 定位索引再取值，**禁止假设 `r[0]`/`r[1]` 的列顺序**；④ 改后三重验证：diff 仅目标列变化 + 非目标列 0 差异 + 抽查非默认值行数符合预期（"值合法但内容错"validator 检测不到，靠人工核对兜底）。
 - 字段语义类约定（License=数据许可 / Country-City=数据采集地 / Email 以 CSV 为准 / 多任务口径 / 全文核查）见 `spe-database-curation` 技能（SKILL.md），此处不重复。
 
 ### 会话收尾（强制）
@@ -118,11 +119,12 @@ mode: primary
     collaborators confirm the CSV), **UTF-8 with BOM** (do NOT strip the BOM —
     Chinese collaborators open it in Excel on Chinese Windows which defaults to GBK;
     the BOM is what keeps diacritics like `ö`/`é`/`ü` from garbling).
-    39-column structure (incl. `DOI`), key columns:
+    40-column structure (incl. `DOI`), key columns:
     `Folder_Name` (== study folder; **project-wide key ID for papers/preprints** —
     one row per experiment: `Folder_Name` + `Exp`), `Paper_ID` (**deprecated** —
     legacy link to the old manuscript Table 1; do NOT create new values), `Country`,
-    `Stim_language`, `Stim_Type`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`.
+    `Stim_language`, `Stim_Type`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`,
+    `subj_Group` (被试分组：组间设计填原文组名、分号分隔；无组间填 `All`).
     NOTE: `Environmental_Info` stores the **stimulus-presentation software**
     (E-prime/Gorilla/PsychoPy/Matlab), NOT Lab-vs-Online setting — do not conflate the
     two. The manuscript Table 1 column `Exp_Implement` (Lab/Online/Mixed) does NOT exist

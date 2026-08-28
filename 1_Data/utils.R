@@ -8,6 +8,8 @@
 #                        探测含 1_Data 与 2_Code 的目录
 #   write_clean_csv()    统一写出 *_Clean.csv（默认 CRLF 行尾，库内惯例；
 #                        write.csv 默认 quote/NA/数值格式）
+#   read_dataset_inf()   统一读取主索引 1_Data/Dataset_inf.csv（UTF-8 BOM、
+#                        CRLF、QUOTE_MINIMAL；返回 data.frame，列名原样保留）
 # 用法示例：
 #   .ut <- file.path(dirname(dirname(.script_dir)), "2_Code", "utils.R")
 #   source(.ut)
@@ -51,4 +53,17 @@ write_clean_csv <- function(df, path, crlf = TRUE) {
   }
   cat("  written:", path, "rows =", nrow(df), "\n")
   invisible(df)
+}
+
+# ---- 统一读取主索引 Dataset_inf.csv（UTF-8 BOM、CRLF、QUOTE_MINIMAL） ----
+# fileEncoding="UTF-8-BOM" 剥离 BOM（否则第一列名 ID 带 \ufeff 前缀）；
+# check.names=FALSE 保留原列名（含空格/斜杠，如 "EEG/fMRI Data"）。
+read_dataset_inf <- function(root = NULL) {
+  root <- if (is.null(root)) spe_root() else root
+  path <- file.path(root, "1_Data", "Dataset_inf.csv")
+  if (!file.exists(path)) {
+    stop("read_dataset_inf: 未找到主索引 ", path)
+  }
+  read.csv(path, stringsAsFactors = FALSE, check.names = FALSE,
+           fileEncoding = "UTF-8-BOM", na.strings = c("", "NA"))
 }
