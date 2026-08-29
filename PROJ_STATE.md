@@ -162,17 +162,16 @@ L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（9 个 pending�
 
 ### 论文全集三分类（全量交叉核对推进框架）
 
-全部 43 个唯一 Folder_Name 按「交叉核对进度」分三大类，后续全量核对按此框架推进：
+全部 43 个唯一 Folder_Name 按「交叉核对进度」分两大类(2026-08-29更新)，后续全量核对按此框架推进：
 
 | 类别 | 数量 | 成员 | 说明 |
 |---|---|---|---|
-| **一、已完成全量交叉核对** | 5 | Kirk_2025_BritJPsy、Martinez-Perez_2024_ConsciousCog、Sui_2014_APP、Wang_2016_JEPHPP、Wozniak_2022_PsychRes | 阶段 2 已做「全文核查 + 交叉对比」并修复 31 单元格，不再重复核对 |
-| **二、阶段 3.1 全量交叉核对** | 21 研究 / 37 行 | 见阶段 3.1 | **已完成（2026-08）**：复核全部完成，可自动改项两轮已更新（CSV 61+48 单元格 + JSON 44 处）；P15–P20 已消解、P7–P9 已标记解决（exp JSON detail 注明行数特征）、P5 已解决（Bed 解码重建 Exp2 Clean）、**P3 已解决（第三轮，MatchParticipant 映射）**，P1–P22 无剩余，见 Stage3_1_CrossCheck.md |
-| **三、未来全量交叉核对** | 17 | 分两小类（见下） | 待数据或说明文档补齐后再核对 |
-| ├ 三a：有数据但无说明文档/论文全文 | 3 | Hu_2023_psyarxiv、Sui_2014_unpub、Pan_2025_unpub | 数据五件套已齐但**无正式论文全文可依**；需用户手动查找说明文档（预印本正文/OSF/原始 README/联系作者），查不到则由用户确认后用 NA 填充对应元数据字段，再按阶段 3.1 方法核对 |
-| └ 三b：缺数据（有或没有说明文档/全文） | 14 | 阶段 4 五研究（Sun/Zhang/Orellana-2021/Smith/Sui_2015_unpub）+ 阶段 5 九 pending（Bukowski/Golubickis/Hobbs/Hu_2023_SDB/Mcivor/Orellana-2023/Scheller/Svensson_2022/Wozniak_2020） | 先由阶段 4（补 raw）/阶段 5（整条目入库）补齐数据，入库后按其数据完整度并入一/二/三a 流程收尾 |
+| **一、已完成全量交叉核对** | 26 | Kirk_2025_BritJPsy、Martinez-Perez_2024_ConsciousCog、Sui_2014_APP、Wang_2016_JEPHPP、Wozniak_2022_PsychRes 及阶段3.1| 阶段 2 已做「全文核查 + 交叉对比」并修复 31 单元格，不再重复核对 + 阶段3.1全量交叉核对，见 Stage3_1_CrossCheck_archived.md |
+| **二、未来全量交叉核对** | 17 | 分两小类（见下） | 待数据或说明文档补齐后再核对 |
+| ├ 二a：有数据但无说明文档/论文全文 | 3 | Hu_2023_psyarxiv、Sui_2014_unpub、Pan_2025_unpub | 数据五件套已齐但**无正式论文全文可依**；均为用户团队成员负责的数据项目，未来进行方法文档补充 |
+| └ 二b：缺数据（有或没有说明文档/全文） | 14 | 阶段 4 五研究（Sun/Zhang/Orellana-2021/Smith/Sui_2015_unpub）+ 阶段 5 九 pending（Bukowski/Golubickis/Hobbs/Hu_2023_SDB/Mcivor/Orellana-2023/Scheller/Svensson_2022/Wozniak_2020） | 先由阶段 4（补 raw）/阶段 5（整条目入库）补齐数据，入库后按其数据完整度并流程收尾 |
 
-分类依据（判定顺序）：① 是否已做过全文核查+交叉对比（阶段 2 五研究）→ ② REF/ 是否有正式论文全文 md/rmd（无 → 三a）→ ③ 是否缺数据/未入库（缺 → 三b，即阶段 4/5 对象）→ ④ 其余（有全文、有数据、无已知问题）→ 二（阶段 3.1）。三a 与三b 区分：**三a 有数据缺文档**（用户查文档补全元数据），**三b 缺数据**（阶段 4/5 补数据）；二者均有全文者（如 Sun_2026_DataExp 无全文、Zhang_2023_NeuroImage 有 REF md）按自身情况在补数后归入对应流程。
+分类依据（判定顺序）：① 是否已做过全文核查+交叉对比（阶段 2 五研究 + 阶段3.1 21研究）→ ② REF/ 是否有正式论文全文 md/rmd（无 → 三a）→ ③ 是否缺数据/未入库（缺 → 三b，即阶段 4/5 对象。二a 与二b 区分：**二a 有数据缺文档**（用户查文档补全元数据），**二b 缺数据**（阶段 4/5 补数据）；二者均有全文者（如 Sun_2026_DataExp 无全文、Zhang_2023_NeuroImage 有 REF md）按自身情况在补数后归入对应流程。
 
 ### ~~阶段 1：元数据补齐~~ **已完成（2026-08-27）**
 - **元数据补齐**：4 paper JSON（Lee / Smith / Svensson / Orellana-Corrales_2021_APP，[C] 字段经 Crossref 核对、Summary/Conclusion 由论文摘要/全文生成）+ 6 实验级 JSON（v2 五组件，方法细节来源分级：Lee 正文+OSF、Smith REF/ HTML+OSF 预注册、Svensson PMC、Orellana Springer）+ 6 Codebook（单 Sheet1 4 列，行数=Clean 列数）。遗留说明：Svensson exp JSON `Equipment.Software` 论文未披露留 `/`；Lee 数据为匹配任务（PMT1+PMT2）而非论文主任务（分类任务），已在 exp JSON detail 注明。
