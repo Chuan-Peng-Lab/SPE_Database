@@ -24,13 +24,15 @@ mode: primary
 - `README.md` — 面向**人类读者**：项目介绍、数据使用指引。代理也应按需引用。
 - `AGENTS.md`（本文件）— 面向**agent**：环境约束、效率约定、caveats。
 - `PROJ_STATE.md` — **会话状态快照**：**每个 session 结束时统一更新一次**（工作过程中不逐条实时记录，避免文档冗长）；新会话先读它再开工。
-- `3_Reports/Table1_Issues_Solvability.md` — **Table 1 问题可解性分析**：逐项判定稿件 Table 1 差异的可解性（可自动确定 / 需人工），与 PROJ_STATE.md 双向关联（未解决清单 ↔ 可解性判定）；依据 `Generate_Table1.qmd` 输出的 `table1_problems.txt`。
-- `REF/README_html2md.md` — **REF 全文 HTML → MD 转换管线使用说明**：`REF/html2Json.py`（HTML→JSON）+ `REF/json2md.py`（JSON→MD）的批量用法、摘要验收清单、新模板适配；全文正文归属本文件，AGENTS/PROJ_STATE 只放指针。
 - `.opencode/skills/spe-database-curation/SKILL.md` — **通用 curation 技能**：自足独立、
   不依赖本仓库文档；任何数据整理/入库任务一律加载
   `skill(name="spe-database-curation")`。
-- 引用方向：README ↔ AGENTS ↔ PROJ_STATE 三份相互引用，并**统一指向技能**；
-  Table1_Issues_Solvability.md ↔ PROJ_STATE.md 双向关联；技能不反向依赖这三份文档。
+
+- 引用方向：README ↔ AGENTS ↔ PROJ_STATE 三份相互引用，并**统一指向技能**；技能不反向依赖这三份文档。
+
+### 其他重要文档：
+- `3_Reports/Table1_Issues_Solvability.md` — **Table 1 问题可解性分析**：逐项判定稿件 Table 1 差异的可解性（可自动确定 / 需人工），与 PROJ_STATE.md 双向关联（未解决清单 ↔ 可解性判定）；依据 `Generate_Table1.qmd` 输出的 `table1_problems.txt`。
+- `REF/README_html2md.md` — **REF 全文 HTML → MD 转换管线使用说明**：`REF/html2Json.py`（HTML→JSON）+ `REF/json2md.py`（JSON→MD）的批量用法、摘要验收清单、新模板适配；全文正文归属本文件，AGENTS/PROJ_STATE 只放指针。
 
 ## 项目总体逻辑（单向数据管道）
 
