@@ -13,7 +13,7 @@
       "Viewing_distance": "60 cm"
     },
     "Experimental_Design": {
-      "Conditions": "/"
+      "Conditions": "2 (matching condition: matching vs. nonmatching) x 4 (label identity: Ich [self], Mutter [mother], Bekannter [acquaintance], Nichts [none])"
     },
     "Block_Structure": {
       "Practice_trials": "48",
@@ -39,6 +39,6 @@
         "Background": "White"
       }
     },
-    "detail": ""
+    "detail": "Data note (2026-08 P5): raw export contains no stimulus-content columns (target/flanker/targetform all empty); the Condition column carries the E-Prime 2-letter code: first letter = label identity (i=Ich, m=Mutter, b=Bekannter, n=Nichts), second letter = matching status (m=matching, n=nonmatching). Decoding verified against the aggregated SPSS file on psycharchives (column names RTim/RTin/RTmm/RTmn/RTbm/RTbn/RTnm/RTnn; mean |error| 13.8 ms over 288 subject-condition cells). Clean data therefore provides Matching + Label-side identity triple only; Shape-side identity cannot be recovered (per-participant shape-label assignment not recorded; paper groups nonmatching trials by label, see paper text). Note that for the 32 participants run with program versions V1-V4 the Ich trials are 24 matching + 12 nonmatching (4 participants from the original version: 18 + 18); each identity totals 36 trials, 144 per participant overall. Rows with RT_ms = 0 are no-response trials (kept per minimal-preprocessing rule). Method source: paper full text; dataset source: psycharchives 10.23668/psycharchives.2642 (Exp. group 1 = Exp1 and group 2 = duplicate of group 1; group 3 = Exp3; Exp2 raw only available in this database folder)."
   }
 }

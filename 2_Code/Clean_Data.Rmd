@@ -493,6 +493,12 @@ write.csv(x = df[[6]], file = "../1_Data/Schaefer_2019_CP/Exp1/Schaefer_2019_CP_
 # Sarah Schaefer_2019_CP (Drop?)
 ## Experiment 2 (Identity = 4)
 "Self", "Mother","none", "Acquaintance"   （No  trial mess)
+# 2026-08 P5 重建（原段未完成，仅 Subject/Condition/RT/ACC）：
+# raw 无刺激内容列（target/flanker/targetform 全空），Condition(=Bed) 为 E-Prime 2 字母条件码：
+# 第 1 字母 = label 身份（i=Ich, m=Mutter, b=Bekannter, n=Nichts），第 2 字母 = 匹配状态（m=匹配, n=不匹配）；
+# 解码经 psycharchives 聚合 SPSS（RTim/RTin/RTmm/RTmn/RTbm/RTbn/RTnm/RTnn 列名）验证（288 单元 MAE 13.8 ms）。
+# Clean 因此提供 Matching + Label 侧 3 级 Identity；Shape 侧不可恢复（每被试 shape-label 分配未记录）。
+# 与 Exp1/Exp3 一致：Ich→Self, Mutter→Mother/Close, Bekannter→Acquaintance, Nichts→none/NonPerson。
 ```{r Paper p54 Experiment 2}
 df[[7]] <- read.csv(
   "../1_Data/Schaefer_2019_CP/Exp2/Schaefer_2019_CP_Exp2_raw.csv"
@@ -500,22 +506,38 @@ df[[7]] <- read.csv(
   dplyr::mutate(
     Subject = as.numeric(Subject),
     Condition = Bed,
-    RT_ms = MT4.RT,
-    RT_sec = MT4.RT / 1000,
+    Matching = case_when(
+      substr(Bed, 2, 2) == "m" ~ "Matching",
+      substr(Bed, 2, 2) == "n" ~ "Nonmatching"
+    ),
+    Label_Origin_Identity = case_when(
+      substr(Bed, 1, 1) == "i" ~ "Ich",
+      substr(Bed, 1, 1) == "m" ~ "Mutter",
+      substr(Bed, 1, 1) == "b" ~ "Bekannter",
+      substr(Bed, 1, 1) == "n" ~ "Nichts"
+    ),
+    Label_English_Identity = case_when(
+      Label_Origin_Identity == "Ich" ~ "Self",
+      Label_Origin_Identity == "Mutter" ~ "Mother",
+      Label_Origin_Identity == "Bekannter" ~ "Acquaintance",
+      Label_Origin_Identity == "Nichts" ~ "none"
+    ),
+    Label_Standardized_Identity = case_when(
+      Label_English_Identity == "Self" ~ "Self",
+      Label_English_Identity == "Mother" ~ "Close",
+      Label_English_Identity == "Acquaintance" ~ "Acquaintance",
+      Label_English_Identity == "none" ~ "NonPerson"
+    ),
+    RT_ms = as.numeric(MT4.RT),
+    RT_sec = as.numeric(MT4.RT) / 1000,
     ACC = as.numeric(MT4.ACC)
   ) %>%
-  dplyr::mutate(
-    Subjcet = as.numeric(Subject),
-    RT_ms = as.numeric(RT_ms),
-    RT_sec = as.numeric(RT_sec),
-    ACC = as.numeric(MT4.ACC),
+  dplyr::select(
+    Subject, Condition, Matching,
+    Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
+    RT_ms, RT_sec, ACC
   ) %>%
-    dplyr::select(
-    Subject, Condition, RT_ms, RT_sec, ACC
-  ) %>%
-  dplyr::arrange(
-    Subject
-  )
+  dplyr::arrange(Subject)
 
 names(df)[7] <- "Schaefer_2019_CP Exp 2"
 summary(df[[7]])
@@ -1506,12 +1528,17 @@ df[[22]] <- read.csv(
       Shape_English_Identity == "Individual_Stranger" ~ "Stranger",
     ),
     Label_English_Identity = case_when(
-      Label == "Self" ~ "Self",
-      Label == "We" ~ "Self",
-      Label == "They" ~ "Stranger",
-      Label == "You" ~ "Stranger",
+      Label == "Self" ~ "Individual_Self",
+      Label == "We" ~ "Group-Self",
+      Label == "They" ~ "Group-Stranger",
+      Label == "You" ~ "Individual_Stranger",
     ),
-    Label_Standardized_Identity = Label_English_Identity,
+    Label_Standardized_Identity = case_when(
+      Label_English_Identity == "Individual_Self" ~ "Self",
+      Label_English_Identity == "Group-Self" ~ "Self",
+      Label_English_Identity == "Group-Stranger" ~ "Stranger",
+      Label_English_Identity == "Individual_Stranger" ~ "Stranger",
+    ),
     Matching = case_when(
       Matching == "Match" ~ "Matching",
       Matching == "Mismatch" ~ "Nonmatching",
@@ -1579,12 +1606,17 @@ df[[23]] <- read.csv(
       Shape_English_Identity == "Individual_Stranger" ~ "Stranger",
     ),
     Label_English_Identity = case_when(
-      Label == "Self" ~ "Self",
-      Label == "We" ~ "Self",
-      Label == "They" ~ "Stranger",
-      Label == "You" ~ "Stranger",
+      Label == "Self" ~ "Individual_Self",
+      Label == "We" ~ "Group-Self",
+      Label == "They" ~ "Group-Stranger",
+      Label == "You" ~ "Individual_Stranger",
     ),
-    Label_Standardized_Identity = Label_English_Identity,
+    Label_Standardized_Identity = case_when(
+      Label_English_Identity == "Individual_Self" ~ "Self",
+      Label_English_Identity == "Group-Self" ~ "Self",
+      Label_English_Identity == "Group-Stranger" ~ "Stranger",
+      Label_English_Identity == "Individual_Stranger" ~ "Stranger",
+    ),
     Matching = case_when(
       Matching == "Match" ~ "Matching",
       Matching == "Mismatch" ~ "Nonmatching",
@@ -1653,12 +1685,22 @@ df[[24]] <- read.csv(
     ),
     Label_Origin_Identity = case_when(
       Label == "Self" ~ "Self",
-      Label == "We" ~ "Self",
-      Label == "They" ~ "Stranger",
-      Label == "You" ~ "Stranger",
+      Label == "We" ~ "We",
+      Label == "They" ~ "They",
+      Label == "You" ~ "You",
     ),
-    Label_English_Identity = Label_Origin_Identity,
-    Label_Standardized_Identity = Label_English_Identity,
+    Label_English_Identity = case_when(
+      Label == "Self" ~ "Individual_Self",
+      Label == "We" ~ "Group-Self",
+      Label == "They" ~ "Group-Stranger",
+      Label == "You" ~ "Individual_Stranger",
+    ),
+    Label_Standardized_Identity = case_when(
+      Label_English_Identity == "Individual_Self" ~ "Self",
+      Label_English_Identity == "Group-Self" ~ "Self",
+      Label_English_Identity == "Group-Stranger" ~ "Stranger",
+      Label_English_Identity == "Individual_Stranger" ~ "Stranger",
+    ),
     Matching = case_when(
       Matching == "Match" ~ "Matching",
       Matching == "Mismatch" ~ "Nonmatching",
@@ -1700,33 +1742,53 @@ df[[25]] <- read.csv(
     RT_sec = rt,
     ACC = corr,
   ) %>%
+  # 2026-08 P3: pair 中谁是自己 = MatchParticipant（per-pair 角色映射，
+  # 来源 E4InferentialDATA.csv，即论文 L191 分析所用；已复现统计：
+  # Self 674 ms vs Coactor 751 ms vs Stranger 734 ms，与论文 670/744/728 一致）
+  dplyr::left_join(
+    read.csv("../1_Data/Constable_2019_EPHPP/Constable_2019_EPHPP_raw/E4InferentialDATA.csv") %>%
+      dplyr::filter(TrialType == "Match") %>%
+      dplyr::select(Pair, MatchParticipant),
+    by = c("Subject" = "Pair")
+  ) %>%
   dplyr::mutate(
     ACC = as.numeric(ACC),
     RT_sec = as.numeric(RT_sec),
     RT_ms = RT_sec * 1000,
     RT_ms = as.numeric(RT_ms),
     Shape_English_Identity = case_when(
-      Shape_Origin_Identity == "Person1" ~ "Individual_Self",
-      Shape_Origin_Identity == "Person2" ~ "Individual_Self",
-      Shape_Origin_Identity == "Team" ~ "Group-Self",
-      Shape_Origin_Identity == "StrangerTeam" ~ "Group-Stranger",
-      Shape_Origin_Identity == "Stranger" ~ "Individual_Stranger",
+      Shape_Origin_Identity == "Person1" ~ "Person 1",
+      Shape_Origin_Identity == "Person2" ~ "Person 2",
+      Shape_Origin_Identity == "Team" ~ "Team",
+      Shape_Origin_Identity == "StrangerTeam" ~ "Stranger Team",
+      Shape_Origin_Identity == "Stranger" ~ "Stranger",
     ),
     Shape_Standardized_Identity = case_when(
-      Shape_English_Identity == "Individual_Self" ~ "Self",
-      Shape_English_Identity == "Group-Self" ~ "Self",
-      Shape_English_Identity == "Group-Stranger" ~ "Stranger",
-      Shape_English_Identity == "Individual_Stranger" ~ "Stranger",
+      Shape_Origin_Identity == MatchParticipant ~ "Self",
+      Shape_Origin_Identity == ifelse(MatchParticipant == "Person1", "Person2", "Person1") ~ "ingroup",
+      Shape_Origin_Identity == "Team" ~ "Self",
+      TRUE ~ "Stranger",
     ),
     Label_Origin_Identity = case_when(
-      Label == "Person1" ~ "Self",
-      Label == "Person2" ~ "Self",
-      Label == "Team" ~ "Self",
-      Label == "StrangerTeam" ~ "Stranger",
+      Label == "Person1" ~ "Person1",
+      Label == "Person2" ~ "Person2",
+      Label == "Team" ~ "Team",
+      Label == "StrangerTeam" ~ "StrangerTeam",
       Label == "Stranger" ~ "Stranger",
     ),
-    Label_English_Identity = Label_Origin_Identity,
-    Label_Standardized_Identity = Label_English_Identity,
+    Label_English_Identity = case_when(
+      Label == "Person1" ~ "Person 1",
+      Label == "Person2" ~ "Person 2",
+      Label == "Team" ~ "Team",
+      Label == "StrangerTeam" ~ "Stranger Team",
+      Label == "Stranger" ~ "Stranger",
+    ),
+    Label_Standardized_Identity = case_when(
+      Label_Origin_Identity == MatchParticipant ~ "Self",
+      Label_Origin_Identity == ifelse(MatchParticipant == "Person1", "Person2", "Person1") ~ "ingroup",
+      Label_Origin_Identity == "Team" ~ "Self",
+      TRUE ~ "Stranger",
+    ),
     Matching = case_when(
       Matching == "Match" ~ "Matching",
       Matching == "Mismatch" ~ "Nonmatching",
@@ -4165,7 +4227,7 @@ df[[58]] <- read.csv(
     ),
     Label_Standardized_Identity = case_when(
       Label_Origin_Identity == "you" ~ "You",
-      Label_Origin_Identity == "friend" ~ "Friend",
+      Label_Origin_Identity == "friend" ~ "Close",  # 2026-08 P12: Friend→Close（与 Shape 侧词表一致）
       Label_Origin_Identity == "happy" ~ "NonPerson",
       Label_Origin_Identity == "neutral" ~ "NonPerson",
     ),
@@ -4231,18 +4293,26 @@ df[[59]] <- read.csv(
     Label_English_Identity = case_when(
       Label_Origin_Identity == "self" ~ "Self",
       Label_Origin_Identity == "friend" ~ "Friend",
+      Label_Origin_Identity == "label_9" ~ "£9",   # 2026-08 P12: 补 £9/£1 货币刺激映射
+      Label_Origin_Identity == "label_1" ~ "£1",
     ),
     Label_Standardized_Identity = case_when(
       Label_Origin_Identity == "self" ~ "Self",
       Label_Origin_Identity == "friend" ~ "Close",
+      Label_Origin_Identity == "label_9" ~ "£9",   # 2026-08 P12: 奖赏参照刺激（非自我参照），按原样保留
+      Label_Origin_Identity == "label_1" ~ "£1",
     ),
     Shape_English_Identity = case_when(
       Shape_Origin_Identity == "self" ~ "Self",
       Shape_Origin_Identity == "friend" ~ "Friend",
+      Shape_Origin_Identity == "9" ~ "£9",   # 2026-08 P12
+      Shape_Origin_Identity == "1" ~ "£1",
     ),
     Shape_Standardized_Identity = case_when(
       Shape_English_Identity == "Self" ~ "Self",
       Shape_English_Identity == "Friend" ~ "Close",
+      Shape_English_Identity == "£9" ~ "£9",  # 2026-08 P12: 奖赏参照刺激按原样保留
+      Shape_English_Identity == "£1" ~ "£1",
     ),
     ) %>%
   dplyr::select(

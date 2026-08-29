@@ -124,7 +124,8 @@ mode: primary
     one row per experiment: `Folder_Name` + `Exp`), `Paper_ID` (**deprecated** —
     legacy link to the old manuscript Table 1; do NOT create new values), `Country`,
     `Stim_language`, `Stim_Type`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`,
-    `subj_Group` (被试分组：组间设计填原文组名、分号分隔；无组间填 `All`).
+    `subj_Group` (被试分组：**每 group 一行**，行唯一性 = `Folder_Name`+`Exp`+`subj_Group`
+    三元组；组间研究按组拆行、每行填单个组名，无组间填 `All`；详见 SKILL.md 列说明).
     NOTE: `Environmental_Info` stores the **stimulus-presentation software**
     (E-prime/Gorilla/PsychoPy/Matlab), NOT Lab-vs-Online setting — do not conflate the
     two. The manuscript Table 1 column `Exp_Implement` (Lab/Online/Mixed) does NOT exist

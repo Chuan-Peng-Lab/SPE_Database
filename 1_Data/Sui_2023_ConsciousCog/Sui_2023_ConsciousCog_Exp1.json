@@ -39,6 +39,6 @@
         "Background": "Grey"
       }
     },
-    "detail": ""
+    "detail": "Data note (2026-08 P7): provided data has 17974 trials / 20 subjects = 656-952 trials per subject (expected 960 = 16 blocks x 60; incomplete sessions kept as-is per minimal-preprocessing rule; public data may have been pre-cleaned by the authors)."
   }
 }

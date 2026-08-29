@@ -54,8 +54,28 @@ Use me when you are:
   - 键列：`ID`（行号）、`Folder_Name`（关键 ID）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
   - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
   - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
-  - 设计：`Design`、`subj_Group`（被试分组：同一实验为组间设计时填原文 group 名称、多组用分号分隔，如 `LpSTS;DLPFC;sham`；无组间分组填 `All`）。**判定注意（2026-08 沉淀）：`Design` 列含 between-subjects/Group 标记是直接依据，但 Design 未标注不代表无组间——需以全文核对**（案例：Xu_2022 4 组、Constable_2020 Switch Identity、Vicovaro E2 self-symmetry/asymmetry 均仅见于全文，Design 列未标）；在线研究（MTurk/Prolific 等）按平台被试主体标 Country（如 MTurk→United States，2026-08 用户指示）。`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
+  - 设计：`Design`、`subj_Group`（被试分组列，**2026-08 起每 group 一行**：
+    行的唯一性 = `Folder_Name` + `Exp` + `subj_Group` 三元组。组间设计研究按组
+    拆分为多行（Exp 不变），每行 `subj_Group` 填**单个**原文组名（如
+    `LpSTS`，不用分号堆叠——该做法已废弃）；无组间设计保持单行填 `All`。
+    展开后每行的 `Sample_Size`/`Valid_Subj`/`Male`/`Female` 填**组内值**
+    （数据可拆按数据、否则按论文、论文无则 `/`），总体口径与组名映射记
+    Note；展开行的 `ID`/`Paper_ID`/`Paper` 无稿件对应时留空（deprecated
+    列，勿新建值）。**组间判定**（2026-08 沉淀）：`Design` 列含
+    between-subjects/Group 标记是直接依据，但 Design 未标注不代表无组间——
+    需以全文核对（案例：Xu_2022、Constable_2020 Switch Identity、Vicovaro
+    E2 self-symmetry/asymmetry 均仅见于全文）；试次级/被试内变量不展开
+    （案例：Xu_2022 的 high/low attractiveness 在数据无编码仅按
+    acceptance/rejection 展开、Constable_2021 的 Stimuli_Type 为组列）；
+    在线研究（MTurk/Prolific 等）按平台被试主体标 Country（如 MTurk→
+    United States，2026-08 用户指示）。`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
   - 流程：`Practice_Block`、`Practice_Trial`、`numBlocks`、`numTrials`、`Environmental_Info`（**刺激呈现软件**，非 Lab/Online 设置）
+    **numTrials 口径（2026-08 P15 决策）**：一律填**每被试总试次数（total）**，不填 per-block；
+    应能与实验条件数整除出每条件试次数（如 8 条件×60=480）。多 session/多 run 设计（如
+    Qian E1 4 sessions×144）按全 session 合计。**Practice_Trial（2026-08 P16 决策）** =
+    任务正式练习段试次数；学习/训练映射段（如 Constable_2019 E4 的 50 次 "who does this
+    stimulus represent" 训练）**不属于练习**，不填入；同一研究练习数视条件而变时填
+    "21 or 41" 式文本（与 exp JSON 一致）。
   - 状态：`Status`、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
   同论文多实验行共享的字段（作者/邮箱/年/期刊/DOI 等）只填一次，其余行留空或同步传播均可——以组内非空值一致为准。
 - **Study folder**: `<Author>_<Year>_<Journal>` containing the paper-level
@@ -218,6 +238,52 @@ Boundary rules for ambiguous keys:
   `Bekende→Close`; German `Ich→Self`, `Mutter→Close`, `Bekannter→Stranger`;
   English `self→Self`, `friend→Close`, `stranger→Stranger`.
   Analyses must use the `*_Standardized_Identity` column.
+  **非身份刺激特例（2026-08 P12 沉淀）**：非自我参照的刺激（如奖赏参照
+  任务的货币金额 `£9`/`£1`，Lee_2023_Cognition E2）Standardized 按**原样**
+  保留（`£9`/`£1`），不强行归入 6 类词表——它不是身份类别，原样记录保留
+  任务语义；Codebook 枚举同步列出。
+  **自定义 Std 值先例（2026-08）**：6 类词表外的自定义 Standardized 值已有
+  先例——`£9`/`£1`（货币刺激，Lee E2）、`ingroup`（内群体成员/搭档，
+  Constable_2019 E4 的 Coactor：pair 中另一名队友；论文行为与 Stranger 无
+  差异但语义为组内成员，2026-08 用户决策）。使用条件：语义无法归入 6 类时
+  允许原样/自定义值，须在 Codebook 枚举注明。
+  **集体自我（group-self）规则（2026-08 P11/P14 沉淀，Constable_2019 系列）**：
+  集体自我身份（we/team 类）全库仅 Constable_2019 使用。处理：① Origin 层
+  保留原文（We/Team/Person1/Person2 等）；② English 层统一术语
+  `Individual_Self/Group-Self/Individual_Stranger/Group-Stranger`（Shape 与
+  Label 侧一致；E4 pair 研究 English 用字面 "Person 1"/"Person 2"）；③ Std
+  层按论文口径归 Self（如 Constable 论文 "Self: Me and We" 二分类）；④ **CSV
+  的 `Self`/`Close`/`Others` 三列 = Std 6 类的简写表达**：Self 列 = Std Self
+  类身份集合（含 group-self，如 `Self/We`）、Close 列 = Std Close 类（无
+  close-other 时留空）、Others 列
+  = 其余身份——CSV 与 Std 必须同一口径，group-self 不得放入 Close 列
+  （Close=亲近他人语义）；⑤ pair 研究中 Person 归属不可知时（如 Constable
+  E4），CSV Self 列列全部候选（`P1/P2/Team`）并 Note 说明。
+- **ACC 统一编码（2026-08 P21 方案 A，全库统一值域）**：
+  实际按键相对应按键的比较，共 6 类（覆盖全部可能性）：
+
+  | 码 | 含义 | 对应类别 |
+  |---|---|---|
+  | `1` | 正确：与应按键一致 | ① 按键一致 |
+  | `0` | 错误：在响应窗口内按键但按错（属于规定按键范围） | ② 范围内错键 |
+  | `NA` | 无反应：响应窗口内没有按键 | ③ 无按键 |
+  | `-2` | 范围外按键：与应按键不一致且不在规定按键范围（如要求 f/j 却按 k） | ④ 范围外键 |
+  | `-3` | 提前按键：刺激尚未出现就按键 | ⑤ 提前（少见，多数程序不记录） |
+  | `-4` | 超时按键：响应窗口结束后才按键 | ⑥ 反应过迟（少见） |
+
+  规则：① 清洗产物统一用上表编码；② **`-2`/`-3`/`-4` 仅在有明确证据时
+  编码**（如 raw/Response 列显示实际按键超出规定范围、或程序明确记录提前/
+  超时事件），无明确证据时编码为 `NA` 即可（宁缺毋滥，不臆断）；③ 无反应
+  一律 `NA`（不用数字码）；④ 重编码前必须逐研究确认原特殊码语义
+  （Codebook/raw/清洗段/论文，E-Prime 惯例 3=no response 等），不得凭值
+  猜测；⑤ 有 `Response` 实际按键列的文件可用「应按键 vs 实际键」验证或
+  重建 ACC；无 `Response` 列的文件只能依据原码语义映射或留待 raw 追补；
+  ⑥ Codebook 的 `Variable_value` 同步列出码义（如 `1 (correct); 0
+  (incorrect); NA (no response); -2 (out-of-range key); -3 (early
+  response); -4 (late response)`）。全库摸底（2026-08）：58 个 Clean 文件
+  中 44 个为 0/1 标准码；特殊码涉及 10 个文件（Constable 系列 ACC=3、
+  Dalmaso ACC=2、Hu_2020 ACC=-1/2、Sui_2015 ACC=3/4、Vicovaro/Xu/Zhang/
+  Sun/Hu_2023 ACC=NA）；37 个文件有 Response 列、21 个无。
 - **Minimal preprocessing, NO filtering**: cleaning only renames/reorganizes variables
   and standardizes Identity; it keeps ALL trials, participants and values. Invalid
   values stay in the file (e.g., `ACC = -1` no response, `2` wrong key; `RT_ms`
@@ -290,6 +356,14 @@ Boundary rules for ambiguous keys:
   元数据（paper/exp JSON、Codebook、Dataset_inf.csv）→ 两级校验
   （validate_json_metadata.R + validate_clean_csv.R）。`Clean_Data.Rmd` 降级为
    历史配方参考，其逐研究段逐步提取为独立脚本/配置。
+- **阶段 4 辅助工具（2026-08 新增，2_Code/）**：
+  - `repo_fetch.py` — 数据仓库下载辅助（OSF / PsychArchives）：`osf-list`/`osf-get`
+    （按文件名子串匹配下载）/`pa-search`/`pa-files`/`pa-get`；先列文件清单再下载，
+    目标已存在拒绝覆盖（用法见脚本 docstring；P5 沉淀：先 --list 可发现仓库重复
+    上传/缺失，避免白下载）。
+  - `scan_raw.py` — 原始数据快速扫描：列名/行数/每被试行数（整除判定）/
+    列值分布/两列交叉表；大文件用 `--sample N`（行数与被试统计仍全量流式）。
+    阶段 4 判定 raw 完整性（如 Smith 48 vs 59）与还原任务结构用。
 
 ## Dataset_inf.csv 标准读取模板（2026-08）
 

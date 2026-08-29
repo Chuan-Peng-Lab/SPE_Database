@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": ""
+    "detail": "Data note (2026-08 P8): provided data has 11051 trials / 31 subjects = 203-380 trials per subject (expected 400 = 4 blocks x 100; incomplete sessions kept as-is per minimal-preprocessing rule)."
   }
 }

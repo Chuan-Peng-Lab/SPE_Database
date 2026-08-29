@@ -49,6 +49,19 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
   - 批次 4（采集地，CEU 证据）：Constable_2020 City→Budapest；Wozniak_2018 Country→Hungary、City→Budapest（伦理委员会批准机构 = 采集机构，教训入 SKILL.md）
 - **文档同步**：AGENTS.md 加「CSV 字节保真编辑纪律」（QUOTE_MINIMAL 往返/去末尾换行/header.index 定位/三重验证）；SKILL.md 更新 N 口径定义（数据口径优先）、subj_Group 判定、采集地判定规则、读取模板；Stage3_1_CrossCheck.md 重写为未解决清单。
 - **验证**：validate_json_metadata EXIT=0（90 JSON）；validate_clean_csv 59 文件 0 ERROR/40 WARN（基线持平）；CSV 字节保真（diff 仅目标单元格）。
+- **第二轮（2026-08，用户决策，P15–P20 消解 + P7–P9/P5 标记解决）**：
+  - **P15 numTrials 统一 total**：CSV 14 行 numTrials 更新——Constable_2019 E1–E3 96→288（3×96）、E4 80→640（8×80）；Sui_2014 ×4 60→360（6×60）；Vicovaro E1 240→480（2×240）；Qian E1 144→576（4 sessions×144）、E2 100→200；Hu_2020 312→480（匹配 8 条件×60）且 numBlocks 14→2；Lee_2023 ×2 空→96/3/24（PMT 2 runs×48）。原值已是 total 不变：Constable_2020（每人 240）、Constable_2021（384/192，数据 768/384=2×系颜色/文本色/位置平衡，Note 注明）、Wozniak_2018（672）、Vicovaro E2（240）。依据均论文全文（如 Vicovaro L88 "each block 240"、Sui_2014 L48 "six blocks of 60"、Qian L60/L121、Hu_2020 L86 "60 per condition×8"、Constable L74/L181）。
+  - **P16 Practice_Trial 口径**：Constable_2019 E4 50→"21 or 41"（50 为学习映射训练段 L179 非练习；匹配练习 21 or 41 视 pair 信心 L181，与 exp JSON 一致）。
+  - **P17 多任务口径**：Hu_2020/Liu_2023/Svensson_2023/Lee_2023 的 numTrials/numBlocks 全部核对为**匹配任务**口径（Liu 64、Svensson 120 已对；Lee 数据即 PMT 匹配任务）；其他任务数据已纳入者（无）暂且保留；分类/ANT 数据不在库中。
+  - **P18 软件惯例**：未披露 → CSV 留空 + exp JSON '/'（Constable 系列/Sui_2023/Kolvoort/Svensson 已符合）；Lee_2023 ×2 Environmental_Info 空→Testable（论文披露，JSON 已填）。
+  - **P19 Online 采集地**：Prolific 研究 Country=UK（Svensson ✓ 已对；Liu_2023 United Kingdom→UK、City "In United Kingdom"→N/A）；Perrykkad MTurk→United States（批次 3）。
+  - **P20 License**：论文声明 request 者 License 留空——Amodeo ×2（论文 L156）、Kolvoort（L336）、Liu_2023（论文 OSF 公开 osf.io/4n6j7 但 OSF API license=None）"On request"→空；Liang（CC BY-NC-ND）/Constable_2019（No License）数据页明确声明保留。
+  - **P5（Schaefer_2019_JCogPsych E2 Clean 缺列）已解决（2026-08）**：raw 导出无刺激内容列（target/flanker/targetform 全空），仅 Condition(=Bed) 条件码 + MT4.ACC/RT。**Bed 解码**：2 字母码，第 1 字母=label 身份（i/m/b/n=Ich/Mutter/Bekannter/Nichts）、第 2 字母=匹配状态（m/n）——经 psycharchives 聚合 SPSS 验证（列名 RTim/RTin/RTmm/RTmn/RTbm/RTbn/RTnm/RTnn；288 单元 MAE 13.8 ms）。**Clean 重建**：补 Matching + Label 侧 3 级 Identity（9 列：Subject/Condition/Matching/Label_Origin/English/Std/RT_ms/RT_sec/ACC）；Shape 侧不可恢复（每被试 shape-label 分配未记录，论文按 label 归类 nonmatch）。psycharchives（10.23668/psycharchives.2642）：group1=group2（Exp1 重复上传）、group3=Exp3（均与库内一致）、**Exp2 无仓库版本**（库内 raw 唯一来源）。数据特征：V1–V4 版本 Ich 24 匹配/12 不匹配（原始版 18/18），各身份 36 试次/被试。连带更新：Codebook 重写（9 行）、exp JSON detail、Rmd 段同步、CSV 行（Exp2/3 补 numTrials=144/numBlocks=3/Practice_Trial=48 + Self/Close/Others；Exp1 Close 'Mother/Acquaintance'→'Mother' 按 SKILL 惯例——Acquaintance 属 Others 类）。校验：validate_clean_csv 0 ERROR（Exp2 过 E1–E3，缺 Shape/Label 列 2 条 WARN 系不可恢复）；validate_json_metadata EXIT=0。
+  - **psycharchives 下载数据存档输入区（2026-08）**：5 个仓库文件（Exp. group 1/2/3_raw data.tsv ×3、聚合 .sav、license.txt）放入 `1_Data/Schaefer_2019_JCogPsych/Schaefer_2019_JCogPsych_Raw/`（输入区规范，不参与校验；group1/3 与库内 Exp1/3 raw 内容一致，group2=group1 重复）。阶段 4 先例：下载的仓库原始数据统一入 `<Study>_Raw/` 存档。
+  - **阶段 4 辅助工具固化（2026-08，2_Code/）**：`repo_fetch.py`（OSF/PsychArchives 下载辅助：osf-list/osf-get/pa-search/pa-files/pa-get，先列清单再下载、目标已存在拒绝覆盖）+ `scan_raw.py`（raw 扫描：每被试行数/列值分布/交叉表，大文件 --sample 流式）——均源自 P5 手写模式，用法见脚本 docstring + SKILL.md 指针；实测通过（Schaefer/Sun 62MB 抽样/OSF 4n6j7 递归列文件）。
+- **P7–P9（Sui_2023 17974 行、Kolvoort 11051 行、Svensson 7370 行不整除）**：先前 agent 已调查（3 个 exp JSON detail 注明实际行数特征：Sui_2023 656–952/被试 vs 预期 960、Kolvoort 203–380/被试 vs 预期 400、Svensson 45–120/被试 vs 预期 120 仅 18 人满 120；公开数据可能经作者预清洗、不完整 session 按最小预处理规则保留）→ **保持现状，标记已解决**。**P3（Constable E4 Self/Coactor）已解决（2026-08 第三轮）**：输入区 `E4InferentialDATA.csv` 的 `MatchParticipant` 列 = 每 pair 的 match responder（=自己，10 Person1/10 Person2）；统计复现论文 L191（Self 674.3/Coactor 751.4/Stranger 733.6 vs 670/744/728 ✓）；Clean E4 Label/Shape Std 重建（自己→Self、队友→`ingroup`（用户决策）、Team→Self、Stranger/StrangerTeam→Stranger）；Rmd join + Codebook + SKILL（ingroup 自定义值先例）同步；`E4AllDATA.csv` 与 raw MD5 相同不可区分（P2Age/P1Age 为 pair 级年龄）。
+  - **验证**：validate_json_metadata EXIT=0；validate_clean_csv 58 文件 0 ERROR/39 WARN（较原 40 WARN 少 1 = 批次 3 Liang 冗余 Clean 删除所致）；CSV 字节保真（diff 34 单元格，列集合 {numTrials, numBlocks, Practice_Trial, Environmental_Info, Country, City, License, Note}）。
+  - **第三轮（2026-08，本会话，P1–P22 全部解决）**：A 组 pair 口径（40/92 + Note + E4 Female 14→26 + E1–E3 Note 清理）；P4/组展开（subj_Group 每 group 一行，9 行→21 行，8 研究展开）；P6 Kolvoort 改名；P12 Lee（'Friend'→'Close'、£9/£1 原样）；P21 ACC 方案 A 统一编码；P11/P14（CSV=Std 类简写、group-self 规则、E3/E4 Label 重建、English 四类术语）；P3（E4InferentialDATA MatchParticipant 映射重建 Self/ingroup，统计复现 L191）；P7–P9 记录（exp JSON detail）。分析细节见 `3_Reports/P_Issues_Analysis_Plan.md`（本会话报告）。
 
 ### 2026-08-28 — REF/ 全文 HTML → MD 批量转换管线
 
@@ -72,9 +85,13 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 4. 校验链路：任何元数据改动后必须跑 Rscript 2_Code/validate_json_metadata.R（命名、年份漂移、exp 键、v2 组件完整性、文件夹↔CSV 交叉校验）。
 5. 稿件 SPE_database_manu_v16.docx 已废弃（2026-08）：12 个待收录条目信息已登记入 Dataset_inf.csv Note 列（冲突以 CSV 现值为准）；Table 1 以 Generate_Table1.qmd 输出为准；与稿件的自动比对仅在稿件版本更新时手动启用。
 6. 自动修改数据/元数据的依据 = **论文全文 + 原始数据**（JSON/CSV 均为衍生产物，互相矛盾时以全文/数据为准；2026-08 阶段 3.1 确认）。
-7. **N 口径 = 数据口径优先**（2026-08 阶段 3.1 确认，入 SKILL.md）：`Sample_Size` = Clean 中被试总数；`Valid_Subj`/`Drop_Subj` 为派生值（清洗不过滤，通常 = Sample_Size / 0）；论文口径记 Note 列（`Paper_N:` 前缀）。pair 粒度研究（Constable_2019 E4、Constable_2020）单独处理。
-8. `subj_Group` 列语义（2026-08）：组间设计填原文组名、分号分隔；无组间填 `All`。**Design 列不是组间判定的充分依据**——需以全文核对（Xu_2022/Constable_2020/Vicovaro E2 漏判案例）。
+7. **N 口径 = 数据口径优先**（2026-08 阶段 3.1 确认，入 SKILL.md）：`Sample_Size` = Clean 中被试总数；`Valid_Subj`/`Drop_Subj` 为派生值（清洗不过滤，通常 = Sample_Size / 0）；论文口径记 Note 列（`Paper_N:` 前缀）。pair 粒度研究（Constable_2019 E4、Constable_2020）2026-08 第三轮已决：**保持人数口径 40/92**（两人均有数据，A 组证据）+ Note 记 pair 粒度；E4 Female 14→26（论文 L173）。
+8. `subj_Group` 列语义（2026-08 第三轮更新，废弃分号堆叠）：**每个 group 一行**，行唯一性 = `Folder_Name` + `Exp` + `subj_Group` 三元组；组间研究按组拆行、每行填单个组名（组内 N/性别填组内值、总体口径记 Note），无组间保持单行 `All`（全库 9 行→21 行已展开）。**Design 列不是组间判定的充分依据**——需以全文核对（Xu_2022/Constable_2020/Vicovaro E2 漏判案例）；试次级变量不展开（Xu high/low 数据不可还原，按 Acceptance/Rejection 2 行）。
 9. 采集地判定（2026-08 入 SKILL.md）：**伦理委员会批准机构 = 数据采集机构**（CEU 批准 → Budapest）；作者履历单位不是采集地依据。
+
+10. **ACC 统一编码**（2026-08 第三轮，方案 A 全库统一，入 SKILL.md）：`1`=正确、`0`=错误（范围内错键）、`NA`=无反应、`-2`=范围外按键、`-3`=提前、`-4`=超时；**负码仅在有明确证据时编码，否则 NA**（12 文件重编码 + 12 Codebook 同步）。
+11. **自定义 Std 值先例**（2026-08 第三轮，入 SKILL.md）：6 类词表外允许原样/自定义值（`£9`/`£1` 奖赏刺激 Lee E2、`ingroup` 内群体成员 Constable E4 Coactor），须 Codebook 枚举注明。
+12. **CSV `Self`/`Close`/`Others` 三列 = Std 6 类简写**（2026-08 第三轮，入 SKILL.md）：Self 列含 group-self（`Self/We`）、Close 列=Std Close 类（无 close-other 留空）、Others=其余；CSV 与 Std 必须同一口径。
 
 ## 核心文件
 
@@ -102,7 +119,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - validator：EXIT=0（结构级）；2026-08-27 复测：**90 个 JSON 全绿**（阶段 1 新增 Lee/Smith/Svensson/Orellana 的 4 paper + 6 exp JSON；34 文件夹 ↔ CSV 交叉一致）。
 - 内容级校验器 validate_clean_csv.R：59 文件 0 ERROR / 40 WARN（口径差异与替代列提示；Vicovaro_2022_JEPHPP_Exp2 known 条目已于阶段 3 移除）；支持 --data-dir（新产物串测用）。
 - Table 1 渲染（2026-08-27 重渲染）：RENDER_EXIT=0；qmd 58 行 vs 稿件 70 行（12 个 pending 无文件夹）；table1_problems.txt 118 → 111 行（CSV Exp 回填后 8 条 Exp 不一致消失、新增 Martinez 1 条；Pan N 回填后其行显示 稿件 40(—) vs qmd 40）。
-- git：分支 main；REF 管线已提交（c578337 脚本+文档、dd080d4 更多 md fulltext）。工作区未提交改动（阶段 3.1 会话收尾）：Dataset_inf.csv（40 列、subj_Group + 4 批次修改）、SKILL.md、AGENTS.md、PROJ_STATE.md、3_Reports/Stage3_1_CrossCheck.md（新增）、2_Code/read_dataset_inf.py + stage31_crosscheck.py（新增）、1_Data/utils.R、多个 paper/exp JSON（DOI/采集地/Setting/Journal）、1_Data/Liang_2022_HumBrainMap/Liang_2022_HumBrainMap_Exp1_Clean.csv（删除）+ 未跟踪（Liang_2022_JEPHPP_raw/ 输入区等），未 push。REF/ 新转 md 不纳入版本控制属预期。
+- git：分支 main；REF 管线已提交（c578337 脚本+文档、dd080d4 更多 md fulltext）；**87f0305 已提交输入区 ignore**（.gitignore + 578 个 *_Raw/*_raw 输入区文件取消跟踪，磁盘保留）。工作区未提交改动（阶段 3.1 第三轮收尾）：Dataset_inf.csv（40 列、subj_Group + 4 批次修改）、SKILL.md、AGENTS.md、PROJ_STATE.md、3_Reports/Stage3_1_CrossCheck.md（新增）、2_Code/read_dataset_inf.py + stage31_crosscheck.py（新增）、1_Data/utils.R、多个 paper/exp JSON（DOI/采集地/Setting/Journal）、1_Data/Liang_2022_HumBrainMap/Liang_2022_HumBrainMap_Exp1_Clean.csv（删除）+ 未跟踪（Liang_2022_JEPHPP_raw/ 输入区等），未 push。REF/ 新转 md 不纳入版本控制属预期。
 
 ## 已知问题（未解决）
 
@@ -124,7 +141,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - Kirk_2025_BritJPsy.json 嵌套 schema 例外（内部键 KIRK_2025_BJP 保留不动）。
 - Hu_2023_psyarxiv（PsyArXiv 预印本）与 Hu_2023_SDB（Science Data Bank）为两个独立条目，已确认分别保留。
 - 历史管线 Clean_Data.Rmd 内仍引用旧文件夹名（纯历史记录，未改，部分可能在修订过程中进行了修改）。
-- **阶段 3.1 剩余问题（P1–P22，2026-08 复核后）**：21 研究复核完成、可自动改项已更新，剩余**无法自动修改**的问题编号清单见 `3_Reports/Stage3_1_CrossCheck.md`（本文件只放指针）。高优先：P1/P2（Constable pair 粒度，用户指示单独处理）、P5（Schaefer E2 Clean 缺 Shape/Label/Matching 列）、P7–P10（Clean 行数不整除×4）、P4（Liang CSV 行结构 vs 3 组）；其余为 Identity 映射、口径惯例类。
+- **阶段 3.1 全部解决（2026-08 第三轮后）**：21 研究复核完成、可自动改项两轮更新（CSV 61+48 单元格 + JSON 44 处），P15–P20 消解、P7–P9 标记解决（exp JSON detail 注明行数特征）、P5 解决（Bed 解码重建 Exp2 Clean）、**P3 解决（第三轮：MatchParticipant 映射重建 Self/ingroup，统计复现 L191）**。问题编号清单见 `3_Reports/Stage3_1_CrossCheck_archived.md`（本文件为存档）。
 
 ## 失败方案（已弃用，勿重试）
 
@@ -150,7 +167,7 @@ L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（9 个 pending�
 | 类别 | 数量 | 成员 | 说明 |
 |---|---|---|---|
 | **一、已完成全量交叉核对** | 5 | Kirk_2025_BritJPsy、Martinez-Perez_2024_ConsciousCog、Sui_2014_APP、Wang_2016_JEPHPP、Wozniak_2022_PsychRes | 阶段 2 已做「全文核查 + 交叉对比」并修复 31 单元格，不再重复核对 |
-| **二、阶段 3.1 全量交叉核对** | 21 研究 / 37 行 | 见阶段 3.1 | **已完成（2026-08）**：复核全部完成，可自动改项已按全文/数据依据更新（CSV 61 单元格 + JSON 44 处），剩余无法自动修改问题 P1–P22（见 Stage3_1_CrossCheck.md）待下个 session 处理 |
+| **二、阶段 3.1 全量交叉核对** | 21 研究 / 37 行 | 见阶段 3.1 | **已完成（2026-08）**：复核全部完成，可自动改项两轮已更新（CSV 61+48 单元格 + JSON 44 处）；P15–P20 已消解、P7–P9 已标记解决（exp JSON detail 注明行数特征）、P5 已解决（Bed 解码重建 Exp2 Clean）、**P3 已解决（第三轮，MatchParticipant 映射）**，P1–P22 无剩余，见 Stage3_1_CrossCheck.md |
 | **三、未来全量交叉核对** | 17 | 分两小类（见下） | 待数据或说明文档补齐后再核对 |
 | ├ 三a：有数据但无说明文档/论文全文 | 3 | Hu_2023_psyarxiv、Sui_2014_unpub、Pan_2025_unpub | 数据五件套已齐但**无正式论文全文可依**；需用户手动查找说明文档（预印本正文/OSF/原始 README/联系作者），查不到则由用户确认后用 NA 填充对应元数据字段，再按阶段 3.1 方法核对 |
 | └ 三b：缺数据（有或没有说明文档/全文） | 14 | 阶段 4 五研究（Sun/Zhang/Orellana-2021/Smith/Sui_2015_unpub）+ 阶段 5 九 pending（Bukowski/Golubickis/Hobbs/Hu_2023_SDB/Mcivor/Orellana-2023/Scheller/Svensson_2022/Wozniak_2020） | 先由阶段 4（补 raw）/阶段 5（整条目入库）补齐数据，入库后按其数据完整度并入一/二/三a 流程收尾 |
@@ -179,7 +196,7 @@ L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（9 个 pending�
 - ~~遗留：Pan~~ → **移到最后阶段解决**（见阶段 6 之后「最后阶段」）
 - 验收：两级校验全绿（90 JSON EXIT=0；59 Clean 0 ERROR/40 WARN 与基线持平）。
 
-### 阶段 3.1：无问题条目独立复核（对象：21 研究 / 37 行）**复核已完成（2026-08），剩余 P1–P22 待下个 session 处理**
+### ~~阶段 3.1：无问题条目独立复核（对象：21 研究 / 37 行）~~ **全部完成（2026-08 第三轮，P1–P22 全部解决）**
 
 **定位**：Dataset_inf.csv 中**先前判定无问题**的条目（不在已知问题清单、不在阶段 4 追补清单、不在 pending 清单）——这些字段多为早期人工填写，从未经过独立交叉验证。本阶段由 agent 对全部「无问题条目」做一次**独立复核**，以 REF/ 全文 + paper/exp JSON + Clean 数据为权威来源，逐字段与 CSV 现值比对，重点排查人工填写引入的隐性错误（拼写、错值、口径误填）。本阶段对应「论文全集三分类」**类别二**：类别一（5 已核查）排除不重复；类别三a（Hu_2023_psyarxiv / Sui_2014_unpub / Pan_2025_unpub，有数据无正式全文）由用户手动查文档后再核；类别三b（阶段 4/5 缺数据）由对应阶段补齐后再核。
 
