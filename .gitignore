@@ -18,6 +18,7 @@ Datasets/
 
 # Python
 .ipynb_checkpoints/
+__pycache__/
 
 
 # Mac OS
@@ -50,5 +51,9 @@ desktop.ini
 3_Reports/wqh_analysis_data.RData
 /2_Code/Coding_Version
 /3_Reports/Coding_Version
+
+# Raw input zones（输入区，只读不参与校验；<Study>_Raw/ 与历史 <Study>_raw/ 变体均忽略）
+*_Raw/
+*_raw/
 
 REF/
