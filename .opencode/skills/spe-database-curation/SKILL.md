@@ -240,7 +240,9 @@ Boundary rules for ambiguous keys:
   Chinese `我→Self`, `她/他→Close`; Dutch `Ikzelf→Self`, `Vreemde→Stranger`,
   `Bekende→Close`; German `Ich→Self`, `Mutter→Close`, `Bekannter→Stranger`;
   German `Möbel→furniture→NonPerson`（2026-08 QJEP 先例：中性对象类
-  furniture 归 **NonPerson**，非 Stranger）；English `self→Self`,
+  furniture 归 **NonPerson**，非 Stranger；同例 2026-08-30 Zhang_2024_PsychJ
+  Exp2 的两个中性形状（不关联任何标签，程序无身份绑定）Standardized 亦归
+  NonPerson）；English `self→Self`,
   `friend→Close`, `stranger→Stranger`.
   Analyses must use the `*_Standardized_Identity` column.
   **非身份刺激特例（2026-08 P12 沉淀）**：非自我参照的刺激（如奖赏参照
@@ -264,6 +266,16 @@ Boundary rules for ambiguous keys:
   = 其余身份——CSV 与 Std 必须同一口径，group-self 不得放入 Close 列
   （Close=亲近他人语义）；⑤ pair 研究中 Person 归属不可知时（如 Constable
   E4），CSV Self 列列全部候选（`P1/P2/Team`）并 Note 说明。
+- **Shape/Label 列取值约定（2026-08-30 用户指示）**：`Shape` 列存实际呈现的几何刺激
+  （形状名如 circle/square/triangle，或原始刺激文件名如 Kreis.png），`Label` 列存实际标签
+  文字（you/friend/stranger 等），不用数字编码（对下游使用者费解）。数据原始编码保留在 raw
+  `<Stim>Code` 列（ShapeCode/LabelCode）与 Identity 三级列的 `*_Origin_Identity` 层；
+  Matching 等逻辑用编码计算、写出前映射为可读值（先例 Zhang_2024_PsychJ_clean.R）。
+- **刺激-身份绑定恢复（2026-08-30 Vicovaro 先例）**：作者导出可能只记录身份而丢弃几何
+  形状、且绑定 counterbalanced——从作者实验代码/逐被试配置恢复（Vicovaro OrdineP#.xlsx 的
+  identificazione 行）；无法恢复全部时暂停问用户，规律外推须 Codebook/JSON/CSV Note 三处
+  标注。几何形状判断以程序代码/用户目视为准（像素分析不可靠，曾猜反 Zhang 的圆/方）。
+
 - **ACC 统一编码（2026-08 P21 方案 A，全库统一值域）**：
   实际按键相对应按键的比较，共 6 类（覆盖全部可能性）：
 
@@ -380,20 +392,43 @@ Boundary rules for ambiguous keys:
     按 `*** LogFrame Start/End ***` 切块；**中断被试末尾可有未闭合块**（无 End
     标记、无 MT.ACC 记录的未完成试次）→ 解析允许 start 比 end 多 1 且跳过无
     记录块（案例：Orellana-2021 Exp2 nonwords-01 仅 68/128 试次，源数据问题）。
+  - **RT 单位判断（2026-08-30 Vicovaro 教训）**：PsychoPy 导出 RT 通常是秒，
+    但作者可能已 ×1000 存为 ms——**以数值量级判断**（匹配任务 RT 正常
+    300-1000 量级；Vicovaro_2024_PeerJ 的 Exp2 值域 0.33-1082 与 Exp1 的
+    ms 值域一致 → 已是 ms，勿按秒再乘 1000；误乘后 SPE 均值变 5×10^5 即
+    暴露）。负值（提前按键）与超窗值按最小预处理保留。
   - **PsychoPy 每被试导出（宽格式 csv）**：先例 `Orellana-Corrales_2023_QJEP_clean.R`
     ——v1~v8 子目录 = 实验版本；RT 为秒需 ×1000 取整；**被试编号需与作者合并脚本
     一致**（本库案例：作者 1-mergeAndSubset.R 按 v1→v8 文件序 rbind 后
     `factor(date, levels=unique(date))` 编号，清洗脚本须复刻否则无法与作者聚合
     文件对齐验证）；刺激字段（label/bild 等）可能仅存在于原始导出而被作者合并
     产物丢弃——raw 重建优先用原始导出而非合并产物。
+  - **PsychoPy 无响应 = 字符串 "None"**（2026-08-30 Hobbs 教训）：Builder 导出
+    无响应试次的 `keys` 列填字符串 `"None"`（不是 NA）——读取后须
+    `resp[resp == "None"] <- NA` 再判 ACC（否则无响应被误编码为 0）。pandas
+    读 csv 时 "None" 会被默认 na_values 当 NaN，掩盖该问题——以 xlsx（readxl
+    读原值）为准核对。
+  - **同数据 xlsx 与 csv 可能有表示层差异**（2026-08-30 Hobbs 教训）：作者
+    同时提供 xlsx/csv 时以**作者清洗脚本读的那个为准**（Hobbs 的
+    Associative_cleaning.R 用 xlsx；其 csv 的 NA 编码、形状分配列值不同）。
+    清理前先逐列对比两版本，勿默认等价。
+  - **作者聚合验证的 round 边界**（2026-08-30 Hobbs 教训）：库内 RT_ms 取整
+    （round(rt×1000)）与作者原始 rt 阈值（如 <200 ms 排除）在边界行（如
+    199.67 ms → round 200）可能一保留一排除——验证脚本按作者精确值判定
+    边界行，差异为 round 显示差异（<0.5 ms）非数据错误；库内保留原值。
   - **作者脚本逐值验证法（强验证，强烈建议）**：清洗脚本解析结果与作者合并/聚合
     产物逐值对比（subject 编号、条件、ACC、RT×1000 取整），stopifnot 全等；
     再按作者分析口径（正确试次、RT 阈值、每被试 Tukey 上限——**注意不同研究上限
     倍数不同**：Orellana-2021 用 q3+3×IQR、QJEP 用 q3+1.5×IQR，hinge 法分位数）
-    复现论文统计量（±几 ms 内即一致）。2026-08 QJEP 案例证明其价值：作者
-    data_clean.csv 列错位（脚本打印顺序与表头不一致）导致论文统计基于错位数据，
-    被逐值核对发现；核对脚本固化于 `2_Code/qjep_verify/`，详情报
-    `3_Reports/Orellana-Corrales_2023_QJEP_Author_DataIssue.md`。
+    核对论文**描述性统计**（论文报告的均值/正确率/方向，±几 ms 内即一致）。
+    **2026-08-30 用户指示：后续入库只核对描述性统计，不复现统计检验/回归模型
+    结果**（Hobbs 为最后一例全量复现，其 Table 2 48 系数核对脚本
+    `2_Code/hobbs_verify/verify_stats.R` 保留作参考）；论文统计检验与库内数据
+    不一致的问题仍照常记录于 Verifying_original_results_issues.md。2026-08
+    QJEP 案例证明逐值核对的价值：作者 data_clean.csv 列错位（脚本打印顺序与
+    表头不一致）导致论文统计基于错位数据，被逐值核对发现；核对脚本固化于
+    `2_Code/qjep_verify/`，详情报
+    `3_Reports/3_Reports/Verifying_original_results_issues.md（Issue 1）`。
 
 ## Dataset_inf.csv 标准读取模板（2026-08）
 
@@ -444,7 +479,7 @@ Boundary rules for ambiguous keys:
 **收尾（场景 A/B 共用）**
 10. **落盘 + 校验 + 同步**：`cp` /tmp → 目标（exFAT 无原子写，先 /tmp 中转）；场景 B 更新 `Dataset_inf.csv`（每实验一行 `Folder_Name`+`Exp`，UTF-8 **带 BOM** 字节保真，不动 legacy `Dataset_inf.xlsx`）；`validate_json_metadata.R` EXIT=0 + `validate_clean_csv.R` 0 ERROR；场景 B 另需：`known_pending` 白名单移除 + `Generate_Table1.qmd` 重渲染（稿件比对默认关闭，仅稿件版本更新时 `--param compare_manu:true`）；更新 PROJ_STATE.md；exFAT 卫生（git 前清理 `._*`，绝不提交 `._*`/`.DS_Store`）。
 
-**入库后四方核对（2026-08 起，场景 B 收尾必做）**：论文全文 ↔ 作者分析代码（OSF dataPrep/SPSS 脚本）↔ 库内数据（CSV/JSON/Clean/raw）↔ OSF 原始导出，逐字段交叉 + **论文统计量复现**（按作者脚本口径，见 §清洗工具「作者脚本逐值验证法」）。2026-08 QJEP 案例：四方核对发现作者 data_clean.csv 列错位致论文统计量基于错位数据（库内数据正确），详情报 `3_Reports/Orellana-Corrales_2023_QJEP_Author_DataIssue.md`；核对脚本固化于 `2_Code/qjep_verify/`。发现的问题按「可自动确定（有全文/数据证据）→ 修改；需人工 → 登记 PROJ_STATE 已知问题」处置。
+**入库后四方核对（2026-08 起，场景 B 收尾必做）**：论文全文 ↔ 作者分析代码（OSF dataPrep/SPSS 脚本）↔ 库内数据（CSV/JSON/Clean/raw）↔ OSF 原始导出，逐字段交叉 + **论文描述性统计核对**（论文报告的均值/正确率/方向，按作者脚本口径聚合；**2026-08-30 用户指示：只核对描述性统计，不复现统计检验/回归模型结果**——逐值/聚合数据一致性验证仍必做，见 §清洗工具「作者脚本逐值验证法」）。2026-08 QJEP 案例：四方核对发现作者 data_clean.csv 列错位致论文统计量基于错位数据（库内数据正确），详情报 `3_Reports/3_Reports/Verifying_original_results_issues.md（Issue 1）`；核对脚本固化于 `2_Code/qjep_verify/`。发现的问题按「可自动确定（有全文/数据证据）→ 修改；需人工 → 登记 PROJ_STATE 已知问题」处置。
 
 **试点验证（2026-08）**：Vicovaro_2022_JEPHPP（Journal）与 Navon_2021_psyarxiv（Preprint）的 paper JSON 草稿字段（title/authors/year/journal）与现有文件完全一致；Sui_2014_unpub（unpublished）走手工模板。
 **阶段 1 批量回填（2026-08-27）**：Lee/Smith/Svensson/Orellana 4 研究 10 JSON + 6 Codebook——[C] Crossref 核对、[P] 全文来源（Smith=REF/ html、Svensson=PMC XML、Orellana=Springer html、Lee=eprints PDF+补充材料）、[D] Clean 行数÷被试数；两级校验全绿（90 JSON EXIT=0；59 Clean 0 ERROR）。

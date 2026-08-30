@@ -32,6 +32,7 @@ mode: primary
 
 ### 其他重要文档：
 - `3_Reports/Table1_Issues_Solvability.md` — **Table 1 问题可解性分析**：逐项判定稿件 Table 1 差异的可解性（可自动确定 / 需人工），与 PROJ_STATE.md 双向关联（未解决清单 ↔ 可解性判定）；依据 `Generate_Table1.qmd` 输出的 `table1_problems.txt`。
+- `3_Reports/Verifying_original_results_issues.md` — **作者原始结果验证问题统一记录处**：入库四方核对中发现作者/OSF 原始产物与论文或数据不一致、或论文统计量无法复现的问题，一律记录于此（不再单独建文档）；正文见该文件头部，AGENTS/PROJ_STATE 只放指针。
 - `REF/README_html2md.md` — **REF 全文 HTML → MD 转换管线使用说明**：`REF/html2Json.py`（HTML→JSON）+ `REF/json2md.py`（JSON→MD）的批量用法、摘要验收清单、新模板适配；全文正文归属本文件，AGENTS/PROJ_STATE 只放指针。
 
 ## 项目总体逻辑（单向数据管道）
@@ -86,7 +87,7 @@ mode: primary
 - **删除文件必须万分谨慎，尤其是不在 git 中记录的文件**（2026-08-28 教训：`REF/` 全目录被 `.gitignore` 忽略，一次清理 `_files` 删 390 文件 + 误删 Scheller html/json/md 均不可恢复，用户重新下载才找回）。操作纪律：① 删除前先 `git check-ignore <路径>` / `git ls-files` 确认是否被跟踪——不被跟踪的文件 `rm` 即永久丢失；② 批量删除前先列出「将被删除清单」并向用户确认保留策略（如"只删 js/css，图片全保留"），不要自作主张按引用白名单删；③ 非明确垃圾（0 字节残留、浏览器缓存）以外的删除，先 `mv` 到 `REF/_trash_<日期>/` 暂存，用户确认后再物理删除；④ 删除后立即汇报删了什么（文件数+类别），便于用户及时发现误删；⑤ 对用户的删除指令理解不确定时（如"删整个文件夹"），先复述删除范围再执行，不要扩大范围。
 - **工具若含绝对路径，先确认它读的就是当前文件**：校验器/扫描脚本可能硬编码已迁移的旧路径（如 `analyze_csv_blanks.py` 曾指向 `/Volumes/T3/...`），运行时读到旧副本且输出"恰好与预期一致"会掩盖错误。改数据前 `grep` 工具源码确认数据源路径；改后重跑若输出异常，先怀疑工具路径而非数据本身。
 - **编辑文档追加条目时用将被保留的现有文本作锚点**：edit 的 oldString 不要误取整条历史记录（曾把 PROJ_STATE「项目迁移」条目整体替换掉）；改后立即 grep 确认旧内容仍在。
-- **CSV 字节保真编辑（Dataset_inf.csv）读取/写入纪律**（2026-08-28 教训：加 `subj_Group` 列时 `r[0]` 误当 Folder_Name（实为 ID 列）致 74 行组名全失配填 All——值合法、validator 不报错，靠抽查非默认值行数才暴露）。操作纪律：① 引号风格为 **QUOTE_MINIMAL**（仅含逗号/特殊字符的字段加引号），勿凭 `head` 拆分输出臆断为全字段引号；改前先做往返测试（读入原样写出，diff 应为 0）确认格式可复现；② 原文件**末行无换行符**，csv.writer 默认每行加行尾——写入后 truncate 掉末尾 `\r\n` 才字节保真；③ 读字段一律用 `header.index('列名')` 定位索引再取值，**禁止假设 `r[0]`/`r[1]` 的列顺序**；④ 改后三重验证：diff 仅目标列变化 + 非目标列 0 差异 + 抽查非默认值行数符合预期（"值合法但内容错"validator 检测不到，靠人工核对兜底）。**⑤ 非主索引 CSV（`*_subj_info.csv` 等）格式各异**（2026-08-30 教训：往返测试连败 2 次才发现 subj_info 是 UTF-8 无 BOM + LF 行尾，与 Dataset_inf 的 BOM+CRLF 不同）——编辑前先 `xxd`/`head -c` 检测 BOM 与行尾，按原格式写回（含末行无换行），往返测试按检测结果放宽末尾行尾。
+- **CSV 字节保真编辑（Dataset_inf.csv）读取/写入纪律**（2026-08-28 教训：加 `subj_Group` 列时 `r[0]` 误当 Folder_Name（实为 ID 列）致 74 行组名全失配填 All——值合法、validator 不报错，靠抽查非默认值行数才暴露）。操作纪律：① 引号风格为 **QUOTE_MINIMAL**（仅含逗号/特殊字符的字段加引号），勿凭 `head` 拆分输出臆断为全字段引号；改前先做往返测试（读入原样写出，diff 应为 0）确认格式可复现；② 原文件**末行无换行符**，csv.writer 默认每行加行尾——**往返测试必须先把 writer 自动追加的末尾 `\r\n` 截掉（`out = out[:-2]`）再与原文件比较**：直接比较必然 False，那是格式预期差异而非内容差异，先截断；截断后仍 False 的部分才是需要查的真差异。写入时同样 truncate 掉末尾 `\r\n` 才字节保真（2026-08-30 教训：Hobbs 入库编辑时再次撞 `roundtrip equal: False` 才想起截断——测试环节就要先截断，不要等 diff 失败再定位）；③ 读字段一律用 `header.index('列名')` 定位索引再取值，**禁止假设 `r[0]`/`r[1]` 的列顺序**；④ 改后三重验证：diff 仅目标列变化 + 非目标列 0 差异 + 抽查非默认值行数符合预期（"值合法但内容错"validator 检测不到，靠人工核对兜底）。**⑤ 非主索引 CSV（`*_subj_info.csv` 等）格式各异**（2026-08-30 教训：往返测试连败 2 次才发现 subj_info 是 UTF-8 无 BOM + LF 行尾，与 Dataset_inf 的 BOM+CRLF 不同）——编辑前先 `xxd`/`head -c` 检测 BOM 与行尾，按原格式写回（含末行无换行），往返测试按检测结果放宽末尾行尾。
 - 字段语义类约定（License=数据许可 / Country-City=数据采集地 / Email 以 CSV 为准 / 多任务口径 / 全文核查）见 `spe-database-curation` 技能（SKILL.md），此处不重复。
 
 ### 会话收尾（强制）
@@ -99,13 +100,16 @@ mode: primary
 ## Project context
 
 - **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
-  **43 studies / 81 rows** per `Dataset_inf.csv` (35 curated
-  folders on disk + 8 pending entries, 2026-08-30 verified) using the self-matching task
+  **46 studies / 88 rows** per `Dataset_inf.csv` (39 curated
+  folders on disk + 7 pending entries, 2026-08-30 verified; 2026-08-30
+  added Orellana-Corrales_2020_ExpPsych, Vicovaro_2024_PeerJ,
+  Zhang_2024_PsychJ; 2026-08-30 Hobbs_2023_PsychMed 入库, 38→39 文件夹 /
+  8→7 pending) using the self-matching task
   (Sui, He & Humphreys 2012). Earlier published counts (44 papers / 70 datasets /
   3603 participants) refer to the manuscript and have NOT been re-verified against
   the CSV. Companion to a preregistered meta-analysis (OSF: euqmf).
 - **Structure**:
-  - `1_Data/` — 35 study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
+  - `1_Data/` — 39 study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
     master index (legacy `Dataset_inf.xlsx` outdated — pending deletion after
     collaborators confirm the CSV). Each folder contains:
     - raw data: `*_raw.csv` (trial-level), `*_subj_info.csv` (subject-level),
@@ -178,13 +182,14 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   `Wozniak_2020_PLOS` (DOI `10.1371/journal.pone.0235627`, OSF `osf.io/2q9w7`) but no
   `1_Data/Wozniak_2020_PLOS/` folder exists — expected, data not yet curated.
   Paper = Woźniak & Hohwy, PLOS ONE, 2020.
-- **8 more CSV `Folder_Name` entries have no folder (verified 2026-08-30)**: `Bukowski_2021_ActaPsych`,
-  `Golubickis_2021_ActaPsych`, `Hobbs_2023_PsychMed`, `Hu_2023_SDB`, `Mcivor_2021_EJN`,
+- **7 more CSV `Folder_Name` entries have no folder (verified 2026-08-30)**: `Bukowski_2021_ActaPsych`,
+  `Golubickis_2021_ActaPsych`, `Hu_2023_SDB`, `Mcivor_2021_EJN`,
   `Scheller_2026_elife`, `Svensson_2022_PsychRes`,
   `Wozniak_2020_PLOS` — listed in Dataset_inf.csv but no `1_Data/` folder; expected
   pending/uncatalogued, do NOT "fix". The validator (`validate_json_metadata.R`)
-  whitelists all of them (`known_pending` list); `Generate_Table1.qmd` excludes all 8
-  from the generated Table 1. (2026-08-30: `Orellana-Corrales_2023_QJEP` 已入库，
+  whitelists all of them (`known_pending` list); `Generate_Table1.qmd` excludes
+  folderless entries from the generated Table 1 (dynamic keep-by-folder logic).
+  (2026-08-30: `Orellana-Corrales_2023_QJEP` 与 `Hobbs_2023_PsychMed` 已入库，
   移出本清单与白名单。)
 - **Manuscript Table 1 vs data has known discrepancies (verified 2026-08)**: Exp-number
   copy-paste errors (e.g. `P5E1`–`P5E3` all labeled "Exp4" in the manuscript),
