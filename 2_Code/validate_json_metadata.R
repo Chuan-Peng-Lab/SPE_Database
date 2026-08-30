@@ -157,10 +157,16 @@ dataset_inf <- file.path(data_dir, "Dataset_inf.csv")
 # Known-pending studies: listed in Dataset_inf.csv but data not yet curated
 # (documented in AGENTS.md). Add new pending entries here explicitly.
 known_pending <- c(
-  "Bukowski_2021_ActaPsych", "Golubickis_2021_ActaPsych", "Hobbs_2023_PsychMed",
+  "Bukowski_2021_ActaPsych", "Golubickis_2021_ActaPsych",
   "Hu_2023_SDB", "Mcivor_2021_EJN",
   "Scheller_2026_elife", "Svensson_2022_PsychRes", "Wozniak_2020_PLOS"
 )
+
+# Known un-listed folders: input-zone folders whose data arrived but that are
+# not yet ingested into Dataset_inf.csv (stage-5 ingestion in progress).
+# Mirror of known_pending in the opposite direction; remove once the study is
+# listed in the CSV. (Currently none.)
+known_unlisted <- character(0)
 
 folders <- list.dirs(data_dir, recursive = FALSE, full.names = FALSE)
 folders <- folders[!grepl("^\\._", folders)]  # drop AppleDouble sidecars
@@ -184,6 +190,7 @@ if (!file.exists(dataset_inf)) {
 
     # (a) folders with no matching row in Dataset_inf.csv
     no_listing <- setdiff(folders, listed)
+    no_listing <- setdiff(no_listing, known_unlisted)
     if (length(no_listing))
       report("FOLDER NOT IN DATASET_INF: %s (no Folder_Name row in %s)",
              paste(no_listing, collapse = ", "), basename(dataset_inf))

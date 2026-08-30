@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "Physical_Environment": {
+      "Location": "Department of Psychology, University of Bath",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "PC with keyboard (m/n keys, assignment counterbalanced per participant)",
+        "Monitor": "/",
+        "Software": "PsychoPy"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "3 task conditions (self: names of self/friend/stranger; emotion: happy/neutral/sad faces; reward: £9/£3/£1) x 2 matching conditions (matching, non-matching)"
+    },
+    "Block_Structure": {
+      "Block_number": "2 blocks per task condition (60 trials each); 3 task conditions completed sequentially in counterbalanced order (group A-F = 6 orders)",
+      "Trial_number": "360 trials per participant (3 tasks x 120 = 3 x 2 blocks x 60)",
+      "Practice_trials": "/ (practice rows exist in the raw export but trial-level practice data were removed during anonymization; count not recoverable)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "200 ms",
+      "Stimulus_duration": "100 ms (self and reward tasks) / 150 ms (emotion task, greater visual stimulus complexity)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1100 ms",
+      "ITI": "0.9-1.3 s",
+      "Feedback_duration": "500 ms ('correct' / 'incorrect' / 'too slow')"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Geometric shapes, 3 per task condition: self task {circle, square, triangle}, emotion task {star, rectangle, hexagon}, reward task {diamond, oval, pentagon}; shape-label assignment counterbalanced per participant",
+      "Label": "Self condition: participant's own first name, a friend's first name, a stranger's first name (names removed during anonymization, category recovered from data); emotion condition: happy/neutral/sad face pictures; reward condition: £9/£3/£1 (raw data record the number 9/3/1, a pound sign was displayed before it - data dictionary note)",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "schema_version": "2",
+    "Collected_date": "2018-10 to 2019-05",
+    "detail": "Associative learning task (Sui & Humphreys 2015b-style shape-label matching). Trial structure per participant: 360 formal trials = 3 task conditions (counterbalanced order) x 2 blocks x 60 trials; matching:non-matching = 60:60 per task (3 matching combinations x 20 trials, 6 non-matching combinations x 10 trials). Data source: raw_associative_anon.xlsx from the University of Bath Research Data Archive (researchdata.bath.ac.uk/924, DOI 10.15125/BATH-00924, CC BY 4.0; readme declares collection at University of Bath, ethics committee approval 18-167); the .xlsx version is authoritative (the companion .csv has representation-level differences - NA encoding, shape assignment columns; the author cleaning script Associative_cleaning.R also reads the .xlsx). Formal trials identified by non-missing trials.thisN (same as the author script; practice and inter-task transition rows excluded). The Shape column holds the label category of the shape presented (Target column identical, redundant); the Label column holds the presented label content (emotion words / reward numbers 9-3-1 / NA in the self task where real names were deleted during anonymization). Matching = CorrectAnswer Yes/No (author equivalence). Current-trial geometric shape recovered from the per-participant assignment columns (*_shape, constant per participant; the lowercase trial_shape_* columns were dropped for the emotion/reward tasks during anonymization). ACC: 1 correct / 0 incorrect / NA no response (keys NA); RT_ms = round(rt x 1000), no response NA; RT <200 ms kept as-is (minimal preprocessing; the paper excludes RT <200 ms (0.8%) and no-response (8%) trials in its analyses). N = 144 participants, no subject-level exclusion for this task. Identity standardization (user decision 2026-08-30): self task names self/friend/stranger -> Self/Close/Stranger; emotion faces -> NonPerson (non-identity stimuli, QJEP furniture precedent); reward £9/£3/£1 kept verbatim (Lee_2023 E2 precedent); shape-side Standardized = the identity bound to that shape (same as label side). Verification 2026-08-30 (2_Code/hobbs_verify/): trial-level data identical to the author associative_df_trial_anon.csv (51840 rows: Task/Shape/Matching/RT within 1 ms/ACC); collapsed aggregates (1296 subject x task x stimuli cells, author exclusion of RT <200 ms and no-response before aggregation) identical to associative_long_matching_collapsed_anon.csv; all 48 b coefficients of paper Table 2 (accuracy and RT predictors per task condition on PHQ-9/BDI-II) reproduced within +/-0.011. [D] data-derived, [P] paper, [C] code/README."
+  }
+}
