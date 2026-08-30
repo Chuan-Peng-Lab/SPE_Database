@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "Physical_Environment": {
+      "Location": "Anhui Medical University",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "PC with keyboard (keys m/n, match key depends on keyMode right/left)",
+        "Monitor": "1920 x 1080",
+        "Software": "MATLAB + Psychtoolbox"
+      },
+      "Viewing_distance": "90 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (shape: self-associated vs other-associated)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "20 practice trials (accuracy >= 80% required to proceed, per paper)",
+      "Block_number": "2 blocks",
+      "Trial_number": "216 experimental trials (3 matching combinations x 36 + 6 nonmatching combinations x 18)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms (shape-label pair; program p.stimDuration)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "500 ms judgement window (program p.judgeTime; exact deadline not stated in paper)",
+      "ITI": "1500 ms (program p.ISI)",
+      "Feedback_duration": "/ (not reported in paper)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Geometric shapes (stimulus files Associate1-3.bmp; user-verified 2026-08-30: Associate1 = triangle, Associate2 = square, Associate3 = circle). Identity binding fixed per program (shape code i paired with label code i): triangle = you (self), square = friend, circle = stranger.",
+      "Label": "English words: you, friend, stranger (you_EN/friend_EN/stranger_EN.bmp)",
+      "Colors": {
+        "Stimulus": "Black (fgColor [120 120 120] set but shapes/text rendered dark)",
+        "Background": "/"
+      }
+    },
+    "schema_version": "2",
+    "Collected_date": "/",
+    "detail": "Experiment 1 training phase (associative-learning task = matching task stored here). 3 identities: you/friend/stranger (label codes 1/2/3 per program Associate_shape.m; shapes user-verified: 1=triangle=you, 2=square=friend, 3=circle=stranger; matching combinations (1,1)(2,2)(3,3) x 36, nonmatching 6 combinations x 18; 2 blocks x 108 trials; keys m (nonmatch)/n (match), match key 2 for keyMode=right else 1; RespKey 0 = no response). Shape/Label columns store the actual stimuli (shape names / label words you-friend-stranger), numeric codes kept in ShapeCode/LabelCode and the Origin identity columns. Data: 43 participant .mat files x 216 trials (paper: 46 tested, 4 excluded for poor catch-trial performance -> 42 analyzed; database keeps all 43 with data, N=43). RT in ms (0 = no response -> NA). No demographics in .mat (paper: 33 females, M age 19.69 +- 1.98). Paper reports the matching task as associative-learning validation (self-advantage); SPE direction verified in the database. Ethics: Anhui Medical University. Source: paper full text (Wiley HTML) + data and procedure.zip; [P] paper, [D] data, [C] code."
+  }
+}

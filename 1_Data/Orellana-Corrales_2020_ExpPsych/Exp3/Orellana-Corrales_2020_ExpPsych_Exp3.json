@@ -1,0 +1,44 @@
+{
+  "exp3": {
+    "Physical_Environment": {
+      "Location": "University of Tübingen",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "Standard computer mice",
+        "Monitor": "Acer Aspire E15 35-573G-54SK 15.6-in laptop",
+        "Software": "E-Prime 2.0 (Schneider et al., 2002)"
+      },
+      "Viewing_distance": "50 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (shape: self-associated vs stranger-associated)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "4 practice trials",
+      "Block_number": "1 block (E-Prime cycle 1-32, 4 trials each)",
+      "Trial_number": "128 experimental trials"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "Until response or maximum 1500 ms (shape-label pair)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1500 ms",
+      "ITI": "500 ms black screen at trial start",
+      "Feedback_duration": "/ (feedback 'incorrect'/'please respond faster' on error or timeout)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Geometric shapes (circle Kreis.png and triangle Dreieck.png), approx 5 degrees x 5 degrees visual angle",
+      "Label": "German words: Ich (I), Fremder (stranger); Courier New 18-pt, approx 0.7 degrees visual angle",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Black"
+      }
+    },
+    "schema_version": "2",
+    "Collected_date": "2020-09 to 2020-10",
+    "detail": "Study 3: matching task presented BEFORE the dot-probe task (order inversion to rule out association being produced by task completion); dot-probe had 24 practice + 240 trials (database stores matching task only). Matching task identical to Studies 1/2. Data: 36 participants x 128 trials (rawDataMerge.tsv from OSF umv5p; E-Prime Subject numbers entered as session numbers, corrected as Subject+Session-1 per author participantSession.txt). Paper analysis N=34 (SPSS FILTER excludes Subjects 6 and 33: one prior participation, one dot-probe RT outlier; abstract N=35 appears to be a typo). Paper matching-task statistics could NOT be reproduced from any available data version (uploaded mt_data.lst is an un-corrected 17-row intermediate with Subject 1 = merged aggregate of 20 sessions; 3 subjects have empty cells - 0 correct trials - under any filtering; author mt_data.sav not uploaded) - see 3_Reports/3_Reports/Verifying_original_results_issues.md (Issue 2). Source: paper full text + OSF umv5p merge file; [P] paper, [D] data."
+  }
+}

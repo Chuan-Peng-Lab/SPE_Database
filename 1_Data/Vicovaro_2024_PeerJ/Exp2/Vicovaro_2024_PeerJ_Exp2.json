@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "Physical_Environment": {
+      "Location": "University of Padova",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "PC with keyboard (A/L keys, assignment counterbalanced)",
+        "Monitor": "1024 x 768, 60 Hz",
+        "Software": "PsychoPy (Peirce et al., 2019)"
+      },
+      "Viewing_distance": "57 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (shape: self-associated 'you' vs stranger-associated)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "/ (not disclosed in paper; no practice rows in data)",
+      "Block_number": "2 blocks (120 trials each)",
+      "Trial_number": "240 experimental trials (4 shape-word combinations x 60)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "/",
+      "Stimulus_duration": "100 ms (shape and word presented simultaneously)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1000 ms",
+      "ITI": "/ (blank display after stimulus)",
+      "Feedback_duration": "500 ms ('ok'/'no'/'too slow' on correct/incorrect/timeout)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Geometric shapes (circle and square), approx 6.7 degrees height (words 3 degrees below fixation, approx 0.7 degrees height)",
+      "Label": "English words: you, stranger; black text on medium grey background (RGB 0.502)",
+      "Colors": {
+        "Stimulus": "Black",
+        "Background": "Medium grey (RGB 0.502, 0.502, 0.502)"
+      }
+    },
+    "schema_version": "2",
+    "Collected_date": "/",
+    "detail": "Experiment 2: same design as Experiment 1 with emphasis on social causality (identity-role association counterbalanced across two blocks of animations). Matching task identical (240 trials, 2 blocks). Data: 64 participants x 240 trials (author export 1_Matching_Task_2.csv; Italian column names ruolo/corrispondenza/key_resp_2.rt; RT already in ms - value range 0.33-1082 identical to Exp1, do NOT re-scale from seconds). Participants 14 and 16 excluded only from causality analyses; matching-task data of all 64 participants retained. Paper reports the matching task qualitatively only; SPE direction verified in the database. Shape-identity binding (circle=you vs square=you, counterbalanced) recovered per subject from the author's OrdineP1-40.xlsx files (experiment code, extracted 2026-08-30: 4 circle + 4 square alternating, subjects 1-40) and extrapolated by the same alternation for subjects 41-64 (Ordine files not uploaded; user-approved extrapolation, noted in CSV/Codebook); the raw data column ShapeIdentity keeps the author's identity values. Source: paper full text (PeerJ HTML) + OSF e6hd7; [P] paper, [D] data, [C] code."
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "Physical_Environment": {
+      "Location": "Anhui Medical University",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "PC with keyboard (keys m/n, match key depends on keyMode right/left)",
+        "Monitor": "1920 x 1080",
+        "Software": "MATLAB + Psychtoolbox"
+      },
+      "Viewing_distance": "90 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (shape: self-associated vs other-associated)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "20 practice trials (accuracy >= 80% required to proceed, per paper)",
+      "Block_number": "2 blocks",
+      "Trial_number": "216 experimental trials (3 matching combinations x 36 + 6 nonmatching combinations x 18)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms (shape-label pair; program p.stimDuration)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "500 ms judgement window (program p.judgeTime; exact deadline not stated in paper)",
+      "ITI": "1500 ms (program p.ISI)",
+      "Feedback_duration": "/ (not reported in paper)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Geometric shapes (stimulus files Associate1-4.bmp; user-verified 2026-08-30: Associate1 = square, Associate2 = triangle, Associate3 = circle, Associate4 = pentagon). Identity binding per program: square = you, triangle = stranger; circle (3) and pentagon (4) are the two NEUTRAL shapes not associated with any label.",
+      "Label": "English words: you, friend, stranger (you_EN/friend_EN/stranger_EN.bmp)",
+      "Colors": {
+        "Stimulus": "Black (fgColor [120 120 120] set but shapes/text rendered dark)",
+        "Background": "/"
+      }
+    },
+    "schema_version": "2",
+    "Collected_date": "/",
+    "detail": "Experiment 2 training phase. 2 identities: you/stranger (label codes 1/2) plus two NEUTRAL shapes not associated with any label (shape codes 3/4 = circle/pentagon, appearing only in nonmatching trials; standardized as NonPerson). The neutral shapes are an explicit design feature, NOT an error: the paper states 'two neutral shapes, not associated with any labels, were introduced (see Figure 3 and Appendix A)', the program Associate_shape.m hard-codes factors [1,1;1,1;1,1;2,2;2,2;2,2;2,1;3,1;4,1;1,2;3,2;4,2] including the four neutral-shape-label combinations, and the data match exactly (4 combinations x 10 trials = 40 trials per participant). Matching task: 120 trials = 2 blocks x 60 (matching (1,1)(2,2) x 30, nonmatching 6 combinations x 10). Test phase manipulated ISI (1000/3000 ms; not in database). Data: 36 participant .mat files x 120 trials (paper: 38 tested, 2 excluded -> 36 analyzed; error_data folder files are test/error runs, excluded). No demographics in .mat (paper: 27 females, M age 20.22 +- 1.99). Paper reports matching task significance only (Accuracy: self-stranger p < .001; RTs: self-stranger p < .001); SPE direction verified in the database. Source: paper full text + data and procedure.zip; [P] paper, [D] data, [C] code. The paper reports the matching-task analysis only as self vs stranger (Accuracy/RTs p < .001); whether the author analysis included the 40 neutral-shape trials (which carry no identity and cannot enter a self/stranger comparison) is not documented (Appendix A not available) - the database keeps all 120 trials per participant per minimal preprocessing; downstream self/stranger analyses should restrict to identity shapes (1/2)."
+  }
+}

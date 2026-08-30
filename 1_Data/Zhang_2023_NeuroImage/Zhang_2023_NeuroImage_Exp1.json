@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": ""
+    "detail": "Raw trial-level data not available: the public OSF repository (osf.io/hbrus) contains only aggregated behavioral scores (SPE_score, demographics, head motion, self-construal scales for 348 participants), fMRI connectivity matrices and analysis code - no per-trial matching-task exports. Per stage-4 criteria (complete Clean data with full documentation), *_raw.csv is exempted; the OSF behavioral aggregate files are archived in the study *_Raw/ input zone. Clean contains 346 participants x 96 formal trials (6 blocks x 16) plus practice rows (Block=NA); subj_info lists 347 (subject 101 has no Clean rows); paper analysis N=348 (380 recruited, 20 excluded for incomplete task/demographics, 12 for head motion). Stimulus labels in the raw data are Chinese (ni/shengren)."
   }
 }

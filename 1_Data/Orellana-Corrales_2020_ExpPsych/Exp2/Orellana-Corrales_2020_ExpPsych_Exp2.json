@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "Physical_Environment": {
+      "Location": "University of Tübingen",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "Standard computer mice",
+        "Monitor": "Acer Aspire E15 35-573G-54SK 15.6-in laptop",
+        "Software": "E-Prime 2.0 (Schneider et al., 2002)"
+      },
+      "Viewing_distance": "50 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (shape: self-associated vs stranger-associated)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "4 practice trials",
+      "Block_number": "1 block (E-Prime cycle 1-32, 4 trials each)",
+      "Trial_number": "128 experimental trials"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "Until response or maximum 1500 ms (shape-label pair)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1500 ms",
+      "ITI": "500 ms black screen at trial start",
+      "Feedback_duration": "/ (feedback 'incorrect'/'please respond faster' on error or timeout)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Geometric shapes (circle Kreis.png and triangle Dreieck.png), approx 5 degrees x 5 degrees visual angle",
+      "Label": "German words: Ich (I), Fremder (stranger); Courier New 18-pt, approx 0.7 degrees visual angle",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Black"
+      }
+    },
+    "schema_version": "2",
+    "Collected_date": "2019-03 to 2019-05",
+    "detail": "Study 2: dot-probe task with long SOA (1000 ms, IOR) presented before the matching task. Matching task identical to Study 1. Data: 33 participants per author exp2_MT.lst (1-13, 15-34); raw txt exports available for 32 (Subject 34 has edat2 only, no txt/XML - trial-level data not recoverable, excluded from the database). Paper analysis N=31 (2 dot-probe RT outliers; IDs not disclosed in paper, determined by exhaustive enumeration as Subjects 24 and 30 - reproduced all paper statistics, see 2_Code/orellana2020_verify). Source: paper full text + OSF 3ke4f raw exports; [P] paper, [D] data."
+  }
+}

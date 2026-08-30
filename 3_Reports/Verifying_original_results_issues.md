@@ -1,4 +1,16 @@
-# Orellana-Corrales_2023_QJEP — 原作者数据分析产物错误详细说明
+# Verifying original results issues — 作者原始结果验证问题记录
+
+> **本文件用途**：统一记录「入库四方核对（论文 ↔ 作者代码/产物 ↔ 库内数据 ↔ 原始数据）中发现作者/OSF 原始产物与论文或数据不一致、或论文统计量无法复现」的问题。**后续遇到此类问题一律记录在此文件**（每个问题一个条目，含论文信息、问题描述、证据链、影响范围与处置），不再单独建文档。条目按发现时间顺序编号。
+
+**通用处置原则**（与 SKILL.md §入库后四方核对一致）：
+- 库内数据以原始数据为准重建并验证，作者产物问题**不影响库内数据**；
+- 发现的问题按「可自动确定（有全文/数据证据）→ 修改；需人工 → 登记 PROJ_STATE 已知问题」处置；
+- **是否联系作者由项目负责人决定**（超库范围不主动执行）；
+- 核对脚本固化于 `2_Code/`（qjep_verify/、orellana2020_verify/ 等）。
+
+---
+
+# Issue 1 — Orellana-Corrales_2023_QJEP：作者 data_clean.csv 列错位（2026-08）
 
 > **一句话结论**：OSF 官方仓库（osf.io/v8r2p）中作者的数据聚合文件 `data_clean.csv` 存在**列错位**（`in*` 与 `fm*` 两列互换），根源是作者脚本 `2-dataprep_mt.py` 的打印顺序与表头不一致；论文（QJEP 2023）匹配任务的全部统计量可**逐位精确复现自该错位文件**，导致论文两个主效应标签互换、两个中间格均值互换、非匹配试次 follow-up 方向反转、d′ 基于错位错误率计算。**本数据库（1_Data/Orellana-Corrales_2023_QJEP/）的数据自原始 PsychoPy 导出重建，正确无误，不受此问题影响。** SPE 定性结论在真实数据下依然成立。
 
@@ -158,3 +170,84 @@ GLM inRTmean fnRTmean ...        # in 列实为 f_m（家具-匹配）值
 - 论文全文：`REF/Orellana-Corrales_2023_QJEP.md`
 - 作者脚本：输入区 `Orellana-Corrales_2023_QJEP_raw/v8r2p-osfstorage-data-archive/`（data_clean.csv、data_merged.tsv、codebook .csv、data_raw/）；分析代码于 OSF "data and analysis/analysis code/"（1-mergeAndSubset.R、2-dataprep_mt.py、2-dataprep_iat.py、3-Syntax.sps、util.py）
 - 库内数据：`1_Data/Orellana-Corrales_2023_QJEP/Orellana-Corrales_2023_QJEP_Exp1_{raw,Clean,subj_info}.csv`、`Orellana-Corrales_2023_QJEP_clean.R`
+
+
+---
+
+# Issue 2 — Orellana-Corrales_2020_ExpPsych：作者产物问题多项（2026-08-30）
+
+ — 作者产物问题说明（2026-08-30 入库核对发现）
+
+论文：Orellana-Corrales, Matschke & Wesslein (2020), *Experimental Psychology* 67(6), DOI 10.1027/1618-3169/a000502（dot-probe 提示效应 + IOR 研究，匹配任务为 manipulation check；本库只收录匹配任务 trial 级数据，dot-probe 不入库）。
+
+库内数据（`1_Data/Orellana-Corrales_2020_ExpPsych/Exp{1,2,3}/`）经三重验证：① 每被试 128 试次守卫；② identity 自洽（匹配试次 shape 身份 == label 身份、非匹配相反，三实验一致率 1.0）；③ 与作者 LST 聚合逐值核对 0 差异（exp1_MT.lst 38 行、exp2_MT.lst 32 行、mt_data.lst 16 行可比部分）。**库内数据正确，本文件所述均为作者/OSF 侧问题。**
+
+## 1. 作者编号录入错误（已按作者脚本修正）
+
+E-Prime 的 Subject 号被误填为 Session 号（Study 3 = umv5p 存档）。作者自己的修正脚本 `participantSession.txt`（R 代码注释 *"Correct subject numbers entered as session numbers"*）：真实被试号 = Subject + Session − 1。36 个 session 文件 → 真实被试 1–36（dplocation_IOR-01-1 → 被试 1；dplocation_IOR-1-2..1-21 → 被试 2..21；dplocation_IOR-15-1 等 → 15、22–36），与论文 "36 participants completed Study 3" 吻合。Study 1/2（3ke4f 存档）文件名内 Subject 已唯一，无需修正。
+
+## 2. OSF 上传的 mt_data.lst 是未修正编号的中间产物
+
+`umv5p-osfstorage-archive/mt_data.lst` 仅 17 行（Subject = 1, 15, 22–36），其中 **Subject 1 行 = 未修正编号下 20 个 session 的合并聚合**（imACC=560 = 20×28、imRTsum=358371 等）。正确聚合应为 36 行。该文件与 `analysisSyntax.sps`（SPSS 分析读 mt_data.sav）不匹配：若按 17 行版分析，N=16（FILTER 排除 Subject 33），df=15，与论文 F(1,33) 不符——**作者实际分析用的 sav 版本未上传**（见 §5）。
+
+## 3. 三份 LST 的 Tukey RT 上限口径不一致
+
+作者 `util.py` 的 `tukey_all` 提供 q3+1.5×IQR 与 q3+3×IQR 两个上限；逐值核对实证：**exp1/exp2_MT.lst 用 1.5×IQR**（与论文 Methods "one and a half interquartile ranges" 一致），**mt_data.lst 用 3×IQR**（与上传脚本 `data_preparation_mt.py` 激活的 `grenze_type="grenze3_oben"` 一致）。三份产物口径不统一；论文 Methods 文本（1.5）与 Study 3 代码（3）亦不一致。库内核对按各产物实际口径进行（Exp1/2 用 1.5、Exp3 用 3），均 0 差异。
+
+## 4. Study 2 排除名单未公开（已由 agent 枚举确定）
+
+论文 Study 2 "33 completed, 2 excluded (dot-probe RT outliers) → N=31"，未公开编号；OSF 亦无 Study 2 的 SPSS 语法（3ke4f 仅有 exp1_analysis.sps）。agent 以 exp2_MT.lst 33 人聚合暴力枚举 33 选 2 排除组合（528 种），按论文三个统计量（matching F=29.72、nonmatching F=2.67、d' F=13.95）总差最小确定：**被排除者 = Subject 24 与 30**（总差 0.008，且 2×2 主效应 40.58/6.02/6.42 精确复现）。该结论已写入库内 Note。
+
+## 5. Study 3 匹配任务统计量无法复现（作者分析数据版本不可考）
+
+论文 Study 3 匹配任务报告 F(1,33)：shape 22.97、trial type 4.819、交互 28.88；matching 单因素 F=49.59（680.79 vs 830.94）；nonmatching F=0.54；d' F=5.99。**上述值无法从任何可得数据版本复现**：
+
+- 按上传 mt_data.lst（17 行未修正版）FILTER 后 16 行分析：F = 18.4 / 3.26 / 32.84（df=15），matching 27.88、d' 3.37 —— 与论文不符；
+- 按库内修正编号 36 人数据（作者口径 k=3、RT>200、ACC==1、round 均值）排除 6/33 后：**Subject 7、9、14 存在某格 0 个正确试次**（低表现被试：如 Subject 7 的 Ich-nonmatching 32 试次仅 4 个正确；任何过滤口径（含仅 ACC==1、无 RT 过滤）下均缺格），使 34 人无缺格分析不可能；枚举排除集（+7/9/14 子集）与过滤口径（k=1.5/3 × RT 下界 0/100/200）共 96 组合，均不匹配论文 F；
+- 作者 SPSS 分析文件 `mt_data.sav`（analysisSyntax.sps 引用）**未上传**，其聚合口径（含缺格处理）不可考。
+
+**结论**：论文 Study 3 匹配任务统计量基于一个未公开的数据版本；库内数据自洽且与作者上传聚合（16 行可比部分）逐值一致，**不受影响**。是否联系作者核实（如索要 mt_data.sav / 修正后的 36 行 LST）**由项目负责人决定**（与 QJEP 2023 列错位发现的处置模式一致）。
+
+## 6. Study 2 Subject 34 原始导出缺失（edat2 only）
+
+`exp2_rawData.zip` 含 32 名被试的 txt/edat2/XML 三件套 + Subject 34 的 **edat2 仅一份**（无 txt/XML）。edat2 为 E-Prime 二进制格式，无现成解析工具（pyedat2 不可安装），库内无法重建其 trial 级数据 → Exp2 raw/Clean/subj_info 均为 32 人（1–13、15–33）；作者 exp2_MT.lst 含 Subject 34 聚合（33 行）但缺其原始导出。已写入 CSV Note。
+
+## 复现证据摘要（Exp1/2 全部精确，库内数据 = 论文统计量）
+
+| 研究 | 统计量 | 论文值 | 复现值 |
+|---|---|---|---|
+| Exp1 (N=34) | shape / trial / int | 52.48 / 15.00 / 18.99 | 52.48 / 15.00 / 18.99 |
+| Exp1 | matching F (686 vs 874) | 50.73 | 50.73 (685.82 vs 874.00) |
+| Exp1 | nonmatching F (806.88 vs 858.12) | 7.68 | 7.68 |
+| Exp1 | d' F | 28.95 | 28.95 |
+| Exp2 (N=31, excl 24/30) | shape / trial / int | 40.58 / 6.02 / 6.42 | 40.58 / 6.02 / 6.42 |
+| Exp2 | matching F (765.45 vs 934.10) | 29.72 | 29.72 |
+| Exp2 | nonmatching F | 2.67 | 2.67 |
+| Exp2 | d' F | 13.95 | 13.95 |
+| Exp3 (N=34) | shape / trial / int | 22.97 / 4.819 / 28.88 | 无法复现（§5） |
+
+核对脚本：`2_Code/orellana2020_verify/`（README 说明各文件用途与口径）。
+
+---
+
+# Issue 3 — Wang_2016_JEPHPP：作者聚合导出与论文统计量近似吻合但未精确复现；论文 df 与报告 N 不符（2026-08）
+
+> **一句话结论**：论文（JEPHPP 2016）两个实验的匹配任务统计量可**方向性复现**（self 匹配 RT 最快，F 同量级）但**未逐位精确复现**（Exp1 switch match-RT F=32.1 vs 论文 43.29；Exp2 F=12.7 vs 17.35）；且论文全部统计 df(2,38) 隐含分析 N=20，与论文报告的 N=21（Exp1）/N=20（Exp2）部分不符（Exp2 数据实为 25 人）。**库内数据按作者聚合导出重建，Matching 判定与论文设计一致；统计差异疑因作者分析前未披露的试次/被试排除（如 RT 异常值剔除），不改变 SPE 定性结论。**
+
+- 论文：Wang, H., Humphreys, G., & Sui, J. (2016). Expanding and retracting from the self: Gains and costs in switching self-associations. *JEP: HPP, 42*(2), 247–256. DOI: 10.1037/xhp0000125
+- 数据来源：作者 E-Merge 聚合导出（`1_Data/Wang_2016_JEPHPP_Raw/` 输入区，Exp1/Exp2 × Association/Switch 各 1 份）
+- 核对时间：2026-08（阶段 4 重建后核对）
+- 背景：库内原 Exp1 五件套数据源错误（AssoMatc_Self 任务数据误作 Exp1，已归档 `*_Raw/AssoMatc_Self_archive/`），2026-08 由聚合导出重建 Exp1（21 人，编号 3-24 缺 23）与 Exp2（25 人，编号 1-25）
+
+## 1. 问题描述
+
+1. **论文 df 与报告 N 不符**：论文 Exp1 报告 21 名被试，但全部匹配任务统计 df 均为 (2,38)（隐含 n=20）；Exp2 报告 20 人、df(2,38) 一致——Exp1 的 21 人中疑有 1 人未纳入分析（论文未披露）。Exp2 数据 25 人（全部 648 试次/人完整）> 论文 20 人（排除名单未公开）。
+2. **统计量近似但未精确**：按论文设计规则（switch 新指令映射）重建 Matching 后，match 试次 RT 按 label 的 RM-ANOVA：Exp1 F=32.14（论文 43.29）、Exp2 F=12.74（论文 17.35）——方向一致（self < friend < stranger）且同量级，但未逐位复现。剔除任一单被试（leave-one-out）最高 F=37.14（Exp1），仍 <43.29。
+3. **Exp2 人口学不符**：数据 25 人 10 男/15 女（M=23.52）vs 论文 20 人 12 男——上传数据无法与论文分析样本对齐（20 人子集男数 ≤10 <12）。
+4. **Exp1 前 9 行 practice 判定**：每被试 657 行 = 9 practice（前 9 行，9 条件各 1，论文 "nine practice trials"）+ 648 正式；Exp2 数据 648 行/人无 practice 行（论文方法称两实验相同）。
+
+## 2. 处置
+
+- 库内 raw/Clean/subj_info 自作者聚合导出重建（`Wang_2016_JEPHPP_clean.R`），Matching = 新指令映射（Exp1: self→stranger/friend→self/stranger→friend；Exp2: self→friend/friend→stranger/stranger→self），与论文设计一致；
+- 统计差异已记录（本 Issue）；N 口径按数据（Exp1 21、Exp2 25）并记论文口径于 CSV Note；
+- **是否联系作者（排除名单/分析口径）由项目负责人决定**。

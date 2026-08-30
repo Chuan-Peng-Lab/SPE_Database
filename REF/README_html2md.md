@@ -15,7 +15,10 @@
 2026-08-28 新增：元数据取 `dc.*` meta、图取 IIIF 大图链接、跳过 assessment/下载链接/版权等 UI 区块）、
 **MDPI**（`html-bibr`/`html-p`，2026-08-28 新增）、**UC Press/Collabra**（`article-section-wrapper`，
 2026-08-28 新增）、**SAGE**（`biblioentry`，2026-08-28 新增，页面 meta 不全时用 METADATA_OVERRIDES）、
-**PLOS**（`ref-tip`/`toc-section`，2026-08-28 新增）。
+**PLOS**（`ref-tip`/`toc-section`，2026-08-28 新增）、**PeerJ**（`peerj.com` + `article-item-section-content`，
+2026-08-30 新增，元数据取 citation_* meta，正文取 main 内 `section/div.sec`，行内引用 `a.xref-bibr`
+由 inline() 兜底保留作者-年份文字）。Wiley 模板 2026-08-30 起在无 METADATA_OVERRIDES 时回退读页面
+citation_* meta（Kirk/Haciahmet 的 override 仍优先）。
 PsycNet（Wang_2016_JEPHPP）未适配——其 md 为人工转换，勿用本管线覆盖。
 
 ## 最快流程（新 HTML 进来时）

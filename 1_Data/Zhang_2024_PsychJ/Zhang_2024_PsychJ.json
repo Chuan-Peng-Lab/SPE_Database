@@ -1,0 +1,13 @@
+{
+  "Paper_name": "Can irrelevant self-related information in working memory be actively suppressed?",
+  "Summary": "This study examined whether task-irrelevant identity-associated information (self, friend, stranger) can be actively suppressed in working memory, using an irrelevant-distracting paradigm in which participants memorized colors while ignoring shapes during a memory array, then judged whether the test color matched the memorized one while the ignored shape features could also change. Both experiments consisted of two stages: a training phase (shape-label associative-learning task, i.e. the matching task stored in this database) followed by a test phase (irrelevant distracting task). In Experiment 1 (46 participants tested, 42 analyzed; labels self/friend/stranger), self-associated information survived the inhibitory effect. In Experiment 2 (38 tested, 36 analyzed; labels self/stranger plus two neutral shapes, ISI manipulated at 1000 vs 3000 ms), stranger-associated information showed an inhibitory effect at the long ISI while self-associated information remained uninhibited regardless of ISI. The associative-learning task confirmed the self-advantage in both experiments (self faster and more accurate than other identities).",
+  "Year": "2024",
+  "Author": "Quan Zhang, Tiangang Zhou, Jin Tang, Huanjun Xi",
+  "Journal": "PsyCh Journal",
+  "Country": "China",
+  "City": "Hefei",
+  "Extra_Var": "/",
+  "Email": "/",
+  "DOI": "10.1002/pchj.790",
+  "Conclusion": "Self-associated information can bypass the executive system and remain active in working memory processing: attended but outdated self-related features cannot be inhibited, whereas stranger-associated features were suppressed at a long maintenance interval (3000 ms) in Experiment 2."
+}

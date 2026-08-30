@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "/",
+      "Setting": "/",
+      "Equipment": {
+        "Presenting": "Personal computer",
+        "Monitor": "21-in. monitor (1,024 x 768 pixels, 100 Hz)",
+        "Software": "E-Prime software (Version 2.0)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching (switch assignment: self->friend, friend->stranger, stranger->self)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "9 practice trials (paper; no practice rows present in the data export)",
+      "Block_number": "8 blocks",
+      "Trial_number": "648 formal trials per participant (8 blocks x 81 = 9 conditions x 72); 648 rows per participant in data"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Shape first, then label (sequential)",
+      "SOA": "200 ms (blank between shape and label)",
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "Shape: 100 ms, Label: 100 ms",
+      "Response_deadline": "1,000 ms",
+      "ITI": "/",
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.8 degrees x 0.8 degrees",
+      "Shape": "3.6 degrees x 3.6 degrees",
+      "Label": "1.3-2.6 degrees x 1.3 degrees",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Rebuilt in 2026-08 stage 4 from the author's E-Merge aggregate CSV exports in the study *_Raw/ input zone (the previous in-repo Exp1 five-file set was found to be erroneous AssoMatc_Self task data, archived in *_Raw/AssoMatc_Self_archive/). Data contain 25 participants (IDs 1-25) x 648 switch trials each; the paper reports N=20 analyzed (12 male; data: 10 male/15 female, mean age 23.52, 18-30) without a published exclusion list - data-caliber N=25 kept, paper caliber in CSV Note. Two phases: Association (Part 1 learning, variable rows per participant, author export lacks the displayed-label column so Clean Label/Matching are NA) and Breaking (Part 2 switch matching, full Label/Identity/Shape columns). Matching = displayed label conforms to the new assignment: self->friend, friend->stranger, stranger->self (Identity column = the shape's Part 1 identity, fixed per participant; validated against paper RT direction: self match RT fastest). Exp1 labels in raw are capitalized (Self/Friend/Stranger), Exp2 lowercase (self/friend/stranger), kept verbatim in Label/Origin columns. ACC 1/0 with no-response -> NA. Paper statistics approximately reproduced (match RT F=12.7 vs 17.4 paper, same direction); exact reproduction not achieved - see 3_Reports/Verifying_original_results_issues.md (Issue 3)."
+  }
+}

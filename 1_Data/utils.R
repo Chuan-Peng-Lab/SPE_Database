@@ -104,8 +104,10 @@ parse_header <- function(lines) {
 
 # LogFrame 块中 Procedure == Matching 的块（每个返回一个具名列表）。
 # 中断被试（如 Orellana-Corrales_2021_APP Exp2 nonwords-01）末尾可有未闭合块
-# （无 LogFrame End），且未完成试次无 MT.ACC 记录——这类块不产出 trial 行。
-parse_matching_blocks <- function(lines) {
+# （无 LogFrame End），且未完成试次无 ACC 记录——这类块不产出 trial 行。
+# acc_field：ACC 结果变量的 E-Prime 列名（默认 "MT.ACC"；
+#   Orellana-Corrales_2020_ExpPsych 用 "match03.ACC"，2026-08 新增参数）。
+parse_matching_blocks <- function(lines, acc_field = "MT.ACC") {
   starts <- grep("\\*\\*\\* LogFrame Start", lines)
   ends <- grep("\\*\\*\\* LogFrame End", lines)
   stopifnot(length(ends) == length(starts) || length(ends) == length(starts) - 1)
@@ -122,7 +124,7 @@ parse_matching_blocks <- function(lines) {
         kv[[trimws(parts[2])]] <- trimws(parts[3])
       }
     }
-    if (is.null(kv[["MT.ACC"]])) next   # 未完成试次（中断时无记录）
+    if (is.null(kv[[acc_field]])) next   # 未完成试次（中断时无记录）
     out[[length(out) + 1]] <- kv
   }
   out

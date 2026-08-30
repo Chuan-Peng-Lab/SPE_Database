@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "Physical_Environment": {
+      "Location": "University of Tübingen",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "Standard computer mice",
+        "Monitor": "Acer Aspire E15 35-573G-54SK 15.6-in laptop",
+        "Software": "E-Prime 2.0 (Schneider et al., 2002)"
+      },
+      "Viewing_distance": "50 cm"
+    },
+    "Experimental_Design": {
+      "Conditions": "matching, nonmatching (shape: self-associated vs stranger-associated)"
+    },
+    "Block_Structure": {
+      "Practice_trials": "4 practice trials",
+      "Block_number": "1 block (E-Prime cycle 1-32, 4 trials each)",
+      "Trial_number": "128 experimental trials"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "Until response or maximum 1500 ms (shape-label pair)",
+      "SOA": "0 ms (simultaneous presentation)",
+      "Stimulus_order": "Simultaneous",
+      "Response_deadline": "1500 ms",
+      "ITI": "500 ms black screen at trial start",
+      "Feedback_duration": "/ (feedback 'incorrect'/'please respond faster' on error or timeout)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "Central fixation cross",
+      "Shape": "Geometric shapes (circle Kreis.png and triangle Dreieck.png), approx 5 degrees x 5 degrees visual angle",
+      "Label": "German words: Ich (I), Fremder (stranger); Courier New 18-pt, approx 0.7 degrees visual angle",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Black"
+      }
+    },
+    "schema_version": "2",
+    "Collected_date": "2019-04",
+    "detail": "Study 1: dot-probe task with short SOA (100 ms) presented before the matching task. Matching task: 4 practice + 128 trials, keys d (match) / k (nonmatch), response deadline 1500 ms with feedback. Data: 38 participants x 128 trials (rawData: conjunctSPE_short-XX-XX txt exports from OSF 3ke4f). Paper analysis N=34 (SPSS FILTER excludes Subjects 19/20/23/28, dot-probe RT outliers). Shape identity (self/stranger) derived from matching-trial shape-label correspondence (counterbalanced); verified against paper statistics (all F values reproduced exactly, see 2_Code/orellana2020_verify). Paper methods describe shapes as square and triangle but stimulus files are Kreis.png (circle) / Dreieck.png (triangle) - data take precedence (same deviation as Orellana-Corrales_2021_APP). Source: paper full text (PDF) + OSF 3ke4f raw exports; [P] paper, [D] data."
+  }
+}

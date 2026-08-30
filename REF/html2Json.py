@@ -647,17 +647,23 @@ def extract_wiley(soup, raw_html):
     if m:
         doi = m.group(0).rstrip('.')
     ov = METADATA_OVERRIDES.get(doi, {}) if doi else {}
-    data['title'] = ov.get('title')
-    data['authors'] = ov.get('authors', [])
-    data['journal'] = ov.get('journal')
-    data['volume'] = ov.get('volume')
-    data['issue'] = ov.get('issue')
-    data['pages'] = ov.get('pages')
-    data['published_date'] = ov.get('published_date')
+    # 页面 citation_* meta 作为缺省源（2026-08-30：Zhang2024_PsychJ 无 override 但 meta 齐全；
+    # Kirk/Haciahmet 的 override 优先，Kirk 页面无 meta 故输出不变）
+    meta = {m.get('name'): m.get('content') for m in soup.find_all('meta') if (m.get('name') or '').startswith('citation_')}
+    data['title'] = ov.get('title') or meta.get('citation_title')
+    data['authors'] = ov.get('authors') or [m.get('content') for m in soup.find_all('meta', attrs={'name': 'citation_author'}) if m.get('content')]
+    data['affiliations'] = ov.get('affiliations') or list(dict.fromkeys(
+        m.get('content') for m in soup.find_all('meta', attrs={'name': 'citation_author_institution'}) if m.get('content')))
+    data['journal'] = ov.get('journal') or meta.get('citation_journal_title')
+    data['volume'] = ov.get('volume') or meta.get('citation_volume')
+    data['issue'] = ov.get('issue') or meta.get('citation_issue')
+    p1, p2 = meta.get('citation_firstpage'), meta.get('citation_lastpage')
+    data['pages'] = ov.get('pages') or (f'{p1}-{p2}' if p1 and p2 else (p1 or None))
+    data['published_date'] = ov.get('published_date') or norm_date(meta.get('citation_publication_date') or meta.get('citation_date'))
     data['doi'] = doi
     ab = soup.select_one('div.abstract-group p')
     data['abstract'] = clean_text(ab.get_text(' ')) if ab else ''
-    data['keywords'] = []
+    data['keywords'] = [k.strip() for k in (meta.get('citation_keywords') or '').split(';') if k.strip()]
     # 参考文献（ul.rlist.separator > li[data-bib-id]）
     refs, refmap = [], {}
     for i, li in enumerate(soup.select('ul.rlist.separator > li[data-bib-id]'), 1):
@@ -1105,6 +1111,94 @@ def block_plos(el, refmap):
 
 
 # ============================================================
+# PeerJ（Vicovaro2024PeerJ，JATS 风格，2026-08-30 新增）
+#   页面特征：peerj.com 域名 + article-item-section-content
+#   元数据取 citation_* meta；正文 main > div > div.row-article-item-section
+#   > div.article-item-section-content > div > section/div.sec；
+#   行内引用 a.xref-bibr 的 href 为外部 DOI URL，inline() 兜底分支保留作者-年份文字；
+#   脚注仅取正文区外的 div.fn.article-footnote（fn-group 内的 div.fn 属声明区块，留正文）
+# ============================================================
+def extract_peerj(soup, raw_html):
+    data = {}
+    meta = {m.get('name'): m.get('content') for m in soup.find_all('meta') if (m.get('name') or '').startswith('citation_')}
+    data['title'] = meta.get('citation_title')
+    data['authors'] = [m.get('content') for m in soup.find_all('meta', attrs={'name': 'citation_author'}) if m.get('content')]
+    data['affiliations'] = [m.get('content') for m in soup.find_all('meta', attrs={'name': 'citation_author_institution'}) if m.get('content')]
+    data['journal'] = meta.get('citation_journal_title')
+    data['volume'] = meta.get('citation_volume')
+    data['issue'] = meta.get('citation_issue') or ''
+    data['pages'] = meta.get('citation_firstpage')
+    data['doi'] = meta.get('citation_doi')
+    data['published_date'] = norm_date(meta.get('citation_date'))
+    ab = soup.select_one('div.abstract')
+    data['abstract'] = clean_text(ab.get_text(' ')) if ab else ''
+    data['keywords'] = [k.strip() for k in (meta.get('citation_keywords') or '').split(';') if k.strip()]
+    # 参考文献（ul.ref-list > li.ref）
+    refs = []
+    for li in soup.select('ul.ref-list > li.ref'):
+        t = clean_text(li.get_text(' '))
+        if t:
+            refs.append(t)
+    data['references'] = refs
+    # 正文
+    data['body'] = []
+    content = soup.select_one('main div.row-article-item-section div.article-item-section-content')
+    if content is not None:
+        div0 = content.find('div', recursive=False)
+        if div0 is not None:
+            for sec in div0.find_all(['section', 'div'], class_='sec', recursive=False):
+                for el in sec.children:
+                    data['body'].extend(block_peerj(el, {}))
+    # 脚注（仅正文区外的 article-footnote；fn-group 内的 div.fn 已随声明区块入正文）
+    fns = soup.select('div.fn.article-footnote')
+    data['footnotes'] = [clean_text(fn.get_text(' ')) for fn in fns if fn.get_text(' ').strip()]
+    data['acknowledgements'] = ''
+    data['correspondence'] = ''
+    return data
+
+
+def block_peerj(el, refmap):
+    if not getattr(el, 'name', None):
+        return []
+    name = el.name
+    cls = ' '.join(el.get('class') or [])
+    out = []
+    if name in ('h2', 'h3', 'h4', 'h5') and 'heading' in cls:
+        t = clean_text(''.join(inline(c, refmap) for c in el.children))
+        if t:
+            out.append({'type': 'heading', 'level': int(name[1]), 'text': t})
+        return out
+    if name == 'p':
+        t = clean_text(''.join(inline(c, refmap) for c in el.children))
+        if t:
+            out.append({'type': 'paragraph', 'text': t})
+        return out
+    if name == 'figure' and 'fig' in cls:
+        img = el.select_one('img')
+        src = img.get('src') if img else None
+        cap = el.select_one('figcaption')
+        cap_txt = clean_text(cap.get_text(' ')) if cap else ''
+        if src:
+            out.append({'type': 'figure', 'caption': cap_txt, 'src': src})
+        elif cap_txt:
+            out.append({'type': 'figdesc', 'text': cap_txt})
+        return out
+    if name == 'figure' and 'table-wrap' in cls:
+        cap = el.select_one('div.caption')
+        tbl = el.find('table')
+        if tbl:
+            t = table_block(tbl, refmap)
+            t['caption'] = clean_text(cap.get_text(' ')) if cap else ''
+            out.append(t)
+        return out
+    if name in ('div', 'section', 'span'):
+        for c in el.children:
+            out.extend(block_peerj(c, refmap))
+        return out
+    return []
+
+
+# ============================================================
 # 主入口：单个 HTML → JSON（模板原结构 + 学术结构增强）
 # ============================================================
 def process_html_file(html_path: str):
@@ -1162,6 +1256,8 @@ def process_html_file(html_path: str):
             data = extract_sage(soup, html_content)
         elif 'ref-tip' in html_content or 'toc-section' in html_content:
             data = extract_plos(soup, html_content)
+        elif 'peerj.com' in html_content and 'article-item-section-content' in html_content:
+            data = extract_peerj(soup, html_content)
         else:
             data = {}
             print(f"⚠️ 未能识别的页面模板：{name}（仅保留基础字段）")

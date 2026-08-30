@@ -13,12 +13,12 @@
       "Viewing_distance": "/"
     },
     "Experimental_Design": {
-      "Conditions": "/"
+      "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching (switch assignment: self->stranger, friend->self, stranger->friend)"
     },
     "Block_Structure": {
-      "Practice_trials": "9 practice trials",
+      "Practice_trials": "9 practice trials (first 9 rows per participant in data, one per condition)",
       "Block_number": "8 blocks",
-      "Trial_number": "81 trials total"
+      "Trial_number": "648 formal trials per participant (8 blocks x 81 = 9 conditions x 72) + 9 practice = 657 rows per participant in data"
     },
     "Trial_Structure": {
       "Stimulus_order": "Shape first",
@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": ""
+    "detail": "Rebuilt in 2026-08 stage 4 from the author's E-Merge aggregate CSV exports in the study *_Raw/ input zone (the previous in-repo Exp1 five-file set was found to be erroneous AssoMatc_Self task data - 31 participants, person+reward stimulus parameters, collected 2013, not any experiment of this paper; archived in *_Raw/AssoMatc_Self_archive/). Data contain 21 participants (IDs 3-24, missing 23; paper N=21, 3 male/18 female, 19-27 yrs, M=22). Two phases: Association (Part 1 learning, variable rows per participant, author export lacks the displayed-label column so Clean Label/Matching are NA) and Breaking (Part 2 switch matching, 657 rows per participant = 9 practice + 648 formal; full Label/Identity/Shape columns). Matching = displayed label conforms to the new assignment: self->stranger, friend->self, stranger->friend (Identity column = the shape's Part 1 identity, fixed per participant; validated against paper RT direction: self match RT fastest, F=32.1 vs paper 43.3). Exp1 labels capitalized (Self/Friend/Stranger), Exp2 lowercase, kept verbatim in Label/Origin columns. ACC 1/0 with no-response -> NA. Paper statistics approximately reproduced (match RT F=32.1 vs 43.3 paper; all paper dfs (2,38) imply N=20 analyzed while paper reports 21 - see 3_Reports/Verifying_original_results_issues.md (Issue 3))."
   }
 }
