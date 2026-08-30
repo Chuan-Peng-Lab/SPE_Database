@@ -93,13 +93,20 @@ def cmd_osf_get(node, substr, out_dir):
             if kind == "folder":
                 walk(item["id"], os.path.join(prefix, name))
             elif substr.lower() in name.lower():
-                hits.append((os.path.join(prefix, name), item["id"]))
+                hits.append((os.path.join(prefix, name), item["id"],
+                             item["attributes"].get("guid")))
     walk(None)
     if not hits:
         sys.exit(f"[repo_fetch] OSF 项目 {node} 无文件名含 {substr!r} 的文件")
-    for full, fid in hits:
+    for full, fid, guid in hits:
         print(f"[repo_fetch] 下载 {full} ...")
-        url = f"{OSF_BASE}/files/{fid}/download"
+        # api.osf.io/v2/files/{fid}/download 返回 404（2026-08 实测）；
+        # osf.io/{fid}/download 需 GUID 而非内部 24-hex id（fid 会落到 SPA 页面）。
+        # 有效端点：osf.io/{guid}/download 或 files.osf.io/v1/resources/{node}/providers/osfstorage/{fid}
+        if guid:
+            url = f"https://osf.io/{guid}/download"
+        else:
+            url = f"https://files.osf.io/v1/resources/{node}/providers/osfstorage/{fid}"
         out_path = os.path.join(out_dir, os.path.basename(full))
         data = download(url, out_path)
         if args.md5:

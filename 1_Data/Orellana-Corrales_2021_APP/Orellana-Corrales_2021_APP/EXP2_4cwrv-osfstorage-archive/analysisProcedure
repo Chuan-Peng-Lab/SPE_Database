@@ -1,0 +1,11 @@
+#################################################################
+ Data Analyses - Step by Step
+#################################################################
+
+
+1) Merge raw data into one file using E-Merge. Save merged file as rawDataMerge TSV-file.
+
+2) Data cleansing using the Python Files "Data preparation" and "util". Data cleansing to be carried out separately for matching task and dot-probe task data.
+Save data as LST-files.
+
+3) Import LST-files into SPSS and analyse the data using the SPSS Syntax File.

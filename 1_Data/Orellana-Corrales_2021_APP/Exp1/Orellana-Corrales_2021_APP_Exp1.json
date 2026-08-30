@@ -39,6 +39,6 @@
         "Background": "Black"
       }
     },
-    "detail": "Association phase: participants instructed that a shape (square/triangle) denotes them and another denotes a stranger (no images presented). Matching task always presented last, after the dot-probe task. Response keys: d (match), k (nonmatch). Data contain 34 participants x 128 trials (CSV Valid_Subj 28; N caliber difference tracked in PROJ_STATE.md stage 4). Method source: paper full text (Springer)."
+    "detail": "Association phase: participants instructed that a shape (square/triangle) denotes them and another denotes a stranger (no images presented). Matching task always presented last, after the dot-probe task. Response keys: d (match), k (nonmatch). Data contain 34 participants x 128 trials (CSV Valid_Subj 28; N caliber difference tracked in PROJ_STATE.md stage 4). Method source: paper full text (Springer). 2026-08 four-way cross-check note: the paper methods describe the shapes as square and triangle, but the actual stimulus files are Kreis.png (circle) / Dreieck.png (triangle, original E-Prime export values) - paper wording deviates from the data; data take precedence."
   }
 }

@@ -157,6 +157,9 @@ Use me when you are:
   "Email": "…", "DOI": "…", "Conclusion": "…"
 }
 ```
+- **JSON 内容一律英文**（2026-08 用户指示）：paper/exp JSON 的字段值
+  （含 `detail` 注释）不使用中文；中文说明性内容放仓库中文文档
+  （PROJ_STATE.md / 3_Reports/ 报告）或清洗脚本注释。
 - `Year` must equal the folder year.
 - **`Country`/`City` 语义 = 数据采集地，不是作者单位**（2026-08 澄清）：paper JSON 曾误填作者单位（如通讯作者牛津但数据清华采集）；以数据来源为准——被试语言/姓名/采集年/第一作者单位。Dataset_inf.csv 与 paper JSON 需一致；发现 paper JSON 与 CSV 不一致时，先核数据采集地再决定是否同步更新 paper JSON。`Setting`=Online 时 `City` 可填 `/`。
   **采集地判定依据（2026-08 沉淀）**：① 论文直写采集地/被试语言/货币/招募机构（最强）；② **伦理委员会批准机构 = 数据采集机构**（惯例：论文声明获批的伦理机构即采集所在地，2026-08 案例：Constable_2020/Wozniak_2018 均经 Central European University 批准 → 采集地 Budapest）；③ 作者单位 + 全文环境描述（实验室采集）为佐证；④ 作者履历单位（如 Wozniak 的 Australia/Poland/Hungary）**不是**采集地依据。
@@ -236,7 +239,9 @@ Boundary rules for ambiguous keys:
   `Bekende→Friend→Close`. Typical origin-language mappings seen in the DB:
   Chinese `我→Self`, `她/他→Close`; Dutch `Ikzelf→Self`, `Vreemde→Stranger`,
   `Bekende→Close`; German `Ich→Self`, `Mutter→Close`, `Bekannter→Stranger`;
-  English `self→Self`, `friend→Close`, `stranger→Stranger`.
+  German `Möbel→furniture→NonPerson`（2026-08 QJEP 先例：中性对象类
+  furniture 归 **NonPerson**，非 Stranger）；English `self→Self`,
+  `friend→Close`, `stranger→Stranger`.
   Analyses must use the `*_Standardized_Identity` column.
   **非身份刺激特例（2026-08 P12 沉淀）**：非自我参照的刺激（如奖赏参照
   任务的货币金额 `£9`/`£1`，Lee_2023_Cognition E2）Standardized 按**原样**
@@ -360,10 +365,35 @@ Boundary rules for ambiguous keys:
   - `repo_fetch.py` — 数据仓库下载辅助（OSF / PsychArchives）：`osf-list`/`osf-get`
     （按文件名子串匹配下载）/`pa-search`/`pa-files`/`pa-get`；先列文件清单再下载，
     目标已存在拒绝覆盖（用法见脚本 docstring；P5 沉淀：先 --list 可发现仓库重复
-    上传/缺失，避免白下载）。
+    上传/缺失，避免白下载）。**2026-08 端点修复**：OSF 下载一律用
+    `osf.io/{guid}/download`（文件 GUID 取自 API `attributes.guid`）；
+    `api.osf.io/v2/files/{fid}/download` 已失效（404），`osf.io/{24hex-fid}/download`
+    会落到 SPA 页面——osf-get 已按此实现，勿回退。
   - `scan_raw.py` — 原始数据快速扫描：列名/行数/每被试行数（整除判定）/
     列值分布/两列交叉表；大文件用 `--sample N`（行数与被试统计仍全量流式）。
     阶段 4 判定 raw 完整性（如 Smith 48 vs 59）与还原任务结构用。
+- **E-Prime / PsychoPy 原始导出解析先例（2026-08 阶段 4/5 沉淀）**：
+  - **E-Prime `.txt` 日志（UTF-16LE）**：通用解析函数
+    `read_eprime_txt` / `parse_header` / `parse_matching_blocks` 已入
+    `1_Data/utils.R`（先例 `Orellana-Corrales_2021_APP_clean.R`）——
+    `readLines(encoding="UTF-16LE")` 直接读取（`rawToChar` 遇内嵌 nul 报错勿用）；
+    按 `*** LogFrame Start/End ***` 切块；**中断被试末尾可有未闭合块**（无 End
+    标记、无 MT.ACC 记录的未完成试次）→ 解析允许 start 比 end 多 1 且跳过无
+    记录块（案例：Orellana-2021 Exp2 nonwords-01 仅 68/128 试次，源数据问题）。
+  - **PsychoPy 每被试导出（宽格式 csv）**：先例 `Orellana-Corrales_2023_QJEP_clean.R`
+    ——v1~v8 子目录 = 实验版本；RT 为秒需 ×1000 取整；**被试编号需与作者合并脚本
+    一致**（本库案例：作者 1-mergeAndSubset.R 按 v1→v8 文件序 rbind 后
+    `factor(date, levels=unique(date))` 编号，清洗脚本须复刻否则无法与作者聚合
+    文件对齐验证）；刺激字段（label/bild 等）可能仅存在于原始导出而被作者合并
+    产物丢弃——raw 重建优先用原始导出而非合并产物。
+  - **作者脚本逐值验证法（强验证，强烈建议）**：清洗脚本解析结果与作者合并/聚合
+    产物逐值对比（subject 编号、条件、ACC、RT×1000 取整），stopifnot 全等；
+    再按作者分析口径（正确试次、RT 阈值、每被试 Tukey 上限——**注意不同研究上限
+    倍数不同**：Orellana-2021 用 q3+3×IQR、QJEP 用 q3+1.5×IQR，hinge 法分位数）
+    复现论文统计量（±几 ms 内即一致）。2026-08 QJEP 案例证明其价值：作者
+    data_clean.csv 列错位（脚本打印顺序与表头不一致）导致论文统计基于错位数据，
+    被逐值核对发现；核对脚本固化于 `2_Code/qjep_verify/`，详情报
+    `3_Reports/Orellana-Corrales_2023_QJEP_Author_DataIssue.md`。
 
 ## Dataset_inf.csv 标准读取模板（2026-08）
 
@@ -413,6 +443,8 @@ Boundary rules for ambiguous keys:
 
 **收尾（场景 A/B 共用）**
 10. **落盘 + 校验 + 同步**：`cp` /tmp → 目标（exFAT 无原子写，先 /tmp 中转）；场景 B 更新 `Dataset_inf.csv`（每实验一行 `Folder_Name`+`Exp`，UTF-8 **带 BOM** 字节保真，不动 legacy `Dataset_inf.xlsx`）；`validate_json_metadata.R` EXIT=0 + `validate_clean_csv.R` 0 ERROR；场景 B 另需：`known_pending` 白名单移除 + `Generate_Table1.qmd` 重渲染（稿件比对默认关闭，仅稿件版本更新时 `--param compare_manu:true`）；更新 PROJ_STATE.md；exFAT 卫生（git 前清理 `._*`，绝不提交 `._*`/`.DS_Store`）。
+
+**入库后四方核对（2026-08 起，场景 B 收尾必做）**：论文全文 ↔ 作者分析代码（OSF dataPrep/SPSS 脚本）↔ 库内数据（CSV/JSON/Clean/raw）↔ OSF 原始导出，逐字段交叉 + **论文统计量复现**（按作者脚本口径，见 §清洗工具「作者脚本逐值验证法」）。2026-08 QJEP 案例：四方核对发现作者 data_clean.csv 列错位致论文统计量基于错位数据（库内数据正确），详情报 `3_Reports/Orellana-Corrales_2023_QJEP_Author_DataIssue.md`；核对脚本固化于 `2_Code/qjep_verify/`。发现的问题按「可自动确定（有全文/数据证据）→ 修改；需人工 → 登记 PROJ_STATE 已知问题」处置。
 
 **试点验证（2026-08）**：Vicovaro_2022_JEPHPP（Journal）与 Navon_2021_psyarxiv（Preprint）的 paper JSON 草稿字段（title/authors/year/journal）与现有文件完全一致；Sui_2014_unpub（unpublished）走手工模板。
 **阶段 1 批量回填（2026-08-27）**：Lee/Smith/Svensson/Orellana 4 研究 10 JSON + 6 Codebook——[C] Crossref 核对、[P] 全文来源（Smith=REF/ html、Svensson=PMC XML、Orellana=Springer html、Lee=eprints PDF+补充材料）、[D] Clean 行数÷被试数；两级校验全绿（90 JSON EXIT=0；59 Clean 0 ERROR）。

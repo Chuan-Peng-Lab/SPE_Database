@@ -67,3 +67,63 @@ read_dataset_inf <- function(root = NULL) {
   read.csv(path, stringsAsFactors = FALSE, check.names = FALSE,
            fileEncoding = "UTF-8-BOM", na.strings = c("", "NA"))
 }
+
+# ============================================================================
+# E-Prime 文本导出（*.txt，UTF-16LE）解析函数（2026-08 沉淀）
+# ----------------------------------------------------------------------------
+# 先例：Orellana-Corrales_2021_APP_clean.R（g7wrc/4cwrv E-Prime 导出重建 raw）；
+# 适用：E-Prime 的 .txt 日志（每被试一个文件，UTF-16LE 含 BOM）。
+# 要点：readLines(encoding="UTF-16LE") 直接读取（rawToChar 会因内嵌 nul 报错）；
+# 按 "*** LogFrame Start/End ***" 切块；中断被试（会话中途退出）末尾可有
+# 未闭合块（无 End 标记）——parse_matching_blocks 允许 start 比 end 多 1，
+# 且无 MT.ACC 记录的未完成试次块不产出 trial 行。
+# ============================================================================
+
+# 读取 UTF-16LE 文本（E-Prime 导出，含 BOM），返回行向量
+read_eprime_txt <- function(path) {
+  con <- file(path, open = "r", encoding = "UTF-16LE")
+  on.exit(close(con))
+  readLines(con, warn = FALSE)
+}
+
+# Header Start/End 之间的键值对（Subject/Age/Sex/Handedness/Condition 等）
+parse_header <- function(lines) {
+  i0 <- grep("\\*\\*\\* Header Start", lines)
+  i1 <- grep("\\*\\*\\* Header End", lines)
+  stopifnot(length(i0) == 1, length(i1) == 1, i1 > i0)
+  kv <- list()
+  for (ln in lines[(i0 + 1):(i1 - 1)]) {
+    m <- regexec("^\\s*([^:]+):\\s*(.*)$", ln)
+    if (length(m[[1]]) == 3 && m[[1]][1] != -1) {
+      parts <- regmatches(ln, m)[[1]]
+      kv[[trimws(parts[2])]] <- trimws(parts[3])
+    }
+  }
+  kv
+}
+
+# LogFrame 块中 Procedure == Matching 的块（每个返回一个具名列表）。
+# 中断被试（如 Orellana-Corrales_2021_APP Exp2 nonwords-01）末尾可有未闭合块
+# （无 LogFrame End），且未完成试次无 MT.ACC 记录——这类块不产出 trial 行。
+parse_matching_blocks <- function(lines) {
+  starts <- grep("\\*\\*\\* LogFrame Start", lines)
+  ends <- grep("\\*\\*\\* LogFrame End", lines)
+  stopifnot(length(ends) == length(starts) || length(ends) == length(starts) - 1)
+  out <- list()
+  for (i in seq_along(starts)) {
+    block_end <- if (i <= length(ends)) ends[i] - 1 else length(lines)
+    block <- lines[(starts[i] + 1):block_end]
+    if (!any(grepl("^\\s*Procedure:\\s*Matching", block))) next
+    kv <- list()
+    for (ln in block) {
+      m <- regexec("^\\s*([^:]+):\\s*(.*)$", ln)
+      if (length(m[[1]]) == 3 && m[[1]][1] != -1) {
+        parts <- regmatches(ln, m)[[1]]
+        kv[[trimws(parts[2])]] <- trimws(parts[3])
+      }
+    }
+    if (is.null(kv[["MT.ACC"]])) next   # 未完成试次（中断时无记录）
+    out[[length(out) + 1]] <- kv
+  }
+  out
+}

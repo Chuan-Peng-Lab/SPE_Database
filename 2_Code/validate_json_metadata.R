@@ -158,7 +158,7 @@ dataset_inf <- file.path(data_dir, "Dataset_inf.csv")
 # (documented in AGENTS.md). Add new pending entries here explicitly.
 known_pending <- c(
   "Bukowski_2021_ActaPsych", "Golubickis_2021_ActaPsych", "Hobbs_2023_PsychMed",
-  "Hu_2023_SDB", "Mcivor_2021_EJN", "Orellana-Corrales_2023_QJEP",
+  "Hu_2023_SDB", "Mcivor_2021_EJN",
   "Scheller_2026_elife", "Svensson_2022_PsychRes", "Wozniak_2020_PLOS"
 )
 

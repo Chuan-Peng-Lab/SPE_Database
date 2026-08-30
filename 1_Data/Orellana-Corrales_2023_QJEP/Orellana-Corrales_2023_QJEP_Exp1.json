@@ -1,0 +1,44 @@
+{
+    "exp1": {
+        "schema_version": "2",
+        "Collected_date": "2020-12",
+        "Physical_Environment": {
+            "Location": "/",
+            "Setting": "Online",
+            "Equipment": {
+                "Presenting": "/",
+                "Monitor": "/",
+                "Software": "PsychoPy (Peirce et al., 2019)"
+            },
+            "Viewing_distance": "/"
+        },
+        "Experimental_Design": {
+            "Conditions": "self-matching, self-nonmatching, furniture-matching, furniture-nonmatching"
+        },
+        "Block_Structure": {
+            "Block_number": "1 block",
+            "Trial_number": "140 experimental trials",
+            "Practice_trials": "4 practice trials"
+        },
+        "Trial_Structure": {
+            "Fixation_duration": "500 ms",
+            "Stimulus_duration": "until response, max 1500 ms",
+            "SOA": "/",
+            "Stimulus_order": "simultaneous (shape + label)",
+            "Response_deadline": "1500 ms",
+            "ITI": "500 ms (black screen)",
+            "Feedback_duration": "/"
+        },
+        "Stimulus_Properties": {
+            "Modality": "visual",
+            "Fixation": "cross",
+            "Shape": "geometric shapes (circles/triangles, 5 fill patterns each)",
+            "Label": "Ich/Möbel (German)",
+            "Colors": {
+                "Stimulus": "white",
+                "Background": "grey"
+            }
+        },
+        "detail": "QJEP 2023 (Orellana-Corrales, Matschke, Schäfer & Wesslein). Ingested 2026-08 (stage 5). Matching task (Sui 2012 paradigm) data curated; the study also includes an IAT-RF task (b1-b3 data present in data_merged.tsv, not curated; see input zone). [D] Trial_number=140: derived from Clean rows / subjects (19040/136), consistent with paper L95 '4 practice + 140 experimental trials'; Block_number=1 (no block structure reported in paper). [D] Stimuli: label=Ich/Möbel (German, paper L72/L95), bild=Kreis1-5.png/Dreieck1-5.png (circle/triangle x 5 fill patterns); shape identity coded by bed (i=Ich/self, f=Möbel/furniture, same convention as author 2-dataprep_mt.py). [P] Program PsychoPy online (paper L70); Setting=Online (Prolific, native German speakers). [H] N caliber: 136 recruited (words 71 + shapes 65), 29 Tukey outliers excluded (SPSS 3-Syntax.sps list: 2,10,12,13,27,32,33,34,37,39,54,56,58,59,64,67,82,84,86,93,94,96,100,101,109,119,132,134,136) -> analysis N=107 (words 55 + shapes 52, matching paper t(54)/t(51)); raw/Clean retain all 136 (minimal preprocessing, no filtering); exclusion list recorded in CSV Note. No-response trials (549 rows: MT.keys empty, corr=0, rt empty) coded ACC=NA per project P21 convention; raw keeps original 0. [H] subj_info Age missing for 3 subjects (41: 5-digit typo '19998' in year of birth; 49/121: not provided), age = 2020 - YoB (same as SPSS 3-Syntax.sps). Collected_date=2020-12 (data file timestamp 2020-12-08). License: OSF repo (osf.io/v8r2p) has no license declaration (API license=None). 2026-08 four-way cross-check MAJOR FINDING (author artifact issue; curated data unaffected): author 2-dataprep_mt.py print order (mi->mf->ni->nf) mismatches the header of the OSF file data_clean.csv (im->in->fm->fn), so columns in* (actually furniture-matching f_m values) and fm* (actually self-nonmatching i_n values) are swapped in data_clean.csv (verified per-value: subject 1 true means i_m=729/f_m=948/i_n=816/f_n=850 vs data_clean im/in/fm/fn = 729/948/816/850); additionally, for subjects 2/73 with no qualifying trials, imRTmean carries over the previous subject's value. All paper matching-task statistics (F=199.28/77.08/111.13/255.76/5.90/4.63 and means 694/802/779/793) reproduce exactly from the misaligned file: main-effect labels swapped, two cell means swapped, nonmatching follow-up direction reversed, d' based on misaligned ER. Under the true data the qualitative SPE conclusion still holds (self-matching 694 vs furn-matching 778). Verification scripts in 2_Code/qjep_verify/; curated data rebuilt from original PsychoPy csvs and correct."
+    }
+}
