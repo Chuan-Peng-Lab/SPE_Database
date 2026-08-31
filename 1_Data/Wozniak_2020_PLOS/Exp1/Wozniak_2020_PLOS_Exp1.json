@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "2017-06 to 2017-09 (from .dat file timestamps)",
+    "Physical_Environment": {
+      "Location": "Monash University, Melbourne, Australia",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "PC computer",
+        "Monitor": "22-inch LED monitor",
+        "Software": "MATLAB R2013a, Psychophysics Toolbox 3.0.10"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "3 (cue identity: self, stranger 1, stranger 2) x 3 (target identity: self, stranger 1, stranger 2) within-subjects; each cue followed by each target with equal probability (33.3%)"
+    },
+    "Block_Structure": {
+      "Block_number": "3 blocks",
+      "Trial_number": "90 trials per block (270 total)",
+      "Practice_trials": "24"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "400 ms",
+      "Stimulus_duration": "Label: 200 ms; Face: until response (max 2000 ms)",
+      "SOA": "1200 ms (label onset to face onset; 1 s delay between label offset and face onset)",
+      "Stimulus_order": "Label (cue) first, then face (target)",
+      "Response_deadline": "2000 ms",
+      "ITI": "600 ms",
+      "Feedback_duration": "400 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.6 deg x 0.6 deg",
+      "Shape": "Faces (Chicago Face Database): total picture 8 deg x 8 deg, face alone approx. 3.8 deg x 5.3 deg; one face arbitrarily associated with the self (label 'You'), two faces associated with strangers (names Pam/Meg for female, Rob/Sam for male participants); assignment of faces to identities counterbalanced across participants",
+      "Label": "Names of equal length (3 letters, width 2 deg)",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Grey"
+      }
+    },
+    "detail": "Experiment 1: arbitrary self-association of a stranger's face with the label 'You' (no real face used). 24 participants analyzed (all completed; 17 Asian-face and 7 White-face versions, matched to participant ethnicity; 12 female/12 male; age 18-41, M=21.9, SD=4.39; 3 left-handed, 1 ambidextrous). Sequential match-non-match task: label presented for 200 ms, 1 s delay, face until response; match/mismatch response keys 'z' and 'm' counterbalanced across participants (Hand column in raw data: 1 = z match key, 2 = m match key); no response within 2000 ms recorded as key 'x'. Learning phase: three label-face pairings shown for 20 s each. Identity coding (author internal codes You/Neutral/AntiYou, decoded per-subject from raw columns 17-19 and per-experiment semantics): You = Self (self-associated face), Neutral/AntiYou = Stranger. Data: 24 subjects x 270 test trials = 6480 rows; practice trials (24) not written to .dat files. Source: OSF 2q9w7, DATA/SelfBoostExp_1xxx.dat. ACC: 1 correct / 0 incorrect / NA no response (key 'x'); RT_ms in ms, NA for no-response (raw keeps the pseudo-value ~2000 ms). Raw data columns documented in the clean script header; note 3 files (1010/2008/2011) have line-level SubNum differing from filename (author renamed files; filename is the subject ID, see Issue 4 in Verifying_original_results_issues.md)."
+  }
+}

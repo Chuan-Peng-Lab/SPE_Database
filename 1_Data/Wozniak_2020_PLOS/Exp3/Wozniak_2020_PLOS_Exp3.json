@@ -1,0 +1,44 @@
+{
+  "exp3": {
+    "schema_version": "2",
+    "Collected_date": "2017-06 to 2017-09 (from .dat file timestamps)",
+    "Physical_Environment": {
+      "Location": "Monash University, Melbourne, Australia",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "PC computer",
+        "Monitor": "22-inch LED monitor",
+        "Software": "MATLAB R2013a, Psychophysics Toolbox 3.0.10"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "3 (cue identity: You label, own-face name, stranger name) x 3 (target identity: self-associated face, own face, stranger face) within-subjects; each cue followed by each target with equal probability (33.3%)"
+    },
+    "Block_Structure": {
+      "Block_number": "3 blocks",
+      "Trial_number": "90 trials per block (270 total)",
+      "Practice_trials": "24"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "400 ms",
+      "Stimulus_duration": "Label: 200 ms; Face: until response (max 2000 ms)",
+      "SOA": "1200 ms (label onset to face onset; 1 s delay between label offset and face onset)",
+      "Stimulus_order": "Label (cue) first, then face (target)",
+      "Response_deadline": "2000 ms",
+      "ITI": "600 ms",
+      "Feedback_duration": "400 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.6 deg x 0.6 deg",
+      "Shape": "Faces: participant's own photograph + two Chicago Face Database faces (one arbitrarily associated with the self via the label 'You', one associated with a stranger's name); total picture 8 deg x 8 deg, face alone approx. 3.8 deg x 5.3 deg; the label 'You' always paired with a database face, the own face always paired with a stranger's name (names as in Exp1: Pam/Meg or Rob/Sam, changed to Kat/Ken if coinciding); assignment counterbalanced across participants",
+      "Label": "Names of equal length (3 letters, width 2 deg)",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Grey"
+      }
+    },
+    "detail": "Experiment 3: simultaneous establishment of both associations - a stranger's face with the label 'You' (self-associated) and the participant's own real face with a stranger's name. 25 participants tested, 1 excluded due to technical issues with the stimuli; 24 analyzed (12 Asian-face and 12 White-face versions; 12 female/12 male; age 19-39, M=24.7, SD=5.86; 2 left-handed). Task structure identical to Exp1/2 (learning phase 3 x 20 s; 24 practice trials; 3 blocks x 90 = 270 test trials; z/m keys counterbalanced). Identity coding (author internal codes You/Neutral/AntiYou): You = Self (self-associated stranger's face), AntiYou = Self (own face, associated with a stranger's name), Neutral = Stranger. Data: 24 subjects x 270 test trials = 6480 rows. ACC: 1 correct / 0 incorrect / NA no response (key 'x'); RT_ms in ms, NA for no-response. Source: OSF 2q9w7, DATA/SelfBoostExp_3xxx.dat."
+  }
+}

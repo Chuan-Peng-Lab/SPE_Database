@@ -2,7 +2,7 @@
 
 ## 当前目标
 
-SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的文件夹名（<Author>_<Year>_<期刊缩写>）作为全项目论文/预印本的关键 ID，以 1_Data/Dataset_inf.csv 为主索引，使 39 个已入库研究、7 个待入库条目的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 的再生成与比对提供可靠数据源。
+SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的文件夹名（<Author>_<Year>_<期刊缩写>）作为全项目论文/预印本的关键 ID，以 1_Data/Dataset_inf.csv 为主索引，使 40 个已入库研究、5 个待入库条目（+1 暂缓：Scheller_2026_elife 匹配任务数据不可得）的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 的再生成与比对提供可靠数据源。
 当前最重要推进线路见「下一步任务」分层清单（L1 精细化 → L2 数据判定 → L3 入库 → 清理收口）。
 
 ## 已完成（均已验证）
@@ -124,6 +124,17 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **Vicovaro-2024 Shape 列改为实际形状**：counterbalanced 绑定从作者实验代码 `OrdineP1-40.xlsx` 逐被试恢复（两实验均 4 circle + 4 square 交替）；41-64 号无 Ordine 文件，按同一规律外推（Codebook/JSON/CSV Note 三处标注推断性质）；raw 保留 `ShapeIdentity`（原始身份 you/stranger；实际标签为意大利语 tu/sconosciuto）。
 - 验收：两级校验全绿（102 JSON EXIT=0 / 66 Clean 0 ERROR）。
 
+### 2026-09（本会话）— Scheller_2026_elife 移除 + Wozniak_2020_PLOS 入库（阶段 5）
+
+- **Scheller_2026_elife 从 Dataset_inf.csv 删除**（用户决策；2026-09）：本地输入区与 OSF a62df 全量核实——**仓库只有 TOJ trial 级数据**（dataset_E1.csv 38088 行 / dataset_E2.csv 175 MB，Condition=baseline/perceptual_associated/social_associated 全为 TOJ 试次；作者 notebook 引用的逐被试 `Raw Data/*.csv`（含 shape-label 匹配任务）从未上传 OSF；Correlation_Results.xlsx 仅有每被试聚合 SPE/Acc_Self）。用户指示**不下载 OSF**；匹配任务 trial 数据不可得 → 删除 CSV 2 行（字节保真 diff 仅 2 行）；validator `known_pending` 移除、`known_unlisted` 加入（输入区文件夹保留，注释记录原因）；**后续用户联系作者获得匹配数据后再重入**。TOJ 非 self-matching task，不入库。
+- **Wozniak_2020_PLOS 入库（场景 B，3 实验 3 行，pending 白名单移除）**：Woźniak & Hohwy, PLOS ONE 15(7), DOI 10.1371/journal.pone.0235627；OSF 2q9w7；Monash University/Melbourne（MUHREC 批准 = 采集地）。sequential match-non-match（label 200 ms → 1 s 延迟 → face；z/m 键 counterbalanced；24 练习 + 3 blocks × 90 = 270 正式试次）；Matlab R2013a + PTB 3.0.10。
+  - **数据**：72 个 `.dat`（空格分隔 22 列；1xxx/2xxx/3xxx = 实验 1/2/3，各 24 人）；`Wozniak_2020_PLOS_clean.R` 产出 3 实验 × (raw/Clean 6480 行/subj_info 24 行)；subj_info 人口学（Age/Handedness/FaceRace/Exp/Hand/Permutation）自作者 xlsx（Exp3 为外链公式缓存值，readxl 可读）；每实验 12F/12M 与论文一致；守卫：ObjType==(LabelCode==ShapeCode) 全 19440 试次 + ACC 规则全复现。
+  - **身份映射**（用户确认标 Self）：Exp1 陌生脸↔"You"=Self、Pam/Meg 或 Rob/Sam=Stranger；Exp2 本人真实面孔↔陌生人名（Liz/Meg/Pam 或 Rob/Ned/Sam）=Self、其余=Stranger；Exp3 双关联（"You"↔陌生脸=Self + 本人脸↔名字=Self）；Origin 保留原码（You/Neutral/AntiYou）与名字，English 层区分（Self-associated face/Own face/Self label (You)/Own-face name/Stranger face/Stranger name）。
+  - **CSV 收口**：ID 67 行更新（Journal "PloS one"→PLOS ONE、Country/City=Australia/Melbourne、N 24/12/12/24/0、Stim_language=English、Environmental_Info=Matlab、Practice_Block=1/Practice_Trial=24/numBlocks=3/numTrials=270、License **CC BY 4.0→空**（OSF license=None，QJEP 先例）、Design、Note）+ 新增 ID 90（Exp2）/91（Exp3）行（Study=2/3，Note 记 29 测 5 排除 / 25 测 1 排除）；Paper_ID 不新建。
+  - **四方核对（2_Code/wozniak2020_verify/）**：复刻作者 MATLAB 聚合（200<RT<1500 ms 正确试次——**注意论文文字为 "2.5 MAD"、脚本实现为硬编码 1500**）与作者 xlsx 逐值对比 **3312 单元格 0 差异**；发现作者 xlsx 编号体系不对称（cue 用内部码、face 用槽号 σ(j)，perm≠1 的 32 名被试组合/face 主效应标签错位；ER 列实为正确率；3 个 .dat 文件名与行内 SubNum 不一致 1010/2008/2011→1110/2004/2010，以文件名为准）→ **Issue 4 记录**（Verifying_original_results_issues.md）；描述性统计方向核对全通过（Exp1 cue You 646.2 vs 682.6 ms；Exp2 cue 关联名字 624.7/本人脸 619.0 ms 最快；Exp3 本人脸 620.0 ms 最快、cue 无效应 4.7 ms 差；三实验 matching < nonmatching）。
+  - **Table 1 重渲染**：RENDER_EXIT=0，docx 主表 79 数据行（含 Wozniak 3 行）；table1_problems.txt 保持 111 行冻结。
+  - **验收**：validate_json_metadata 109 JSON EXIT=0（pending 5）；validate_clean_csv 71 文件 0 ERROR / 38 WARN（Wozniak 3 文件无警告）；README/AGENTS 计数同步（46 unique / 89 行 / 40 已入库 + 5 pending + 1 deferred）。
+
 ### 2026-08-30（本会话）— 阶段 4 三研究收口（Zhang-2023 / Smith-2024 / Wang-2016）
 
 - **Zhang_2023_NeuroImage：raw 追补豁免**（用户确认）。OSF hbrus（view_only token 仍有效）核实：仅聚合行为数据（`data/all_behavioural_data.xlsx` 348 人 × SPE_score/age/gender/FD/自我量表 + `SPE_score.npy` 等）+ fMRI 矩阵 + 代码，**无 trial 级数据** → 按阶段 4 判定原则豁免。OSF 5 个小文件存档输入区 `Zhang_2023_NeuroImage_Raw/`（先例同 Schaefer/Orellana）。收口：CSV `Stim_language` English→Chinese（Clean 实际标签为中文「你/生人」，用户确认）、paper JSON City `/`→Beijing（论文清华采集）；exp JSON detail 记录豁免与 N 口径（CSV 380/348/32 与论文完全一致）。**遗留记录**：Clean 346 / subj_info 347（Subject 101 无 Clean）/ 论文 348 差 2 人。
@@ -169,11 +180,12 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 13. **Exp2 Stim_Type 定值 `letter string`**（2026-08-30，Orellana-2021 Exp2 非词研究；库内 Stim_Type 值域新增，无现成先例，人工定值）。
 14. **元数据 JSON 内容一律英文**（2026-08-30 用户指示）：paper/exp JSON 字段值（含 detail）不使用中文；中文说明性内容放仓库中文文档或脚本注释。
 15. **QJEP 作者产物错位发现处置**（2026-08-30）：论文/OSF data_clean.csv 列错位（详见 3_Reports/Verifying_original_results_issues.md（Issue 1））——库内数据正确不受影响；文档+JSON detail 记录归档，**是否联系作者由项目负责人决定**（超库范围不主动执行）。
+16. **Scheller_2026_elife 移除**（2026-09 用户决策）：OSF 全量核实仅 TOJ trial 数据、匹配任务 trial 数据从未上传（notebook 引用的逐被试 Raw Data/*.csv 缺失）、用户指示不下载 OSF → CSV 2 行删除、validator known_unlisted 豁免（输入区保留）；**待用户联系作者获得匹配任务数据后重入**。
 
 ## 核心文件
 
 - 1_Data/Dataset_inf.csv — 主索引；1_Data/<Study>_<Year>_<Suffix>/ ×34 — 研究数据
-- 2_Code/validate_json_metadata.R — 元数据校验器（含 8 个待入库白名单，2026-08-30 QJEP 移除）；2_Code/validate_clean_csv.R — 内容级校验器
+- 2_Code/validate_json_metadata.R — 元数据校验器（known_pending 5 个待入库白名单 + known_unlisted 1 个待入库文件夹豁免，2026-09 更新）；2_Code/validate_clean_csv.R — 内容级校验器
 - 3_Reports/Generate_Table1.qmd + Generate_Table1.docx + Output/table1_problems.txt — Table 1 再生成与比对（2026-08-27 重渲染：118 → 111 行问题）
 - 3_Reports/Table1_Issues_Solvability.md — Table 1 问题可解性分析（107 项逐项判定：可自动确定 ~68 / 需人工 ~39；近似数以文档汇总表为准；与本文档双向关联）
 - 3_Reports/Stage3_1_CrossCheck.md — 阶段 3.1 未解决问题编号清单（P1–P22；与本文档「已知问题」双向关联）
@@ -196,13 +208,16 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 测试结果（已实测）
 
-- validator：EXIT=0（结构级）；2026-08-30 会话末复测：**105 个 JSON 全绿**（Wang Exp2 新增 1 个 + Hobbs paper/exp 2 个；41 文件夹 ↔ CSV 交叉一致；known_pending 7 个（Hobbs 已移除）；known_unlisted 已清空）。
-- 内容级校验器 validate_clean_csv.R：68 文件 0 ERROR / 38 WARN（2026-08-30 会话末；含 Hobbs Exp1 新文件——Hobbs 无警告）。
+- validator：EXIT=0（结构级）；2026-09 会话末复测：**109 个 JSON 全绿**（Wozniak paper+exp ×4 新增；41 文件夹 ↔ CSV 交叉一致（含 known_unlisted 豁免的 Scheller 输入区）；known_pending 5 个（Wozniak 已移除）；known_unlisted 1 个（Scheller_2026_elife，注释记录原因）。
+- 内容级校验器 validate_clean_csv.R：71 文件 0 ERROR / 38 WARN（2026-09 会话末；含 Wozniak Exp1-3 新文件——无警告，基线持平）。
 - Wang 重建守卫（clean.R 内嵌）：Exp1 15847 行/21 人、Exp2 17635 行/25 人；Matching 1:3；practice 9 行/被试（Exp1）；Exp1 人口学 3M/18F 与论文一致。
-- Table 1 渲染（2026-08-30 三研究入库后重渲染）：RENDER_EXIT=0；docx 含新 7 行（Orellana ×3 + Vicovaro ×2 + Zhang ×2，共 74 数据行）；table1_problems.txt 保持 111 行（冻结历史清单）。Wang 阶段 4 改动未重渲染（先例同 Orellana-2021 APP 阶段 4，下次阶段 5 渲染时一并）。
+- Table 1 渲染（2026-09 Wozniak 入库后重渲染）：RENDER_EXIT=0；docx 主表 79 数据行（含 Wozniak Exp1-3 三行；Scheller 2 行随 CSV 删除移除）；table1_problems.txt 保持 111 行（冻结历史清单）。
 - git：分支 main。工作区未提交改动（本会话 + 前次会话产物，均未提交）。
 
 ## 已知问题（未解决）
+
+- **Scheller_2026_elife 已移除（2026-09 用户决策）**：匹配任务 trial 级数据不可得（OSF 全量仅 TOJ trial 数据——dataset_E1/E2.csv 全为 TOJ 试次；作者 notebook 引用的逐被试 Raw Data/*.csv 未上传；不下载 OSF）→ CSV 2 行删除、validator known_unlisted 豁免（输入区文件夹保留，含 TOJ 数据与聚合 SPE）；**用户联系作者后重入**（详情见「已完成」2026-09 条目与关键决策 16）。
+- **Wozniak_2020_PLOS 已入库（2026-09）**：3 实验 3 行五件套就位（详情见「已完成」2026-09 条目）；**作者 xlsx 编号错位等产物问题见 `3_Reports/Verifying_original_results_issues.md（Issue 4）`**（xlsx cue 用内部码/face 用槽号致 perm≠1 的 32 名被试组合与 face 主效应标签错位；ER 列实为正确率；3 个 .dat 文件名与行内 SubNum 不一致以文件名为准；脚本过滤 1500 ms 硬编码 vs 论文文字 2.5 MAD）；**是否联系作者由项目负责人决定**。
 
 **条目级缺失汇总（2026-08 全量递归扫描，覆盖缺元数据/缺原始数据/缺 subject 级数据三类）**
 分级标准：中度 = 缺元数据（codebook / JSON）；重度 = 缺 trial 级原始数据（`*_raw.csv`）。同一严重程度内按条目名 alphabetical 排列，整体由轻到重。
@@ -223,7 +238,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **Zhang-2024 被试人口学缺失**：.mat 无 Age/Gender → subj_info 全 /（论文仅组均值：exp1 33F/Mage 19.69、exp2 27F/Mage 20.22，记 Note）。
 - **Wang_2016_JEPHPP 数据源错误已更正（2026-08-30）**：原 Exp1 五件套实为 AssoMatc_Self 任务数据（31 人，非论文任何实验；归档 `*_Raw/AssoMatc_Self_archive/`）→ 已从输入区聚合 CSV 重建 Exp1/Exp2 全套（详见「已完成」本会话条目与 `3_Reports/Wang_2016_JEPHPP_Stage4_Notes.md`）。**待办（挂起，等用户转换 txt）**：edat2/emrg2 → txt 后按交接文档 §7 清单核对（聚合 CSV 逐值核对、association Label 补全、规则 B 验证、论文统计精确复现、control 判定、AssoMatc_Self 身份再确认）；**Issue 3 记录**：论文 df(2,38) 隐含 N=20 vs 报告 21/数据 25、统计量方向一致未精确复现、Exp2 人口学不符（10M/15F vs 论文 12M）；control（论文 N=22）不入库（无 trial 数据）。
 - **Zhang_2023_NeuroImage 遗留（2026-08-30 豁免时记录）**：Clean 346 / subj_info 347（Subject 101 无 Clean）/ 论文 348，差 2 人——历史遗留，无 trial 数据无法追查，保持现状。
-- CSV 遗留空白（2026-08-30 更新）：Journal 空 0（Orellana 已填）；License 空 3（Sui_2015_unpub ×2 → L2；QJEP ×2 无 OSF 声明留空）；Stim_language 空 4（Scheller ×2、Wozniak_2020、Hu_2023_SDB → L3）；Country 空 3（Scheller ×2、Wozniak_2020 → L3）；City 空 8（Scheller ×2、Wozniak_2020 → L3；Sun → L2；Sui_2014_unpub 无采集地证据暂留空；Sui_2015_unpub ×2 → L2；QJEP 在线留空）。分层处理：L2 缺 raw 研究（Orellana/Sun/Sui_2015_unpub）→ 阶段 4 判定后收尾（Orellana 已完成）；L3 pending（Scheller/Wozniak_2020/Hu_2023_SDB）→ 阶段 5 入库时填齐。
+- CSV 遗留空白（2026-09 更新）：Journal 空 0（Orellana 已填；Wozniak 已填 PLOS ONE）；License 空 4（Sui_2015_unpub ×2 → L2；QJEP ×2 无 OSF 声明留空；**Wozniak_2020_PLOS ×3 OSF license=None 留空（2026-09，QJEP 先例）**）；Stim_language 空 1（Hu_2023_SDB → L3）；Country/City 空 1（Hu_2023_SDB → L3；**Scheller/Wozniak_2020 已随删除/入库消解**）。分层处理：L2 缺 raw 研究（Orellana/Sun/Sui_2015_unpub）→ 阶段 4 判定后收尾（Orellana 已完成）；L3 pending（Hu_2023_SDB）→ 阶段 5 入库时填齐。
 - 稿件 Table 1 与数据差异（11 条 Exp 标注、N/Trials/Language/Stimulus/Exp_Implement 不一致等）：**稿件 v16 已废弃（2026-08），不再与其比对**；历史问题清单（table1_problems.txt，111 行）与逐项可解性判定（Table1_Issues_Solvability.md，107 项：可自动 ~68 / 需人工 ~39）冻结保留，待稿件版本更新时作为修正清单使用（渲染 qmd 传 --param compare_manu:true 刷新）。12 个 pending 条目（无文件夹）的稿件 Exp_Implement 信息已登记入 CSV Note 列。
 - ~~Orellana-Corrales_2021_APP Exp2：Clean/subj_info 33 名被试 vs CSV Sample_Size 34 / Valid_Subj 31——N 口径待人工确认（稿件 36 亦不符；归阶段 4 数据判定后一并处理）。~~ **已闭合（2026-08-30）**：34 招募 = 33 Clean（nonwords-01 数据不完整移除，源数据问题）+ 1；论文分析 N=31 = 33 − {4,33}（SPSS 排除名单，df=30 吻合）；口径已记 CSV Note 与本文档阶段 4 条目。
 - Pan_2025_unpub：subj_info 的 Age 按 2025−出生年（raw `year` 列 2000–2005）推算、Education 为原始编码 5（含义未文档化）——**待作者确认**（2026-08 用户决策：移到最后阶段解决）；CSV Sample_Size/Valid_Subj 已按 raw 40 名被试回填。
@@ -255,10 +270,10 @@ L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（8 个 pending�
 
 | 类别 | 数量 | 成员 | 说明 |
 |---|---|---|---|
-| **一、已完成全量交叉核对** | 32 | Kirk_2025_BritJPsy、Martinez-Perez_2024_ConsciousCog、Sui_2014_APP、Wang_2016_JEPHPP、Wozniak_2022_PsychRes、Orellana-Corrales_2021_APP、Orellana-Corrales_2023_QJEP、**Orellana-Corrales_2020_ExpPsych、Vicovaro_2024_PeerJ、Zhang_2024_PsychJ、Hobbs_2023_PsychMed** 及阶段3.1| 阶段 2 已做「全文核查 + 交叉对比」并修复 31 单元格，不再重复核对 + 阶段3.1全量交叉核对（Stage3_1_CrossCheck_archived.md）+ 2026-08-30 阶段 4/5 四方核对（Orellana-2021 APP、Orellana-2023 QJEP）+ **2026-08-30 新研究入库核对（Orellana-2020 论文统计量 Exp1/2 精确复现、Vicovaro/Zhang 方向验证、Hobbs Table 2 全部 48 系数复现）** |
-| **二、未来全量交叉核对** | 15 | 分两小类（见下） | 待数据或说明文档补齐后再核对 |
+| **一、已完成全量交叉核对** | 33 | Kirk_2025_BritJPsy、Martinez-Perez_2024_ConsciousCog、Sui_2014_APP、Wang_2016_JEPHPP、Wozniak_2022_PsychRes、Orellana-Corrales_2021_APP、Orellana-Corrales_2023_QJEP、**Orellana-Corrales_2020_ExpPsych、Vicovaro_2024_PeerJ、Zhang_2024_PsychJ、Hobbs_2023_PsychMed、Wozniak_2020_PLOS** 及阶段3.1| 阶段 2 已做「全文核查 + 交叉对比」并修复 31 单元格，不再重复核对 + 阶段3.1全量交叉核对（Stage3_1_CrossCheck_archived.md）+ 2026-08-30 阶段 4/5 四方核对（Orellana-2021 APP、Orellana-2023 QJEP）+ **2026-08-30 新研究入库核对（Orellana-2020 论文统计量 Exp1/2 精确复现、Vicovaro/Zhang 方向验证、Hobbs Table 2 全部 48 系数复现）+ 2026-09 Wozniak_2020 四方核对（3312 单元格 0 差 + 方向核对，2_Code/wozniak2020_verify/）** |
+| **二、未来全量交叉核对** | 12 | 分两小类（见下） | 待数据或说明文档补齐后再核对 |
 | ├ 二a：有数据但无说明文档/论文全文 | 3 | Hu_2023_psyarxiv、Sui_2014_unpub、Pan_2025_unpub | 数据五件套已齐但**无正式论文全文可依**；均为用户团队成员负责的数据项目，未来进行方法文档补充 |
-| └ 二b：缺数据（有或没有说明文档/全文） | 11 | 阶段 4 三研究（Sun/Zhang/Smith）+ 阶段 5 七 pending（Bukowski/Golubickis/Hu_2023_SDB/Mcivor/Scheller/Svensson_2022/Wozniak_2020）+ Sui_2015_unpub（.mat 判定） | 先由阶段 4（补 raw）/阶段 5（整条目入库）补齐数据，入库后按其数据完整度并流程收尾 |
+| └ 二b：缺数据（有或没有说明文档/全文） | 9 | 阶段 4 三研究（Sun/Zhang/Smith）+ 阶段 5 五 pending（Bukowski/Golubickis/Hu_2023_SDB/Mcivor/Svensson_2022）+ Sui_2015_unpub（.mat 判定）+ **Scheller_2026_elife（2026-09 从 CSV 删除，匹配任务数据待作者提供后重入）** | 先由阶段 4（补 raw）/阶段 5（整条目入库）补齐数据，入库后按其数据完整度并流程收尾 |
 
 分类依据（判定顺序）：① 是否已做过全文核查+交叉对比（阶段 2 五研究 + 阶段3.1 21研究）→ ② REF/ 是否有正式论文全文 md/rmd（无 → 三a）→ ③ 是否缺数据/未入库（缺 → 三b，即阶段 4/5 对象。二a 与二b 区分：**二a 有数据缺文档**（用户查文档补全元数据），**二b 缺数据**（阶段 4/5 补数据）；二者均有全文者（如 Sun_2026_DataExp 无全文、Zhang_2023_NeuroImage 有 REF md）按自身情况在补数后归入对应流程。
 
@@ -342,10 +357,11 @@ L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（8 个 pending�
 - 收尾：该研究 CSV 空白与 N 口径一并收口，不重复编辑同一 CSV
 - 验收：每项产出 raw.csv（输入区→清洗脚本→两级校验 EXIT=0）**或**确认豁免并记录结论；严重度表/白名单同步
 
-### 阶段 5：条目入库（2026-08-30 完成三新研究 + Hobbs；剩余 7 个 pending 待数据）
+### 阶段 5：条目入库（2026-08-30 完成三新研究 + Hobbs；2026-09 完成 Wozniak_2020；剩余 5 个 pending 待数据）
 - 用户将原始数据放入输入区后，加载 spe-database-curation 技能走 Metadata & ingestion workflow 场景 B（统一 10 步流程，SKILL.md 2026-08-27 版；**入库后必做四方核对**——论文-代码-数据-原始数据 + **描述性统计核对**（2026-08-30 用户指示：只核对描述性统计，不复现统计检验/回归模型结果；Hobbs 为最后一例全量复现））
 - **已完成（2026-08-30，本会话）**：Orellana-Corrales_2020_ExpPsych（3 行）、Vicovaro_2024_PeerJ（2 行）、Zhang_2024_PsychJ（2 行）——非 pending 白名单条目（全新研究，新增 CSV 行）；Hobbs_2023_PsychMed（1 行收口，pending 白名单移除）——详情见「已完成」2026-08-30 条目；先例要点：Orellana-2020 作者编号修正（participantSession.txt）；三份作者 LST 的 Tukey 口径不一致需逐份核对；排除名单未公开时可用统计量枚举反推（Orellana Exp2 = 24/30）；Vicovaro RT 单位以值域判断（勿按 PsychoPy 秒先验重缩放）；Zhang 中性形状 → NonPerson；.mat 身份编号以程序（Associate_shape.m）为准；Hobbs 三条件全收 1 行（xlsx 权威、PsychoPy "None" 无响应、匿名化名字/practice 处理、Table 2 全复现）
-- **剩余 7 个 pending**（Bukowski/Golubickis/Hu_2023_SDB/Mcivor/Scheller/Svensson_2022/Wozniak_2020）：无输入区数据，待用户提供后入库；其 CSV 空白（Scheller/Wozniak_2020/Hu_2023_SDB 的 Country/City/Stim_language）在入库时随行自然填齐
+- **已完成（2026-09，本会话）**：Wozniak_2020_PLOS（3 行，pending 白名单移除；四方核对 3312 单元格 0 差 + 方向核对 + Issue 4）——详情见「已完成」2026-09 条目；**Scheller_2026_elife 从 CSV 删除（用户决策）**：OSF 全量仅 TOJ trial 数据、匹配任务数据从未上传、不下载 OSF → 待用户联系作者后重入（known_unlisted 豁免、输入区保留）。
+- **剩余 5 个 pending**（Bukowski/Golubickis/Hu_2023_SDB/Mcivor/Svensson_2022）：无输入区数据，待用户提供后入库；其 CSV 空白（Hu_2023_SDB 的 Country/City/Stim_language）在入库时随行自然填齐
 - 验收（每研究）：五件套齐全（raw/Clean/subj_info/Codebook/paper+exp JSON）、命名合规；新增/更新 CSV 行；两级校验 EXIT=0；Generate_Table1.qmd 重渲染 RENDER_EXIT=0、docx 行数相应增加
 
 ### 阶段 6：清理与简化（依赖合作者确认 CSV）

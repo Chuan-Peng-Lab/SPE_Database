@@ -275,6 +275,16 @@ Boundary rules for ambiguous keys:
   形状、且绑定 counterbalanced——从作者实验代码/逐被试配置恢复（Vicovaro OrdineP#.xlsx 的
   identificazione 行）；无法恢复全部时暂停问用户，规律外推须 Codebook/JSON/CSV Note 三处
   标注。几何形状判断以程序代码/用户目视为准（像素分析不可靠，曾猜反 Zhang 的圆/方）。
+   - **作者内部码的语义表必须逐实验核对**（2026-09 Wozniak_2020 先例）：同一研究内作者
+   内部身份码可能**跨实验语义不同**——Wozniak 的 You/Neutral/AntiYou 三码：Exp1 中
+   AntiYou=陌生脸 2 号（Stranger）、Exp2/3 中 AntiYou=**本人真实面孔**（Self）；"You" 码
+   在 Exp1/3 为自关联陌生脸（Self）、Exp2 为普通陌生名（Stranger）。解码依据 = 作者
+   脚本头注释/论文逐实验核对（本案例 MATLAB 聚合脚本头注释 "In Experiment X: ..." 逐条
+   对应），**禁止跨实验假设码义一致**；同实验内同一码在 Label 侧与 Shape 侧语义也可不同
+   （label 'You' 是自我标签 vs shape 是自关联面孔）——Label 与 Shape 侧分别建语义表。
+   本人真实面孔及其关联标签 → Self（2026-09 用户确认，Exp2/3 先例：与本人脸关联的
+   陌生人名在任务中代表自己，Standardized=Self；Origin 保留名字原样，English 层区分
+   'Own face'/'Own-face name' 与 'Self-associated face'/'Self label (You)'）。
 
 - **ACC 统一编码（2026-08 P21 方案 A，全库统一值域）**：
   实际按键相对应按键的比较，共 6 类（覆盖全部可能性）：
@@ -412,6 +422,22 @@ Boundary rules for ambiguous keys:
     同时提供 xlsx/csv 时以**作者清洗脚本读的那个为准**（Hobbs 的
     Associative_cleaning.R 用 xlsx；其 csv 的 NA 编码、形状分配列值不同）。
     清理前先逐列对比两版本，勿默认等价。
+  - **MATLAB/Psychtoolbox 空格分隔 `.dat` 导出**（2026-09 Wozniak_2020 先例）：
+    库内首次遇到的专有格式。① **列定义权威 = 实验脚本的 `fprintf` 格式串**
+    （本案例 RUN.m 一行 fprintf 定义全部 22 列：被试/实验/键映射/试次/按键/
+    标签名/标签码/形状/排列参数/性别/匹配状态/ACC/RT 等）——先读脚本再解析，
+    勿猜列；② 读取用 `read.table(sep="", colClasses="character")` 全字符读入
+    后逐列语义解码（混合文本列无法整体数值化）；③ 练习试次可能根本不写入
+    导出文件（本案例 .dat 只有 270 正式试次，24 练习不落盘——不要误判
+    "缺数据"）；④ 无反应由作者约定键表示（本案例 'x'，RT 为伪值 ~2000 ms）
+    → 库内 ACC=NA、RT_ms=NA，raw 保留原值；⑤ 多实验混存同一目录时按
+    被试编号段区分（1xxx/2xxx/3xxx = 实验 1/2/3）。
+  - **Excel 外链公式的缓存值**（2026-09 Wozniak_2020 先例）：作者聚合 xlsx
+    的单元格可能是**外链公式**（如 `='[1]General info'!D73`，引用未随附的
+    工作簿）——openpyxl `data_only=True` 或 readxl 可读**缓存值**（作者在
+    有源文件的机器上保存过），无缓存时读 NA；公式字符串本身（data_only=
+    False）不是数据。此类 xlsx 常**双重用途**：作者产物验证对象（逐值对比）
+    + subj_info 人口学来源（Age/Gender/Handedness/FaceRace 等）。
   - **作者聚合验证的 round 边界**（2026-08-30 Hobbs 教训）：库内 RT_ms 取整
     （round(rt×1000)）与作者原始 rt 阈值（如 <200 ms 排除）在边界行（如
     199.67 ms → round 200）可能一保留一排除——验证脚本按作者精确值判定
@@ -429,6 +455,20 @@ Boundary rules for ambiguous keys:
     表头不一致）导致论文统计基于错位数据，被逐值核对发现；核对脚本固化于
     `2_Code/qjep_verify/`，详情报
     `3_Reports/3_Reports/Verifying_original_results_issues.md（Issue 1）`。
+    2026-09 Wozniak_2020 教训补充（详见 Issue 4）：
+    ① **作者聚合产物的身份编号体系先验证再对比**——作者 xlsx/聚合文件的
+    编号可能与库内解析不对称（案例：cue 用固定内部码、face 用槽号/permutation
+    决定，仅 perm=1 的被试一致）——先用少量被试枚举排列（按 permutation 等
+    设计参数）找对齐规则，再全量逐值对比，直接按假设对比会大量误报；
+    ② **聚合文件 "ER"/"ACC" 类列语义先确认**（Wozniak xlsx 的 ER 列实为
+    正确率，且按「正确且 RT 有效」计数，非错误率）；
+    ③ **作者脚本实现口径 vs 论文文字可能不一致**（Wozniak 论文 "2.5 MAD"
+    排除 vs 脚本硬编码 highestRT=1500 ms）——逐值验证用脚本实现口径，
+    差异记录进 Issue；
+    ④ **逐被试导出文件名 vs 行内 Subject 编号不一致**时（作者整理时重命名
+    过文件），以作者最终产物（如 xlsx 被试列表）口径为准定被试 ID，行内
+    原值保留 raw 并记录（Wozniak 3 个 .dat：1010/2008/2011 行内
+    SubNum=1110/2004/2010）。
 
 ## Dataset_inf.csv 标准读取模板（2026-08）
 
@@ -479,7 +519,7 @@ Boundary rules for ambiguous keys:
 **收尾（场景 A/B 共用）**
 10. **落盘 + 校验 + 同步**：`cp` /tmp → 目标（exFAT 无原子写，先 /tmp 中转）；场景 B 更新 `Dataset_inf.csv`（每实验一行 `Folder_Name`+`Exp`，UTF-8 **带 BOM** 字节保真，不动 legacy `Dataset_inf.xlsx`）；`validate_json_metadata.R` EXIT=0 + `validate_clean_csv.R` 0 ERROR；场景 B 另需：`known_pending` 白名单移除 + `Generate_Table1.qmd` 重渲染（稿件比对默认关闭，仅稿件版本更新时 `--param compare_manu:true`）；更新 PROJ_STATE.md；exFAT 卫生（git 前清理 `._*`，绝不提交 `._*`/`.DS_Store`）。
 
-**入库后四方核对（2026-08 起，场景 B 收尾必做）**：论文全文 ↔ 作者分析代码（OSF dataPrep/SPSS 脚本）↔ 库内数据（CSV/JSON/Clean/raw）↔ OSF 原始导出，逐字段交叉 + **论文描述性统计核对**（论文报告的均值/正确率/方向，按作者脚本口径聚合；**2026-08-30 用户指示：只核对描述性统计，不复现统计检验/回归模型结果**——逐值/聚合数据一致性验证仍必做，见 §清洗工具「作者脚本逐值验证法」）。2026-08 QJEP 案例：四方核对发现作者 data_clean.csv 列错位致论文统计量基于错位数据（库内数据正确），详情报 `3_Reports/3_Reports/Verifying_original_results_issues.md（Issue 1）`；核对脚本固化于 `2_Code/qjep_verify/`。发现的问题按「可自动确定（有全文/数据证据）→ 修改；需人工 → 登记 PROJ_STATE 已知问题」处置。
+**入库后四方核对（2026-08 起，场景 B 收尾必做）**：论文全文 ↔ 作者分析代码（OSF dataPrep/SPSS 脚本）↔ 库内数据（CSV/JSON/Clean/raw）↔ OSF 原始导出，逐字段交叉 + **论文描述性统计核对**（论文报告的均值/正确率/方向，按作者脚本口径聚合；**2026-08-30 用户指示：只核对描述性统计，不复现统计检验/回归模型结果**——逐值/聚合数据一致性验证仍必做，见 §清洗工具「作者脚本逐值验证法」）。2026-08 QJEP 案例：四方核对发现作者 data_clean.csv 列错位致论文统计量基于错位数据（库内数据正确），详情报 `3_Reports/3_Reports/Verifying_original_results_issues.md（Issue 1）`；核对脚本固化于 `2_Code/qjep_verify/`。发现的问题按「可自动确定（有全文/数据证据）→ 修改；需人工 → 登记 PROJ_STATE 已知问题」处置。**验证时机建议（2026-09 Wozniak 先例）**：作者聚合逐值验证宜在**清洗脚本产出后、CSV 行收口前**完成——数据层证据（列解码、身份映射、ACC/RT 口径）先行确认，发现问题时只需改清洗脚本重跑，避免 CSV/JSON 已写死后再返工；论文方向性核对与 CSV 收口可同步进行。
 
 **试点验证（2026-08）**：Vicovaro_2022_JEPHPP（Journal）与 Navon_2021_psyarxiv（Preprint）的 paper JSON 草稿字段（title/authors/year/journal）与现有文件完全一致；Sui_2014_unpub（unpublished）走手工模板。
 **阶段 1 批量回填（2026-08-27）**：Lee/Smith/Svensson/Orellana 4 研究 10 JSON + 6 Codebook——[C] Crossref 核对、[P] 全文来源（Smith=REF/ html、Svensson=PMC XML、Orellana=Springer html、Lee=eprints PDF+补充材料）、[D] Clean 行数÷被试数；两级校验全绿（90 JSON EXIT=0；59 Clean 0 ERROR）。
@@ -516,11 +556,16 @@ Boundary rules for ambiguous keys:
    ERROR → exit 1; historical exceptions are listed in the script `known` vector
    (KNOWN, exempted; remove the entry once fixed — same pattern as `known_pending`).
 2. The validator whitelists not-yet-curated studies (`known_pending`, currently
-   9: `Bukowski_2021_ActaPsych`, `Golubickis_2021_ActaPsych`, `Hobbs_2023_PsychMed`,
-   `Hu_2023_SDB`, `Mcivor_2021_EJN`, `Orellana-Corrales_2023_QJEP`,
-   `Scheller_2026_elife`, `Svensson_2022_PsychRes`, `Wozniak_2020_PLOS`) that
+   5: `Bukowski_2021_ActaPsych`, `Golubickis_2021_ActaPsych`,
+   `Hu_2023_SDB`, `Mcivor_2021_EJN`, `Svensson_2022_PsychRes`) that
    are allowed to lack a folder; once such a study is curated, remove it from the
    whitelist.
+   **反向豁免 `known_unlisted`（2026-09 首次启用）**：有文件夹但 CSV 无行的
+   研究（方向与 `known_pending` 相反）——用于**条目从 CSV 移除**的情形（数据
+   不可得/撤回，如 Scheller_2026_elife：OSF 仅 TOJ 数据、匹配任务 trial 数据
+   从未上传、用户指示不下载 → 删 CSV 行、输入区文件夹保留并加入
+   `known_unlisted` 豁免；重入时移除并注释更新）。SKILL 处理原则：删除 CSV
+   行前先确认（用户决策），输入区文件不删除。
 3. **Validator blind spots**（校验器只校验存在的文件，以下缺失不会被发现，需人工核对）：
    缺 paper 级 JSON、缺 codebook、CSV 中重复的 `(Folder_Name, Exp)` 组合。
 4. One-time schema migrations live in `2_Code/migrate_exp_json_to_v2.py`

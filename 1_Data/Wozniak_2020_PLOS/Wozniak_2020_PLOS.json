@@ -1,0 +1,13 @@
+{
+  "Paper_name": "Stranger to my face: Top-down and bottom-up effects underlying prioritization of images of one's face",
+  "Summary": "The study investigated top-down and bottom-up processes underlying self-prioritization using a sequential match-non-match task with faces in three experiments. Participants associated an unfamiliar face with the self (Exp1), their own face with a stranger's name (Exp2), or both associations simultaneously (Exp3). Results showed a robust self-related top-down effect: when a self-related cue (label) was presented, participants were later faster at classifying subsequent targets, regardless of target identity. No bottom-up prioritization was found for arbitrarily self-associated stranger faces, but participants' real faces were processed faster as targets (Exp2 and Exp3), suggesting bottom-up prioritization of one's own face may be driven by familiarity rather than mere self-association.",
+  "Year": "2020",
+  "Author": "Mateusz Woźniak, Jakob Hohwy",
+  "Journal": "PLOS ONE",
+  "Country": "Australia",
+  "City": "Melbourne",
+  "Extra_Var": "/",
+  "Email": "/",
+  "DOI": "10.1371/journal.pone.0235627",
+  "Conclusion": "The results suggest that self-prioritization is underpinned by distinct top-down and bottom-up processes. The top-down self-prioritization effect (faster processing after self-related cues) observed in Experiment 1 replicated previous findings and persisted when perceptual expectations were controlled, indicating it is not driven by cue-induced statistical expectations. Experiments 2 and 3 showed that the two cue-induced top-down effects (from the label 'You' and from a name associated with one's own face) may be two manifestations of the same underlying process, as they did not coexist independently in Experiment 3 and their magnitudes correlated. The bottom-up effect was observed only for participants' real faces, not for arbitrarily self-associated stranger faces, suggesting faster detection of one's own face may reflect increased familiarity."
+}

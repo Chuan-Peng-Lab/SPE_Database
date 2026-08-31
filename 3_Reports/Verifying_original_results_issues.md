@@ -251,3 +251,28 @@ E-Prime 的 Subject 号被误填为 Session 号（Study 3 = umv5p 存档）。�
 - 库内 raw/Clean/subj_info 自作者聚合导出重建（`Wang_2016_JEPHPP_clean.R`），Matching = 新指令映射（Exp1: self→stranger/friend→self/stranger→friend；Exp2: self→friend/friend→stranger/stranger→self），与论文设计一致；
 - 统计差异已记录（本 Issue）；N 口径按数据（Exp1 21、Exp2 25）并记论文口径于 CSV Note；
 - **是否联系作者（排除名单/分析口径）由项目负责人决定**。
+
+---
+
+# Issue 4 — Wozniak_2020_PLOS：作者 xlsx 聚合文件 face 身份编号错位；ER 列实为正确率；3 个 .dat 文件名与行内编号不一致（2026-09）
+
+> **一句话结论**：OSF（osf.io/2q9w7）作者聚合文件 "Raw data - SelfBoostExp.xlsx" 的**身份编号体系不对称**——cue（标签）编号用固定内部码（1=You, 2=Neutral, 3=AntiYou），**face 编号却用槽号**（每被试 permutation 决定，σ(j)=「码 j 在 labelsREAL 排列中的槽号」），导致 perm≠1 的 32 名被试（perm0×20、perm2×8、perm3×4）其 9 组合 RT/ER、face 主效应（RT_0i）与派生区（RT_M/NM1/NM2）的**身份标签错位**；仅 perm1（40 人）正确。另：xlsx 的 "ER_" 列实际是**正确率**（非错误率，命名误导）；3 个 .dat 文件（1010/2008/2011）行内 SubNum 与文件名不一致（行内=1110/2004/2010，作者整理时重命名，xlsx 与文件名口径一致）。**库内数据自 .dat 重建、真实身份映射正确，不受影响**；论文描述的定性结论（方向核对）全部成立。
+
+- 论文：Woźniak, M., & Hohwy, J. (2020). Stranger to my face: Top-down and bottom-up effects underlying prioritization of images of one's face. *PLOS ONE, 15*(7), e0235627. DOI: 10.1371/journal.pone.0235627
+- 数据仓库：OSF https://osf.io/2q9w7（"Raw data - SelfBoostExp.xlsx" + DATA/SelfBoostExp_*.dat ×72 + MATLAB 聚合脚本）
+- 核对时间：2026-09（阶段 5 入库后的四方核对：论文 ↔ 作者 MATLAB 脚本/xlsx ↔ 库内数据 ↔ .dat 原始导出）
+- 核对脚本：`2_Code/wozniak2020_verify/`（verify_massive.py：复刻作者聚合并与 xlsx 逐值对比，3312 单元格 0 差异；方向核对见脚本 README）
+
+## 1. 问题描述
+
+1. **xlsx face 编号 = 槽号（permutation 决定），cue 编号 = 内部码**：作者聚合脚本（Massive_SelfBoost_Avg1subject_MAD_full.m）将标签编号为 You=1/Neutral=2/AntiYou=3（固定），而 xlsx 的 face 列编号为「码 j 在 labelsREAL 排列中的槽号」σ(j)（perm0: [2,1,3]、perm1: [1,2,3]、perm2: [2,3,1]、perm3: [3,1,2]）。因此 xlsx 的 RT_ij = 真实组合 (label 码 i, face 码 σ(j))；RT_0i = face 码 σ(i)；派生区 RT_M_i = 组合 (i, σ(i))（对 perm≠1 不是真实匹配组合）、RT_NM1_i = label 码 i & face 码≠σ(i)、RT_NM2_i = face 码 σ(i) & label 码≠i。证据：72 名被试全部 3312 个 xlsx 单元格按此规则逐值复现（±0.01 ms / ±0.001），按任何其他映射均有数百处不符。
+2. **xlsx ER 列为正确率**（作者命名 ER 误导）：如 ERR_TOTAL=0.9815 = 265/270 正确；且 ER 区按「正确且 RT 有效（200<RT<1500 ms）」计数（作者脚本 data(:,11)==1 过滤）。
+3. **作者脚本 RT 过滤 = 硬编码 1500 ms**，与论文文字「2.5 median absolute deviations (MAD) over the median」**不一致**（脚本中 highestRT 计算后立即被覆盖为 1500）；xlsx 聚合基于 1500 ms 口径。
+4. **3 个 .dat 文件名与行内 SubNum 不一致**：SelfBoostExp_1010.dat（行内 1110）、2008.dat（行内 2004）、2011.dat（行内 2010）——作者整理时重命名以区分重复编号；xlsx 被试列表与**文件名**口径一致（1010 与 1110 并存）。库内以文件名为被试 ID，行内值保留于 raw（SubNum 列）。
+5. **影响**：论文 Table 1（图片）与 Fig 2–4 的 target 均值可能基于错位标签（无法直接核对——论文描述统计为图片）；论文 target 主效应 ANOVA 对 perm≠1 被试标签错位敏感（32/72）。论文正文全部**方向性结论**已按真实身份核对成立（见 §3）。
+
+## 2. 处置
+
+- 库内 raw/Clean/subj_info 自 72 个 .dat 重建（`Wozniak_2020_PLOS_clean.R`），身份映射按论文语义（Exp1: You=Self, 其余 Stranger；Exp2: AntiYou=本人脸=Self；Exp3: You=自关联陌生脸=Self、AntiYou=本人脸=Self），不受 xlsx 错位影响；
+- 作者聚合逐值复现（3312 单元格 0 差异）证明解析正确；描述性统计方向核对（论文口径 200<RT<1500）全部通过；
+- **是否联系作者（xlsx 错位是否进入论文统计/表格）由项目负责人决定**。

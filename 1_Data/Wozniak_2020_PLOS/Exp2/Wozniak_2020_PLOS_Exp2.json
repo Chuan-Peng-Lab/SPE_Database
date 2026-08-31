@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "schema_version": "2",
+    "Collected_date": "2017-06 to 2017-09 (from .dat file timestamps)",
+    "Physical_Environment": {
+      "Location": "Monash University, Melbourne, Australia",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "PC computer",
+        "Monitor": "22-inch LED monitor",
+        "Software": "MATLAB R2013a, Psychophysics Toolbox 3.0.10"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "3 (cue identity: own-face name, stranger name 1, stranger name 2) x 3 (target identity: own face, stranger face 1, stranger face 2) within-subjects; each cue followed by each target with equal probability (33.3%)"
+    },
+    "Block_Structure": {
+      "Block_number": "3 blocks",
+      "Trial_number": "90 trials per block (270 total)",
+      "Practice_trials": "24"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "400 ms",
+      "Stimulus_duration": "Label: 200 ms; Face: until response (max 2000 ms)",
+      "SOA": "1200 ms (label onset to face onset; 1 s delay between label offset and face onset)",
+      "Stimulus_order": "Label (cue) first, then face (target)",
+      "Response_deadline": "2000 ms",
+      "ITI": "600 ms",
+      "Feedback_duration": "400 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "0.6 deg x 0.6 deg",
+      "Shape": "Faces: participant's own photograph (taken at the start of the session with controlled lighting and white background, not mirror-reversed) + two Chicago Face Database faces; total picture 8 deg x 8 deg, face alone approx. 3.8 deg x 5.3 deg; own face always associated with a stranger's name, two other faces with stranger names (Liz/Meg/Pam for female, Rob/Ned/Sam for male participants; name changed to Kat/Ken if it coincided with the participant's name); assignment counterbalanced across participants",
+      "Label": "Names of equal length (3 letters, width 2 deg)",
+      "Colors": {
+        "Stimulus": "White",
+        "Background": "Grey"
+      }
+    },
+    "detail": "Experiment 2: association of the participant's own real face with a stranger's name (no 'You' label). 29 participants tested, 5 excluded due to technical issues during preparation of photographs; 24 analyzed (17 Asian-face and 7 White-face versions; 12 female/12 male; age 18-35, M=21.8, SD=3.65; 3 left-handed). Task structure identical to Exp1 (learning phase 3 x 20 s; 24 practice trials; 3 blocks x 90 = 270 test trials; z/m keys counterbalanced). Identity coding (author internal codes You/Neutral/AntiYou): AntiYou = Own face (Self, associated with a stranger's name), You/Neutral = Stranger. Per-subject which name is linked to the own face is given by raw columns 14-16 (the own-face name is the one whose code is AntiYou). Data: 24 subjects x 270 test trials = 6480 rows. ACC: 1 correct / 0 incorrect / NA no response (key 'x'); RT_ms in ms, NA for no-response. Source: OSF 2q9w7, DATA/SelfBoostExp_2xxx.dat; note 2 files (2008/2011) have line-level SubNum differing from filename (author renamed files; filename is the subject ID, see Issue 4 in Verifying_original_results_issues.md)."
+  }
+}

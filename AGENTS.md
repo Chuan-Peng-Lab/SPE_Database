@@ -100,8 +100,10 @@ mode: primary
 ## Project context
 
 - **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
-  **46 studies / 88 rows** per `Dataset_inf.csv` (39 curated
-  folders on disk + 7 pending entries, 2026-08-30 verified; 2026-08-30
+  **46 studies / 89 rows** per `Dataset_inf.csv` (40 curated
+  folders on disk + 5 pending entries + 1 deferred, 2026-09 verified; 2026-09
+  Wozniak_2020_PLOS 入库（3 行）；2026-09 Scheller_2026_elife 2 行删除
+  （匹配任务 trial 数据不可得，待作者提供后重入）；2026-08-30
   added Orellana-Corrales_2020_ExpPsych, Vicovaro_2024_PeerJ,
   Zhang_2024_PsychJ; 2026-08-30 Hobbs_2023_PsychMed 入库, 38→39 文件夹 /
   8→7 pending) using the self-matching task
@@ -109,7 +111,7 @@ mode: primary
   3603 participants) refer to the manuscript and have NOT been re-verified against
   the CSV. Companion to a preregistered meta-analysis (OSF: euqmf).
 - **Structure**:
-  - `1_Data/` — 39 study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
+  - `1_Data/` — 40 study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
     master index (legacy `Dataset_inf.xlsx` outdated — pending deletion after
     collaborators confirm the CSV). Each folder contains:
     - raw data: `*_raw.csv` (trial-level), `*_subj_info.csv` (subject-level),
@@ -154,7 +156,10 @@ mode: primary
       `Folder_Name`; comparison treats manuscript "Not specified"=missing and
       `CC0`=`CC0 1.0 Universal` as equal). Outputs `Generate_Table1.docx` +
       `Output/table1_problems.txt` (known issue classes listed there); render with
-      RStudio's bundled quarto. Operational details: PROJ_STATE.md.
+      RStudio's bundled quarto（2026-09 实测路径：
+      `/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render
+      Generate_Table1.qmd`——注意是 `app/quarto/bin/`，不是 `app/bin/quarto/`）。
+      Operational details: PROJ_STATE.md.
     - `Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md` — Chinese report of the
       3-way consistency check (manuscript Table 1 vs CSV vs folders).
 - **Stack**: R / R Markdown / Shiny. RStudio project (`SPE_Database.Rproj`).
@@ -178,19 +183,22 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 - **Missing raw data**: `Sun_2026_DataExp/` has `Sun_2026_DataExp_Exp1_Clean.csv`
   (largest cleaned file, 62 MB) but no `*_raw.csv`（实验级 JSON 已于 2026-08 补齐；
   raw 追补归阶段 4，用户+agent 共同决定）。
-- **Pending study — no data folder yet (do NOT "fix")**: `Dataset_inf.csv` lists
-  `Wozniak_2020_PLOS` (DOI `10.1371/journal.pone.0235627`, OSF `osf.io/2q9w7`) but no
-  `1_Data/Wozniak_2020_PLOS/` folder exists — expected, data not yet curated.
-  Paper = Woźniak & Hohwy, PLOS ONE, 2020.
-- **7 more CSV `Folder_Name` entries have no folder (verified 2026-08-30)**: `Bukowski_2021_ActaPsych`,
+- **Deferred study — rows removed from CSV (do NOT "fix")**: `Scheller_2026_elife`
+  (DOI `10.7554/eLife.100932`, OSF `osf.io/a62df`) — rows deleted from
+  `Dataset_inf.csv` (2026-09, user decision): the OSF archive contains TOJ
+  trial-level data only; the shape-label matching-task trial data (per-participant
+  `Raw Data/*.csv` referenced by the analysis notebooks) were never uploaded.
+  The input-zone folder is kept (validator `known_unlisted` whitelist). Re-ingest
+  when the authors share the matching data.
+- **5 more CSV `Folder_Name` entries have no folder (verified 2026-09)**: `Bukowski_2021_ActaPsych`,
   `Golubickis_2021_ActaPsych`, `Hu_2023_SDB`, `Mcivor_2021_EJN`,
-  `Scheller_2026_elife`, `Svensson_2022_PsychRes`,
-  `Wozniak_2020_PLOS` — listed in Dataset_inf.csv but no `1_Data/` folder; expected
-  pending/uncatalogued, do NOT "fix". The validator (`validate_json_metadata.R`)
-  whitelists all of them (`known_pending` list); `Generate_Table1.qmd` excludes
-  folderless entries from the generated Table 1 (dynamic keep-by-folder logic).
-  (2026-08-30: `Orellana-Corrales_2023_QJEP` 与 `Hobbs_2023_PsychMed` 已入库，
-  移出本清单与白名单。)
+  `Svensson_2022_PsychRes` — listed in Dataset_inf.csv but no `1_Data/` folder;
+  expected pending/uncatalogued, do NOT "fix". The validator
+  (`validate_json_metadata.R`) whitelists all of them (`known_pending` list);
+  `Generate_Table1.qmd` excludes folderless entries from the generated Table 1
+  (dynamic keep-by-folder logic). (2026-08-30: `Orellana-Corrales_2023_QJEP` 与
+  `Hobbs_2023_PsychMed` 已入库；2026-09: `Wozniak_2020_PLOS` 已入库，
+  均移出本清单与白名单。)
 - **Manuscript Table 1 vs data has known discrepancies (verified 2026-08)**: Exp-number
   copy-paste errors (e.g. `P5E1`–`P5E3` all labeled "Exp4" in the manuscript),
   N-count differences (manuscript "—" vs CSV concrete values), Trials wording
