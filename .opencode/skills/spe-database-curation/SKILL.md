@@ -51,7 +51,14 @@ Use me when you are:
   for deletion once collaborators confirm the CSV (audit 2026-08: it holds no data
   beyond the CSV).
 - **`Dataset_inf.csv` 列说明（40 列，按用途分组）**：
-  - 键列：`ID`（行号）、`Folder_Name`（关键 ID）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
+  - 键列：`ID`（**复合键，2026-09 起**：格式 `<Folder_Name>_Exp<Exp>_<subj_Group>`，
+    组名空格以下划线编码（如 `Constable_2021_CogEmo_Exp1_Happy_self`）；行唯一性即
+    `Folder_Name+Exp+subj_Group` 三元组唯一性；此前为数字行号，历史文档中的数字 ID
+    引用均为旧口径，不再使用）、`Folder_Name`（关键 ID）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
+  - **行序约定（2026-09 起）**：Dataset_inf.csv 数据行**始终按 ID 列字母序排列**
+    （纯字典序，Python `sorted(key=ID)` 即同款）；新增研究入库时**追加后立即重排**
+    （或直接插入排序位置），任何编辑后行序保持排序；校验手段：`python sorted` 检查
+    或 `git diff` 只应显示内容/插入行而非整体乱序
   - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
   - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
   - 设计：`Design`、`subj_Group`（被试分组列，**2026-08 起每 group 一行**：

@@ -2,7 +2,7 @@
 
 This project was inspired by [the Confidence Database](https://doi.org/10.1038/s41562-019-0813-1). We aimed at curating a database that include trial-level data and other meta-data from as many empirical studies that used self-matching task from [Sui, He, &amp; Humphreys (2012)](http://www.ncbi.nlm.nih.gov/pubmed/22963229). `<!-- OSF, preprint, and publication links will be directly added to this paragraph -->`
 
-Currently, the SPE database includes trial-level data from **48 studies** (**40 curated on disk + 7 pending entries + 1 deferred**) / **91 rows** per the master index `1_Data/Dataset_inf.csv` (2026-09: + Wozniak_2020_PLOS curated; Scheller_2026_elife rows removed — matching-task trial data not available on OSF, see PROJ_STATE.md; + Zhang_2026_JNeurosci and Qi_2025_SciData registered as pending with input-zone data). Earlier published counts (44 papers / 70 datasets / 3603 participants) refer to the manuscript and have not been re-verified against the CSV. Each dataset includes information on reaction times (RTs), accuracy (ACC), and other information reported in papers. Participants in these included studies come from diverse cultural backgrounds, facilitating cross-study comparisons and meta-analytic investigations.
+Currently, the SPE database includes trial-level data from **49 studies** (**40 curated on disk + 8 pending entries + 1 deferred**) / **92 rows** per the master index `1_Data/Dataset_inf.csv` (see `PROJ_STATE.md`). <!-- Earlier published counts (44 papers / 70 datasets / 3603 participants) refer to the manuscript and have not been re-verified against the CSV -->. Each dataset includes information on reaction times (RTs), accuracy (ACC), and other information reported in papers. Participants in these included studies come from diverse cultural backgrounds and age range, facilitating cross-study comparisons and meta-analytic investigations.
 
 The SPE Database is continuously updated as new studies and datasets become available. We welcome contributions from researchers who wish to share their data and help expand this resource. If you are interested in contributing or collaborating, please feel free to reach out!
 
@@ -10,7 +10,7 @@ This project is in parallel with an on-going preregistered meta-analysis leading
 
 ## Data & metadata
 
-- **Master index**: `1_Data/Dataset_inf.csv` (UTF-8 with BOM) — one row per experiment, keyed by `Folder_Name` (the project-wide ID for papers/preprints, == study folder) + `Exp`. Key columns: `FirstAuthor`, `Year` (official print year), `Journal`, `DOI` (paper DOI), `Country`/`City`, `Stim_Type`, `Stim_language`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`, `Repo_Link` (data repository link). Current inventory: **40 curated studies on disk + 5 pending entries + 1 deferred (Scheller_2026_elife)** (authoritative counts live in the CSV).
+- **Master index**: `1_Data/Dataset_inf.csv` (UTF-8 with BOM) — one row per experiment-sample, keyed by `Folder_Name` (the project-wide ID for papers/preprints, == study folder) + `Exp` + `subj_Group`. Key columns: `FirstAuthor`, `Year` (official print year), `Journal`, `DOI` (paper DOI), `Country`/`City`, `Stim_Type`, `Stim_language`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`, `Repo_Link` (data repository link). Current inventory: **40 curated studies on disk + 8 pending entries + 1 deferred (Scheller_2026_elife)** (authoritative counts live in the CSV).
 - **Data readability** (since 2026-08-30): `Shape`/`Label` columns hold actual stimulus values (shape names / label words); original numeric codes are kept in the raw `ShapeCode`/`LabelCode` columns and the Clean `*_Origin_Identity` columns.
 - **Cleaned data**: `*_ExpN_Clean.csv` uses standardized columns `Subject`, `Shape`, `Label`, `Matching`, `ACC`, `RT_ms`, plus 3-level Identity columns (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger). Cleaning is minimal preprocessing — invalid values (e.g., `ACC = -1`) are kept and documented in the codebook; users preprocess per their own analysis goals.
 - **Per-study metadata**: paper-level `<Study>.json` + experiment-level `<Study>_Exp<N>.json` (v2 schema) + `Codebook_<Study>_Exp<N>_Clean.xlsx`.
@@ -20,7 +20,7 @@ This project is in parallel with an on-going preregistered meta-analysis leading
 ## Leading Team
 
 - Zhenxin Cai (School of Psychology, Nanjing Normal University,email:[czx@nnu.edu.cn](czx@nnu.edu.cn))
-- Wang Qihui(School of Psychology, Nanjing Normal University,email:QAQbigWang@163.com.)
+- Wang Qihui(School of Psychology, Nanjing Normal University)
 - Xinru Sun (School of Psychology, Nanjing Normal University)
 - Wanke Pan (School of Psychology, Nanjing Normal University)
 - Mengzheng Hu (School of Psychology, Nanjing Normal University)
@@ -30,7 +30,7 @@ This project is in parallel with an on-going preregistered meta-analysis leading
 
 ### Data contributors
 
-Authors of original studies were invited and listed here, if permitted, as contributors. We will adhere to Sage's authorship criteria for authors in our future data descriptor paper. That is, authors of our data descriptor paper must have been responsible for at least one of the following [CRediT](https://us.sagepub.com/en-us/nam/credit) roles:
+Authors of original studies were invited and listed here, if accepted, as contributors of the future manuscript. We will adhere to general authorship criteria for authors in our future data descriptor paper. That is, authors of our data descriptor paper must have been responsible for at least one of the following [see CRediT](https://us.sagepub.com/en-us/nam/credit) roles:
 
 - Conceptualization
 - Methodology
@@ -42,7 +42,7 @@ AND at least one of the following:
 - Writing - Original Draft Preparation
 - Writing - Review & Editing
 
-Contributors
+Confirmed contributors
 
 - Marco Bertamini (Department of General Psychology, University of Padova)
 - Mario Dalmaso (Department of Developmental and Social Psychology, University of Padova)

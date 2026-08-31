@@ -1,9 +1,9 @@
-# PROJ_STATE.md — SPE Database 项目状态（2026-08 更新）
+# PROJ_STATE.md — SPE Database 项目状态（2026-09 更新）
 
 ## 当前目标
 
-SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的文件夹名（<Author>_<Year>_<期刊缩写>）作为全项目论文/预印本的关键 ID，以 1_Data/Dataset_inf.csv 为主索引，使 40 个已入库研究、5 个待入库条目（+1 暂缓：Scheller_2026_elife 匹配任务数据不可得）的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 的再生成与比对提供可靠数据源。
-当前最重要推进线路见「下一步任务」分层清单（L1 精细化 → L2 数据判定 → L3 入库 → 清理收口）。
+SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的文件夹名（<Author>_<Year>_<期刊缩写>）作为全项目论文/预印本的关键 ID，以 1_Data/Dataset_inf.csv 为主索引（**49 unique / 92 行**：40 已入库 + 8 待入库条目（5 pending + Zhang_2026_JNeurosci/Qi_2025_SciData/Atzeni_2026_PsychRes 已登记）+ 1 暂缓（Scheller_2026_elife）），使各研究的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 的再生成与比对提供可靠数据源。
+当前最重要推进线路见「下一步任务」分层清单（L1 精细化 → L2 数据判定 → L3 入库 → 清理收口）。**2026-09 更新**：Status=1 判定标准改为五件套自洽优先（关键决策 17，当前 74 行/36 unique 已标记）；CSV ID 列已改为复合键（关键决策 18）。
 
 ## 已完成（均已验证）
 
@@ -141,6 +141,27 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **发现：4 个 pending 研究输入区数据已到位**（文件夹 2026-08-31 创建，此前 PROJ_STATE/白名单均未记录）：`Bukowski_2021_ActaPsych_Raw/`（OSF pcv3u 存档 24.7 MB）、`Golubickis_2021_ActaPsych_Raw/`（OSF 8bktn）、`Mcivor_2021_EJN_Raw/`（figshare `Participant E-Prime Data Combined.xlsx` 10.7 MB）、`Svensson_2022_PsychRes_Raw/`（OSF cj7fp）；`Hu_2023_SDB` 仍无文件夹。
 - **用户决策：暂不入库，仅记录**；阶段 5 入库待另行指示（按 SKILL 场景 B 流程逐研究执行）。校验器影响已核实：4 个新文件夹在 CSV 中已列出，validate_json_metadata.R 不报错（known_pending 条目变惰性，入库完成后移除）。
 
+### 2026-09（本会话）— Qi_2025 全文转换 + Journal/DOI 补录 + Atzeni_2026_PsychRes 登记（收尾）
+
+- **REF 全文**：Qi_2025_SciData.html（nature.com/Scientific Data）经管线转换——**命中现有 Springer 模板**（无需新适配，记入 README_html2md.md）；产出 `Qi_2025_SciData.md`（验收全过：frontmatter 完整、64 条参考文献、16 图全本地化 0 缺失）；论文 *A Comprehensive Dataset for Investigating the Structure of Self-Bias*（Qi/Zou/Chau/Zhou/Wang/Sui，Scientific Data 12(1)，2025-11-06）——**134 名被试 10 范式（含 shape-label matching）与输入区数据吻合**，确认期刊/DOI。
+- **CSV ID 93（Qi_2025_SciData）补 Journal=Scientific Data / DOI=10.1038/s41597-025-06035-z**（字节保真，用户确认）。
+- **Atzeni_2026_PsychRes 登记（2026-09 用户指示）**：新研究登记 CSV——ID 94 `Atzeni_2026_PsychRes_Exp1_All`（T2 数据口径 N=116；T3=93 记 Note；意大利语 TU/SCONOSCIUTO=self/stranger；T1 无匹配任务（IAT+NLT+RSES）；Repo_Link osf.io/tmk5b；Journal=Psychological Research 待入库时 Crossref 核对）；known_unlisted 豁免移除（恢复 1 个 = Scheller）。入库（阶段 5）待用户指示。
+- 收尾验收：validate_json_metadata EXIT=0（109 JSON / 48 文件夹 / known_unlisted 1）；validate_clean_csv 0 ERROR / 38 WARN。
+
+### 2026-09（本会话）— Dataset_inf.csv 按 ID 字母序排序（92 行）
+
+- **用户指示**：CSV 按 ID 列 alphabet 排序，后续新研究自动保持排序。
+- **执行**：92 行按 ID 纯字典序重排（`sorted(key=ID)`；同研究内 Exp 自然成序、组名按字母序）；程序化验证——排序前后行内容多重集合完全一致（仅行序变化）+ 升序断言通过。
+- **约定固化**：行序 = ID 字母序（新增研究追加后立即重排）；已入 SKILL.md §列说明「行序约定」+ 关键决策 19；下游无行序依赖（各脚本按列名/Folder_Name 读取；qmd 稿件比对默认关闭且基于 Paper_ID→行号过渡映射，冻结清单不受影响）。
+- 验收：validate_json_metadata EXIT=0（109 JSON / 48 文件夹）。
+
+### 2026-09（本会话）— Dataset_inf.csv ID 列改为复合键（91 行）
+
+- **用户指示**：第一列 ID 从数字行号改为论文ID+实验编号+被试组编码。
+- **执行**：全部 91 行 ID 重建为 `<Folder_Name>_Exp<Exp>_<subj_Group>`（组名空格→下划线，如 `Constable_2021_CogEmo_Exp1_Happy_self`、`Orellana-Corrales_2023_QJEP_Exp1_familiar_(words)`）；预检确认三元组唯一（91/91）、无空 Exp/组、无下游代码引用 ID 列（Generate_Table1.qmd 的 Table 1 ID 列 = Folder_Name、稿件比对用行号键，均不受影响）。
+- 验收：改后程序化核对——除 ID 列外其余 39 列 0 差异（Qi_2025 Journal/DOI 为本会话早前按指示补入的合法差异）；validate_json_metadata EXIT=0（109 JSON / 47 文件夹）；新 ID 91 个全部唯一。
+- 规则入 SKILL.md §列说明；关键决策 18。
+
 ### 2026-09（本会话）— Status=1 判定标准更新 + 三研究标记（Zhang_2023 / Smith_2024 / Sui_2014_unpub）
 
 - **用户指示更新 Status 判定标准**（关键决策 17，已入 SKILL.md §列说明）：Status=1 的最关键标准 = **库内五件套逻辑自洽清晰**（raw/Clean/subj_info/Codebook/JSON 互相印证、缺口有依据）；与论文表述一致为次要指标，不一致记 `Verifying_original_results_issues.md` Issue（先例：Zhang_2023 Issue 5）+ exp JSON detail/CSV Note，不阻塞 Status=1。
@@ -213,6 +234,8 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 15. **QJEP 作者产物错位发现处置**（2026-08-30）：论文/OSF data_clean.csv 列错位（详见 3_Reports/Verifying_original_results_issues.md（Issue 1））——库内数据正确不受影响；文档+JSON detail 记录归档，**是否联系作者由项目负责人决定**（超库范围不主动执行）。
 16. **Scheller_2026_elife 移除**（2026-09 用户决策）：OSF 全量核实仅 TOJ trial 数据、匹配任务 trial 数据从未上传（notebook 引用的逐被试 Raw Data/*.csv 缺失）、用户指示不下载 OSF → CSV 2 行删除、validator known_unlisted 豁免（输入区保留）；**待用户联系作者获得匹配任务数据后重入**。
 17. **Status=1 判定标准更新**（2026-09 用户指示，取代 2026-08-30「类别一=已完成全量交叉核对」口径）：**最关键标准 = 库内五件套（raw/Clean/subj_info/Codebook/paper+exp JSON）形成逻辑上完全一致、清晰可追溯的结构**（各层级互相印证、缺口已解释：豁免/占位/排除均有依据）；**与原论文表述是否完全一致是次要指标**——不一致不阻塞 Status=1，记录于 `Verifying_original_results_issues.md`（Issue 编号）+ exp JSON detail/CSV Note（先例：Zhang_2023 Issue 5）。raw 豁免（阶段 4）不阻塞标记。已按新标准标记 **Zhang_2023_NeuroImage、Smith_2024_Cortex（豁免+收口同构）、Sui_2014_unpub（试点逐值全等验证）** 为 Status=1（此前 Status 核查条目「无需修改任何行」按旧口径成立，被本条取代）。
+18. **Dataset_inf.csv ID 列改为复合键**（2026-09 用户指示）：第一列 `ID` 不再使用数字行号，改为 **`<Folder_Name>_Exp<Exp>_<subj_Group>`**（组名空格→下划线，如 `Constable_2021_CogEmo_Exp1_Happy_self`）；行唯一性 = Folder_Name+Exp+subj_Group 三元组唯一性（已核实 91 行全部唯一、无空 Exp/组）；已核实无下游代码依赖 ID 列（Table 1 的 ID 列 = Folder_Name；稿件比对用行号键）；历史文档中的数字 ID 引用均为旧口径。规则入 SKILL.md §列说明。
+19. **Dataset_inf.csv 行序 = 按 ID 列字母序**（2026-09 用户指示）：数据行始终按 ID 纯字典序排列（`sorted(key=ID)`）；新增研究入库时**追加后立即重排**或插入排序位置，任何编辑后保持排序；行序变化不影响下游（各脚本按列名/Folder_Name 读取，稿件比对默认关闭）；规则入 SKILL.md §列说明。
 
 ## 核心文件
 
@@ -233,14 +256,14 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## REF/ 全文收录统计（2026-08-30 更新）
 
-- **现状**：REF/ 覆盖 **42 个研究**全文材料（34 已入库 + 8 pending）；格式：html ×32（+Vicovaro2024PeerJ、Zhang2024_PsychJ）、md ×39（+2 新转换）、pdf ×9、json ×31、Rmd ×2（Hu_2023_psyarxiv）、PMC.xml ×1、docx ×2。md/rmd 覆盖：41 个应有全文（46 − 5 unpublished）中 **40 个已有**；仅 Wang_2016_JEPHPP 为人工转换（PsycNet 模板未适配）。2026-08-30 新增 **PeerJ 模板**适配（html2Json.py extract_peerj）+ Wiley extract 增加 citation_* meta 兜底（Zhang_2024_PsychJ 页面无 override 时回退页面 meta），已同步 README_html2md.md 模板清单。
+- **现状**：REF/ 覆盖 **44 个研究**全文材料；格式：html ×33（+Qi_2025_SciData）、md ×40（+Qi_2025_SciData、Zhang_2026_JNeurosci_DS）、pdf ×10（+Zhang_2026_JNeurosci.pdf）、json ×32、Rmd ×2（Hu_2023_psyarxiv）、PMC.xml ×1、docx ×2。md/rmd 覆盖：应有全文（48 unique − 4 unpublished − 数据论文 Sun − 暂缓 Hu_2023_SDB）中 **41 个已有**（Wang_2016_JEPHPP 为人工转换，PsycNet 模板未适配）。2026-09 新增：**Qi_2025_SciData.html 命中现有 Springer 模板**（nature.com 与 SpringerLink 共用 `c-article-body`，无新模板，已记 README_html2md.md）；Zhang_2026_JNeurosci 由 pdf 经 DeepSeek 转换（_DS 版）。2026-08-30 新增 **PeerJ 模板**适配（html2Json.py extract_peerj）+ Wiley extract 增加 citation_* meta 兜底（Zhang_2024_PsychJ 页面无 override 时回退页面 meta），已同步 README_html2md.md 模板清单。
 - **`*_DS.md`**：7 个文件（Constable_2019/2021、Navon、Qian、Schaefer、Vicovaro、Hobbs）**经 DeepSeek 在线对话生成**，质量优于 pdf2md.py 原版（完整 frontmatter/结构化标题/Markdown 表格/无混排），原版已删；pdf2md.py 保留备用。
 - **暂不考虑（无 md/rmd）**：`Sun_2026_DataExp`（数据论文，无传统全文）、`Hu_2023_SDB`（用户指示暂缓）。
 - **重要教训（沉淀于 REF/README_html2md.md）**：① 转换优先走 `html2Json.py + json2md.py` 自动管线（已适配 Springer/Elsevier/Wiley/eLife/MDPI/Collabra/SAGE/PLOS 8 模板）；② Wiley/SAGE 页面 meta 缺失 → 用 Crossref 补 `METADATA_OVERRIDES`；③ BMC 参考文献是 `<ol>` 非 `<ul>`（曾漏 80 条）；④ PDF 用 pymupdf `words` 模式（span 层丢 APA 字距空格）；⑤ PDF 双栏交错/表格重复是源版式固有边界，DeepSeek `_DS` 版更优；⑥ pdf2md 自动跳过已有 md 的 PDF（html 版优先）。全文归属见 AGENTS.md Document map（管线详见 REF/README_html2md.md）。
 
 ## 测试结果（已实测）
 
-- validator：EXIT=0（结构级）；2026-09 会话末复测：**109 个 JSON 全绿**（Wozniak paper+exp ×4 新增；47 文件夹 ↔ CSV 交叉一致（含 known_unlisted 豁免的 Scheller 输入区与 Zhang_2026/Qi_2025 输入区）；known_pending 5 个（Wozniak 已移除）；known_unlisted 1 个（Scheller_2026_elife，注释记录原因；Zhang_2026_JNeurosci 已列入 CSV 移除豁免）。
+- validator：EXIT=0（结构级）；2026-09 会话末复测：**109 个 JSON 全绿**（48 文件夹 ↔ CSV 交叉一致（含 known_unlisted 豁免：Scheller_2026_elife）；known_pending 5 个；known_unlisted 1 个）。内容级 validate_clean_csv：71 文件 **0 ERROR / 38 WARN**（基线持平）。CSV 字节保真：ID 列复合键改造后逐行核对——除 ID 列外其余 39 列 0 差异（Qi_2025 Journal/DOI 为指示内补入）；91 个新 ID 全部唯一。
 - 内容级校验器 validate_clean_csv.R：71 文件 0 ERROR / 38 WARN（2026-09 会话末；含 Wozniak Exp1-3 新文件——无警告，基线持平）。
 - Wang 重建守卫（clean.R 内嵌）：Exp1 15847 行/21 人、Exp2 17635 行/25 人；Matching 1:3；practice 9 行/被试（Exp1）；Exp1 人口学 3M/18F 与论文一致。
 - Table 1 渲染（2026-09 Wozniak 入库后重渲染）：RENDER_EXIT=0；docx 主表 79 数据行（含 Wozniak Exp1-3 三行；Scheller 2 行随 CSV 删除移除）；table1_problems.txt 保持 111 行（冻结历史清单）。
@@ -394,7 +417,7 @@ L2 有文件夹但无标准 raw → 阶段 4；L3 无文件夹（8 个 pending�
 - **已完成（2026-08-30，本会话）**：Orellana-Corrales_2020_ExpPsych（3 行）、Vicovaro_2024_PeerJ（2 行）、Zhang_2024_PsychJ（2 行）——非 pending 白名单条目（全新研究，新增 CSV 行）；Hobbs_2023_PsychMed（1 行收口，pending 白名单移除）——详情见「已完成」2026-08-30 条目；先例要点：Orellana-2020 作者编号修正（participantSession.txt）；三份作者 LST 的 Tukey 口径不一致需逐份核对；排除名单未公开时可用统计量枚举反推（Orellana Exp2 = 24/30）；Vicovaro RT 单位以值域判断（勿按 PsychoPy 秒先验重缩放）；Zhang 中性形状 → NonPerson；.mat 身份编号以程序（Associate_shape.m）为准；Hobbs 三条件全收 1 行（xlsx 权威、PsychoPy "None" 无响应、匿名化名字/practice 处理、Table 2 全复现）
 - **已完成（2026-09，本会话）**：Wozniak_2020_PLOS（3 行，pending 白名单移除；四方核对 3312 单元格 0 差 + 方向核对 + Issue 4）——详情见「已完成」2026-09 条目；**Scheller_2026_elife 从 CSV 删除（用户决策）**：OSF 全量仅 TOJ trial 数据、匹配任务数据从未上传、不下载 OSF → 待用户联系作者后重入（known_unlisted 豁免、输入区保留）。
 - **剩余 5 个 pending**（Bukowski/Golubickis/Hu_2023_SDB/Mcivor/Svensson_2022）：**其中 4 个（Bukowski/Golubickis/Mcivor/Svensson_2022）输入区数据已到位（2026-09 核查发现，见「已完成」对应条目），用户决策暂不入库、待另行指示**；Hu_2023_SDB 仍无输入区数据；其 CSV 空白（Hu_2023_SDB 的 Country/City/Stim_language）在入库时随行自然填齐
-- **2026-09 新增 2 个待入库条目（CSV 行 ID 92/93 已登记，输入区已建）**：Zhang_2026_JNeurosci（AgingSPE，OSF x9frd，91 人 OA/YA）、Qi_2025_SciData（SLM 匹配任务，134 人）——详情见「已完成」2026-09 对应条目；入库待用户指示
+- **2026-09 新增 3 个待入库条目（CSV 行已登记，输入区已建）**：Zhang_2026_JNeurosci（AgingSPE，OSF x9frd，91 人 OA/YA）、Qi_2025_SciData（SLM 匹配任务，134 人，Journal/DOI 已补）、Atzeni_2026_PsychRes（SPE-自尊纵向 T1-T3，OSF tmk5b，匹配任务 T2=116/T3=93）——详情见「已完成」2026-09 对应条目；入库待用户指示
 - 验收（每研究）：五件套齐全（raw/Clean/subj_info/Codebook/paper+exp JSON）、命名合规；新增/更新 CSV 行；两级校验 EXIT=0；Generate_Table1.qmd 重渲染 RENDER_EXIT=0、docx 行数相应增加
 
 ### 阶段 6：清理与简化（依赖合作者确认 CSV）

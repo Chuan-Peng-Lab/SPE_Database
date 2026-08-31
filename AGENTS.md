@@ -100,12 +100,12 @@ mode: primary
 ## Project context
 
 - **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
-  **48 studies / 91 rows** per `Dataset_inf.csv` (40 curated
-  folders on disk + 7 pending entries + 1 deferred, 2026-09 verified; 2026-09
+  **49 studies / 92 rows** per `Dataset_inf.csv` (40 curated
+  folders on disk + 8 pending entries + 1 deferred, 2026-09 verified; 2026-09
   Wozniak_2020_PLOS 入库（3 行）；2026-09 Scheller_2026_elife 2 行删除
   （匹配任务 trial 数据不可得，待作者提供后重入）；2026-09 新增待入库
-  Zhang_2026_JNeurosci 与 Qi_2025_SciData（输入区已建，CSV 行已登记）；
-  2026-08-30
+  Zhang_2026_JNeurosci、Qi_2025_SciData、Atzeni_2026_PsychRes（输入区已建，
+  CSV 行已登记）；2026-08-30
   added Orellana-Corrales_2020_ExpPsych, Vicovaro_2024_PeerJ,
   Zhang_2024_PsychJ; 2026-08-30 Hobbs_2023_PsychMed 入库, 38→39 文件夹 /
   8→7 pending) using the self-matching task
