@@ -18,6 +18,16 @@
 #      1=正确, 0=错误, 3=超时反应（probeDur=1 s，RT>=1000 ms），
 #      4=无反应（RT=0）。按项目「最小预处理」约定保留原值、不重编码、不过滤
 #      （含义已写入 codebook 与下方注释）。
+#   4. 新增标准 trial 级 *_ExpN_raw.csv 输出（2026-08-31 阶段 4 判定：
+#      .mat raw 可生成，见 PROJ_STATE.md 阶段 4）：
+#      从同一批 Source/*.mat 提取原始数值码（Shape/Label=1/2/3，
+#      ACC=1/0/3/4，RT_ms 即 TestRt 原值）+ 还原 Block(1-4)/Trial(1-60)
+#      序列 + 会话人口学（Age/Sex/Hand，自 .mat 的 age/sex/han）+ 按键
+#      Response（TestResp，1/2）。练习试次（ptrialMat，12/会话）不导出，
+#      与既有 Clean 口径一致（Clean 亦只含 240 测试试次/会话）。
+#      raw 行数与 Clean 完全一致（Exp1=9600 / Exp2=9360），并做
+#      raw↔Clean 逐值核对守卫（Orellana-2021 先例）。输入区顶层同名 CSV
+#      仅含人口学一行，非 trial 数据，raw 一律取自 Source/*.mat。
 # ----------------------------------------------------------------------------
 # 运行方式：Rscript Sui_2015_unpub_clean.R（或在 RStudio 中打开后 Run/Source）
 # 依赖包：R.matlab, dplyr, tidyr
@@ -144,6 +154,82 @@ read.mat <- function(list) {
   return(df)
 }
 
+# ---- write_raw_csv：从 .mat 会话导出标准 trial 级 raw（原始数值码；
+#      还原 Block(1-4)/Trial(1-60) 序列 + 会话人口学 + 按键；练习试次
+#      （ptrialMat）不导出，与 Clean 口径一致） ----
+write_raw_csv <- function(list, out_path, exclude_zero = FALSE) {
+  res <- list()
+  for (nm in names(list)) {
+    m <- list[[nm]]
+    n_tr <- nrow(m$TestRt)
+    n_blk <- ncol(m$TestRt)
+    res[[nm]] <- data.frame(
+      Subject  = as.numeric(m$num),
+      Session  = as.numeric(m$ses),
+      Block    = rep(seq_len(n_blk), each = n_tr),
+      Trial    = rep(seq_len(n_tr), n_blk),
+      Shape    = as.vector(m$Tshape),
+      Label    = as.vector(m$Tlabel),
+      Matching = ifelse(
+        as.vector(m$Tshape) == as.vector(m$Tlabel),
+        "Matching", "Nonmatching"
+      ),
+      ACC      = as.vector(m$Correct),
+      RT_ms    = as.vector(m$TestRt),
+      Response = as.vector(m$TestResp),
+      Age      = as.numeric(m$age),
+      Sex      = as.character(m$sex),
+      Hand     = as.character(m$han)
+    )
+  }
+  df <- do.call(rbind, res)
+  if (exclude_zero) df <- df[df$Subject != 0, ] # 排除测试被试 subject 0（同 Clean 口径）
+  df <- df[order(df$Subject, df$Session, df$Block, df$Trial), ]
+  row.names(df) <- NULL
+  write_clean_csv(df, out_path)
+  df
+}
+
+# ---- check_raw_vs_clean：raw 与 Clean 逐值核对（行数 + 共有列全等）。
+#      Clean 由 pivot_longer 生成，被试-会话组内为 trial-major（行序 = 试次
+#      优先，每试次 4 个 block 相邻：Trial=rep(1:60,each=4), Block=rep(1:4,60)）；
+#      raw 为 block-major（.mat 矩阵列主序，Block=rep(1:4,each=60),
+#      Trial=rep(1:60,4)，贴近真实运行顺序）。核对前统一按 (Trial, Block)
+#      排序对齐，不依赖两文件自身行序。
+#      ACC 编码差异（既有、与 raw 生成无关）：.mat 的 Correct 含特殊码
+#      3=超时（RT>=1000 ms）/ 4=无反应（RT=0），已提交的 *_Clean.csv 将其
+#      全部重编码为 NA（Exp1 143 行 / Exp2 76 行，与 raw 中 3+4 行数逐一
+#      吻合）；本脚本按项目「最小预处理」约定保留 3/4。核对时对两侧同时做
+#      {3,4}→NA 归一后比较：特殊码行集合必须完全一致，非特殊码 ACC 值全等。
+#      （注：.mat 与已提交 Clean 的编码分歧先于本次 raw 生成即存在，见
+#      PROJ_STATE.md 阶段 4 记录；raw 一律保留 .mat 原始码。） ----
+check_raw_vs_clean <- function(raw_df, cln_df) {
+  stopifnot(nrow(raw_df) == nrow(cln_df), nrow(cln_df) %% 4 == 0)
+  n_grp <- nrow(cln_df) / 4 # 每 4 行 = 同一试次的 4 个 block（trial-major）
+  c <- cln_df[order(
+    cln_df$Subject, cln_df$Session,
+    rep(seq_len(n_grp), each = 4),      # Trial 键
+    rep(seq_len(4), n_grp)              # Block 键
+  ), ]
+  r <- raw_df[order(raw_df$Subject, raw_df$Session, raw_df$Trial, raw_df$Block), ]
+  norm_acc <- function(x) ifelse(x %in% c(3, 4), NA_real_, x)
+  acc_r <- norm_acc(r$ACC)
+  acc_c <- norm_acc(c$ACC)
+  stopifnot(
+    all(r$Subject == c$Subject),
+    all(r$Session == c$Session),
+    all(r$Shape == c$Shape),
+    all(r$Label == c$Label),
+    all(as.character(r$Matching) == as.character(c$Matching)),
+    sum(is.na(acc_r)) == sum(r$ACC %in% c(3, 4)),
+    all(is.na(acc_r) == is.na(acc_c)),                # 特殊码行集合完全一致
+    all(ifelse(is.na(acc_r), TRUE, acc_r == acc_c)),  # 非特殊码 ACC 全等
+    all(abs(r$RT_ms - c$RT_ms) < 1e-9)
+  )
+  cat("raw ↔ Clean 逐值全等（", nrow(raw_df), " 行；ACC 按 {3,4}↔NA 归一后核对，特殊码 ",
+      sum(is.na(acc_r)), " 行）\n", sep = "")
+}
+
 # ============================================================================
 # Experiment 1（Identity = 3）
 # "Self", "Friend", "Stranger" -> "Self", "Close", "Stranger"（无 trial 混乱）
@@ -219,9 +305,18 @@ df_e1 <- read.mat(
     Subject
   )
 
+# 标准 trial 级 raw：同一批 .mat，原始数值码 + Block/Trial 序列 + 人口学
+df_e1_raw <- write_raw_csv(
+  list = list_mat_e1,
+  out_path = file.path(STUDY_DIR, "Exp1", "Sui_2015_unpub_Exp1_raw.csv"),
+  exclude_zero = FALSE
+)
+
 rm(list_mat_e1, mat_data)
 
 write_clean_csv(df_e1, file.path(STUDY_DIR, "Exp1", "Sui_2015_unpub_Exp1_Clean.csv"))
+
+check_raw_vs_clean(df_e1_raw, df_e1)
 
 # ============================================================================
 # Experiment 2（Identity = 3）
@@ -300,9 +395,18 @@ df_e2 <- read.mat(list = list_mat_e2) %>%
   ) %>%
   dplyr::filter(Subject != 0) # 排除测试被试 subject 0（见文件头说明）
 
+# 标准 trial 级 raw：同一批 .mat，排除测试被试 subject 0（同 Clean 口径）
+df_e2_raw <- write_raw_csv(
+  list = list_mat_e2,
+  out_path = file.path(STUDY_DIR, "Exp2", "Sui_2015_unpub_Exp2_raw.csv"),
+  exclude_zero = TRUE
+)
+
 rm(list_mat_e2, mat_data)
 
 write_clean_csv(df_e2, file.path(STUDY_DIR, "Exp2", "Sui_2015_unpub_Exp2_Clean.csv"))
+
+check_raw_vs_clean(df_e2_raw, df_e2)
 
 # ============================================================================
 # 输出校验
@@ -321,11 +425,15 @@ cat("Exp2 subject x session:
 ")
 print(table(df_e2$Subject, df_e2$Session))
 
-# 一致性守卫：Exp1=9600 行 / 20 被试；Exp2=9360 行 / 20 被试 / 无 subject 0
+# 一致性守卫：Exp1=9600 行 / 20 被试；Exp2=9360 行 / 20 被试 / 无 subject 0；
+# raw 与 Clean 同构（行数/被试数/无 subject 0），逐值核对见上方 check_raw_vs_clean
 stopifnot(
   nrow(df_e1) == 9600, length(unique(df_e1$Subject)) == 20,
   nrow(df_e2) == 9360, length(unique(df_e2$Subject)) == 20,
-  !any(df_e2$Subject == 0)
+  !any(df_e2$Subject == 0),
+  nrow(df_e1_raw) == 9600, length(unique(df_e1_raw$Subject)) == 20,
+  nrow(df_e2_raw) == 9360, length(unique(df_e2_raw$Subject)) == 20,
+  !any(df_e2_raw$Subject == 0)
 )
 cat("
 校验通过：Exp1 9600 行（subject 1-20），Exp2 9360 行（subject 1-20，无 subject 0）。

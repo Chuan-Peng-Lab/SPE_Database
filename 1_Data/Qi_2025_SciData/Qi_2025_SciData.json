@@ -1,0 +1,13 @@
+{
+  "Paper_name": "A Comprehensive Dataset for Investigating the Structure of Self-Bias",
+  "Summary": "A dataset capturing multiple manifestations of self-bias, the systematic prioritization of self-related information, across cognitive, social, and economic decision-making domains. It provides comprehensive trial-by-trial data from 134 participants who completed 10 classic self-bias paradigms (self-reference effect, mere ownership effect, self-face visual search, self-name visual search, cocktail party effect, self-name attentional blink, shape-label matching, self-enhancement, implicit association test of self-esteem, endowment effect), along with key individual-difference variables (personality traits, self-esteem, cultural-related self-construals, etc.). The dataset is designed to enable researchers to investigate whether self-biases reflect a unitary construct (like a g-factor of self-processing) or domain-specific phenomena.",
+  "Year": "2025",
+  "Author": "Yuxuan Qi, Fengjie Zou, Xi Ying Chau, Michelle Zhou, Fei Wang, Jie Sui",
+  "Journal": "Scientific Data",
+  "Country": "China",
+  "City": "Beijing",
+  "Extra_Var": "/",
+  "Email": "/",
+  "DOI": "10.1038/s41597-025-06035-z",
+  "Conclusion": "Technical validation analyses confirmed the expected self-bias patterns across paradigms. For the shape-label matching paradigm, the self-prioritization effect was significant only in matching trials: participants responded fastest and most accurately to pairings involving the self-shape, followed by the friend-shape and the familiar-other shape (Lu Xun). The dataset provides an empirical foundation for determining whether self-biases reflect a unitary construct or domain-specific phenomena."
+}

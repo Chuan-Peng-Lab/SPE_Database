@@ -8,7 +8,7 @@ SelfBoost_Avg1subject_MAD_full.m）的每被试条件均值，与作者 xlsx 聚
 作者过滤口径（脚本实现，注意与论文文字 "2.5 MAD" 不同——脚本实际为
 硬编码 highestRT=1500）：仅正确试次且 200 < RT < 1500 ms。
 
-作者 xlsx 身份编号体系（关键发现，2026-09 验证）：
+作者 xlsx 身份编号体系（关键发现，2026-08-31 验证）：
   - cue（label）编号 = 固定内部码：1=You, 2=Neutral, 3=AntiYou
   - face 编号 = 槽号（每被试 permutation 决定），即 xlsx 的 face 列 j
     对应内部码 σ(j)，其中 σ(j) = "码 j 在 labelsREAL 排列中的槽号"：

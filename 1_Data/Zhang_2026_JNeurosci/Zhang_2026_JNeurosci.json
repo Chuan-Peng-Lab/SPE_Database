@@ -1,0 +1,13 @@
+{
+  "Paper_name": "Neural Compensation in the Medial Prefrontal Cortex Preserves Self-Prioritization in Aging: A Computational Approach",
+  "Summary": "This study demonstrates that older adults (OAs) preserve and even enhance their ability to prioritize self-related stimuli, compared with young adults (YAs). Combining a perceptual shape-label matching paradigm with computational modeling (hierarchical drift diffusion modeling, HDDM) and fMRI analyses, the study found that this preservation operates through distinct cognitive and neural mechanisms: OAs' general slower responses resulted from more conservative decision thresholds and prolonged nondecision processes, while evidence accumulation (the core computational process underlying self-prioritization) remained intact. Neuroimaging showed an age-invariant self-other discrimination mediated by bilateral posterior superior temporal sulcus (pSTS) and decreased primary visual cortex (V1) activity, and OAs demonstrated stronger brain-behavior coupling for self-prioritization in the left ventromedial prefrontal cortex, right ventrolateral prefrontal cortex, anterior cingulate cortex, and right temporal pole. A dual-pathway model is proposed: neural maintenance in posterior regions mediating self-other discrimination and compensatory prefrontal-temporal recruitment sustaining behavioral performance.",
+  "Year": "2026",
+  "Author": "Yongfa Zhang, Yang Sun, Haixu Wang, Wanke Pan, Fei Wang, Jie Sui",
+  "Journal": "The Journal of Neuroscience",
+  "Country": "China",
+  "City": "Beijing",
+  "Extra_Var": "/",
+  "Email": "/",
+  "DOI": "10.1523/JNEUROSCI.0487-25.2025",
+  "Conclusion": "OAs preserved and even enhanced self-prioritization behaviorally (larger z-transformed RT SPE than YAs) with accuracy comparable to YAs. DDM revealed that OAs' slower responses stemmed from more conservative decision thresholds and prolonged nondecision time, whereas evidence accumulation for self-relevant information remained intact. Computational-neuroimaging analyses revealed two distinct preservation mechanisms: faster evidence accumulation for self-relevant information via increased vmPFC and striatum activation across age groups, and heightened associations between self-information accumulation and mPFC/temporal pole activation specific to OAs."
+}

@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "2025 (ethics protocol dated 2025-01-24; exact collection dates not reported)",
+    "Physical_Environment": {
+      "Location": "Online (Pavlovia); participants: psychology students at the University of Padova, Italy",
+      "Setting": "Online",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "PsychoPy 2022.2.4 (Peirce et al., 2019), administered via Pavlovia"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (label identity: TU = self, SCONOSCIUTO = stranger) x 2 (trial type: matching, nonmatching) within-subjects; longitudinal: same matching task at session 2 (T2) and session 3 (T3), about one week apart; 200 formal trials per session = 4 conditions x 50"
+    },
+    "Block_Structure": {
+      "Block_number": "/",
+      "Trial_number": "200 trials per session (50 per condition; 100 matching + 100 nonmatching; 20 practice trials not included in the exported data)",
+      "Practice_trials": "20"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms (shape and label presented simultaneously)",
+      "SOA": "/",
+      "Stimulus_order": "simultaneous (shape above, label below the vertical centre)",
+      "Response_deadline": "1500 ms (blank screen response window)",
+      "ITI": "immediate (next trial after feedback)",
+      "Feedback_duration": "500 ms (\"OK\" for correct responses)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (geometric shapes + Italian identity labels)",
+      "Fixation": "cross at screen centre",
+      "Shape": "square or triangle (0.3 x 0.3 height units; shape-identity association counterbalanced across participants: condizione 1 = square-self, condizione 2 = triangle-self; assignment learned at session 2 and maintained at session 3)",
+      "Label": "TU (self) / SCONOSCIUTO (stranger), presented in Italian (Arial, letter height 0.06 height units)",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "SPE-self-esteem longitudinal study (OSF tmk5b; author analysis script SPE_SE_analyses_rv.R in the input zone). 200 undergraduate psychology students from the University of Padova (Italy) were invited; 149 volunteered for session 1, 119 took part in session 2, 97 in session 3; the matching task data files contain 116 (T2) and 93 (T3) participants (3 and 4 participants' data respectively absent from the archive). Ethics: Ethics Committee for Psychological Research of the University of Padova (Protocol 987-a, dated 2025-01-24); study conducted entirely online via Pavlovia. This database row covers the shape-label matching task only (S2 and S3; S1 had no matching task - IAT + NLT + RSES only). Data: author aggregate exports matching_task_2.csv / matching_task_3.csv (no per-participant raw files); columns: participant / condizione (1, 2) / type_trial (exp) / label (TU, SCONOSCIUTO) / shape (images/square.png, images/triangle.png) / matching_task.corr (1/0; 0 with NA rt = missed trial in the author's coding) / matching_task.rt (seconds) / shape_type / who (self/other = label identity, redundant) / trial_type (match_self, match_other, nonmatch_self, nonmatch_other = actual stimulus combination; match iff (label==TU)==(shape==self-shape per condizione), verified 100% consistent). Library products: raw + Clean merge sessions 2 and 3 with a Session column (2/3); 42,918 rows; 140 unique subjects (116 at session 2, 93 at session 3, 69 overlap; 3 participant IDs contain leading/trailing whitespace - trimmed in Subject, raw keeps the original column). The author's counterbalance variable 'condizione' is kept under the English column name Condition in Clean (raw keeps the original name). No-response trials (rt NA, author codes 0) are coded ACC=NA, RT_ms=NA per library convention (author miss coding documented). Duplicated/extra sessions kept as-is (minimal preprocessing): 3 T2 participants with 400 rows (two runs; author excluded LFVI/GSMA/JRHA from analyses) and 4 T3 participants with >200 rows (author dropped CTNA/FPMA/ESAD/mtma) plus 2 partial T3 participants (150/137 rows); the author's analysis also kept only correct matching trials, removed +/-3 SD outliers per participant x condition, and dropped participants with <50 valid matching trials (analysis N: 106 at T2, 84 at T3). numTrials = 200 per session (textual, sessions with duplicated/extra runs noted)."
+  }
+}

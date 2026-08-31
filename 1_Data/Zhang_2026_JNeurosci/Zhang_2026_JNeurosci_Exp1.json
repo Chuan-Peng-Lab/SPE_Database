@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "Tsinghua University, Beijing, China",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "E-Prime 2.0 (Psychology Software Tools)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "3 (shape identity: self, friend, stranger) x 2 (trial type: match, mismatch) within-subjects; 2 (group: OA, YA) between-subjects; 90 trials per session = 9 shape-label combinations x 10 (30 match + 60 mismatch)"
+    },
+    "Block_Structure": {
+      "Block_number": "5 blocks (fMRI runs within a single scanning visit; the paper calls them 'sessions', library convention: Session = one complete participation, within-visit task repetitions = Block)",
+      "Trial_number": "90 trials per block (450 total when all 5 blocks complete)",
+      "Practice_trials": "5-min practice before scanning (trial count not reported; not in data)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "3000 ms (shape-label pair)",
+      "SOA": "/",
+      "Stimulus_order": "simultaneous (shape above, label below fixation cross)",
+      "Response_deadline": "3000 ms (stimulus duration)",
+      "ITI": "blank screen 500-2500 ms (jittered)",
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (geometric shapes + English identity labels)",
+      "Fixation": "cross 0.8 x 0.8 deg on gray background",
+      "Shape": "triangle, square, circle (identity associations counterbalanced across participants; geometry NOT recorded in the data - the Shape column holds identity words only)",
+      "Label": "abstract labels 'you', 'friend', 'stranger' (English; friend = close friend named by the participant, stranger = unfamiliar name selected from a common name list)",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "gray"
+      }
+    },
+    "detail": "AgingSPE study (OSF x9frd, 'Neural Compensation in Medial Prefrontal Cortex Preserves Self-Prioritization in Aging'; HDDM analysis notebooks in the input zone). 66 OAs and 36 YAs recruited from Tsinghua University and nearby communities (China); after exclusions (5 OAs impaired cognitive function, 1 OA + 4 YAs fMRI technical issues, 1 OA excessive head movement), the analysis included 59 cognitively healthy OAs (32 females, 71.31 +/- 6.90 years, range 58-84) and 32 YAs (18 females, 23.22 +/- 2.59 years, range 19-29); ethics: Ethics Committee of the Center for Biomedical Imaging Research at Tsinghua University. Task: learning phase associating three geometric shapes with three identity labels (associations counterbalanced), then match/mismatch judgments (E-Prime 2.0, response keys counterbalanced). Each of the 5 fMRI runs (blocks; author's column 'session') contained 10 trials of each of the 9 shape-label combinations (90 trials = 30 match + 60 mismatch). Data: author aggregate export aging_behavioral.csv (38,057 rows; no per-participant raw files), columns: subj_idx / group (OA, YA) / session (author's name; fMRI run/block 1-5, within one visit) / trial (repetition index 1-10 within block, 9 combinations each; some rows missing in incomplete blocks) / shape, label (identity words Self/Friend/Stranger) / TrialType (match, mismatch) / stim (1 = match indicator, redundant with TrialType) / accuracy (1/0) / response (1 = match key, 0 = mismatch key) / rt (seconds). The file contains responded trials only: no-response (omitted) trials are absent (paper reports omission rates 0.77% OA / 0.56% YA) - no NA anywhere. Blocks per participant: 2-5 (74 subjects with 5; 17 with 2-4, consistent with fMRI runs excluded for head motion). Identity coding: shape/label identity words; standardized mapping (user decision 2026-08-31): Self / Close (friend) / Stranger. Paper RT exclusion (RT < 200 ms or > 3 SD from group mean, < 3% discarded) applies to its analyses only; library keeps all trials (minimal preprocessing). numTrials = 450 (5 blocks x 90) with incomplete blocks in 17 subjects; practice not recorded. Clean column name: Block (author's 'session' renamed per library convention: Session = one complete participation)."
+  }
+}

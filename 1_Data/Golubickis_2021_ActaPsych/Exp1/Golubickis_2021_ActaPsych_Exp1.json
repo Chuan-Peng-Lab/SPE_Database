@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "2020-2021 (not reported; OSF project created 2020-10-20)",
+    "Physical_Environment": {
+      "Location": "N/A (online study; participants recruited via Prolific; ethics: Ethics Committee, School of Psychology, University of Plymouth)",
+      "Setting": "Online",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "/ (not disclosed in the paper; OSF holds only the R analysis script)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "3 (shape association: self, friend, stranger) x 2 (presentation: mixed, blocked) x 2 (trial type: matching, nonmatching), all within-subjects"
+    },
+    "Block_Structure": {
+      "Block_number": "6 blocks (3 mixed + 3 blocked; block order randomized; each blocked block contains a single shape only)",
+      "Trial_number": "60 trials per block (360 total per participant; half matching, half nonmatching)",
+      "Practice_trials": "12 (before the 6 experimental blocks; not present in the data files)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms (shape-label pair; shape above, label below the fixation cross)",
+      "SOA": "/ (simultaneous presentation)",
+      "Stimulus_order": "simultaneous (shape and label displayed together)",
+      "Response_deadline": "none (self-paced; blank screen until a response)",
+      "ITI": "immediate (next trial starts after the 500 ms feedback)",
+      "Feedback_duration": "500 ms (correct/incorrect)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (geometric shapes + English identity labels)",
+      "Fixation": "central cross (500 ms)",
+      "Shape": "triangle, square, circle (138 x 138 pixels, grey on white; shape-identity associations counterbalanced across participants and NOT recorded in the data - the Shape column holds identity words self/friend/stranger only)",
+      "Label": "you, friend, stranger (English words; the data records the identity words self/friend/stranger)",
+      "Colors": {
+        "Stimulus": "grey shapes on white background",
+        "Background": "white"
+      }
+    },
+    "detail": "Experiment 1 (simultaneous shape-label matching task, Sui et al. 2012 style). 30 participants (9 male, M age = 22.67, SD = 3.11) recruited via Prolific (paid GBP 7.50/h); ethics: School of Psychology, University of Plymouth (same for Exp 2). Learning phase: participants learned random shape-identity associations (self, friend, stranger) shown simultaneously on screen; response keys N and M, key mapping counterbalanced. Trial: 500 ms fixation, 100 ms shape-label pair, blank screen until response, 500 ms feedback. Data source: OSF 8bktn 'MoD_full_E1.csv' (10,278 rows; 30 participants x up to 360 trials). The author file already excludes RT < 200 ms trials (522 of 10,800 = 4.8% removed, matching the paper's 'approximately 4%'); library keeps the file as-is (no re-filtering). Per-subject trial counts range 246-360 (no practice trials in the file). No demographics in the data; paper reports 9 male / M age 22.67 (3.11) - subj_info rows carry '/' (no per-subject demographics available). Identity coding: shape/label identity words self/friend/stranger; standardized mapping (user decision 2026-08-31): Self / Close / Stranger. Matching: type == 'match' <-> shape == label (verified 0 mismatches across all rows). Paper analysis excluded RT < 200 ms trials (already removed in the file); no participant exclusions in Exp 1 (30 analyzed; paper Appendix A reports N = 8755 correct-RT observations vs 8766 in the file - 11-trial count difference, all Appendix B means reproduce exactly so the file is the analysis data). Appendix B (mean of per-subject means, RT mean (SD) and accuracy % (SD)) fully reproduced from the file except one cell: self/mixed/nonmatching RT SD = 122.5 vs paper 112 (mean 737 identical; no exclusion rule reproduces 112; recorded as Issue 7 in Verifying_original_results_issues.md). numTrials = 360 (6 blocks x 60); Practice_Trial = 12; numBlocks = 6; Setting = Online (Prolific); Software not disclosed. Library products: raw 10,278 rows (author columns verbatim), Clean 14 columns (no Trial column - Exp 1 file has no trial index), subj_info 30 rows (demographics '/')."
+  }
+}

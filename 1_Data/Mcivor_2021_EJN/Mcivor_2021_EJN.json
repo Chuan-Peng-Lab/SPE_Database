@@ -1,0 +1,13 @@
+{
+  "Paper_name": "Self-referential processing and emotion context insensitivity in major depressive disorder",
+  "Summary": "Examined whether differential self-perception influences the salience of emotional stimuli in depressive disorders, using a perceptual matching task in which geometric shapes were arbitrarily assigned to the self and an unknown other, and each shape additionally contained a happy, sad or neutral line drawing of a face (task-irrelevant). Participants judged whether shape-label pairs were as originally shown or re-paired. Both control and depressed participants showed biased responses to self-relevant stimuli (higher d' and drift rate v for self) regardless of facial emotion; compared to control participants, depressed participants exhibited reduced happy and sad emotional biases (delta d', delta v) regardless of self-relevance, consistent with generalised Emotion Context Insensitivity at short (150 ms) stimulus presentations.",
+  "Year": "2021",
+  "Author": "Lucy McIvor, Jie Sui, Tina Malhotra, David Drury, Sanjay Kumar",
+  "Journal": "European Journal of Neuroscience",
+  "Country": "United Kingdom",
+  "City": "Oxford",
+  "Extra_Var": "/",
+  "Email": "skumar@brookes.ac.uk",
+  "DOI": "10.1111/ejn.14782",
+  "Conclusion": "A robust self-prioritization effect (higher discriminability d' and drift rate v for self over other pairings) was found in both control and depressed participants across all emotion conditions, indicating that self-bias is preserved in depression and does not reflect familiarity. Depressed participants showed reduced happy and sad emotional biases relative to control participants (lower delta d' and delta v) in both the self and other conditions, providing evidence for a generalised Emotion Context Insensitivity (hypoattention to both positive and negative information) at short stimulus presentations rather than a depression-specific negative bias."
+}

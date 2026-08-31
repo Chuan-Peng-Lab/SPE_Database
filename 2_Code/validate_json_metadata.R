@@ -157,16 +157,15 @@ dataset_inf <- file.path(data_dir, "Dataset_inf.csv")
 # Known-pending studies: listed in Dataset_inf.csv but data not yet curated
 # (documented in AGENTS.md). Add new pending entries here explicitly.
 known_pending <- c(
-  "Bukowski_2021_ActaPsych", "Golubickis_2021_ActaPsych",
-  "Hu_2023_SDB", "Mcivor_2021_EJN",
-  "Svensson_2022_PsychRes"
+  "Bukowski_2021_ActaPsych",
+  "Hu_2023_SDB"
 )
 
 # Known un-listed folders: input-zone folders whose data arrived but that are
 # not yet ingested into Dataset_inf.csv (stage-5 ingestion in progress).
 # Mirror of known_pending in the opposite direction; remove once the study is
 # listed in the CSV. Scheller_2026_elife: rows removed from Dataset_inf.csv
-# (2026-09 user decision) because the matching-task trial data are not
+# (2026-08-31 user decision) because the matching-task trial data are not
 # available (OSF archive holds TOJ trial data only; per-participant Raw Data
 # CSVs referenced by the analysis notebooks were never uploaded); folder kept
 # for the downloaded OSF archive. Re-ingest when the authors share the data.

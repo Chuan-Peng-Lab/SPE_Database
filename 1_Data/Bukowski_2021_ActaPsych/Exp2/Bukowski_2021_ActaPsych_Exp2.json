@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "schema_version": "2",
+    "Collected_date": "2017-11-01 to 2017-12-15 (SessionDate in E-Prime txt headers)",
+    "Physical_Environment": {
+      "Location": "University of Vienna, Faculty of Psychology, Vienna, Austria (laboratory rooms; participants tested individually; see paper: experiments conducted at the University of Vienna, Faculty of Psychology)",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/ (Display.RefreshRate 60.005 Hz recorded in E-Prime header)",
+        "Software": "E-Prime (experiment AssoMatc_control_young; .edat2/.txt exports on OSF pcv3u)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (matching condition: matching, nonmatching) x 3 (shape association: self, familiar other, neutral instance), within-subjects; between-subjects factor: training group (imitation / imitation-inhibition / control-inhibition)"
+    },
+    "Block_Structure": {
+      "Block_number": "6 blocks of 60 trials (paper text says 'three blocks of 60 trials' = 180; the data contain 6 blocks x 60 = 360 formal trials per participant - data caliber used, paper difference noted in CSV Note)",
+      "Trial_number": "360 formal trials per participant (6 blocks x 60; matching and nonmatching equally frequent within each shape condition)",
+      "Practice_trials": "9 (data; paper text says '12 trials practice block' - data caliber used; practice trials retained with Phase column in Clean)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms (one shape with one label)",
+      "SOA": "/",
+      "Stimulus_order": "simultaneous (shape and label displayed together)",
+      "Response_deadline": "800-1200 ms after stimulus onset (paper; E-Prime Target.RT recorded in ms)",
+      "ITI": "1000 ms (ITIDur recorded in E-Prime)",
+      "Feedback_duration": "500 ms (Correct / Incorrect / Too late!)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (geometric shapes + German identity labels)",
+      "Fixation": "central cross (500 ms)",
+      "Shape": "S.bmp / T.bmp / C.bmp (shape image files; paper describes triangle, square, circle - exact file-to-shape mapping not verifiable, Shape column holds file names as-is per user decision)",
+      "Label": "Sie / Freund / Fremder (German: formal You / friend / stranger; paper describes English labels you / best friend / unfamiliar person - actual stimuli German, Stim_language = German)",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Experiment 2 of Bukowski et al. (2021), shape matching task (Sui et al. 2012 style). 111 participants recruited (all female, right-handed; paper: final sample 109 after 2 dropouts, M age = 21.58, SD = 3.71); library data caliber = 103 participants (107 txt files - 4 excluded as Outliers=1 per user-compiled bukowski_exp2_fix_subjID.xlsx from Book1.xlsx Data_and_counterbalance; 5 Book1 rows without txt files were never in the data). Training groups (between-subjects, user decision to split CSV rows by group; paper wording): imitation 35 / imitation-inhibition 33 / control-inhibition 35 (data caliber; paper final-sample distribution 37/36/36, analyzed 35/30/32 after chance-level exclusions - recorded in CSV Note). Participant numbering: Recode_subjID from user-compiled fix table (Book1 Data_and_counterbalance renumbering, unique 1-113); E-Prime original Subject field kept in raw Subject_EPrime (note: E-Prime Subject numbers repeat across batches, e.g. 03 in both Nov 29 and Dec 13 sessions - fix table disambiguates). Identity mapping (user confirmed): Label Sie->You->Self, Freund->Friend->Close, Fremder->Stranger->Stranger; Shape variable already holds identity words Self/Friend/Stranger (English), Std Self/Close/Stranger. Shape column = Target file names (S/T/C.bmp) per user decision (image files not provided; first letters likely Square/Triangle/Circle but unverifiable). Matching = YesNoResp (Yes = matching); response keys m/n counterbalanced across participants (half Yes->n, half Yes->m; verified in guards). ACC = Target.ACC (0/1); no-response trials (RESP empty, RT 0, ACC 0) coded NA in ACC and RT_ms per project convention (E-Prime records them as ACC=0). RT in ms (integers). Block = BlockList.Sample 1-6; Trial = TrialList.Sample 1-60 within block. Practice trials (9) retained with Phase column per project convention. Data verified cell-by-cell against E-Merge aggregation in Book1.xlsx (Data_by_conditionpriming): 618 cells, 0 mismatch. Stimulus language German (Sie/Freund/Fremder). Paper describes 12 practice trials and 3 blocks of 60; data contain 9 practice and 6 blocks x 60 = 360 - data caliber used (Practice_Trial=9, numBlocks=6, numTrials=360), paper difference noted. Source: OSF pcv3u (Raw data xp1xp2/exp2/trained 2.0 shape matching/); Processed data/trainingSOD_Exp1_Exp2.sav holds subject-level aggregates (not used for numbering; Mea_*/SM_ACC_* columns differ in caliber from library aggregates)."
+  }
+}

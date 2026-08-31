@@ -1,0 +1,13 @@
+{
+  "Paper_name": "More or less of me and you: self-relevance augments the effects of item probability on stimulus prioritization",
+  "Summary": "In three shape-label matching experiments (Sui et al. 2012 style), the study examined how the frequency of self- versus friend-related shapes interacts with self-relevance in stimulus prioritization. Participants learned shape-label associations (self, friend) and then judged whether shape-label pairs matched, while prior expectancies about stimulus frequency were provided. With equal frequencies (Exp 1), a standard self-prioritization effect emerged. In confirmatory (Exp 2) and dis-confirmatory (Exp 3) contexts, frequently presented stimuli were prioritized, an effect most pronounced for self-relevant items. Hierarchical drift diffusion modeling traced the effects to the rate of information uptake, which was faster for self-related stimuli.",
+  "Year": "2022",
+  "Author": "Saga L. Svensson, Marius Golubickis, Hollie Maclean, Johanna K. Falbén, Linn M. Persson, Dimitra Tsamadi, Siobhan Caughey, Arash Sahraie, C. Neil Macrae",
+  "Journal": "Psychological Research",
+  "Country": "United Kingdom",
+  "City": "Aberdeen",
+  "Extra_Var": "/",
+  "Email": "s.svensson.19@abdn.ac.uk",
+  "DOI": "10.1007/s00426-021-01562-x",
+  "Conclusion": "Stimulus frequency and personal relevance jointly shape stimulus prioritization in shape-label matching. When self- and friend-related shapes appeared equally often (Exp 1), a self-prioritization effect emerged on matching trials. In both confirmatory (Exp 2) and dis-confirmatory (Exp 3) task contexts, frequently encountered stimuli were prioritized, with the effect most pronounced for self-relevant items. HDDM analyses indicated the effects were driven by the rate of information uptake (faster for self-related stimuli), with expectancy disconfirmation influencing friend- but not self-related processing, suggesting self-related beliefs are relatively resistant to updating."
+}

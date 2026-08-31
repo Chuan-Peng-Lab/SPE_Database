@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "Not reported (OSF project created 2020-09-15)",
+    "Physical_Environment": {
+      "Location": "Laboratory, University of Aberdeen (ethics: Ethics Committee, School of Psychology, University of Aberdeen)",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/ (not disclosed in the paper)",
+        "Monitor": "/ (not disclosed in the paper)",
+        "Software": "/ (not disclosed in the paper; OSF archive holds only data files and stimuli)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (shape association: self, friend) x 2 (matching condition: matching, nonmatching), within-subjects; equal presentation frequency (50% self & 50% friend, as instructed)"
+    },
+    "Block_Structure": {
+      "Block_number": "1 block of 200 experimental trials",
+      "Trial_number": "200 trials per participant (50 per condition: self-matching, self-nonmatching, friend-matching, friend-nonmatching)",
+      "Practice_trials": "10 (before the experimental block; not present in the data file)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "1000 ms (central fixation cross)",
+      "Stimulus_duration": "100 ms (shape above and label below the fixation cross, presented together)",
+      "SOA": "/ (simultaneous presentation)",
+      "Stimulus_order": "simultaneous (shape-label pair displayed together)",
+      "Response_deadline": "none (blank screen until a response; response keys N and M, key-response mapping counterbalanced)",
+      "ITI": "/ (not reported)",
+      "Feedback_duration": "/ (not reported)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (geometric shapes + English identity labels)",
+      "Fixation": "central cross (1000 ms)",
+      "Shape": "triangle and square (138 x 138 pixels, white on grey background; shape-identity binding counterbalanced across participants and NOT recorded in the data - the Shape column holds identity words Self/Friend only)",
+      "Label": "YOU and FRIEND (English words, uppercase in the data file; the paper writes 'You'/'Friend')",
+      "Colors": {
+        "Stimulus": "white shapes on grey background",
+        "Background": "grey"
+      }
+    },
+    "detail": "Experiment 1 (equivalent context): shape-label matching task (Sui et al. 2012). 20 participants (14 female, M age = 19.32, SD = 5.08), University of Aberdeen undergraduates; laboratory session. Learning phase: participants were told the computer would randomly assign one geometric shape to denote them (self) and another to denote their best friend, then saw a screen showing the assignment (e.g., you = square, friend = triangle); assignment counterbalanced across participants. Trial: 1000 ms fixation, 100 ms shape-label pair, blank screen until response (N/M keys, mapping counterbalanced). Data source: OSF cj7fp 'Experiment 1, equal.xlsx' (3,370 rows; 20 participants). The author-provided file already excludes RT < 200 ms trials and non-response trials: RT min = 200 ms (paper analysis criterion 'responses faster than 200 ms were excluded', reported <1% of trials), no missing-value rows, RT ceiling ~1200 ms; per-subject trial counts range 118-199 of the 200 design trials - the cause of the missing trials is not documented by the authors (possibly missed-response trials and early session termination); the library keeps the file as-is (minimal preprocessing, no re-filtering, no imputation). Practice trials (10) are not in the file. Identity coding: Target Label YOU/FRIEND -> Self/Close, Shape Association Self/Friend -> Self/Close (user decision 2026-09). Matching: 'Matching' <-> (Target Label identity == Shape Association identity), verified 0 mismatches across all 3,370 rows. No geometric shape information in the file (shape-identity binding counterbalanced, not recorded) - the Shape column holds the identity words (Zhang_2026 / Golubickis precedent). No demographics in the data; paper reports 14 female / M age 19.32 (5.08) - subj_info rows carry '/' (no per-subject demographics available; Golubickis precedent). Descriptive direction checks (mean of per-subject means, correct RTs): matching self 592.9 ms / 83.0% vs friend 657.7 ms / 69.7% (self faster and more accurate), nonmatching friend 661.2 ms vs self 682.4 ms (friend faster) - consistent with the paper's Fig. 1-2 and multilevel results. numTrials = 200; numBlocks = 1; Practice_Trial = 10; Practice_Block = 1; Setting = Laboratory; Software not disclosed (Environmental_Info left empty per P18). Library products: raw 3,370 rows (author columns verbatim, incl. author spelling 'Reponse Time'), Clean 13 columns, subj_info 20 rows (demographics '/')."
+  }
+}

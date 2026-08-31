@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "2023-04 to 2023-12 (from per-participant file date stamps)",
+    "Physical_Environment": {
+      "Location": "Tsinghua University, Beijing, China",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "25-inch external monitor",
+        "Monitor": "25-inch, 1920 x 1080 pixels, 60 Hz",
+        "Software": "PsychoPy 2022.2.4"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "3 (shape identity: self, friend, familiar other) x 2 (trial type: matching, nonmatching) within-subjects; formal 360 trials = 6 conditions x 60 (each nonmatching pair combination presented equally often)"
+    },
+    "Block_Structure": {
+      "Block_number": "6 blocks (rest after every 60 trials)",
+      "Trial_number": "60 trials per block (360 total formal)",
+      "Practice_trials": "variable; until 6 consecutive correct responses (6-138 in data)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms (shape-name pair)",
+      "SOA": "/",
+      "Stimulus_order": "simultaneous (shape above, name below)",
+      "Response_deadline": "1100 ms (blank screen after stimulus)",
+      "ITI": "immediate (next trial after feedback)",
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (geometric shapes + Chinese full names)",
+      "Fixation": "cross on gray background (RGB 127, 127, 127)",
+      "Shape": "circle, triangle, rectangle (2.4 deg x 2.4 deg each; names from data filenames; paper text says square - see Issue 6)",
+      "Label": "full names of self, best friend, and Lu Xun (familiar other; about 4.4 deg x 2.4 deg)",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "gray (RGB 127, 127, 127)"
+      }
+    },
+    "detail": "Shape-label matching (SLM) paradigm within a 10-paradigm data paper (Scientific Data 12(1), 2025); this database row covers the SLM task only. 134 Chinese undergraduate/graduate students (77 female; age 18-28, M=21.99, SD=2.08) recruited from the Tsinghua University psychology subject pool; ethics: Ethics Committee of the Department of Psychological and Cognitive Sciences at Tsinghua University (NO. 2022-29); all right-handed, normal/corrected vision. Learning phase: three geometric shapes associated with the full names of the self, the best friend, and Lu Xun (familiar other); shape-identity association and z/m key mapping counterbalanced across participants in 12 groups (condition 1A-6B, group 1-12; see SLM_rawdata_code.txt). Practice block until 6 consecutive correct responses (data: 6-138 practice trials per participant), then 360 formal trials (rest after every 60 trials). Trial: 500 ms fixation, 100 ms shape-name pair, 1100 ms blank response window, 500 ms feedback. Data: 134 per-participant PsychoPy exports (Data_of_each_participant/<ID>_SLM_*.csv, UTF-8 BOM); each file has 2 leading metadata/blank rows (row 1 carries ID/age/sex; dropped in library products); no-response trials have empty keys in the per-participant files (author's Summary_SLM.xlsx records them as the string 'None'); one file records sex as Chinese '男' (= male). Identity coding: label_identity/shape_identity 1=self, 2=friend, 3=familiar other (Lu Xun); standardized mapping (user decision 2026-08-31): Self / Close / Celebrity (Qian_2020_QJEP 'Familiar'->'Celebrity' precedent). Paper text describes the shapes as circle/square/triangle while data filenames are circle.png/triangle.png/rectangle.png - library uses the data names (Issue 6 in Verifying_original_results_issues.md). Paper technical validation excluded 2 participants (accuracy > 3 SD below group mean) and trials with RT < 100 ms or > 3 SD (0.2% discarded) for its analyses only; library keeps all data (minimal preprocessing; practice trials retained with a Phase column; numTrials = 360 formal trials per participant). Author aggregates in the input zone: Summary_SLM.xlsx (data_raw / data_clean / coding sheets) and Preliminary_results_SLM.xlsx. Library data structure: raw 51,677 rows (48,240 formal + 3,437 practice), Clean 15 standard columns, subj_info 134 rows (Age/Gender/Group/Date)."
+  }
+}

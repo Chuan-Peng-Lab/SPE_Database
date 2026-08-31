@@ -1,0 +1,44 @@
+{
+  "exp3": {
+    "schema_version": "2",
+    "Collected_date": "Not reported (OSF project created 2020-09-15)",
+    "Physical_Environment": {
+      "Location": "Laboratory, University of Aberdeen (ethics: Ethics Committee, School of Psychology, University of Aberdeen)",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/ (not disclosed in the paper)",
+        "Monitor": "/ (not disclosed in the paper)",
+        "Software": "/ (not disclosed in the paper; OSF archive holds only data files and stimuli)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (stimulus frequency: self-frequent, friend-frequent) x 2 (shape association: self, friend) x 2 (matching condition: matching, nonmatching) x trial number, within-subjects; dis-confirmatory context (instructed expectancies disconfirmed by the actual frequencies)"
+    },
+    "Block_Structure": {
+      "Block_number": "2 blocks of 200 trials each (one self-expectancy, one friend-expectancy; block order counterbalanced)",
+      "Trial_number": "400 trials per participant (per block: 100 matching + 100 nonmatching; 150 trials of the actually-frequent shape - 75 matching + 75 nonmatching - and 50 of the actually-infrequent shape - 25 matching + 25 nonmatching; note the actual frequency is the OPPOSITE of the instructed expectancy)",
+      "Practice_trials": "10 (before the main task; not present in the data file)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "1000 ms (central fixation cross)",
+      "Stimulus_duration": "100 ms (shape above and label below the fixation cross, presented together)",
+      "SOA": "/ (simultaneous presentation)",
+      "Stimulus_order": "simultaneous (shape-label pair displayed together)",
+      "Response_deadline": "none (blank screen until a response; response keys N and M, key-response mapping counterbalanced)",
+      "ITI": "/ (not reported)",
+      "Feedback_duration": "/ (not reported)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (geometric shapes + English identity labels)",
+      "Fixation": "central cross (1000 ms)",
+      "Shape": "triangle and square (138 x 138 pixels, white on grey background; shape-identity binding counterbalanced across participants and NOT recorded in the data - the Shape column holds identity words Self/Friend only)",
+      "Label": "You and Friend (English words; NOT recorded in the data file - the Label column is derived from Trial Type + Shape Association, fully determined under the two-identity design)",
+      "Colors": {
+        "Stimulus": "white shapes on grey background",
+        "Background": "grey"
+      }
+    },
+    "detail": "Experiment 3 (dis-confirmatory context): shape-label matching task (Sui et al. 2012) with disconfirmed stimulus-frequency expectancies. 25 participants (18 female, M age = 20.40, SD = 2.75), University of Aberdeen undergraduates; laboratory session. As in Exp 2, participants were told to expect a higher frequency of either the self-shape (75% self & 25% friend) or the friend-shape (75% friend & 25% self) in each of two blocks of 200 trials, but the actual frequencies were reversed: in the self-frequent (i.e., friend-expectancy) block, friend-related shapes actually appeared 75% of the time, and vice versa. Data source: OSF cj7fp 'Experiment 3, dis-confirmatory.xlsx' (8,786 rows; 25 participants). The author-provided file already excludes RT < 200 ms trials and non-response trials: RT min = 200 ms (paper analysis criterion, reported <2% of trials), no missing-value rows, RT ceiling ~1200 ms; per-subject trial counts range 206-399 of the 400 design trials - cause not documented by the authors; library keeps the file as-is (minimal preprocessing). Practice trials (10) are not in the file. File rows are sorted by (accuracy descending, block, trial number): all correct trials (both blocks, trial numbers ascending within block) followed by all incorrect trials - the file is NOT in trial order; the Block column is derived from the trial-number restarts within each accuracy group (exactly 2 runs per group, expectancy order identical across groups; verified for all 25 participants) and the Trial column carries the author's per-block trial number (1-200). Expectancy column = instructed block condition (Self/Friend); in this dis-confirmatory design the ACTUAL frequency is the opposite (verified: self-expectancy blocks contain 25.2% self-associated shapes, friend-expectancy blocks 75.1% self-associated). No Target Label column in the file: the Label column is derived from Trial Type + Shape Association (fully determined with two identities; user decision 2026-09). No geometric shape information (binding counterbalanced, not recorded) - Shape column holds identity words. No demographics in the data; paper reports 18 female / M age 20.40 (2.75) - subj_info rows carry '/'. Descriptive direction checks (mean of per-subject means, correct RTs): self-expectancy blocks (friend actually frequent) friend 599.8 ms / 75.9% vs self 625.5 ms / 73.9%; friend-expectancy blocks (self actually frequent) self 563.4 ms / 82.2% vs friend 636.5 ms / 59.2% - actually-frequent stimuli prioritized, more so for self - consistent with the paper's Fig. 5-6 (and with the paper's note that in the friend-frequent condition accuracy did not differ significantly). numTrials = 400; numBlocks = 2; Practice_Trial = 10; Practice_Block = 1; Setting = Laboratory; Software not disclosed (Environmental_Info left empty per P18). Library products: raw 8,786 rows (author columns verbatim), Clean 16 columns (incl. derived Block, Trial and Expectancy), subj_info 25 rows (demographics '/')."
+  }
+}

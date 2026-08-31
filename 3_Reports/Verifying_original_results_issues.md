@@ -254,13 +254,13 @@ E-Prime 的 Subject 号被误填为 Session 号（Study 3 = umv5p 存档）。�
 
 ---
 
-# Issue 4 — Wozniak_2020_PLOS：作者 xlsx 聚合文件 face 身份编号错位；ER 列实为正确率；3 个 .dat 文件名与行内编号不一致（2026-09）
+# Issue 4 — Wozniak_2020_PLOS：作者 xlsx 聚合文件 face 身份编号错位；ER 列实为正确率；3 个 .dat 文件名与行内编号不一致（2026-08-31）
 
 > **一句话结论**：OSF（osf.io/2q9w7）作者聚合文件 "Raw data - SelfBoostExp.xlsx" 的**身份编号体系不对称**——cue（标签）编号用固定内部码（1=You, 2=Neutral, 3=AntiYou），**face 编号却用槽号**（每被试 permutation 决定，σ(j)=「码 j 在 labelsREAL 排列中的槽号」），导致 perm≠1 的 32 名被试（perm0×20、perm2×8、perm3×4）其 9 组合 RT/ER、face 主效应（RT_0i）与派生区（RT_M/NM1/NM2）的**身份标签错位**；仅 perm1（40 人）正确。另：xlsx 的 "ER_" 列实际是**正确率**（非错误率，命名误导）；3 个 .dat 文件（1010/2008/2011）行内 SubNum 与文件名不一致（行内=1110/2004/2010，作者整理时重命名，xlsx 与文件名口径一致）。**库内数据自 .dat 重建、真实身份映射正确，不受影响**；论文描述的定性结论（方向核对）全部成立。
 
 - 论文：Woźniak, M., & Hohwy, J. (2020). Stranger to my face: Top-down and bottom-up effects underlying prioritization of images of one's face. *PLOS ONE, 15*(7), e0235627. DOI: 10.1371/journal.pone.0235627
 - 数据仓库：OSF https://osf.io/2q9w7（"Raw data - SelfBoostExp.xlsx" + DATA/SelfBoostExp_*.dat ×72 + MATLAB 聚合脚本）
-- 核对时间：2026-09（阶段 5 入库后的四方核对：论文 ↔ 作者 MATLAB 脚本/xlsx ↔ 库内数据 ↔ .dat 原始导出）
+- 核对时间：2026-08-31（阶段 5 入库后的四方核对：论文 ↔ 作者 MATLAB 脚本/xlsx ↔ 库内数据 ↔ .dat 原始导出）
 - 核对脚本：`2_Code/wozniak2020_verify/`（verify_massive.py：复刻作者聚合并与 xlsx 逐值对比，3312 单元格 0 差异；方向核对见脚本 README）
 
 ## 1. 问题描述
@@ -279,13 +279,13 @@ E-Prime 的 Subject 号被误填为 Session 号（Study 3 = umv5p 存档）。�
 
 ---
 
-# Issue 5 — Zhang_2023_NeuroImage：OSF 共享 subject 级文件与论文分析样本口径不一致；trial 级数据未共享（2026-09）
+# Issue 5 — Zhang_2023_NeuroImage：OSF 共享 subject 级文件与论文分析样本口径不一致；trial 级数据未共享（2026-08-31）
 
 > **一句话结论**：OSF 仓库（osf.io/hbrus）全量存档**无 trial 级数据、聚合文件（348 行）无被试 ID**；从 git 历史恢复的原始 subject 级文件（347 人，与库内 subj_info 逐值一致）与论文分析样本（348 人，182F/166M，18–34 岁）在 **N 与人口学上不一致**（数据 174F/172M/1 空、Age 0–36 含 0/36 异常值）——作者共享的 subject 文件 ≠ 论文分析样本组成（推断：论文 348 含约 8 名未共享 trial 数据的被试；库内 7 名无有效数据者属论文排除者）。库内 Clean 的 SPE 复算（stranger-match − self-match RT，正确试次）与 OSF SPE_score 分布吻合（mean 98.7 vs 95.0，sd 71.9 vs 70.7），证明库内 trial 数据与论文聚合 SPE 同源，**库内数据不受影响**。
 
 - 论文：Zhang, Y., Wang, F., & Sui, J. (2023). Decoding individual differences in self-prioritization from the resting-state functional connectome. *NeuroImage*, 120205. DOI: 10.1016/j.neuroimage.2023.120205
-- 数据仓库：OSF https://osf.io/hbrus/（全量存档 2026-09 下载：data/ 聚合行为+FC 矩阵、data/external_dataset/ 老年外部验证样本聚合、codes/、output/）
-- 核对时间：2026-09（全量 OSF 存档复核 + git 历史源文件恢复 + SPE 公式复算）
+- 数据仓库：OSF https://osf.io/hbrus/（全量存档 2026-08-31 下载：data/ 聚合行为+FC 矩阵、data/external_dataset/ 老年外部验证样本聚合、codes/、output/）
+- 核对时间：2026-08-31（全量 OSF 存档复核 + git 历史源文件恢复 + SPE 公式复算）
 - 核对脚本：本会话 Python 比对（SPE 复算逻辑见 PROJ_STATE 对应条目；无固化脚本）
 
 ## 1. 问题描述
@@ -301,3 +301,54 @@ E-Prime 的 Subject 号被误填为 Session 号（Study 3 = umv5p 存档）。�
 - CSV 行（ID 53）N 口径已按数据口径收口：346/346/0（Paper_N 记 Note）；原始 subject 源文件已恢复至输入区存档；
 - trial 级 raw 豁免维持（OSF 无 trial 数据；原 trial 级 raw 从未入 git，不可恢复）；
 - 遗留：OSF 聚合无 ID，论文 348 与数据 347 的差 1 无法精确对位；**是否联系作者（subject 文件与论文样本组成差异、trial 数据可否共享）由项目负责人决定**。
+
+---
+
+# Issue 6 — Qi_2025_SciData：论文文字 "square" vs 数据文件 rectangle.png（2026-08-31）
+
+> **一句话结论**：论文 Methods 描述 SLM 任务三形状为 "circle, square, and triangle"，而逐被试 PsychoPy 导出的 `shape` 列实际为 `circle.png` / `triangle.png` / `rectangle.png`（三值严格等量：各 16080 次 / 48,240 正式试次）。形状-身份绑定为逐被试 counterbalance（12 组），数据内部自洽（清洗守卫全过）。库内 Shape 列以数据文件名为准（circle/triangle/rectangle）；该差异仅刺激命名不一致，不影响任何统计量。
+
+- 论文：Qi, Y., Zou, F., Chau, X. Y., Zhou, M., Wang, F., & Sui, J. (2025). A Comprehensive Dataset for Investigating the Structure of Self-Bias. *Scientific Data, 12*(1). DOI: 10.1038/s41597-025-06035-z
+- 数据仓库：OSF https://osf.io/3h95f（DOI 10.17605/OSF.IO/3H95F；数据 CC BY 4.0）
+- 核对时间：2026-08-31（阶段 5 入库核对）
+- 核对脚本：`1_Data/Qi_2025_SciData/Qi_2025_SciData_clean.R`（内嵌守卫）
+
+## 1. 问题描述
+
+论文 Methods（SLM 段）："participants learned to associate three geometric shapes (circle, square, and triangle) with three named identities"。134 个逐被试导出（各 381 行 = 2 元数据行 + 练习 + 360 正式试次）的 `shape` 列取值仅三值且严格等量：`circle.png` 16080、`triangle.png` 16080、`rectangle.png` 16080（全部 48,240 正式试次）。即论文文字 "square" 对应数据文件 "rectangle.png"。
+
+## 2. 处置
+
+- 库内数据以数据文件为准：Clean Shape 列 = circle / triangle / rectangle（去扩展名）；身份映射按 `shape_identity` 码（1/2/3），与形状名无关；
+- 差异已记录于 exp JSON detail（`Qi_2025_SciData_Exp1.json`）与 Dataset_inf.csv Note 列；
+- 无统计量受影响（形状名仅为刺激标签；匹配关系由 label_identity/shape_identity 码承载）；
+- **是否联系作者说明由项目负责人决定**（当前不主动联系）。
+
+---
+
+# Issue 7 — Golubickis_2021_ActaPsych：论文 Appendix B 单个 RT SD 单元格无法复现（2026-08-31）
+
+> **一句话结论**：论文（Acta Psychologica 218:103350）Appendix B 的 Exp1「self / mixed / nonmatching」单元格 RT SD 报告为 112 ms，库内数据复算（被试均值 SD）为 122.5 ms；该单元格 RT 均值（737 vs 736.6）与正确率（80 (17.8) vs 80 (17)）完全一致，且论文 Appendix B/C 其余 **23/24 个单元格（RT 均值/SD、正确率均值/SD）全部逐位复现**（±1 ms / ±1 pp 内）。单一 SD 单元格差异无统计影响，库内数据管道无误。
+
+- 论文：Golubickis, M., & Macrae, C. N. (2021). Judging me and you: Task design modulates self-prioritization. *Acta Psychologica, 218*, 103350. DOI: 10.1016/j.actpsy.2021.103350
+- 数据仓库：OSF https://osf.io/8bktn/（MoD_full_E1.csv / MoD_full_E2.csv / Analysis.R；项目未设置数据许可）
+- 核对时间：2026-08-31（阶段 5 入库核对）
+- 核对脚本：`1_Data/Golubickis_2021_ActaPsych/Golubickis_2021_ActaPsych_clean.R`（内嵌 Appendix 复现守卫，该单元格 SD 容差放宽至 15 并注释原因）
+
+## 1. 问题描述
+
+Appendix B（Exp1）报告 12 个单元格的 RT 均值 (SD) 与正确率 (SD)，均为被试均值口径（mean of per-subject cell means）。从 MoD_full_E1.csv 复算：
+
+| 单元格 | 论文 RT 均值 (SD) | 复算 RT 均值 (SD) | 差异 |
+|---|---|---|---|
+| self / mixed / nonmatching | 737 (112) | 736.6 (122.5) | 均值 −0.4 ms；SD +10.5 |
+| 其余 11 个单元格（Exp1） | — | — | 均值 ±0.5 ms 内、SD ±0.6 内 |
+| 全部 12 个单元格（Exp2, Appendix C） | — | — | 均值 ±0.8 ms 内、SD ±0.6 内 |
+
+SD 差异排查：无单个被试剔除可使 SD 变为 112（剔除最极端被试仅至 108.7/110.0）；「正确试次 ≥10/≥20」等排除规则亦无法同时保住均值 737 与 SD 112（如 n_correct≥10 时 SD=110.4 但均值升至 746.0）；总体 SD（population）为 120.4 亦非 112。该值疑为作者制表笔误或基于略异的数据版本，无法由任何简单规则复现。
+
+## 2. 处置
+
+- 库内数据以原始文件为准（附录其余全部单元格复现，证明文件即分析数据）；唯一 SD 差异不涉及任何结论（论文相关统计量方向全部验证通过：mixed > blocked、self 最快最准、SPE RT mixed 63/55 ms、blocked 26/11 ms 均复现）；
+- 差异已记录于 exp JSON detail（`Golubickis_2021_ActaPsych_Exp1.json`）；
+- **是否联系作者说明由项目负责人决定**（当前不主动联系）。

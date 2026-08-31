@@ -1,7 +1,7 @@
 # ============================================================================
 # Wozniak_2020_PLOS — 独立清洗脚本：标准 raw/Clean/subj_info（Exp1-3）
 # ----------------------------------------------------------------------------
-# 背景（2026-09 阶段 5 入库）：Woźniak & Hohwy (2020), "Stranger to my face:
+# 背景（2026-08-31 阶段 5 入库）：Woźniak & Hohwy (2020), "Stranger to my face:
 # top-down and bottom-up effects underlying prioritization of images of one's
 # face", PLOS ONE 15(7), DOI 10.1371/journal.pone.0235627. 数据 OSF 2q9w7
 # （2021-04-27 上传；OSF 无 License 声明）。

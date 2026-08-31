@@ -42,7 +42,7 @@ Use me when you are:
 - **Root**: `1_Data/Dataset_inf.csv` — master index (the newest version;
   UTF-8 with BOM — see checklist step 7). One row per experiment, keyed by
   `Folder_Name` (== study folder; **project-wide key ID for papers/preprints**)
-  + `Exp`; 39 columns incl. `DOI`, `Country`, `Stim_language`, `Stim_Type`,
+  + `Exp`; 40 columns incl. `DOI`, `Country`, `Stim_language`, `Stim_Type`,
   `License`, `numTrials`, `Sample_Size`/`Male`/`Female`.
   `Paper_ID`/`Paper` columns are **deprecated** (legacy mapping to the old
   manuscript Table 1; do NOT create new values).
@@ -51,11 +51,11 @@ Use me when you are:
   for deletion once collaborators confirm the CSV (audit 2026-08: it holds no data
   beyond the CSV).
 - **`Dataset_inf.csv` 列说明（40 列，按用途分组）**：
-  - 键列：`ID`（**复合键，2026-09 起**：格式 `<Folder_Name>_Exp<Exp>_<subj_Group>`，
+  - 键列：`ID`（**复合键，2026-08-31 起**：格式 `<Folder_Name>_Exp<Exp>_<subj_Group>`，
     组名空格以下划线编码（如 `Constable_2021_CogEmo_Exp1_Happy_self`）；行唯一性即
     `Folder_Name+Exp+subj_Group` 三元组唯一性；此前为数字行号，历史文档中的数字 ID
     引用均为旧口径，不再使用）、`Folder_Name`（关键 ID）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
-  - **行序约定（2026-09 起）**：Dataset_inf.csv 数据行**始终按 ID 列字母序排列**
+  - **行序约定（2026-08-31 起）**：Dataset_inf.csv 数据行**始终按 ID 列字母序排列**
     （纯字典序，Python `sorted(key=ID)` 即同款）；新增研究入库时**追加后立即重排**
     （或直接插入排序位置），任何编辑后行序保持排序；校验手段：`python sorted` 检查
     或 `git diff` 只应显示内容/插入行而非整体乱序
@@ -79,11 +79,24 @@ Use me when you are:
   - 流程：`Practice_Block`、`Practice_Trial`、`numBlocks`、`numTrials`、`Environmental_Info`（**刺激呈现软件**，非 Lab/Online 设置）
     **numTrials 口径（2026-08 P15 决策）**：一律填**每被试总试次数（total）**，不填 per-block；
     应能与实验条件数整除出每条件试次数（如 8 条件×60=480）。多 session/多 run 设计（如
-    Qian E1 4 sessions×144）按全 session 合计。**Practice_Trial（2026-08 P16 决策）** =
+    Qian E1 4 sessions×144）按全 session 合计。
+    **Session 语义（2026-08-31 用户定义，库内统一）**：`Session` = 完成一个通常意义上的
+    完整心理学实验的一次参加（如 6 blocks、约 1 小时；完成后被试离开实验室或下线）。
+    被试再次来实验室/上线完成另一个完整实验 = 下一个 session（如纵向研究 T2/T3）。
+    同一参加内的重复任务段（如 fMRI 连续 5 个 run）**不叫 session**——用 `Block`
+    （或 Run）列。案例：Atzeni_2026 T2/T3 = 两次独立上线 → Session 列 ✓；
+    Zhang_2026 的 5 个 fMRI "session" 实为同一次扫描内 5 个 run → Clean 列名 Block
+    （作者原列名 session 保留于 raw）。
+    **纵向/多时点研究（2026-08-31 Atzeni 先例）**：同一任务多个测量时点（如 T2/T3）**不拆
+    Exp、不拆 subj_Group**——合并为单 Exp 行，Clean 加 `Session` 列区分时点（与
+    多 session 研究统一命名）；`Sample_Size` = 跨时点 unique 被试数（数据口径），
+    各时点 N 与重叠记 Note；`numTrials` 填每时点试次数（文本式注明重复/部分
+    session）。Clean 列一律英文（作者变量名如 'condizione' 用英文对应名
+    Condition；raw 保留作者原名）。**Practice_Trial（2026-08 P16 决策）** =
     任务正式练习段试次数；学习/训练映射段（如 Constable_2019 E4 的 50 次 "who does this
     stimulus represent" 训练）**不属于练习**，不填入；同一研究练习数视条件而变时填
     "21 or 41" 式文本（与 exp JSON 一致）。
-  - 状态：`Status`（**=1 判定标准（2026-09 用户指示）**：最关键标准是**库内五件套
+  - 状态：`Status`（**=1 判定标准（2026-08-31 用户指示）**：最关键标准是**库内五件套
     （raw/Clean/subj_info/Codebook/paper+exp JSON）形成逻辑上完全一致、清晰可追溯
     的结构**——各层级互相印证、缺口已解释（豁免/占位/排除均有依据）；与原论文表述
     是否完全一致是**次要指标**，不一致不阻塞 Status=1，而是记录于
@@ -288,14 +301,14 @@ Boundary rules for ambiguous keys:
   形状、且绑定 counterbalanced——从作者实验代码/逐被试配置恢复（Vicovaro OrdineP#.xlsx 的
   identificazione 行）；无法恢复全部时暂停问用户，规律外推须 Codebook/JSON/CSV Note 三处
   标注。几何形状判断以程序代码/用户目视为准（像素分析不可靠，曾猜反 Zhang 的圆/方）。
-   - **作者内部码的语义表必须逐实验核对**（2026-09 Wozniak_2020 先例）：同一研究内作者
+   - **作者内部码的语义表必须逐实验核对**（2026-08-31 Wozniak_2020 先例）：同一研究内作者
    内部身份码可能**跨实验语义不同**——Wozniak 的 You/Neutral/AntiYou 三码：Exp1 中
    AntiYou=陌生脸 2 号（Stranger）、Exp2/3 中 AntiYou=**本人真实面孔**（Self）；"You" 码
    在 Exp1/3 为自关联陌生脸（Self）、Exp2 为普通陌生名（Stranger）。解码依据 = 作者
    脚本头注释/论文逐实验核对（本案例 MATLAB 聚合脚本头注释 "In Experiment X: ..." 逐条
    对应），**禁止跨实验假设码义一致**；同实验内同一码在 Label 侧与 Shape 侧语义也可不同
    （label 'You' 是自我标签 vs shape 是自关联面孔）——Label 与 Shape 侧分别建语义表。
-   本人真实面孔及其关联标签 → Self（2026-09 用户确认，Exp2/3 先例：与本人脸关联的
+   本人真实面孔及其关联标签 → Self（2026-08-31 用户确认，Exp2/3 先例：与本人脸关联的
    陌生人名在任务中代表自己，Standardized=Self；Origin 保留名字原样，English 层区分
    'Own face'/'Own-face name' 与 'Self-associated face'/'Self label (You)'）。
 
@@ -415,6 +428,24 @@ Boundary rules for ambiguous keys:
     按 `*** LogFrame Start/End ***` 切块；**中断被试末尾可有未闭合块**（无 End
     标记、无 MT.ACC 记录的未完成试次）→ 解析允许 start 比 end 多 1 且跳过无
     记录块（案例：Orellana-2021 Exp2 nonwords-01 仅 68/128 试次，源数据问题）。
+  - **E-Prime 合并导出（.xlsx）列陷阱（2026-09-01 Mcivor 先例）**：E-Merge/DataAid
+    式合并导出可能含：① **语义重复列**（Mcivor 的 `Label` vs `Label2`——正式试次
+    `Label` 全空、`Label2` 才有值；CellLabel 内嵌身份为小写如 'Happyselfmatch'，
+    与 Label 列大写 'Self' 不同）——取用前逐列统计空值/取值分布，勿假设两列等价；
+    ② 导出的 `Group` 字段可能**不是设计/临床分组**（Mcivor 的 Group 0/1/2 与临床
+    分组完全无关，控制/抑郁两组均含多种码）——临床/设计分组以作者问卷/诊断清单
+    文件（如 M.I.N.I.）名单为准，并用论文统计量（年龄 M/SD、性别计数、量表均值、
+    共病计数）逐位复现验证映射；③ 会话元数据列（StudioVersion 等）可能仅部分行
+    有值（软件版本以论文/多数证据为准，矛盾记 exp JSON detail）；④ 日期单元格
+    三类混杂（'MM-DD-YYYY' 文本 / ISO 日期时间 / Excel 5 位序列号）——subj_info
+    统一 ISO 前先分诊（序列号 as.Date(origin="1899-12-30")）。
+  - **d′ 描述性核对口径试配（2026-09-01 Mcivor 先例）**：论文只报告派生描述统计
+    （如 d′ 均值）时，按论文公式实现后对口径试配（FA 含/不含无反应、RT 剔除
+    基准），命中论文报告值即确认作者口径（Mcivor：FA 含无反应（ACC≠1 on
+    nonmatch）+ onset-RT<200 剔除命中论文控制 happy 1.70 / neutral 1.56；
+    核对脚本固化 2_Code/mcivor_verify/）；论文文字与数据的小差异（如 RT<200 剔除
+    比例 "<0.0001%" vs 实际 0.04%；问卷量表范围文字 vs 数据）记 exp JSON
+    detail/CSV Note，不建 Issue（Golubickis Appendix 计数差异同款处置）。
   - **RT 单位判断（2026-08-30 Vicovaro 教训）**：PsychoPy 导出 RT 通常是秒，
     但作者可能已 ×1000 存为 ms——**以数值量级判断**（匹配任务 RT 正常
     300-1000 量级；Vicovaro_2024_PeerJ 的 Exp2 值域 0.33-1082 与 Exp1 的
@@ -435,7 +466,7 @@ Boundary rules for ambiguous keys:
     同时提供 xlsx/csv 时以**作者清洗脚本读的那个为准**（Hobbs 的
     Associative_cleaning.R 用 xlsx；其 csv 的 NA 编码、形状分配列值不同）。
     清理前先逐列对比两版本，勿默认等价。
-  - **MATLAB/Psychtoolbox 空格分隔 `.dat` 导出**（2026-09 Wozniak_2020 先例）：
+  - **MATLAB/Psychtoolbox 空格分隔 `.dat` 导出**（2026-08-31 Wozniak_2020 先例）：
     库内首次遇到的专有格式。① **列定义权威 = 实验脚本的 `fprintf` 格式串**
     （本案例 RUN.m 一行 fprintf 定义全部 22 列：被试/实验/键映射/试次/按键/
     标签名/标签码/形状/排列参数/性别/匹配状态/ACC/RT 等）——先读脚本再解析，
@@ -445,7 +476,22 @@ Boundary rules for ambiguous keys:
     "缺数据"）；④ 无反应由作者约定键表示（本案例 'x'，RT 为伪值 ~2000 ms）
     → 库内 ACC=NA、RT_ms=NA，raw 保留原值；⑤ 多实验混存同一目录时按
     被试编号段区分（1xxx/2xxx/3xxx = 实验 1/2/3）。
-  - **Excel 外链公式的缓存值**（2026-09 Wozniak_2020 先例）：作者聚合 xlsx
+  - **作者文件级预清洗 → 每被试试次数低于设计值**（2026-09-01 Svensson_2022 先例）：
+    作者共享的 xlsx/csv 可能已按分析口径排除试次（本案例：RT min = 200 恰为论文
+    "faster than 200 ms excluded" 口径、无 NA 行 → 未响应试次也被排除；每被试试次数
+    118-199/200、215-399/400，缺失原因论文/OSF 未说明）——**原样入库（最小预处理，
+    不补滤不补行）**，numTrials 填设计值（论文口径），预清洗事实记 exp JSON detail +
+    CSV Note（Golubickis 同款先例：文件层缺 4.8%）；不要按缺失率推断"数据不完整"
+    而拒绝入库。
+  - **作者共享文件可能按条件/ACC 排序而非试次顺序**（2026-09-01 Svensson_2022 先例）：
+    ① Exp3 文件按 (ACC desc, block, trial number) 排序——正确试次全部在前、错误在后，
+    且 block 内 trial 1-200 升序 → Block 由**每个 ACC 组内 trial 序号重启**重建（每 ACC
+    组恰 2 段），两 ACC 组 expectancy 顺序一致则对齐可靠（守卫：两组长/序一致、重启
+    次数 = block 数-1）；② Exp2 文件按 block（expectancy run）排序——每被试恰 2 run →
+    Block = run 序号；③ 排序键不明确时先检查行内 trial 序号单调性再决定 Block 派生
+    方式；Block 是 block-level 条件（如频率操纵）分析的必要列，值得派生并在 Codebook/
+    JSON 注释。
+  - **Excel 外链公式的缓存值**（2026-08-31 Wozniak_2020 先例）：作者聚合 xlsx
     的单元格可能是**外链公式**（如 `='[1]General info'!D73`，引用未随附的
     工作簿）——openpyxl `data_only=True` 或 readxl 可读**缓存值**（作者在
     有源文件的机器上保存过），无缓存时读 NA；公式字符串本身（data_only=
@@ -468,7 +514,7 @@ Boundary rules for ambiguous keys:
     表头不一致）导致论文统计基于错位数据，被逐值核对发现；核对脚本固化于
     `2_Code/qjep_verify/`，详情报
     `3_Reports/3_Reports/Verifying_original_results_issues.md（Issue 1）`。
-    2026-09 Wozniak_2020 教训补充（详见 Issue 4）：
+    2026-08-31 Wozniak_2020 教训补充（详见 Issue 4）：
     ① **作者聚合产物的身份编号体系先验证再对比**——作者 xlsx/聚合文件的
     编号可能与库内解析不对称（案例：cue 用固定内部码、face 用槽号/permutation
     决定，仅 perm=1 的被试一致）——先用少量被试枚举排列（按 permutation 等
@@ -532,7 +578,7 @@ Boundary rules for ambiguous keys:
 **收尾（场景 A/B 共用）**
 10. **落盘 + 校验 + 同步**：`cp` /tmp → 目标（exFAT 无原子写，先 /tmp 中转）；场景 B 更新 `Dataset_inf.csv`（每实验一行 `Folder_Name`+`Exp`，UTF-8 **带 BOM** 字节保真，不动 legacy `Dataset_inf.xlsx`）；`validate_json_metadata.R` EXIT=0 + `validate_clean_csv.R` 0 ERROR；场景 B 另需：`known_pending` 白名单移除 + `Generate_Table1.qmd` 重渲染（稿件比对默认关闭，仅稿件版本更新时 `--param compare_manu:true`）；更新 PROJ_STATE.md；exFAT 卫生（git 前清理 `._*`，绝不提交 `._*`/`.DS_Store`）。
 
-**入库后四方核对（2026-08 起，场景 B 收尾必做）**：论文全文 ↔ 作者分析代码（OSF dataPrep/SPSS 脚本）↔ 库内数据（CSV/JSON/Clean/raw）↔ OSF 原始导出，逐字段交叉 + **论文描述性统计核对**（论文报告的均值/正确率/方向，按作者脚本口径聚合；**2026-08-30 用户指示：只核对描述性统计，不复现统计检验/回归模型结果**——逐值/聚合数据一致性验证仍必做，见 §清洗工具「作者脚本逐值验证法」）。2026-08 QJEP 案例：四方核对发现作者 data_clean.csv 列错位致论文统计量基于错位数据（库内数据正确），详情报 `3_Reports/3_Reports/Verifying_original_results_issues.md（Issue 1）`；核对脚本固化于 `2_Code/qjep_verify/`。发现的问题按「可自动确定（有全文/数据证据）→ 修改；需人工 → 登记 PROJ_STATE 已知问题」处置。**验证时机建议（2026-09 Wozniak 先例）**：作者聚合逐值验证宜在**清洗脚本产出后、CSV 行收口前**完成——数据层证据（列解码、身份映射、ACC/RT 口径）先行确认，发现问题时只需改清洗脚本重跑，避免 CSV/JSON 已写死后再返工；论文方向性核对与 CSV 收口可同步进行。
+**入库后四方核对（2026-08 起，场景 B 收尾必做）**：论文全文 ↔ 作者分析代码（OSF dataPrep/SPSS 脚本）↔ 库内数据（CSV/JSON/Clean/raw）↔ OSF 原始导出，逐字段交叉 + **论文描述性统计核对**（论文报告的均值/正确率/方向，按作者脚本口径聚合；**2026-08-30 用户指示：只核对描述性统计，不复现统计检验/回归模型结果**——逐值/聚合数据一致性验证仍必做，见 §清洗工具「作者脚本逐值验证法」）。2026-08 QJEP 案例：四方核对发现作者 data_clean.csv 列错位致论文统计量基于错位数据（库内数据正确），详情报 `3_Reports/3_Reports/Verifying_original_results_issues.md（Issue 1）`；核对脚本固化于 `2_Code/qjep_verify/`。发现的问题按「可自动确定（有全文/数据证据）→ 修改；需人工 → 登记 PROJ_STATE 已知问题」处置。**验证时机建议（2026-08-31 Wozniak 先例）**：作者聚合逐值验证宜在**清洗脚本产出后、CSV 行收口前**完成——数据层证据（列解码、身份映射、ACC/RT 口径）先行确认，发现问题时只需改清洗脚本重跑，避免 CSV/JSON 已写死后再返工；论文方向性核对与 CSV 收口可同步进行。
 
 **试点验证（2026-08）**：Vicovaro_2022_JEPHPP（Journal）与 Navon_2021_psyarxiv（Preprint）的 paper JSON 草稿字段（title/authors/year/journal）与现有文件完全一致；Sui_2014_unpub（unpublished）走手工模板。
 **阶段 1 批量回填（2026-08-27）**：Lee/Smith/Svensson/Orellana 4 研究 10 JSON + 6 Codebook——[C] Crossref 核对、[P] 全文来源（Smith=REF/ html、Svensson=PMC XML、Orellana=Springer html、Lee=eprints PDF+补充材料）、[D] Clean 行数÷被试数；两级校验全绿（90 JSON EXIT=0；59 Clean 0 ERROR）。
@@ -569,11 +615,11 @@ Boundary rules for ambiguous keys:
    ERROR → exit 1; historical exceptions are listed in the script `known` vector
    (KNOWN, exempted; remove the entry once fixed — same pattern as `known_pending`).
 2. The validator whitelists not-yet-curated studies (`known_pending`, currently
-   5: `Bukowski_2021_ActaPsych`, `Golubickis_2021_ActaPsych`,
-   `Hu_2023_SDB`, `Mcivor_2021_EJN`, `Svensson_2022_PsychRes`) that
+   2: `Bukowski_2021_ActaPsych`,
+   `Hu_2023_SDB`) that
    are allowed to lack a folder; once such a study is curated, remove it from the
    whitelist.
-   **反向豁免 `known_unlisted`（2026-09 首次启用）**：有文件夹但 CSV 无行的
+   **反向豁免 `known_unlisted`（2026-08-31 首次启用）**：有文件夹但 CSV 无行的
    研究（方向与 `known_pending` 相反）——用于**条目从 CSV 移除**的情形（数据
    不可得/撤回，如 Scheller_2026_elife：OSF 仅 TOJ 数据、匹配任务 trial 数据
    从未上传、用户指示不下载 → 删 CSV 行、输入区文件夹保留并加入

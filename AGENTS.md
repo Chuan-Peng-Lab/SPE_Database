@@ -11,6 +11,15 @@ mode: primary
 以下情况**均不构成**确认：会话惯例、收尾清单、任务"完成"的推断、用户只说"修复/更新/插入/列出"等不含提交指令的话。
 **不要每次回复都询问是否提交**：提交事宜只在用户主动询问/指示时处理。任务完成正常汇报结果即可；若有未提交改动，简单提示一句"改动未提交"即可，不重复追问。用户询问提交时，agent 列出待提交文件与 commit message 草案，获得明确确认后再提交。
 
+**Agent 禁止过度无效思考（三试即止原则，2026-09-01 沉淀）**：遇到阻碍（解析失败/编号对不上/验证不通过/结构不清），**最多尝试 3 次不同方法；第 3 次仍无法解决，立即停下并向用户报告，禁止继续反复读取/反复推理**。报告格式：一句话说清「我卡在 X，已试 A/B/C 三种方法，原因是 Y，需要您决定/提供 Z」。具体触发即止场景：
+1. **同一数据反复读取**：为"找答案"反复读取同一批文件（sav/xlsx/txt header 等）超过 2 轮 → 停止。数据不会因多读一遍而变，答案要么在已读内容里、要么需要用户提供，不会在第 3 遍读取时出现。
+2. **同一细节反复提出新假设**：编号重复、口径差异等问题，第 2 个假设失败后 → 停止，把已排除的假设 + 证据列给用户，请用户裁决。
+3. **无思路的试探性命令**：动手前先写一句话思路（问题是什么 → 权威来源是谁 → 用什么键连接 → 预期输出是什么），写不出来 → 先问用户，不执行。
+4. **用户指定来源 = 唯一权威**：用户明确说"读 X 文件/以 X 为准"后，只用 X 推进，不主动引入其他文件交叉验证纠缠（用户要求的四方核对等验证除外）。
+5. **用户催促/否定 = 立即停**：用户说"不要再看 X""不要浪费时间""别瞎思考"时，立即停止当前路径，转为提问或改走用户指示的方向，不解释、不辩解、不"最后再看一眼"。
+
+反面教材（2026-09-01 Bukowski Exp2 会话）：被试编号确认环节反复读取 sav/Book1/txt header 多轮（>3 次尝试）、对 E-Prime Subject 重复与 sav Mea_* 口径提出多个未经验证的假设，用户多次打断（"你糊涂就把你的问题提出来""不要做任何的思考了""不要再看.sav文件了"）。正确做法：第 1 轮确认「txt header Subject 有重复 + sav 编号体系不同」后，应立即把冲突事实 + 候选方案提交用户裁决（用户随后用 fix_subjID.xlsx 一锤定音）。
+
 ## 会话约定（通用）
 
 - **Never** start an exploration task or fire background exploration without explicit user
@@ -100,12 +109,16 @@ mode: primary
 ## Project context
 
 - **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
-  **49 studies / 92 rows** per `Dataset_inf.csv` (40 curated
-  folders on disk + 8 pending entries + 1 deferred, 2026-09 verified; 2026-09
-  Wozniak_2020_PLOS 入库（3 行）；2026-09 Scheller_2026_elife 2 行删除
-  （匹配任务 trial 数据不可得，待作者提供后重入）；2026-09 新增待入库
-  Zhang_2026_JNeurosci、Qi_2025_SciData、Atzeni_2026_PsychRes（输入区已建，
-  CSV 行已登记）；2026-08-30
+  **49 studies / 95 rows** per `Dataset_inf.csv` (46 curated
+  folders on disk + 2 pending entries + 1 deferred, 2026-09-01 verified; 2026-09-01
+  Svensson_2022_PsychRes（Exp1/2/3 子文件夹，3 行收口）与 Mcivor_2021_EJN（2 行收口）
+  入库；Bukowski_2021_ActaPsych **Exp2 已入库**（3 行收口；Exp1 待用户转换
+  edat2→txt 后收口）；2026-08-31
+  四新研究入库: Zhang_2026_JNeurosci（OA/YA 拆 2 行）、Qi_2025_SciData、
+  Atzeni_2026_PsychRes（T2/T3 合并）、Golubickis_2021_ActaPsych（Exp1/Exp2
+  子文件夹）；2026-08-31
+  Wozniak_2020_PLOS 入库（3 行）；2026-08-31 Scheller_2026_elife 2 行删除
+  （匹配任务 trial 数据不可得，待作者提供后重入）；2026-08-30
   added Orellana-Corrales_2020_ExpPsych, Vicovaro_2024_PeerJ,
   Zhang_2024_PsychJ; 2026-08-30 Hobbs_2023_PsychMed 入库, 38→39 文件夹 /
   8→7 pending) using the self-matching task
@@ -113,15 +126,15 @@ mode: primary
   3603 participants) refer to the manuscript and have NOT been re-verified against
   the CSV. Companion to a preregistered meta-analysis (OSF: euqmf).
 - **Structure**:
-  - `1_Data/` — 40 study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
+  - `1_Data/` — 46 curated study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
     master index (legacy `Dataset_inf.xlsx` outdated — pending deletion after
     collaborators confirm the CSV). Each folder contains:
     - raw data: `*_raw.csv` (trial-level), `*_subj_info.csv` (subject-level),
       sometimes `*_Raw/` subfolders with per-participant exports (E-Prime `.edat2`,
       MATLAB `.mat`, PsychoPy `.psydat`).
     - cleaned data: `*_ExpN_Clean.csv`.
-    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 56 files total:
-      28 canonical `Codebook_` + 28 legacy `CodeBook_`; 2026-08-27 阶段 1 新增 6 个 canonical),
+    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 78 files total:
+      50 canonical `Codebook_` + 28 legacy `CodeBook_`; 2026-09-01 verified; 2026-08-27 阶段 1 新增 6 个 canonical),
       study-level `.json` (paper metadata) and experiment-level `.json`
       (methodology, v2 hierarchical schema: five components under `exp<N>`).
   - `1_Data/Dataset_inf.csv` — **master index** (newest version; `Dataset_inf.xlsx`
@@ -158,7 +171,7 @@ mode: primary
       `Folder_Name`; comparison treats manuscript "Not specified"=missing and
       `CC0`=`CC0 1.0 Universal` as equal). Outputs `Generate_Table1.docx` +
       `Output/table1_problems.txt` (known issue classes listed there); render with
-      RStudio's bundled quarto（2026-09 实测路径：
+      RStudio's bundled quarto（2026-08-31 实测路径：
       `/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render
       Generate_Table1.qmd`——注意是 `app/quarto/bin/`，不是 `app/bin/quarto/`）。
       Operational details: PROJ_STATE.md.
@@ -187,21 +200,23 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   raw 追补归阶段 4，用户+agent 共同决定）。
 - **Deferred study — rows removed from CSV (do NOT "fix")**: `Scheller_2026_elife`
   (DOI `10.7554/eLife.100932`, OSF `osf.io/a62df`) — rows deleted from
-  `Dataset_inf.csv` (2026-09, user decision): the OSF archive contains TOJ
+  `Dataset_inf.csv` (2026-08-31, user decision): the OSF archive contains TOJ
   trial-level data only; the shape-label matching-task trial data (per-participant
   `Raw Data/*.csv` referenced by the analysis notebooks) were never uploaded.
   The input-zone folder is kept (validator `known_unlisted` whitelist). Re-ingest
   when the authors share the matching data.
-- **5 more CSV `Folder_Name` entries have no folder (verified 2026-09)**: `Bukowski_2021_ActaPsych`,
-  `Golubickis_2021_ActaPsych`, `Hu_2023_SDB`, `Mcivor_2021_EJN`,
-  `Svensson_2022_PsychRes` — listed in Dataset_inf.csv but no `1_Data/` folder;
-  expected pending/uncatalogued, do NOT "fix". The validator
+- **2 CSV `Folder_Name` entries are pending — not curated (verified 2026-09-01)**: `Bukowski_2021_ActaPsych`
+  has an
+  input-zone folder, **Exp2 已入库（2026-09-01，3 行收口；Exp1 待用户转换 edat2→txt 后收口）**，and `Hu_2023_SDB`
+  has no folder at all; expected pending/uncatalogued, do NOT "fix". The validator
   (`validate_json_metadata.R`) whitelists all of them (`known_pending` list);
   `Generate_Table1.qmd` excludes folderless entries from the generated Table 1
   (dynamic keep-by-folder logic). (2026-08-30: `Orellana-Corrales_2023_QJEP` 与
-  `Hobbs_2023_PsychMed` 已入库；2026-09: `Wozniak_2020_PLOS` 已入库，
-  均移出本清单与白名单。2026-09 后：Bukowski/Golubickis/Mcivor/Svensson_2022
-  已建输入区文件夹（数据到位，暂不入库），仍在 pending 白名单，入库时移除。)
+  `Hobbs_2023_PsychMed` 已入库；2026-08-31: `Wozniak_2020_PLOS` 与
+  `Golubickis_2021_ActaPsych` 已入库；2026-09-01: `Svensson_2022_PsychRes`
+  （Exp1/2/3 子文件夹五件套 + CSV 3 行收口）与 `Mcivor_2021_EJN`
+  （平铺五件套 + CSV 2 行收口 + d′ 描述性核对）已入库，
+  均移出本清单与白名单。)
 - **Manuscript Table 1 vs data has known discrepancies (verified 2026-08)**: Exp-number
   copy-paste errors (e.g. `P5E1`–`P5E3` all labeled "Exp4" in the manuscript),
   N-count differences (manuscript "—" vs CSV concrete values), Trials wording
