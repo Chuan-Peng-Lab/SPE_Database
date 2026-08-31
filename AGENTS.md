@@ -100,10 +100,12 @@ mode: primary
 ## Project context
 
 - **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
-  **46 studies / 89 rows** per `Dataset_inf.csv` (40 curated
-  folders on disk + 5 pending entries + 1 deferred, 2026-09 verified; 2026-09
+  **48 studies / 91 rows** per `Dataset_inf.csv` (40 curated
+  folders on disk + 7 pending entries + 1 deferred, 2026-09 verified; 2026-09
   Wozniak_2020_PLOS 入库（3 行）；2026-09 Scheller_2026_elife 2 行删除
-  （匹配任务 trial 数据不可得，待作者提供后重入）；2026-08-30
+  （匹配任务 trial 数据不可得，待作者提供后重入）；2026-09 新增待入库
+  Zhang_2026_JNeurosci 与 Qi_2025_SciData（输入区已建，CSV 行已登记）；
+  2026-08-30
   added Orellana-Corrales_2020_ExpPsych, Vicovaro_2024_PeerJ,
   Zhang_2024_PsychJ; 2026-08-30 Hobbs_2023_PsychMed 入库, 38→39 文件夹 /
   8→7 pending) using the self-matching task
@@ -198,7 +200,8 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   `Generate_Table1.qmd` excludes folderless entries from the generated Table 1
   (dynamic keep-by-folder logic). (2026-08-30: `Orellana-Corrales_2023_QJEP` 与
   `Hobbs_2023_PsychMed` 已入库；2026-09: `Wozniak_2020_PLOS` 已入库，
-  均移出本清单与白名单。)
+  均移出本清单与白名单。2026-09 后：Bukowski/Golubickis/Mcivor/Svensson_2022
+  已建输入区文件夹（数据到位，暂不入库），仍在 pending 白名单，入库时移除。)
 - **Manuscript Table 1 vs data has known discrepancies (verified 2026-08)**: Exp-number
   copy-paste errors (e.g. `P5E1`–`P5E3` all labeled "Exp4" in the manuscript),
   N-count differences (manuscript "—" vs CSV concrete values), Trials wording

@@ -76,7 +76,13 @@ Use me when you are:
     任务正式练习段试次数；学习/训练映射段（如 Constable_2019 E4 的 50 次 "who does this
     stimulus represent" 训练）**不属于练习**，不填入；同一研究练习数视条件而变时填
     "21 or 41" 式文本（与 exp JSON 一致）。
-  - 状态：`Status`、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
+  - 状态：`Status`（**=1 判定标准（2026-09 用户指示）**：最关键标准是**库内五件套
+    （raw/Clean/subj_info/Codebook/paper+exp JSON）形成逻辑上完全一致、清晰可追溯
+    的结构**——各层级互相印证、缺口已解释（豁免/占位/排除均有依据）；与原论文表述
+    是否完全一致是**次要指标**，不一致不阻塞 Status=1，而是记录于
+    `3_Reports/Verifying_original_results_issues.md`（Issue 编号）及 exp JSON
+    detail/CSV Note（先例：Zhang_2023_NeuroImage，Issue 5）；raw 豁免的研究
+    （阶段 4 豁免）不影响标记）、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
   同论文多实验行共享的字段（作者/邮箱/年/期刊/DOI 等）只填一次，其余行留空或同步传播均可——以组内非空值一致为准。
 - **Study folder**: `<Author>_<Year>_<Journal>` containing the paper-level
   `<Author>_<Year>_<Journal>.json` at its root.

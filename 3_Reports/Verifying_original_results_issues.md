@@ -276,3 +276,28 @@ E-Prime 的 Subject 号被误填为 Session 号（Study 3 = umv5p 存档）。�
 - 库内 raw/Clean/subj_info 自 72 个 .dat 重建（`Wozniak_2020_PLOS_clean.R`），身份映射按论文语义（Exp1: You=Self, 其余 Stranger；Exp2: AntiYou=本人脸=Self；Exp3: You=自关联陌生脸=Self、AntiYou=本人脸=Self），不受 xlsx 错位影响；
 - 作者聚合逐值复现（3312 单元格 0 差异）证明解析正确；描述性统计方向核对（论文口径 200<RT<1500）全部通过；
 - **是否联系作者（xlsx 错位是否进入论文统计/表格）由项目负责人决定**。
+
+---
+
+# Issue 5 — Zhang_2023_NeuroImage：OSF 共享 subject 级文件与论文分析样本口径不一致；trial 级数据未共享（2026-09）
+
+> **一句话结论**：OSF 仓库（osf.io/hbrus）全量存档**无 trial 级数据、聚合文件（348 行）无被试 ID**；从 git 历史恢复的原始 subject 级文件（347 人，与库内 subj_info 逐值一致）与论文分析样本（348 人，182F/166M，18–34 岁）在 **N 与人口学上不一致**（数据 174F/172M/1 空、Age 0–36 含 0/36 异常值）——作者共享的 subject 文件 ≠ 论文分析样本组成（推断：论文 348 含约 8 名未共享 trial 数据的被试；库内 7 名无有效数据者属论文排除者）。库内 Clean 的 SPE 复算（stranger-match − self-match RT，正确试次）与 OSF SPE_score 分布吻合（mean 98.7 vs 95.0，sd 71.9 vs 70.7），证明库内 trial 数据与论文聚合 SPE 同源，**库内数据不受影响**。
+
+- 论文：Zhang, Y., Wang, F., & Sui, J. (2023). Decoding individual differences in self-prioritization from the resting-state functional connectome. *NeuroImage*, 120205. DOI: 10.1016/j.neuroimage.2023.120205
+- 数据仓库：OSF https://osf.io/hbrus/（全量存档 2026-09 下载：data/ 聚合行为+FC 矩阵、data/external_dataset/ 老年外部验证样本聚合、codes/、output/）
+- 核对时间：2026-09（全量 OSF 存档复核 + git 历史源文件恢复 + SPE 公式复算）
+- 核对脚本：本会话 Python 比对（SPE 复算逻辑见 PROJ_STATE 对应条目；无固化脚本）
+
+## 1. 问题描述
+
+1. **OSF 存档无 trial 级数据、聚合文件无被试 ID**：`all_behavioural_data.xlsx`（348 行：SPE_score/age/gender/FD_Jenkinson/independent_self/interdependent_self）与 `SPE_score.npy`/`covariate_*.npy` 无任何 ID 列，无法按被试对位；全库无匹配任务 trial 导出（与阶段 4 豁免结论一致）。
+2. **共享 subject 级文件与论文样本不一致**：git 历史恢复的 `Zhang_2023_NeuroImage_Exp1_raw_Subject.csv`（347 人）与库内 subj_info **逐值一致（0 差异）**，但人口学与论文不符——性别 174F/172M/1 空 vs 论文 182F/166M；年龄 0–36（389 号 Age=0、90 号 Age=36）vs 论文 18–34。N 差 1（348 vs 347）。
+3. **库内数据结构**：Clean 346 = 源 347 − Subject 101（有人口学、无 trial 行）；340 人有可用数据（142/211/385/413 全无反应 RT=0、402 仅 11/112 正确、62 为 1 行全 NA 占位）→ 论文 348 分析样本应含约 8 名未共享 trial 数据的被试。
+4. **SPE 公式复现（分布吻合，无法逐值对齐）**：OSF SPE_score（n=348，mean 94.98，sd 70.72，range −170.8–311.4）≈ Clean 复算 stranger-match − self-match（正确试次，mean 98.74，sd 71.85，range −182.7–317.5）；~4 ms 差来自作者预处理脚本的 RT 过滤（脚本未上传 OSF），故 2 位小数逐值对位仅 17/340 命中，无法由此识别缺失被试。
+
+## 2. 处置
+
+- 库内数据正确：subj_info = 原始 subject 源文件逐值一致；Clean 为最小预处理（无过滤）；SPE 分布可复现 → 数据管道无错误；
+- CSV 行（ID 53）N 口径已按数据口径收口：346/346/0（Paper_N 记 Note）；原始 subject 源文件已恢复至输入区存档；
+- trial 级 raw 豁免维持（OSF 无 trial 数据；原 trial 级 raw 从未入 git，不可恢复）；
+- 遗留：OSF 聚合无 ID，论文 348 与数据 347 的差 1 无法精确对位；**是否联系作者（subject 文件与论文样本组成差异、trial 数据可否共享）由项目负责人决定**。
