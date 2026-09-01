@@ -39,6 +39,6 @@
         "Background": "Black"
       }
     },
-    "detail": ""
+    "detail": "Shape = geometric shape presented in the trial (derived from raw P1Shape/P2Shape/StrangerShape per participant and phase; identity in Shape_Origin_Identity = P1/P2/Stranger). P1/P2/StrangerShape columns removed (info merged into Shape). Phase = association switch phase (1 = initial binding, 2 = after remapping). Task = self-matching (joint dyad)."
   }
 }

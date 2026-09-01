@@ -283,6 +283,27 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 
 - Standardized columns: `Subject`, `Shape`, `Label`, `Matching`, `ACC`, `RT_ms`
   (plus optional `Block`, `Trial`, `Phase`, `Response`, `RT_sec`).
+- **Shape/Label 列 = 原实验呈现的刺激本身（2026-09 定案，shape 层统一原则）**：
+  - Shape 层与 Label 层是两层刺激，**不一定真是几何图形**（可为面孔文件/声音文件/说话者/情绪类型等）。
+  - `Shape` 列存原实验呈现的形状侧刺激（几何形状名如 TRIANGLE、面孔文件如 asian/a_f.jpg、说话者如 S1、
+    联结类型如 Positive/Negative）；`Label` 列存原实验呈现的标签文字（you/friend/stranger 等）。
+  - **无法确认原刺激时填 `missing`**（如 raw 只记录身份词、几何/文件信息不可恢复）：身份信息一律由
+    Identity 三层（Origin/English/Standardized）承载，不在 Shape/Label 列重复身份词。
+  - **`Shape_Subtype`**（可选列，紧随 Shape 后）：shape 层刺激的子类型/具体实例——如 Kirk 的 Voice
+    （说话者=Shape、具体音频文件=Shape_Subtype）、Wozniak 2018 的 face_gender（面孔文件=Shape、性别=Shape_Subtype）。
+  - **`ShapeLoc`**（全库通用可选列）：形状-标签布局，默认 shape 上、label 下；平衡位置的研究（Constable 系列）
+    记录实际值 Top/Bottom。
+  - 先例：Dalmaso（Face→Shape）、Liu（Face→Shape）、Wozniak 2018（Face_Gender→Shape_Subtype）、
+    Kirk（Speaker→Shape、Voice→Shape_Subtype、E2 Shape=Own/M5/M10 从 soundfile 前缀推导）、
+    Constable 2021（Shape=Positive/Negative 联结类型）、Constable 2020/2019 E1-3（Shape=几何形状从 raw 绑定恢复）、
+    Constable 2019 E4 + Dalmaso E2 Label（missing，原刺激不可得）。
+  - **删除分层索引列后须保证键唯一（2026-09 沉淀）**：清洗删除冗余索引列（如 Bin）后，
+    `(Subject, Block, Trial)` 必须仍唯一；不唯一时把被删列维度**合入 Trial 编号**
+    （Hu_2020 先例：Trial 1-24 每 bin 循环，删 Bin 后 `Trial = (Bin-1)*24 + Trial` → block 内 1-120 唯一）。
+    反向排查方法：全库扫描 Clean 的 `(Subject, Block, Trial)` 重复键（仅 Hu_2020/Hu_2023_psyarxiv/Zhang_2023
+    命中；Hu_2023 为跨 Session 重复属另一类问题——Session 列被清洗丢弃，须保留 Session 并按其分组排序）。
+    独立脚本模式（Wozniak_2018/Hu_2020 同款）：Rmd 段删除留指针注释、`<Study>_clean.R` 从 Rmd 原代码复制
+    仅改问题处、守卫按有效被试断言（无效被试已知重复不参与唯一性断言）。
 - **任务与附加自变量命名（2026-09 定案，全库统一）**：
   - `Task` 列：**全库标准列**，区分"联结对象是否含自参照身份"的任务类型。默认值 `self-matching`
     （形状↔自我/他人联结，数据库核心）；其他受控值：`facialExpression-matching`（联结纯情绪面孔）、
@@ -294,10 +315,12 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
     每研究的 extraIV 具体语义（值、操纵定义、论文文字对应）**必须登记在 Codebook 与 exp JSON detail**
     （同名列在不同研究语义不同，Codebook 分别描述，如 Qian E1 的 Mood vs E2 的 cue 均叫 extraIV1）。
     仅当列可被其他列+extraIV 完全推导（冗余编码）或为派生/评定/常量时才可删除或保留原名；
-    删除列须 raw 保留原值。**列顺序（2026-09 定案模板）**：`Subject → [Group] → [Session] →
-    [Condition] → Block → Trial → [Phase] → [Practice] → Shape → Label → Task → Matching →
-    Label-Identity×3 → Shape-Identity×3 → [extraIV1] → [extraIV2] → [Response] → RT_ms → RT_sec → ACC
-    → [研究特有保留列尾部]`；新增/重命名/重排后 Codebook 行序必须与 Clean 列序一致。
+    删除列须 raw 保留原值。**列顺序（2026-09 定案模板 v2）**：`Subject → [Group] → [Session] →
+    Task → [Phase] → [Condition] → Block → Trial → [Practice] → Matching → Shape → [ShapeLoc] →
+    [Shape_Subtype] → Shape-Identity×3 → Label → Label-Identity×3 → [extraIV1] → [extraIV2] →
+    [CorrResponse] → [Response] → RT_ms → RT_sec → ACC → [研究特有保留列尾部]`；
+    `CorrResponse` = 按实验设计的正确反应键（仅当 raw 有 CRESP/CorrectAnswer 类列可直接取时补，否则不加）；
+    新增/重命名/重排后 Codebook 行序必须与 Clean 列序一致。
 - **Identity columns — 3 levels per identity-bearing stimulus column**
   `X` ∈ {Shape, Label}:
   `X_Origin_Identity` (verbatim as in the raw data, original language) →

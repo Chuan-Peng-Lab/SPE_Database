@@ -39,6 +39,6 @@
         "Background": "Grey (169 cd/m²)"
       }
     },
-    "detail": "extraIV1 = luminance intensity of the grey-scale square (Strong/Weak, 2/86/255/340 cd/m2). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
+    "detail": "extraIV1 = luminance intensity (Strong/Weak). Shape = stimulus category associated with shape identity (Positive = light squares, Negative = dark squares; shape actually = luminance square). Stimuli_Type column removed (info merged into Shape + identity). Task = self-matching."
   }
 }

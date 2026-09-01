@@ -39,6 +39,6 @@
         "Background": "Black"
       }
     },
-    "detail": ""
+    "detail": "Shape column = face stimulus file (shape1/2/3.jpg, E-Prime internal names; actual faces from Chicago Face Database: WF-209/211/233 female, WM-003/004/029 male; specific face ID per trial not recoverable from raw). Shape_Subtype = gender of the face stimulus (paper variable Face_Gender; experiment had same-gender vs opposite-gender face parts). Task = self-matching with facial stimuli."
   }
 }

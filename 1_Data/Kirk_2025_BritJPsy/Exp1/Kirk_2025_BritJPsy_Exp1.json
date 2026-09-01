@@ -5,7 +5,11 @@
     "Physical_Environment": {
       "Location": "Online (Prolific recruitment)",
       "Setting": "Online",
-      "Equipment": { "Presenting": "/", "Monitor": "/", "Software": "Gorilla Experiment Builder" },
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "Gorilla Experiment Builder"
+      },
       "Viewing_distance": "/"
     },
     "Experimental_Design": {
@@ -21,15 +25,20 @@
       "Stimulus_duration": "/",
       "SOA": "Familiarization: 500 ms; Test: 0 ms (voice offset to label onset)",
       "Stimulus_order": "Familiarization: label first; Test: voice first",
-      "Response_deadline": "/", "ITI": "/", "Feedback_duration": "/"
+      "Response_deadline": "/",
+      "ITI": "/",
+      "Feedback_duration": "/"
     },
     "Stimulus_Properties": {
       "Modality": "Auditory (voice) and visual (label)",
       "Fixation": "/",
       "Shape": "Not applicable (voice task)",
       "Label": "/",
-      "Colors": { "Stimulus": "Black labels", "Background": "White" }
+      "Colors": {
+        "Stimulus": "Black labels",
+        "Background": "White"
+      }
     },
-    "detail": "derived from nested paper JSON (KIRK_2025_BJP.Experiments.TY1)"
+    "detail": "Shape = speaker identity (S1/S2/S3; identity association was to the speaker, 3 male Scottish-accented speakers). Shape_Subtype = specific audio file (two tokens per speaker). Accent (Scottish) is an experiment-level feature recorded here (column removed from Clean). Task = voice-label matching (self-matching)."
   }
 }

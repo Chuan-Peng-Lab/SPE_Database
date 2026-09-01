@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": "extraIV1 = self-association block race (self=Asian vs self=White). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
+    "detail": "extraIV1 = self-association block relative to participant race (Same-race/Diff-race; E1 participants all Japanese/Asian, so raw condition Asian = Same-race, White = Diff-race). Shape column = actual face stimulus file (asian/* = Asian, white/* = White, _f/_m = gender). Label = You/Other (paper wording; presented in Japanese; raw internal code Self/Other kept in Label_Origin_Identity). Task column added 2026-09 (default self-matching)."
   }
 }

@@ -39,6 +39,6 @@
         "Background": "Black"
       }
     },
-    "detail": ""
+    "detail": "Shape = geometric shape presented in the trial (recovered from raw per-participant binding SelfShape/WeShape/TheyShape/AloneShape; identity in Shape_Origin_Identity). ShapeLoc = shape above/below fixation (counterbalanced). Task = self-matching (we-prioritization)."
   }
 }
