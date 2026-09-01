@@ -159,7 +159,7 @@
 
 1. **12 个"稿件有但 qmd 未生成"的 ID**（Bukowski/Golubickis/Hobbs/Mcivor/Orellana-Corrales_2023_QJEP/Svensson_2022_PsychRes）— 对应 6 个文件夹不存在，需**收录数据**后解决
 2. **N 中 raw/subj_info 与稿件、CSV 三方均不符者**（P6E1=46, Pt13E1=102, Pt28E1=67, Pn13E3=28, P51E1=24, Pt9E2=18, P95E1/2=18, Pt10E1=347, Pt7E1=288, Pu6E1=334；2026-08 subj_info 补齐后新增：Pu5E1=47, Pu5E2=51, Pu4E2=90, Pu9E2=33）— 可能含排除标准/全部样本 vs 有效样本，需人工判定口径
-3. **subj_info 已全覆盖（2026-08-27）**：全库 56 个 `*_subj_info.csv`——Orellana-Corrales_2021_APP ×2 与 Sui_2015_unpub ×2 由 Clean.csv 唯一 Subject / `*_Raw/` 人口学记录生成（无原始数据，人口学部分为 /；见 PROJ_STATE.md「已完成」）
+3. **subj_info 已全覆盖（2026-08-27）**：全库 56 个 `*_subj_info.csv`——Orellana-Corrales_2021_APP ×2 与 Sui_2015_unpub ×2 由 Clean.csv 唯一 Subject / `*_Raw/` 人口学记录生成（无原始数据，人口学部分为 /；见 PROJ_STATE.md「8. 完成进度」）
 4. **Stimulus/Language/Trials 中无 JSON 且 raw 无明确信息者** — 需查阅论文原文
 5. **Smith_2024_Cortex (Pu3E1)**: subj_info/raw 仅 48 名被试（含剔除 1 个空 participant），与 CSV Sample_Size=59 / Valid_Subj=58 差约 10 名——raw 导出疑似不全，待人工核对（见 PROJ_STATE.md 已知问题）
 
