@@ -16,9 +16,9 @@
       "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching (switch assignment: self->friend, friend->stranger, stranger->self)"
     },
     "Block_Structure": {
-      "Practice_trials": "9 practice trials (paper; no practice rows present in the data export)",
+      "Practice_trials": "9 practice trials (one per condition) in Breaking; 6 practice trials in Association",
       "Block_number": "8 blocks",
-      "Trial_number": "648 formal trials per participant (8 blocks x 81 = 9 conditions x 72); 648 rows per participant in data"
+      "Trial_number": "648 formal trials per participant in Breaking (8 blocks x 81 = 9 conditions x 72) + 9 practice; Association: variable formal trials (until 6 consecutive correct per shape) + 6 practice"
     },
     "Trial_Structure": {
       "Stimulus_order": "Shape first, then label (sequential)",
@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": "Rebuilt in 2026-08 stage 4 from the author's E-Merge aggregate CSV exports in the study *_Raw/ input zone (the previous in-repo Exp1 five-file set was found to be erroneous AssoMatc_Self task data, archived in *_Raw/AssoMatc_Self_archive/). Data contain 25 participants (IDs 1-25) x 648 switch trials each; the paper reports N=20 analyzed (12 male; data: 10 male/15 female, mean age 23.52, 18-30) without a published exclusion list - data-caliber N=25 kept, paper caliber in CSV Note. Two phases: Association (Part 1 learning, variable rows per participant, author export lacks the displayed-label column so Clean Label/Matching are NA) and Breaking (Part 2 switch matching, full Label/Identity/Shape columns). Matching = displayed label conforms to the new assignment: self->friend, friend->stranger, stranger->self (Identity column = the shape's Part 1 identity, fixed per participant; validated against paper RT direction: self match RT fastest). Exp1 labels in raw are capitalized (Self/Friend/Stranger), Exp2 lowercase (self/friend/stranger), kept verbatim in Label/Origin columns. ACC 1/0 with no-response -> NA. Paper statistics approximately reproduced (match RT F=12.7 vs 17.4 paper, same direction); exact reproduction not achieved - see 3_Reports/Verifying_original_results_issues.md (Issue 3)."
+    "detail": "Rebuilt 2026-08 stage 4 from the author's E-Merge aggregate CSV exports. 2026-09-01 txt-verified rebuild (v2): data source switched to the E-Merge txt exports in *_Raw/RawData_Exp2 (converted from edat2); author aggregate CSV verified value-by-value against the txt with 0 differences (2_Code/wang2016_verify/verify_merge_vs_csv.py); the CSV dropped the 9 breaking practice rows per participant (they exist in the txt) and the 6 association practice rows - both now included. Data: 25 participants (IDs 1-25; paper reports N=20 analyzed, 12 male, M=23.70, 18-30; data 25 = 10 male/15 female, M=23.52; no exclusion list published, data caliber kept - Issue 3). Two phases: Association (Part 1; 3AFC task, see Exp1 detail) and Breaking (Part 2; 9 practice + 8 blocks x 81; keys n/m). Clean: Label/Matching filled for Association (label = shape's assigned identity label; Matching = Matching); Block (1-8)/Trial (1-81) and CorrResponse added; Exp2 Clean labels lowercase (self/friend/stranger) as in the author export. Matching = rule B (new assignment: self->friend, friend->stranger, stranger->self), verified trial-by-trial against txt CorrectAnswer/YesNoResp (0 violations). On-screen label text was Chinese per participant; Label/Origin columns store English (lowercase). ACC 1/0 with no response -> NA. Paper statistics approximately reproduced (match-RT RM-ANOVA F=22.6 with 25 participants vs paper 17.35 with N=20; error F=4.75 vs 3.93; Issue 3)."
   }
 }

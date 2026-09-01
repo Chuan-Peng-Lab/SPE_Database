@@ -23,7 +23,25 @@ E-Merge/DataAid 式合并导出可能含：
 
 ### `.edat2`/`.emrg2`（二进制，库内不可解析）
 
-无现成二进制解析工具（E-DataAid/E-Merge 官方唯一；rprime/convert-eprime/eMergeR 均只处理文本导出；pyedat2 pip 不可装；olefile 可开 OLE2 容器但私有流编码无公开文档）——**用户决定自行将 edat2/emrg2 转为 txt**（案例：Wang_2016 交接文档 `3_Reports/Wang_2016_JEPHPP_Stage4_Notes.md` §7 待核对清单；Bukowski Exp1 待用户转换）。
+无现成二进制解析工具（E-DataAid/E-Merge 官方唯一；rprime/convert-eprime/eMergeR 均只处理文本导出；pyedat2 pip 不可装；olefile 可开 OLE2 容器但私有流编码无公开文档）——**用户决定自行将 edat2/emrg2 转为 txt**（案例：Wang_2016 核对背景见 `3_Reports/Verifying_original_results_issues.md` Issue 3 §4；Bukowski Exp1 待用户转换）。
+
+### E-Merge 扁平导出 txt（多被试合并文件，UTF-16LE）（2026-09-01 Wang_2016 先例）
+
+用户从 edat2/emrg2 用 E-DataAid/E-Merge 转出的**合并文件**是扁平宽表（非 per-participant LogFrame 格式），结构：第 1-3 行为类型/等级/列数，**第 4 行为列名**（tab 分隔），之后每行一个事件。要点：
+
+1. **trial 行判定看 Procedure/Running 列非空**，且不同实验层级的 trial 在不同"级别"列（Wang: 练习在 `Procedure[SubTrial]`+`Running[SubTrial]` 含 "Prac"；正式在 `Procedure[LogLevel5]` 或 `Procedure[SubTrial]` 非 Prac）——先枚举每被试各列非空分布再定谓词，勿假设
+2. **3AFC 任务的位置键**：association 阶段形状+三标签同屏，键 b/n/m = 标签位置 1/2/3，`CorrectAnswer` = 正确标签所在位置键 → **每试次呈现标签 = CA 键对应位置的文本**（T1/T2/T3），可确定性恢复（Wang: 全被试恒定 {Self:你, Friend:朋友, Stranger:生人}，逐试次验证 0 违例）
+3. **同一实验两程序版本**（Wang Exp1 breaking=TR4* vs breaking_mn=TR5*，被试按版本分文件合并）：结构一致，Block 在 `TRxBlockList.Sample`，**x = 程序变体**（从 `Procedure[Block]` 的 `TR\d+` 提取），Trial 序号 = `SubTrial`（block 内 1-81）
+4. **同被试多列 ACC/RESP/RT**：Exp2 练习用 `Target1.*`、正式用 `Target.*`（对象名不同）——按行级 Prac 标志选列
+5. **match 键 counterbalance**：`YesNoResp` 指示该试次正确键是否 = match 键；**每被试 match 键恒定**（由 practice 行推断，一致性守卫）；用 `CorrectAnswer == match键 ⟺ Matching` 逐试次验证规则
+6. **作者聚合 CSV 可能丢弃 practice 行**（Wang Exp2 丢 9 行/被试 breaking practice、两实验丢 6 行/被试 association practice）——txt 为准重建，CSV 作逐值验证基准（先例脚本 `2_Code/wang2016_verify/verify_merge_vs_csv.py`）
+7. 聚合 CSV 的 Label 可能是英文翻译（原呈现为中文/小写英文）——核对时按翻译映射逐值比，库内 Label/Origin 列存英文、原文记 Codebook/JSON
+
+### 分析样本子集穷举法（2026-09-01 Wang_2016 先例）
+
+论文 df 隐含分析 N'< 数据 N 且排除名单未公开时：**穷举全部 C(N, N') 个子集**重算论文统计量（直接 SS 分解公式算 RM-ANOVA F，勿用 aov 循环——C(25,20)=53130 子集 aov 超时，公式版 ~3 分钟）：
+- 命中（F 落入论文四舍五入区间）→ 论文统计与数据相容，但**排除名单不可唯一反推**（Wang Exp2: RT 命中 731 个子集、错误率 2087 个）——记录"相容但不可唯一确定"，勿声称找到排除名单
+- 全子集皆不命中 → 疑试次级排除/聚合细节差异（Wang Exp1 match-RT 43.02 vs 43.29，留一 21 子集最接近 43.16）
 
 ## PsychoPy
 

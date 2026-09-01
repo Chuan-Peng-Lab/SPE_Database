@@ -230,27 +230,79 @@ E-Prime 的 Subject 号被误填为 Session 号（Study 3 = umv5p 存档）。�
 
 ---
 
-# Issue 3 — Wang_2016_JEPHPP：作者聚合导出与论文统计量近似吻合但未精确复现；论文 df 与报告 N 不符（2026-08）
+# Issue 3 — Wang_2016_JEPHPP：作者聚合导出与论文统计量近似吻合但未精确复现；论文 df 与报告 N 不符（2026-08，2026-09-01 txt 核对后更新）
 
-> **一句话结论**：论文（JEPHPP 2016）两个实验的匹配任务统计量可**方向性复现**（self 匹配 RT 最快，F 同量级）但**未逐位精确复现**（Exp1 switch match-RT F=32.1 vs 论文 43.29；Exp2 F=12.7 vs 17.35）；且论文全部统计 df(2,38) 隐含分析 N=20，与论文报告的 N=21（Exp1）/N=20（Exp2）部分不符（Exp2 数据实为 25 人）。**库内数据按作者聚合导出重建，Matching 判定与论文设计一致；统计差异疑因作者分析前未披露的试次/被试排除（如 RT 异常值剔除），不改变 SPE 定性结论。**
+> **一句话结论**：论文（JEPHPP 2016）两个实验的匹配任务统计量可**方向性复现**；txt 核对后（2026-09-01）复现度大幅提升——**Exp1 match-RT F=43.02（论文 43.29，全 21 人即近似命中，相对差 0.6%）、Exp2 存在大量 20 人子集精确复现论文 F=17.35/3.93（排除名单不可唯一反推）**；论文全部统计 df(2,38) 隐含分析 N=20，与论文报告 N=21（Exp1）/N=20（Exp2）不符（Exp2 数据实为 25 人）。**库内数据按 txt 重建并经聚合 CSV 逐值验证（0 差异），Matching 判定与论文设计一致（规则 B 逐试次验证 0 违例）；残余统计差异疑为作者未披露的试次/被试排除细节，不改变 SPE 定性结论。**
 
 - 论文：Wang, H., Humphreys, G., & Sui, J. (2016). Expanding and retracting from the self: Gains and costs in switching self-associations. *JEP: HPP, 42*(2), 247–256. DOI: 10.1037/xhp0000125
-- 数据来源：作者 E-Merge 聚合导出（`1_Data/Wang_2016_JEPHPP_Raw/` 输入区，Exp1/Exp2 × Association/Switch 各 1 份）
-- 核对时间：2026-08（阶段 4 重建后核对）
+- 数据来源：作者 E-Merge 聚合导出 + 6 份 E-Merge txt（edat2 转换，`1_Data/Wang_2016_JEPHPP_Raw/` 输入区；**聚合 CSV ↔ txt 逐值核对 0 差异**，`2_Code/wang2016_verify/verify_merge_vs_csv.py`）
+- 核对时间：2026-08（阶段 4 重建后核对）；2026-09-01（txt 转换后复核，统计口径：正式试次、规则 B match 集、正确试次 RT 均值、RM-ANOVA，`2_Code/wang2016_verify/verify_stats.R`）
 - 背景：库内原 Exp1 五件套数据源错误（AssoMatc_Self 任务数据误作 Exp1，已归档 `*_Raw/AssoMatc_Self_archive/`），2026-08 由聚合导出重建 Exp1（21 人，编号 3-24 缺 23）与 Exp2（25 人，编号 1-25）
 
 ## 1. 问题描述
 
-1. **论文 df 与报告 N 不符**：论文 Exp1 报告 21 名被试，但全部匹配任务统计 df 均为 (2,38)（隐含 n=20）；Exp2 报告 20 人、df(2,38) 一致——Exp1 的 21 人中疑有 1 人未纳入分析（论文未披露）。Exp2 数据 25 人（全部 648 试次/人完整）> 论文 20 人（排除名单未公开）。
-2. **统计量近似但未精确**：按论文设计规则（switch 新指令映射）重建 Matching 后，match 试次 RT 按 label 的 RM-ANOVA：Exp1 F=32.14（论文 43.29）、Exp2 F=12.74（论文 17.35）——方向一致（self < friend < stranger）且同量级，但未逐位复现。剔除任一单被试（leave-one-out）最高 F=37.14（Exp1），仍 <43.29。
+1. **论文 df 与报告 N 不符**：论文 Exp1 报告 21 名被试，但全部匹配任务统计 df 均为 (2,38)（隐含 n=20）；Exp2 报告 20 人、df(2,38) 一致——Exp1 的 21 人中疑有 1 人未纳入分析（论文未披露）。Exp2 数据 25 人 > 论文 20 人（排除名单未公开）。
+2. **统计量复现（2026-09 txt 口径，正式试次）**：
+   - **Exp1（21 人全样本）**：match-RT F=43.02（论文 43.29，近似命中）；match 错误 F=6.66（论文 7.65）；association 错误 F=3.23（论文 3.35）；mismatch 错误 F=0.14（论文 1.66，差异大，原因不明——疑试次级排除）；留一 20 人子集无法精确命中（RT 最接近 43.16=剔除 21 号，err 最接近 7.63=剔除 6 号）。
+   - **Exp2（25 人全样本）**：match-RT F=22.57（论文 17.35）；match 错误 F=4.75（论文 3.93）；association 错误 F=0.045（论文 0.02）；mismatch 错误 F=3.66（论文 3.96，接近）。**全 53130 个 20 人子集扫描：存在大量子集精确复现论文 F（RT=17.35：731 个命中，最接近 17.3499，如排除 {4,7,9,23,25}；err=3.93：2087 个命中，最接近 3.9300，如排除 {1,4,7,14,24}）——论文 20 人分析样本与数据相容，但排除名单不可由数据唯一反推，且 RT/错误两分析的排除集不必相同**。
 3. **Exp2 人口学不符**：数据 25 人 10 男/15 女（M=23.52）vs 论文 20 人 12 男——上传数据无法与论文分析样本对齐（20 人子集男数 ≤10 <12）。
-4. **Exp1 前 9 行 practice 判定**：每被试 657 行 = 9 practice（前 9 行，9 条件各 1，论文 "nine practice trials"）+ 648 正式；Exp2 数据 648 行/人无 practice 行（论文方法称两实验相同）。
+4. **Exp1 前 9 行 practice 判定**：成立（9 条件各 1）；**Exp2 practice 行真实存在（9/被试，txt 验证），作者聚合 CSV 导出时丢弃**——库内 v2 数据已从 txt 补回（论文方法称两实验相同，与数据一致）。
 
-## 2. 处置
+## 2. txt 核对后的新发现（2026-09-01，均不影响库内数据正确性）
 
-- 库内 raw/Clean/subj_info 自作者聚合导出重建（`Wang_2016_JEPHPP_clean.R`），Matching = 新指令映射（Exp1: self→stranger/friend→self/stranger→friend；Exp2: self→friend/friend→stranger/stranger→self），与论文设计一致；
-- 统计差异已记录（本 Issue）；N 口径按数据（Exp1 21、Exp2 25）并记论文口径于 CSV Note；
+- **association 任务实现为 3AFC 选择**：形状 + 三个标签同屏（T1-T3 位置），键 b/n/m = 位置 1/2/3，CorrectAnswer = 正确标签（=形状初始指派身份）所在位置键；论文文字描述为 match/mismatch 判断（"choose which of the three labels matched the shape"——方法文字实为 3AFC，结果部分按 match/mismatch 表述）；Clean 的 association Label 由此逐试次恢复（全被试恒定映射 {Self:你, Friend:朋友, Stranger:生人}，0 违例），Matching 全为 Matching（3AFC 无失配试次）。
+- **breaking 实际按键为 n/m**（论文写 Z/M 键；n/m 为相邻键，疑因中文键盘布局 Z 为输入法切换键）；match 键（Yes）每被试 counterbalance（n 或 m），YesNoResp 列记录。
+- **Exp1 breaking 两程序版本**：breaking（TR4*，被试 3-10,24）与 breaking_mn（TR5*，被试 11-22），结构/列语义一致（Block=TRxBlockList.Sample、SubTrial=1-81）。
+- **AssoMatc_Self ≠ 论文 control**：RawData_Baseline 31 人（2013-07~08 采集）任务结构 6 blocks×60+18 practice、匹配 50/50、每条件 40 试次 ≠ 论文 control（"与 Part 2 相同"：8 blocks×81、72/条件、1/3 匹配）；人口学 14 男/M=22.90/19-29 ≠ 论文 22 人 13 男/M=23.78/19-32。非论文 control，不入库（维持 2026-08 决策；背景详见下文 §4）。
+
+## 3. 处置
+
+- 库内 raw/Clean/subj_info 自 6 份 txt 重建（`Wang_2016_JEPHPP_clean.R` v2，聚合 CSV 逐值验证 0 差异），Matching = 规则 B（新指令映射：Exp1 self→stranger/friend→self/stranger→friend；Exp2 self→friend/friend→stranger/stranger→self），与论文设计一致，并用 txt 的 CorrectAnswer/YesNoResp 逐试次验证 0 违例；
+- 统计差异已记录（本 Issue）；N 口径按数据（Exp1 21、Exp2 25）并记论文口径于 CSV Note；Exp2 分析样本不可唯一反推（见上）；
 - **是否联系作者（排除名单/分析口径）由项目负责人决定**。
+
+## 4. 背景与数据布局（原 `Wang_2016_JEPHPP_Stage4_Notes.md` 核心内容，2026-09-01 并入后该文件已删除）
+
+> 2026-09-01 并入（原 `Wang_2016_JEPHPP_Stage4_Notes.md` 删除）：仅保留当前最重要的背景事实（任务设计、输入区布局、N 口径决策）；历史试错过程不记录。
+
+### 4.1 论文与任务设计
+
+- 论文：Wang, H., Humphreys, G., & Sui, J. (2016). Expanding and retracting from the self. *JEP: HPP, 42*(2), 247–256. DOI: 10.1037/xhp0000125
+- 两实验 + 一个 control；每实验两阶段：
+  - **Part 1 Association（学习）**：形状（S.bmp/C.bmp/T.bmp，counterbalanced 绑定）与身份标签配对学习；实现为 3AFC 选择任务（见 §2），学习到 6 连对/形状标准。
+  - **Part 2 Breaking（切换匹配）**：按**新指派**判断 shape-label 对是否匹配；切换映射 Exp1：self→stranger、friend→self、stranger→friend；Exp2：self→friend、friend→stranger、stranger→self。**8 blocks × 81 = 648 正式试次（9 条件 × 72）+ 9 practice**；实际按键 n/m（论文写 Z/M，中文键盘布局原因）。
+  - **Control（baseline，仅 Exp1 有）**：独立被试只接受 Part 2 指令后直接匹配判断；论文 N=22（13 男，19-32 岁，M=23.78）。
+- 论文 N：Exp1 = 21（3 男，19-27，M=22）；Exp2 = 20（12 男，18-30，M=23.70）。
+
+### 4.2 输入区布局（`1_Data/Wang_2016_JEPHPP/Wang_2016_JEPHPP_Raw/`）
+
+| 路径 | 内容 | 备注 |
+|---|---|---|
+| `RawData_Exp1/` | SelfAssociate/breaking（TR4 版，被试 3-10,24）/breaking_mn（TR5 版，被试 11-22）edat2 + 3 份合并 txt（SelfAssociate/breaking/breaking_mn_merge_20260831.txt） | 论文 Exp1 原始导出；txt 为用户 2026-08-31 从 edat2 转换 |
+| `RawData_Exp2/` | SelfAssociate + breaking edat2 + 2 份合并 txt | 论文 Exp2 原始导出 |
+| `RawData_Baseline/` | AssoMatc_Self-{1-21,101-110} 31 个 edat2 + baseline_merge_20260831.txt | **非论文 control**（见 §2 新发现） |
+| `Merge Data_Exp1 & Exp 2 & Baseline/` | 4 个二进制合并文件 + Baseline Merge Data/（Counter1-6.emrg2 等） | E-Merge 合并产物 |
+| 4 份聚合 CSV | `Wang_2016_JEPHPP_Exp{1,2}_{Association,Switch}.csv` | 作者 E-Merge 导出；2026-08 重建原数据源，现作逐值验证基准（与 txt 0 差异） |
+| `AssoMatc_Self_archive/` | 原库内错误 Exp1 五件套（AssoMatc_Self 数据） | 归档，勿删除 |
+
+要点：聚合 CSV 的 Identity 列 = 形状的 Part 1 身份（与 association 数据一致，逐被试固定）；Exp1 Label 大写（Self/Friend/Stranger）、Exp2 小写（self/friend/stranger）；聚合 CSV 无 Block/Trial 序号列、无 CorrectAnswer；Exp1 Switch 每被试前 9 行为 practice、Exp2 Switch 的 practice 行被导出丢弃（txt 有，9/被试）。
+
+### 4.3 原 Exp1 五件套数据源错误（已更正）
+
+原 `Wang_2016_JEPHPP_Exp1_raw.csv`（→ Clean → subj_info）曾误用 **AssoMatc_Self 任务**数据（31 人，编号 1-21+101-110，2013-07~08 采集，含 person+reward 刺激参数，与论文三实验均不符）——已归档至 `*_Raw/AssoMatc_Self_archive/` 并重建（2026-08）。**AssoMatc_Self 数据真实归属未确认**（可能是作者另一研究/未发表数据），保留输入区存档，不作任何实验数据（2026-09-01 txt 核对后仍无法判定）。
+
+### 4.4 N 口径与决策记录（用户 2026-08 确认；2026-09-01 复核维持）
+
+| 实验 | 数据口径（库内） | 论文口径 | 决策 |
+|---|---|---|---|
+| Exp1 | 21（3 男/18 女） | 21（3 男/18 女）一致 ✓ | 无冲突 |
+| Exp2 | 25（10 男/15 女） | 20（12 男）分析，无排除名单 | **数据口径 25**，Note 记 Paper_N: 20 |
+| control | 不入库（2026-09-01 复核：AssoMatc_Self 31 人非论文 control，结构/人口学/时间三重不符） | 22 | **整行不入库**；31 人保留输入区存档 |
+| AssoMatc_Self | 非论文数据 | — | 保留输入区存档，不作任何实验数据 |
+
+- CSV 行：Exp1 = ID 58（numTrials=648、Practice_Trial=9、numBlocks=8、Note 说明重建）；Exp2 = ID 89（新增行，Status=1，Paper_ID 留空——deprecated 列勿新建值）。
+- 重建脚本：`1_Data/Wang_2016_JEPHPP/Wang_2016_JEPHPP_clean.R`（v2，2026-09-01 起从 6 份 txt 重建；守卫：行数/被试数/Matching 1:3/practice 行数/8 blocks×81/9 条件×72/规则 B 逐试次/人口学）；验证脚本 `2_Code/wang2016_verify/`（README 说明用途与口径）。
+- 校验：validate_json_metadata（127 JSON）EXIT=0；validate_clean_csv 82 文件 0 ERROR/29 WARN。
 
 ---
 
