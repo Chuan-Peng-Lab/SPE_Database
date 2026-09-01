@@ -37,5 +37,5 @@
 #           Subject 7/9/14 存在某格 0 个正确试次（低表现，任何过滤口径下均
 #           缺格），使"36-2=34 人无缺格分析"不可能；③ 作者 mt_data.sav
 #           （SPSS 分析文件）未上传，实际分析数据版本不可考。详见
-#           3_Reports/3_Reports/Verifying_original_results_issues.md（Issue 2）。
+#           3_Reports/Verifying_original_results_issues.md（Issue 2）。
 # ============================================================================

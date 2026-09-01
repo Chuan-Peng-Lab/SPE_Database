@@ -52,7 +52,7 @@ mode: primary
 
 **阶段一：整理与入库（agent + skill 自动化，2026-08 起）**
 - 输入：各研究公开数据（论文/preprint/unpublished）下载至**输入区**
-  `1_Data/<Study>/<Study>_Raw/`（只读，不参与校验；详见 SKILL.md Raw input zone）
+  `1_Data/<Study>/<Study>_Raw/`（只读，不参与校验；详见 SKILL.md §文件与文件夹规范（Raw input zone）
 - 执行：agent 加载 `spe-database-curation` 技能 → 扫描输入区识别
   实验/被试/会话 → 生成独立清洗脚本 `<Study>_clean.R`（列映射 +
   Identity 三级标准化；配方参考 Clean_Data.Rmd，其降级为历史参考）→
@@ -148,7 +148,7 @@ mode: primary
     legacy link to the old manuscript Table 1; do NOT create new values), `Country`,
     `Stim_language`, `Stim_Type`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`,
     `subj_Group` (被试分组：**每 group 一行**，行唯一性 = `Folder_Name`+`Exp`+`subj_Group`
-    三元组；组间研究按组拆行、每行填单个组名，无组间填 `All`；详见 SKILL.md 列说明).
+    三元组；组间研究按组拆行、每行填单个组名，无组间填 `All`；详见 SKILL.md §主索引).
     NOTE: `Environmental_Info` stores the **stimulus-presentation software**
     (E-prime/Gorilla/PsychoPy/Matlab), NOT Lab-vs-Online setting — do not conflate the
     two. The manuscript Table 1 column `Exp_Implement` (Lab/Online/Mixed) does NOT exist
@@ -246,7 +246,7 @@ Treat these as known issues, not new discoveries — do not "find" them again:
 ## TODO / planned work
 
 - (Done 2026-08) Codebook authoring rules added to `spe-database-curation` SKILL.md:
-  §Codebook authoring rules specifies the single-`Sheet1` 4-column template
+  §Codebook 编写规则 specifies the single-`Sheet1` 4-column template
   (`Variable_name | Variable_description | Variable_value | Variable_category`),
   per-column content rules (definitions, valid values, units, missing/invalid codes)
   and the creation workflow from the Clean.csv header + paper methods + data values.
