@@ -157,7 +157,6 @@ dataset_inf <- file.path(data_dir, "Dataset_inf.csv")
 # Known-pending studies: listed in Dataset_inf.csv but data not yet curated
 # (documented in AGENTS.md). Add new pending entries here explicitly.
 known_pending <- c(
-  "Bukowski_2021_ActaPsych",
   "Hu_2023_SDB"
 )
 

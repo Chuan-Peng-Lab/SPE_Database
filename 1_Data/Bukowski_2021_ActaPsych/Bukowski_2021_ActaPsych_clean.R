@@ -247,21 +247,22 @@ cat("guard 2 (no-response semantics) OK:", sum(.noresp),
 .rt[.noresp] <- NA_integer_
 clean2 <- data.frame(
   Subject = .exp2$Subject,
+  Task = "self-matching",                       # 全库模板 v2（2026-09-01 定案）
+  Phase = .exp2$Phase,
   Block = .exp2$Block,
   Trial = .exp2$Trial,
-  Phase = .exp2$Phase,
-  Shape = .exp2$Target,                        # 实际刺激文件原样（用户确认）
-  Label = .exp2$Label,                         # 德语标签原样
   Matching = ifelse(.exp2$YesNoResp == "Yes", "matching", "mismatching"),
-  ACC = .acc,
-  RT_ms = .rt,
+  Shape = .exp2$Target,                        # 实际刺激文件原样（用户确认）
   Shape_Origin_Identity = .exp2$Shape,         # 数据原样（身份词英文）
   Shape_English_Identity = .exp2$Shape,
   Shape_Standardized_Identity = .std_map[.exp2$Shape],
+  Label = .exp2$Label,                         # 德语标签原样
   Label_Origin_Identity = .exp2$Label,         # 德语原样
   Label_English_Identity = ifelse(.exp2$Label == "Sie", "You",
                            ifelse(.exp2$Label == "Freund", "Friend", "Stranger")),
   Label_Standardized_Identity = .std_map[.exp2$Label],
+  RT_ms = .rt,
+  ACC = .acc,
   stringsAsFactors = FALSE)
 stopifnot(all(clean2$Shape_Standardized_Identity %in%
                 c("Self", "Close", "Stranger")))
@@ -331,13 +332,194 @@ stopifnot(identical(as.integer(.grp_tab), c(33L, 35L, 35L)))  # counter 33 / imi
 }
 .direction(clean2, "Exp2")
 
-# ---- Exp1（txt 待用户转换；存在则处理，编号方案同 Exp2 待用户提供 fix 表） ----
-.exp1_txts <- list.files(.exp1_txt_dir, pattern = "\\.txt$")
-.exp1_txts <- .exp1_txts[.exp1_txts != "outlier shape.txt"]
-if (length(.exp1_txts) == 0) {
-  cat("Exp1: no converted txt files yet - skipped\n")
-} else {
-  stop("Exp1 txt present but no fix_subjID table yet; stop until user provides it")
+# ============================================================================
+# Exp1（merge txt 已由用户转换，2026-08-31）
+# ----------------------------------------------------------------------------
+# 数据：shapematching_merge_all_20260831.txt = E-Merge 聚合导出（UTF-16LE，
+#   扁平表格而非 LogFrame 块）：前 4 行为类型/列名表头（第 4 行 = 89 列名），
+#   第 5 行起为数据行。87 个唯一 Subject（E-Prime 原始编号 101-416，与
+#   DataFile.Basename 一一对应，无跨批次重复 → 无需重编号，用户决策 2026-09-02
+#   用现有材料，不另建 fix 表）。每被试 369 行 = 9 PracTrialProc（练习，
+#   PracTrialList.Sample 1-9）+ 360 TrialProc（正式 6 blocks × 60，
+#   BlockList.Sample 1-6、TrialList.Sample 块内 1-60）。列语义与 Exp2 相同
+#   （Target=S/T/C.bmp、Shape=Self/Friend/Stranger、Label=Sie/Freund/Fremder、
+#   YesNoResp=Yes/No 匹配语义、CorrectAnswer=m/n 键、Target.ACC/RT/RESP/CRESP）。
+# 剔除：outlier shape.txt 的 9 个编号（204/221/406/207/322/120/206/217/210）
+#   = 无效被试（用户决策 2026-09-02）→ 有效 78 人。
+# 训练组：res1.xlsx Sheet1 的 Subject + TrainCond（Imitation/Counter-Imitation/
+#   Inhibition-control/Be-imitated）→ 论文口径 imitation / imitation-inhibition
+#   / control-inhibition / be-imitated（用户决策 2026-09-02，拆 4 行）。
+# N 口径：数据 78（87 − 9）；论文 132 招募 / 90 final（24/26/18/22）/
+#   64 分析（16/17/14/17，ACC chance 剔除 22 人）记 CSV Note。
+# ============================================================================
+
+# ---- merge txt 扁平表解析（E-Merge 导出格式，非 LogFrame） ----
+.parse_merge_txt <- function(path) {
+  lines <- read_eprime_txt(path)             # UTF-16LE 逐行
+  stopifnot(length(lines) > 4)
+  cols <- strsplit(lines[4], "\t", fixed = TRUE)[[1]]
+  stopifnot(length(cols) == 89)
+  data_lines <- lines[5:length(lines)]
+  data_lines <- data_lines[nzchar(trimws(data_lines))]
+  out <- lapply(data_lines, function(ln) {
+    v <- strsplit(ln, "\t", fixed = TRUE)[[1]]
+    if (length(v) < length(cols)) v <- c(v, rep("", length(cols) - length(v)))
+    names(v) <- cols
+    v
+  })
+  do.call(rbind, lapply(out, function(v) as.data.frame(t(v), stringsAsFactors = FALSE)))
 }
+
+.exp1_merge <- file.path(.exp1_txt_dir, "shapematching_merge_all_20260831.txt")
+stopifnot(file.exists(.exp1_merge))
+cat("Exp1: parsing E-Merge export\n")
+.exp1 <- .parse_merge_txt(.exp1_merge)
+stopifnot(nrow(.exp1) == 87 * 369)           # 87 人 × (9 练习 + 360 正式)
+stopifnot(length(unique(.exp1$Subject)) == 87)
+
+# ---- 训练组：res1.xlsx Sheet1（Subject + TrainCond） ----
+.res1 <- read_excel(file.path(.exp1_txt_dir, "res1.xlsx"), sheet = "Sheet1")
+.res1 <- .res1[!is.na(.res1[[1]]) & grepl("^\\d+$", as.character(.res1[[1]])), ]
+.tc_map <- setNames(as.character(.res1[[11]]), as.character(.res1[[1]]))
+.tc_map <- .tc_map[!is.na(.tc_map) & .tc_map != "NA"]
+.group_rename <- c(Imitation = "imitation", "Counter-Imitation" = "imitation-inhibition",
+                   "Inhibition-control" = "control-inhibition", "Be-imitated" = "be-imitated")
+.exp1$Priming <- unname(.group_rename[.tc_map[.exp1$Subject]])
+stopifnot(all(!is.na(.exp1$Priming)))        # 87 人全部有训练组
+cat("Exp1 group counts (87 files):\n"); print(table(.exp1$Priming[!duplicated(.exp1$Subject)]))
+
+# ---- 剔除 outlier shape.txt 的 9 人 ----
+.outl <- readLines(file.path(.exp1_txt_dir, "outlier shape.txt"), warn = FALSE)
+.outl <- unique(trimws(.outl[nzchar(trimws(.outl))]))
+stopifnot(length(.outl) == 9)
+.exp1 <- .exp1[!(.exp1$Subject %in% .outl), ]
+stopifnot(length(unique(.exp1$Subject)) == 78)
+cat("Exp1: excluded", length(.outl), "outliers ->", length(unique(.exp1$Subject)), "valid subjects\n")
+
+# ---- 列语义换算（与 Exp2 相同的字段名） ----
+.proc <- .exp1[["Procedure[SubTrial]"]]
+.stop_ok <- .proc %in% c("TrialProc", "PracTrialProc")
+stopifnot(all(.stop_ok))
+.exp1$Phase <- ifelse(.proc == "PracTrialProc", "practice", "formal")
+.exp1$Block <- as.integer(ifelse(.exp1$Phase == "formal", .exp1$BlockList.Sample, NA))
+.exp1$Trial <- as.integer(ifelse(.exp1$Phase == "formal", .exp1$TrialList.Sample,
+                      .exp1$PracTrialList.Sample))
+# 关键列值域
+stopifnot(all(.exp1$Target %in% c("S.bmp", "T.bmp", "C.bmp")))
+stopifnot(all(.exp1$Shape %in% c("Self", "Friend", "Stranger")))
+stopifnot(all(.exp1$Label %in% c("Sie", "Freund", "Fremder")))
+stopifnot(all(.exp1$YesNoResp %in% c("Yes", "No")))
+stopifnot(all(.exp1$CorrectAnswer %in% c("m", "n")))
+stopifnot(all(.exp1$Target.ACC %in% c("0", "1")))
+stopifnot(all(.exp1$Target.CRESP %in% c("m", "n")))
+stopifnot(all(.exp1$Target.RESP %in% c("", "m", "n")))
+
+# ---- 守卫 1（Exp1 结构：78 人 × 369） ----
+.fcnt <- tapply(.exp1$Phase == "formal", .exp1$Subject, sum)
+.pcnt <- tapply(.exp1$Phase == "practice", .exp1$Subject, sum)
+stopifnot(all(.fcnt == 360), all(.pcnt == 9))
+.fsub <- .exp1[.exp1$Phase == "formal", ]
+stopifnot(all(.fsub$Block >= 1), all(.fsub$Block <= 6))
+stopifnot(all(.fsub$Trial >= 1), all(.fsub$Trial <= 60))
+.tperb <- tapply(.fsub$Trial, list(.fsub$Subject, .fsub$Block),
+                 function(x) identical(sort(as.integer(x)), 1:60))
+stopifnot(all(.tperb))
+# 匹配语义：YesNoResp == Yes ⟺ Shape 身份 == Label 身份
+.match_ok1 <- (.exp1$Shape == "Self" & .exp1$Label == "Sie") |
+              (.exp1$Shape == "Friend" & .exp1$Label == "Freund") |
+              (.exp1$Shape == "Stranger" & .exp1$Label == "Fremder")
+stopifnot(all((.exp1$YesNoResp == "Yes") == .match_ok1))
+# 键映射 counterbalanced
+.keymap1 <- tapply(.exp1$CorrectAnswer[.exp1$YesNoResp == "Yes"],
+                   .exp1$Subject[.exp1$YesNoResp == "Yes"],
+                   function(x) unique(x))
+stopifnot(all(vapply(.keymap1, length, 0L) == 1),
+          all(vapply(.keymap1, function(x) x %in% c("m", "n"), logical(1))))
+cat("guard 1 (Exp1 structure) OK: 78 subjects x 360 trials; match logic, key mapping, value domains all pass\n")
+
+# ---- 守卫 2（Exp1 无反应语义） ----
+.noresp1 <- .exp1$Target.RESP == ""
+stopifnot(all(.exp1$Target.ACC[.noresp1] == "0"),
+          all(.exp1$Target.RT[.noresp1] == "0"))
+.rts1 <- as.integer(.exp1$Target.RT[!.noresp1])
+stopifnot(all(.rts1 > 0), all(.rts1 < 10000))
+cat("guard 2 (Exp1 no-response semantics) OK:", sum(.noresp1),
+    "no-response trials -> ACC/RT NA\n")
+
+# ---- 标准化（Exp1） ----
+.acc1 <- as.integer(.exp1$Target.ACC)
+.acc1[.noresp1] <- NA_integer_
+.rt1 <- as.integer(.exp1$Target.RT)
+.rt1[.noresp1] <- NA_integer_
+clean1 <- data.frame(
+  Subject = .exp1$Subject,
+  Task = "self-matching",                       # 全库模板 v2（2026-09-01 定案）
+  Phase = .exp1$Phase,
+  Block = .exp1$Block,
+  Trial = as.integer(.exp1$Trial),
+  Matching = ifelse(.exp1$YesNoResp == "Yes", "matching", "mismatching"),
+  Shape = .exp1$Target,                        # 实际刺激文件原样（同 Exp2）
+  Shape_Origin_Identity = .exp1$Shape,         # 数据原样（身份词英文）
+  Shape_English_Identity = .exp1$Shape,
+  Shape_Standardized_Identity = .std_map[.exp1$Shape],
+  Label = .exp1$Label,                         # 德语标签原样
+  Label_Origin_Identity = .exp1$Label,         # 德语原样
+  Label_English_Identity = ifelse(.exp1$Label == "Sie", "You",
+                           ifelse(.exp1$Label == "Freund", "Friend", "Stranger")),
+  Label_Standardized_Identity = .std_map[.exp1$Label],
+  RT_ms = .rt1,
+  ACC = .acc1,
+  stringsAsFactors = FALSE)
+stopifnot(all(clean1$Shape_Standardized_Identity %in% c("Self", "Close", "Stranger")))
+stopifnot(all(clean1$Label_Standardized_Identity %in% c("Self", "Close", "Stranger")))
+
+# ---- 输出（Exp1 raw/Clean/subj_info） ----
+.exp1_dir <- file.path(.study_dir, "Exp1")
+dir.create(.exp1_dir, showWarnings = FALSE, recursive = TRUE)
+raw1 <- data.frame(
+  Subject = .exp1$Subject, Session = .exp1$Session,
+  SessionDate = .exp1$SessionDate, Phase = .exp1$Phase,
+  Block = .exp1$Block,
+  TrialList.Sample = .exp1$Trial, Target = .exp1$Target, Shape = .exp1$Shape,
+  Label = .exp1$Label, YesNoResp = .exp1$YesNoResp,
+  CorrectAnswer = .exp1$CorrectAnswer, Target.ACC = .exp1$Target.ACC,
+  Target.RT = .exp1$Target.RT, Target.RESP = .exp1$Target.RESP,
+  Target.CRESP = .exp1$Target.CRESP, Priming = .exp1$Priming,
+  stringsAsFactors = FALSE)
+stopifnot(nrow(raw1) == 78 * 369, nrow(clean1) == 78 * 369)
+write.csv(raw1, file.path(.exp1_dir,
+          "Bukowski_2021_ActaPsych_Exp1_raw.csv"), row.names = FALSE)
+write_clean_csv(clean1, file.path(.exp1_dir,
+                "Bukowski_2021_ActaPsych_Exp1_Clean.csv"))
+cat("Exp1 products: raw", nrow(raw1), "rows / Clean", nrow(clean1),
+    "rows /", length(unique(clean1$Subject)), "subjects\n")
+
+# ---- subj_info（Exp1：Subject=E-Prime 编号原样；论文仅女性/右利手） ----
+.s1 <- .exp1[!duplicated(.exp1$Subject),
+             c("Subject", "SessionDate", "Priming")]
+.s1 <- .s1[order(as.integer(.s1$Subject)), ]
+subj1 <- data.frame(
+  Subject_ID = .s1$Subject,
+  Exp_id = "Bukowski_2021_ActaPsych_Exp1",
+  Age = "/",                                    # 无人口学数据来源（同 Exp2）
+  Gender = "Female",                            # 论文仅招募女性
+  Handedness = "Right",                         # 右利手为纳入标准
+  Group = .s1$Priming,
+  Date = .s1$SessionDate,
+  stringsAsFactors = FALSE)
+write.csv(subj1, file.path(.exp1_dir,
+          "Bukowski_2021_ActaPsych_Exp1_subj_info.csv"),
+          row.names = FALSE, na = "")
+stopifnot(nrow(subj1) == 78)
+cat("Exp1 subj_info:", nrow(subj1), "rows\n")
+
+# ---- Exp1 训练组分布（供 CSV 行收口） ----
+.grp_tab1 <- table(subj1$Group)
+cat("Exp1 group counts (data caliber, 78):\n"); print(.grp_tab1)
+
+# ---- 描述性统计方向核对（Exp1，仅正式试次） ----
+.direction(clean1, "Exp1")
+
+cat("=== Bukowski clean.R finished ===\n")
 
 cat("=== Bukowski clean.R finished ===\n")

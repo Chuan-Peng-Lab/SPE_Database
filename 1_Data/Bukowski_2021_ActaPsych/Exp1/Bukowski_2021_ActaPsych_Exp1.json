@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "2017-03-27 (SessionDate in E-Prime merge txt header; all files share this date)",
+    "Physical_Environment": {
+      "Location": "University of Vienna, Faculty of Psychology, Vienna, Austria (laboratory rooms; participants tested individually; see paper: experiments conducted at the University of Vienna, Faculty of Psychology)",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/ (Display.RefreshRate recorded in E-Prime header)",
+        "Software": "E-Prime (experiment AssoMatc_control_young; .edat2/.emrg2 exports on OSF pcv3u, converted to txt by E-Merge 2026-08-31)"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (matching condition: matching, nonmatching) x 3 (shape association: self, familiar other, neutral instance), within-subjects; between-subjects factor: training group (imitation / imitation-inhibition / control-inhibition / be-imitated)"
+    },
+    "Block_Structure": {
+      "Block_number": "6 blocks of 60 trials (paper text says 'three blocks of 60 trials' = 180; the data contain 6 blocks x 60 = 360 formal trials per participant - data caliber used, paper difference noted in CSV Note)",
+      "Trial_number": "360 formal trials per participant (6 blocks x 60; matching and nonmatching equally frequent within each shape condition)",
+      "Practice_trials": "9 (data; paper text says '12 trials practice block' - data caliber used; practice trials retained with Phase column in Clean)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms",
+      "Stimulus_duration": "100 ms (one shape with one label)",
+      "SOA": "/",
+      "Stimulus_order": "simultaneous (shape and label displayed together)",
+      "Response_deadline": "800-1200 ms after stimulus onset (paper; E-Prime Target.RT recorded in ms)",
+      "ITI": "1000 ms (ITIDur recorded in E-Prime)",
+      "Feedback_duration": "500 ms (Correct / Incorrect / Too late!)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (geometric shapes + German identity labels)",
+      "Fixation": "central cross (500 ms)",
+      "Shape": "S.bmp / T.bmp / C.bmp (shape image files; paper describes triangle, square, circle - exact file-to-shape mapping not verifiable, Shape column holds file names as-is per user decision)",
+      "Label": "Sie / Freund / Fremder (German: formal You / friend / stranger; paper describes English labels you / best friend / unfamiliar person - actual stimuli German, Stim_language = German)",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Experiment 1 of Bukowski et al. (2021), shape matching task (Sui et al. 2012 style). 132 participants targeted (33 per group, all female, right-handed; paper: 90 final after 8 dropouts/data loss, M age = 21.58, SD = 3.71; 4 training groups: imitation 24 / imitation-inhibition 26 / control-inhibition 18 / be-imitated 22; shape-matching analyzed sample 64 after 22 chance-level exclusions: 16/17/14/17). Library data caliber = 78 participants (87 E-Prime files in E-Merge export shapematching_merge_all_20260831.txt - 9 participants excluded as outliers per user decision 2026-09-02 based on outlier shape.txt list: 204/221/406/207/322/120/206/217/210). Participant numbering: E-Prime original Subject field (101-416, unique across files, matching DataFile.Basename - no renumbering needed; user decision 2026-09-02 to use existing materials, no separate fix table). Training groups from res1.xlsx Sheet1 TrainCond (Imitation / Counter-Imitation / Inhibition-control / Be-imitated) renamed to paper wording (imitation / imitation-inhibition / control-inhibition / be-imitated) per user decision; group counts (data caliber): imitation 22 / imitation-inhibition 21 / control-inhibition 16 / be-imitated 19. Identity mapping (same as Exp2, user confirmed): Label Sie->You->Self, Freund->Friend->Close, Fremder->Stranger->Stranger; Shape variable already holds identity words Self/Friend/Stranger (English), Std Self/Close/Stranger. Shape column = Target file names (S/T/C.bmp) per user decision (image files not provided; first letters likely Square/Triangle/Circle but unverifiable). Matching = YesNoResp (Yes = matching); response keys m/n counterbalanced across participants (verified in guards). ACC = Target.ACC (0/1); no-response trials (RESP empty, RT 0, ACC 0) coded NA in ACC and RT_ms per project convention. RT in ms (integers). Block = BlockList.Sample 1-6; Trial = TrialList.Sample 1-60 within block (practice: PracTrialList.Sample 1-9). Practice trials (9) retained with Phase column. Data verified cell-by-cell against author E-Merge aggregation in res1.xlsx (shapematching1 sheet, all formal trials grouped by CorrectAnswer key x Shape): 468 cells, 0 mismatch (author caliber includes no-response RT=0 in the mean). Paper describes 12 practice trials and 3 blocks of 60; data contain 9 practice and 6 blocks x 60 = 360 - data caliber used (Practice_Trial=9, numBlocks=6, numTrials=360), paper difference noted. Source: OSF pcv3u (Raw data xp1xp2/exp1/shape matching/). Note: res1.xlsx holds author aggregates only (SM_RT/SM_ACC by subject and condition); no additional author-processed files were used."
+  }
+}
