@@ -5,7 +5,11 @@
     "Physical_Environment": {
       "Location": "/",
       "Setting": "/",
-      "Equipment": { "Presenting": "/", "Monitor": "/", "Software": "/" },
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "/"
+      },
       "Viewing_distance": "/"
     },
     "Experimental_Design": {
@@ -17,16 +21,24 @@
       "Practice_trials": "/"
     },
     "Trial_Structure": {
-      "Fixation_duration": "/", "Stimulus_duration": "/", "SOA": "/",
-      "Stimulus_order": "/", "Response_deadline": "/", "ITI": "/", "Feedback_duration": "/"
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "SOA": "/",
+      "Stimulus_order": "/",
+      "Response_deadline": "/",
+      "ITI": "/",
+      "Feedback_duration": "/"
     },
     "Stimulus_Properties": {
       "Modality": "Visual",
       "Fixation": "/",
       "Shape": "circle, triangle (geometric shapes)",
       "Label": "/",
-      "Colors": { "Stimulus": "/", "Background": "/" }
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
     },
-    "detail": "Data Express; methodology details not documented; derived from Clean.csv structure"
+    "detail": "Data Express; methodology details not documented; derived from Clean.csv structure extraIV1 = stimulus domain (ability/moral), extraIV2 = stimulus valence (negative/positive). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
   }
 }

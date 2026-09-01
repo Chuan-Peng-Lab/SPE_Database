@@ -39,6 +39,6 @@
         "Background": "Grey (169 cd/m²)"
       }
     },
-    "detail": ""
+    "detail": "extraIV1 = emotional intensity of the face stimulus (Strong = morph extreme, Weak = 600-ms morph still). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
   }
 }

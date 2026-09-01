@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": ""
+    "detail": "Experiment 2 (WordsPairing): two tasks. (1) standard self-matching as Exp1. (2) self-pseudoWords task (SelfPriorExp_WordsPairing): pseudo-words paired with shapes by mere pairing display 'triangle - Nenu' (no meaning); 360 trials. Label recovery and Clean merge as Exp1 (all 18 subjects x 360 + 360 rows)."
   }
 }

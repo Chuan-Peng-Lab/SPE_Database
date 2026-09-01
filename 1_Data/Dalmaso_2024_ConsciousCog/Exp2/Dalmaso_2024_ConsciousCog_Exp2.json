@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": ""
+    "detail": "Data note (2026-09): Race and Condition columns were 100% NA in the Clean file due to a cleaning-side loss; both restored from the raw file (race = face-stimulus race, condition = self-association block race, both White/Asian, row-aligned 0 mismatches). Face stimulus files encode race+gender (asian/a_f.jpg = asian female, etc.). extraIV1 = self-association block race (self=Asian vs self=White); Race/Condition restored from raw 2026-09. Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
   }
 }

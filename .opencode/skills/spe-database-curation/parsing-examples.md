@@ -61,6 +61,15 @@ PsychoPy 导出 RT 通常是秒，但作者可能已 ×1000 存为 ms——**以
 
 作者聚合 xlsx 的单元格可能是**外链公式**（如 `='[1]General info'!D73`，引用未随附的工作簿）——openpyxl `data_only=True` 或 readxl 可读**缓存值**（作者在有源文件的机器上保存过），无缓存时读 NA；公式字符串本身（data_only=False）不是数据。此类 xlsx 常**双重用途**：作者产物验证对象（逐值对比）+ subj_info 人口学来源（Age/Gender/Handedness/FaceRace 等）。
 
+### 多任务同构脚本 + 每试次标签确定性恢复（2026-09-01 Wozniak_2022 先例）
+
+一个研究含两个任务（标准 self-matching + 伪词任务），脚本同构（MD5 相同）、.dat 列语义部分不同：
+
+1. **配对码（pairing code）唯一决定 (shape, personlabel, type)**：testlist 第 1 列 objnumber（1-9）→ 1/2/3 正确配对、4-9 错误配对；`personlabel 索引 = f(objnumber)`（{1,5,9}→1、{2,6,7}→2、{3,4,8}→3）、`shape 槽位 = f(objnumber)`（{1,4,7}→1、{2,5,8}→2、{3,6,9}→3）。
+2. **每试次呈现标签未写入 .dat 但可恢复**：标签数组（V10-V12 槽位标签 / 伪词按 version 分配）逐行重复写入，呈现标签 = 标签数组[f(objnumber)]——**确定性恢复后生成单值 Label 列**（Label1/2/3 式宽格式 = 槽位绑定、被试内恒定，≠ 每试次呈现标签，勿混用）。
+3. **验证法**：① .dat 与库内 raw 逐行 0 差异；② 按作者聚合脚本口径（正确试次 RT 均值 + MAD/200 上下限）重算其 xlsx 逐格对比——命中即确认解码正确；不命中先怀疑**作者脚本自身笔误**（Wozniak_2022 perm6 sequence 数组重复 5 缺 8，9 名 perm6 被试的 NM/NMLab 两格全偏，45/54 被试 9 格 100% 命中）。
+4. **伪词任务身份映射**：伪词无翻译（English 层保留原样），Standardized 层 = 该伪词在该被试槽位分配中的身份（V13 直给自我伪词）；两任务合并入库时用 `Task` 列区分（self-matching / self-pseudoWords），同一 Clean 文件（每被试两段各 360 行）。
+
 ## 作者共享产物特征
 
 ### 文件级预清洗 → 每被试试次数低于设计值（2026-09-01 Svensson_2022 先例）

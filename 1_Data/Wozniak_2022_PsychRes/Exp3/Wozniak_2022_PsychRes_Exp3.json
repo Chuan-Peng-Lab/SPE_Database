@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": ""
+    "detail": "Experiment 3 (WordsSelfPairing): two tasks. (1) standard self-matching as Exp1. (2) self-pseudoWords task (SelfPriorExp_WordsSelfPairing): pseudo-words paired with identities 'Nenu pairs with You' (word-identity pairing); 360 trials. Label recovery and Clean merge as Exp1."
   }
 }

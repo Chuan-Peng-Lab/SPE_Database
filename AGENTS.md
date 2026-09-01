@@ -133,8 +133,8 @@ mode: primary
       sometimes `*_Raw/` subfolders with per-participant exports (E-Prime `.edat2`,
       MATLAB `.mat`, PsychoPy `.psydat`).
     - cleaned data: `*_ExpN_Clean.csv`.
-    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 78 files total:
-      50 canonical `Codebook_` + 28 legacy `CodeBook_`; 2026-09-01 verified; 2026-08-27 阶段 1 新增 6 个 canonical),
+    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 81 files total:
+      53 canonical `Codebook_` + 28 legacy `CodeBook_`; 2026-09-01 verified; 2026-09-01 全库同步后计数),
       study-level `.json` (paper metadata) and experiment-level `.json`
       (methodology, v2 hierarchical schema: five components under `exp<N>`).
   - `1_Data/Dataset_inf.csv` — **master index** (newest version; `Dataset_inf.xlsx`
@@ -181,6 +181,10 @@ mode: primary
 - **Key conventions**: cleaned variables standardized to `Subject`, `Shape`, `Label`,
   `Matching`, `ACC`, `RT_ms`, and 3-level Identity columns
   (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger).
+  **2026-09-01 起全库统一**：`Task` 列（默认 `self-matching`，其他受控值 facialExpression-matching /
+  monetaryValue-matching / self-pseudoWords）+ 任务内额外自变量 `extraIV1`/`extraIV2` +
+  固定列顺序模板（Subject→Group→Session→Condition→Block→Trial→Phase→Practice→Shape→Label→Task→
+  Matching→Identity×3→extraIV1/2→Response→RT_ms→RT_sec→ACC→研究特有尾部）；规则见 SKILL.md §数据标准化。
   Cleaned file naming: `<Author>_<Year>_<Suffix>_ExpN_Clean.csv` (Suffix = readable
   journal/database abbreviation, full short journal name, or psyarxiv/unpub tag;
   see the curation skill).

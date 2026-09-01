@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": ""
+    "detail": "extraIV1 = morality of the stimulus label (moral vs immoral). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
   }
 }

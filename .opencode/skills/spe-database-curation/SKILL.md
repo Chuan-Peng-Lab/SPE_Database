@@ -283,6 +283,21 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 
 - Standardized columns: `Subject`, `Shape`, `Label`, `Matching`, `ACC`, `RT_ms`
   (plus optional `Block`, `Trial`, `Phase`, `Response`, `RT_sec`).
+- **任务与附加自变量命名（2026-09 定案，全库统一）**：
+  - `Task` 列：**全库标准列**，区分"联结对象是否含自参照身份"的任务类型。默认值 `self-matching`
+    （形状↔自我/他人联结，数据库核心）；其他受控值：`facialExpression-matching`（联结纯情绪面孔）、
+    `monetaryValue-matching`（联结金钱价值）、`self-pseudoWords`（形状↔伪词配对，Wozniak_2022）。
+    多任务研究（如 Hobbs 三任务）按行填对应值；单任务研究填默认值。判定标准：
+    **联结对象含自参照身份 → self-matching（任务内其他操纵归 extraIV）；不含 → 其他 Task 值**。
+  - `extraIV1`/`extraIV2`：self-matching 任务内的**额外操纵自变量**（第 3/4 自变量）统一命名
+    （如 Blocktype→extraIV1、Expectancy→extraIV1、Domain→extraIV1 + Valence→extraIV2 等）。
+    每研究的 extraIV 具体语义（值、操纵定义、论文文字对应）**必须登记在 Codebook 与 exp JSON detail**
+    （同名列在不同研究语义不同，Codebook 分别描述，如 Qian E1 的 Mood vs E2 的 cue 均叫 extraIV1）。
+    仅当列可被其他列+extraIV 完全推导（冗余编码）或为派生/评定/常量时才可删除或保留原名；
+    删除列须 raw 保留原值。**列顺序（2026-09 定案模板）**：`Subject → [Group] → [Session] →
+    [Condition] → Block → Trial → [Phase] → [Practice] → Shape → Label → Task → Matching →
+    Label-Identity×3 → Shape-Identity×3 → [extraIV1] → [extraIV2] → [Response] → RT_ms → RT_sec → ACC
+    → [研究特有保留列尾部]`；新增/重命名/重排后 Codebook 行序必须与 Clean 列序一致。
 - **Identity columns — 3 levels per identity-bearing stimulus column**
   `X` ∈ {Shape, Label}:
   `X_Origin_Identity` (verbatim as in the raw data, original language) →

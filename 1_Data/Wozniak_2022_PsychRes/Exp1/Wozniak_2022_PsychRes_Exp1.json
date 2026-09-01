@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": ""
+    "detail": "Experiment 1 (WordsMeaning): two tasks. (1) standard self-matching: shape slots (triangle/square/circle) bound to You/friend-name/none; 360 trials. (2) self-pseudoWords task (SelfPriorExp_WordsMeaning): shape slots paired with Telugu pseudo-words Nenu/Miru/Waru, instruction 'Nenu means You' (word-meaning association); 360 trials. Per-trial presented label recovered 2026-09 from pairing code V6 (personlabel index f(V6): {1,5,9}->1, {2,6,7}->2, {3,4,8}->3) + slot labels V10-V12; verified against author Data2MeansAuto.m aggregates (xlsx T1 468/486 cells exact for non-perm6 subjects; perm6 discrepancy traced to author sequence-array typo). Clean merged per subject: 360 standard + 360 words rows; subject 3002 standard task has 353 rows (file truncated in archive)."
   }
 }
