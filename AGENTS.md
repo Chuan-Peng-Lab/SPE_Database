@@ -109,11 +109,14 @@ mode: primary
 ## Project context
 
 - **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
-  **49 studies / 95 rows** per `Dataset_inf.csv` (46 curated
-  folders on disk + 2 pending entries + 1 deferred, 2026-09-01 verified; 2026-09-01
+  **49 studies / 98 rows** per `Dataset_inf.csv` (47 curated
+  folders on disk + 1 pending entry + 1 deferred, 2026-09-02 verified; 2026-09-02
+  Bukowski_2021_ActaPsych **Exp1 入库**（4 行收口，78 人 = 87 E-Merge txt − 9
+  outlier；imitation 22 / imitation-inhibition 21 / control-inhibition 16 /
+  be-imitated 19；468 单元格逐位复现 0 差异）——Bukowski 两实验全部入库；
+  2026-09-01
   Svensson_2022_PsychRes（Exp1/2/3 子文件夹，3 行收口）与 Mcivor_2021_EJN（2 行收口）
-  入库；Bukowski_2021_ActaPsych **Exp2 已入库**（3 行收口；Exp1 待用户转换
-  edat2→txt 后收口）；2026-08-31
+  入库；2026-08-31
   四新研究入库: Zhang_2026_JNeurosci（OA/YA 拆 2 行）、Qi_2025_SciData、
   Atzeni_2026_PsychRes（T2/T3 合并）、Golubickis_2021_ActaPsych（Exp1/Exp2
   子文件夹）；2026-08-31
@@ -126,7 +129,7 @@ mode: primary
   3603 participants) refer to the manuscript and have NOT been re-verified against
   the CSV. Companion to a preregistered meta-analysis (OSF: euqmf).
 - **Structure**:
-  - `1_Data/` — 46 curated study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
+  - `1_Data/` — 47 curated study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
     master index (legacy `Dataset_inf.xlsx` outdated — pending deletion after
     collaborators confirm the CSV). Each folder contains:
     - raw data: `*_raw.csv` (trial-level), `*_subj_info.csv` (subject-level),
@@ -209,17 +212,17 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   `Raw Data/*.csv` referenced by the analysis notebooks) were never uploaded.
   The input-zone folder is kept (validator `known_unlisted` whitelist). Re-ingest
   when the authors share the matching data.
-- **2 CSV `Folder_Name` entries are pending — not curated (verified 2026-09-01)**: `Bukowski_2021_ActaPsych`
-  has an
-  input-zone folder, **Exp2 已入库（2026-09-01，3 行收口；Exp1 待用户转换 edat2→txt 后收口）**，and `Hu_2023_SDB`
+- **1 CSV `Folder_Name` entry is pending — not curated (verified 2026-09-02)**: `Hu_2023_SDB`
   has no folder at all; expected pending/uncatalogued, do NOT "fix". The validator
-  (`validate_json_metadata.R`) whitelists all of them (`known_pending` list);
+  (`validate_json_metadata.R`) whitelists it (`known_pending` list);
   `Generate_Table1.qmd` excludes folderless entries from the generated Table 1
   (dynamic keep-by-folder logic). (2026-08-30: `Orellana-Corrales_2023_QJEP` 与
   `Hobbs_2023_PsychMed` 已入库；2026-08-31: `Wozniak_2020_PLOS` 与
   `Golubickis_2021_ActaPsych` 已入库；2026-09-01: `Svensson_2022_PsychRes`
   （Exp1/2/3 子文件夹五件套 + CSV 3 行收口）与 `Mcivor_2021_EJN`
-  （平铺五件套 + CSV 2 行收口 + d′ 描述性核对）已入库，
+  （平铺五件套 + CSV 2 行收口 + d′ 描述性核对）已入库；
+  2026-09-02: `Bukowski_2021_ActaPsych` Exp1 入库（4 行收口，78 人 =
+  87 E-Merge txt − 9 outlier；468 单元格逐位复现 0 差异）——两实验全部入库，
   均移出本清单与白名单。)
 - **Manuscript Table 1 vs data has known discrepancies (verified 2026-08)**: Exp-number
   copy-paste errors (e.g. `P5E1`–`P5E3` all labeled "Exp4" in the manuscript),
