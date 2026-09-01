@@ -1,44 +1,44 @@
 {
-  "exp1": {
-    "schema_version": "2",
-    "Collected_date": "/",
-    "Physical_Environment": {
-      "Location": "Tsinghua University (testing room)",
-      "Setting": "Laboratory",
-      "Equipment": {
-        "Presenting": "PC",
-        "Monitor": "22-inch CRT monitor, 1024 × 768 resolution, 100Hz",
-        "Software": "Matlab 2016a with PsychToolbox-3"
-      },
-      "Viewing_distance": "/"
-    },
-    "Experimental_Design": {
-      "Conditions": "/"
-    },
-    "Block_Structure": {
-      "Practice_trials": "48 (matching task)",
-      "Block_number": "2 blocks (matching task), 6 blocks (categorization task)",
-      "Trial_number": "120 trials per block (matching), 144 trials per block (categorization)"
-    },
-    "Trial_Structure": {
-      "Stimulus_order": "Simultaneously (shape above, label below fixation)",
-      "SOA": "0 ms",
-      "Fixation_duration": "/",
-      "Stimulus_duration": "100 ms (matching task), 200 ms (categorization task)",
-      "Response_deadline": "/",
-      "ITI": "/",
-      "Feedback_duration": "/"
-    },
-    "Stimulus_Properties": {
-      "Modality": "Visual",
-      "Fixation": "0.8° × 0.8° visual angle",
-      "Shape": "3.7° × 3.7° visual angle",
-      "Label": "3.6° × 1.6° visual angle",
-      "Colors": {
-        "Stimulus": "White",
-        "Background": "Grey"
-      }
-    },
-    "detail": "extraIV1 = morality of the stimulus label (good vs bad). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
-  }
+ "exp1": {
+  "schema_version": "2",
+  "Collected_date": "/",
+  "Physical_Environment": {
+   "Location": "Tsinghua University (testing room)",
+   "Setting": "Laboratory",
+   "Equipment": {
+    "Presenting": "PC",
+    "Monitor": "22-inch CRT monitor, 1024 × 768 resolution, 100Hz",
+    "Software": "Matlab 2016a with PsychToolbox-3"
+   },
+   "Viewing_distance": "/"
+  },
+  "Experimental_Design": {
+   "Conditions": "/"
+  },
+  "Block_Structure": {
+   "Practice_trials": "48 (matching task)",
+   "Block_number": "2 blocks (matching task), 6 blocks (categorization task)",
+   "Trial_number": "120 trials per block (matching), 144 trials per block (categorization)"
+  },
+  "Trial_Structure": {
+   "Stimulus_order": "Simultaneously (shape above, label below fixation)",
+   "SOA": "0 ms",
+   "Fixation_duration": "/",
+   "Stimulus_duration": "100 ms (matching task), 200 ms (categorization task)",
+   "Response_deadline": "/",
+   "ITI": "/",
+   "Feedback_duration": "/"
+  },
+  "Stimulus_Properties": {
+   "Modality": "Visual",
+   "Fixation": "0.8° × 0.8° visual angle",
+   "Shape": "3.7° × 3.7° visual angle",
+   "Label": "3.6° × 1.6° visual angle",
+   "Colors": {
+    "Stimulus": "White",
+    "Background": "Grey"
+   }
+  },
+  "detail": "extraIV1 = morality of the stimulus label (good vs bad). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals). 2026-09-02 recoding: 600-row subjects (42) re-validated as valid (Date timestamps monotonic; the 240 extra rows are 5 real interleaved matching blocks of 48 trials per paper 'five short interleaved perceptual-matching blocks of 48 trials', with ~4-min gaps between them; the original program mis-coded them as Block 1 with Bin cycling 1/2). Recoded: blocks 4-8 (48 rows each, by time order), Trial = (Bin-1)*24 + Trial merged within block; (Subject, Block, Trial) now unique for all 44 subjects. ACC unified coding restored (raw -1 no response -> NA, raw 2 out-of-range key -> -2; regression from 2026-09-01 clean.R extraction, 681 rows). Subjects 7302/7303 (360 rows) = 3 formal blocks only, no interleaved blocks (program version difference); Sample_Size 44 kept."
+ }
 }

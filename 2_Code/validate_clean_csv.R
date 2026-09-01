@@ -67,7 +67,9 @@ alt_cols <- list(
   ACC      = c("corr", "Correct", "respCorr", "risposta.corr", "fl.ACC", "MT4.ACC"),
   RT_ms    = c("RT", "rt", "respRt", "risposta.rt", "RT_sec", "fl.RT", "MT4.RT")
 )
-ACC_OK <- c(-1, 0, 1, 2, 3, 4)
+# ACC 合法值域：含 ACC 统一编码（方案 A，2026-08）的负码 -2/-3/-4 及历史旧码（-1 无反应、2/3/4 旧特殊码）
+# 2026-09-02 同步：方案 A 执行时未更新本词表，Hu_2020 正确编码 -2（范围外按键）曾被误报 W3
+ACC_OK <- c(-4, -3, -2, -1, 0, 1, 2, 3, 4)
 
 find_subj_info <- function(cf, base) {
   dirs <- unique(c(dirname(cf), dirname(dirname(cf))))
