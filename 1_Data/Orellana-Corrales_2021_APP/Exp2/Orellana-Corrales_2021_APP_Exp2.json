@@ -39,6 +39,6 @@
         "Background": "Black"
       }
     },
-    "detail": "Association phase: nonword-concept pairs presented 4 times for 3000 ms each, alternating between self-associated and stranger-associated pairs. Study 2 was preregistered (osf.io/s68pm). Data contain 33 participants x 128 trials (CSV Sample_Size 34 / Valid_Subj 31; N caliber difference tracked in PROJ_STATE.md stage 4). Method source: paper full text (Springer)."
+    "detail": "Association phase: nonword-concept pairs presented 4 times for 3000 ms each, alternating between self-associated and stranger-associated pairs. Study 2 was preregistered (osf.io/s68pm). Data contain 33 participants x 128 trials (CSV Sample_Size 33 / Valid_Subj 31 / Drop_Subj 2; subject 01 incomplete excluded from Clean; N caliber difference tracked in PROJ_STATE.md stage 4). Method source: paper full text (Springer)."
   }
 }

@@ -16,7 +16,7 @@
       "Conditions": "/"
     },
     "Block_Structure": {
-      "Practice_trials": "/",
+      "Practice_trials": "24 practice trials",
       "Block_number": "4 blocks",
       "Trial_number": "84 trials per block"
     },
@@ -39,6 +39,6 @@
         "Background": "Black"
       }
     },
-    "detail": "Shape column = face stimulus file (shape1/2/3.jpg, E-Prime internal names; actual faces from Chicago Face Database: WF-209/211/233 female, WM-003/004/029 male; specific face ID per trial not recoverable from raw). Shape_Subtype = gender of the face stimulus (paper variable Face_Gender; experiment had same-gender vs opposite-gender face parts). Task = self-matching with facial stimuli."
+    "detail": "Shape column = face stimulus file (shape1/2/3.jpg, E-Prime internal names; actual faces from Chicago Face Database: WF-209/211/233 female, WM-003/004/029 male; specific face ID per trial not recoverable from raw). Shape_Subtype = gender of the face stimulus (paper variable Face_Gender; experiment had same-gender vs opposite-gender face parts). Task = self-matching with facial stimuli. Practice trials: 24 per subject per CSV Practice_Trial (2026-09-02 synced from CSV; practice rows with PracticeMode == Yes were excluded from raw/Clean during cleaning, so the count is not independently verifiable from retained data)."
   }
 }

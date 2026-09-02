@@ -63,9 +63,9 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ### CSV 遗留空白
 
-- **License 空 33 行 / 14 研究**（无数据许可声明，按 QJEP 先例留空）：Amodeo×2、Atzeni×1、Bukowski×7、Golubickis×2、Kolvoort×1、Liu×1、Orellana-2020×3、Orellana-2023_QJEP×2、Sui_2015×2、Svensson×3、Vicovaro×2、Wozniak_2020×3、Zhang_2024×2、Zhang_2026×2
-- **City 空 6 行**：Sui_2014×1、Sui_2015×2、Orellana-2023_QJEP×2、Sun×1
-- Stim_language 空 1 行（Hu_YQ_2026_ChinaSciData，deferred 入库时填齐）；Country 空 0；Journal 空 0
+- **License 空 39 行 / 17 研究**（无数据许可声明留空；2026-09-02 更新：6 个 `/` 转空白，Sui_2014_APP/Sui_2014_unpub/Pan 计入）：Amodeo×2、Atzeni×1、Bukowski×7、Golubickis×2、Kolvoort×1、Liu×1、Orellana-2020×3、Orellana-2023_QJEP×2、Pan×1、Sui_2014_APP×4、Sui_2014_unpub×1、Sui_2015×2、Svensson×3、Vicovaro×2、Wozniak_2020×3、Zhang_2024×2、Zhang_2026×2
+- **City 空 3 行**：Sui_2014_unpub×1、Sui_2015×2；**City `NA`（Online 研究不适用）3 行**：Kirk×2、Perrykkad×1
+- Stim_language 空 1 行（Hu_YQ_2026_ChinaSciData，deferred 入库时填齐）；Country 空 0；Journal 空 0（Journal `NA` 10 行 = preprint/unpublished 无期刊，not applicable）
 
 ### 其他冻结项
 
@@ -84,7 +84,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 ### B. 数据口径与修改依据
 3. **清洗 = 最小预处理，不过滤无效值**（ACC -1/2 保留并在 codebook 中说明）。
 4. **自动修改数据/元数据的依据 = 论文全文 + 原始数据**（JSON/CSV 均为衍生产物，互相矛盾时以全文/数据为准）。
-5. **N 口径 = 数据口径优先**：`Sample_Size` = Clean 中被试总数；`Valid_Subj`/`Drop_Subj` 为派生值；论文口径记 Note（`Paper_N:` 前缀）。
+5. **N 口径（2026-09-02 修订，正文见 SKILL.md §主索引）**：`Sample_Size` 一律 = Clean 中被试总数；`Valid_Subj` = 作者 summary-data 初步分析后保留的被试量（最小预处理不删除故通常 = Sample）；`Drop_Subj` = Sample − Valid；招募/论文口径记 Note（`Paper_N:` 前缀）。
 6. **Exp2 Stim_Type 定值 `letter string`**（非词研究，库内值域新增，人工定值）。
 
 ### C. 主索引结构
@@ -116,7 +116,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **JSON**：**131 个**（46 paper 级 + 85 实验级）
 - **校验基线**：
   - 结构级：`validate_json_metadata.R` EXIT=0（131 JSON / 48 文件夹 ↔ CSV 交叉一致；known_pending 1 个 = Hu_YQ_2026_ChinaSciData；known_unlisted 1 个 = Scheller_2026_elife）
-  - 内容级：`validate_clean_csv.R` **87 文件 0 ERROR / 29 WARN**
+  - 内容级：`validate_clean_csv.R` **86 文件 0 ERROR / 29 WARN**（2026-09-02 实测；此前记 87 为含输入区 2 个 `*_Clean.csv` 的过计数，已修正）
   - Table 1 渲染：RENDER_EXIT=0；docx 主表 101 数据行（102 CSV 行 − Hu_YQ 无文件夹；2026-09-02 后未重渲染，行数按 CSV 推算）；table1_problems.txt 111 行冻结清单
   - git：分支 `main`（工作区状态以 git status 为准）
 

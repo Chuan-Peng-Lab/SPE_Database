@@ -74,14 +74,14 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
 （Table 1 渲染不做：qmd 为动态 keep-by-folder 逻辑，新研究自动入表；仅在稿件版本更新时 --param compare_manu:true 渲染）
 ```
 
-## 人工决策点（12 条 — 遇到即暂停，等待确认）
+## 人工决策点（13 条 — 遇到即暂停，等待确认）
 
 自动化整理中以下环节**必须人工确认**，agent 不得自行推断覆盖：
 
 1. **年份口径**：Crossref 无 `published-print` 且非纯在线期刊、预印本版本年有争议时，暂停确认。
 2. **期刊缩写**：无现成缩写对照时（新期刊/新库），人工定缩写（可读性原则）。
-3. **N 口径**：数据口径优先（`Sample_Size` = Clean 中被试总数；`Valid_Subj`/`Drop_Subj` 为派生值——清洗不过滤故通常 = Sample_Size / 0；论文口径记 Note 列 `Paper_N:` 前缀；任一不一致 → 暂停人工确认）。规则正文见「主索引 Dataset_inf.csv」。
-4. **License**：**License 列 = 数据许可，不是论文/文章许可**——只看数据存储库/数据页声明（OSF 等），期刊文章页的 CC 图标属于文章许可，两者不可混。无 OSF/数据链接信息时填 `/`（2026-08 用户决策）；数据页/论文明确声明时按声明填写。规则正文见「主索引 Dataset_inf.csv」。
+3. **N 口径（2026-09-02 修订）**：`Sample_Size` = Clean 中被试总数；`Valid_Subj` = 作者 summary-data 初步分析后保留的被试量（最小预处理不删除故通常 = Sample）；`Drop_Subj` = Sample − Valid；招募/论文 N 与 Clean 不一致时记 Note 列 `Paper_N:` 前缀；任一不一致 → 暂停人工确认。规则正文见「主索引 Dataset_inf.csv」。
+4. **License**：**License 列 = 数据许可，不是论文/文章许可**——只看数据存储库/数据页声明（OSF 等），期刊文章页的 CC 图标属于文章许可，两者不可混。无数据许可声明时**留空**（空白 = 不确定，2026-08 QJEP 先例；三态见「主索引」缺失标记规则），数据页/论文明确声明时按声明填写；明确无许可时标 `NA`。规则正文见「主索引 Dataset_inf.csv」。
 5. **Identity 映射歧义**：原文多义（如 `fm`、friend vs close 边界）→ 保留原文到 Origin 列，English/Standardized 暂填并注释待确认。
 6. **实验编号**：无 Paper_ID 且文件夹结构无法推导 Exp 时，留空待人工。
 7. **输入区异常**：多格式混存、损坏文件、per-participant 命名无法对应实验/会话时，暂停人工判断。
@@ -90,6 +90,7 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
 10. **稿件/旧产物**：一律仅作参考线索，永不作为数据来源覆盖 1_Data/（稿件 v16 已废弃）。
 11. **多任务论文口径**：同一论文含多个任务（如 AB + 匹配）时，`Practice_Trial`/`numBlocks`/`numTrials` 取产生该行数据那个任务的值；发现论文中存在但 CSV 未收录的实验行，登记待入库，不擅自补行。
 12. **已发表论文核查对照全文，不只扫空白**：元数据补全/核查时直接对照 `REF/` 全文（期刊名拼写、身份列拼写、Others 措辞、N 口径、实验行数都可能与空白清单外的问题共存，2026-08 案例：Kirk `Psycholog`/`Slef`、Sui_2014 N 不符、Wang 缺 Exp2）。
+13. **缺失标记三态分类**：单元格属 `missing`（明确无法获得）/ 空白（不确定有无）/ `NA`（明确没有/不适用）中哪一类属人工判断——分类不明或证据不足时暂停确认；改标前先查 exp JSON detail / 论文 / 数据，禁止凭值猜测。规则正文见「主索引 Dataset_inf.csv」缺失标记。
 
 ## 文件与文件夹规范
 
@@ -171,14 +172,15 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
 - **行序约定**：数据行**始终按 ID 列字母序排列**（纯字典序，Python `sorted(key=ID)` 即同款）；新增研究入库时**追加后立即重排**（或直接插入排序位置），任何编辑后行序保持排序；校验手段：`python sorted` 检查或 `git diff` 只应显示内容/插入行而非整体乱序
 - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
 - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
-  - **N 口径 = 数据口径优先**：`Sample_Size` = Clean 中被试总数；`Valid_Subj`/`Drop_Subj` 为派生值（清洗不过滤，通常 = Sample_Size / 0）；论文口径记 Note（`Paper_N:` 前缀）。pair 粒度研究按人数口径 + Note 记 pair 粒度。
+  - **N 口径（2026-09-02 修订）**：`Sample_Size` **一律 = Clean 中被试总数**（数据口径）；招募/论文报告 N 与此不一致时记 Note（`Paper_N: X recruited, Y excluded; N in database` 式）。`Valid_Subj` = **作者对 summary-data 初步分析后保留的被试量**（= 论文分析样本）；因本库最小预处理不删除被试，通常 Valid = Sample；仅当作者剔除了**库内仍保留**的被试时 Valid < Sample（先例 Orellana-Corrales_2021_APP E1：Clean 34 / Valid 28）。`Drop_Subj` = Sample − Valid（库内被作者排除数，通常 0）；**未进库的招募排除不占 Drop，只进 Note**。pair 粒度研究按人数口径（Clean Subject=pair ID 时例外）+ Note 记 pair 粒度。
 - 设计：`Design`、`subj_Group`（被试分组列，**每 group 一行**：行的唯一性 = `Folder_Name` + `Exp` + `subj_Group` 三元组。组间设计研究按组拆分为多行（Exp 不变），每行 `subj_Group` 填**单个**原文组名（如 `LpSTS`，不用分号堆叠——该做法已废弃）；无组间设计保持单行填 `All`。展开后每行的 `Sample_Size`/`Valid_Subj`/`Male`/`Female` 填**组内值**（数据可拆按数据、否则按论文、论文无则 `/`），总体口径与组名映射记 Note；展开行的 `ID`/`Paper_ID`/`Paper` 无稿件对应时留空。**组间判定**：`Design` 列含 between-subjects/Group 标记是直接依据，但 Design 未标注不代表无组间——需以全文核对（案例：Xu_2022、Constable_2020 Switch Identity、Vicovaro E2 self-symmetry/asymmetry 均仅见于全文）；试次级/被试内变量不展开；在线研究（MTurk/Prolific 等）按平台被试主体标 Country（如 MTurk→United States，2026-08 用户指示）。`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
 - 流程：`Practice_Block`、`Practice_Trial`、`numBlocks`、`numTrials`、`Environmental_Info`（**刺激呈现软件**，非 Lab/Online 设置）
   - **numTrials 口径**：一律填**每被试总试次数（total）**，不填 per-block；应能与实验条件数整除出每条件试次数（如 8 条件×60=480）。多 session/多 run 设计（如 Qian E1 4 sessions×144）按全 session 合计。
   - **Session 语义**：`Session` = 完成一个通常意义上的完整心理学实验的一次参加（如 6 blocks、约 1 小时；完成后被试离开实验室或下线）。被试再次来实验室/上线完成另一个完整实验 = 下一个 session（如纵向研究 T2/T3）。同一参加内的重复任务段（如 fMRI 连续 5 个 run）**不叫 session**——用 `Block`（或 Run）列。案例：Atzeni_2026 T2/T3 = 两次独立上线 → Session 列 ✓；Zhang_2026 的 5 个 fMRI "session" 实为同一次扫描内 5 个 run → Clean 列名 Block（作者原列名 session 保留于 raw）。
   - **纵向/多时点研究**：同一任务多个测量时点（如 T2/T3）**不拆 Exp、不拆 subj_Group**——合并为单 Exp 行，Clean 加 `Session` 列区分时点；`Sample_Size` = 跨时点 unique 被试数（数据口径），各时点 N 与重叠记 Note；`numTrials` 填每时点试次数（文本式注明重复/部分 session）。Clean 列一律英文（作者变量名如 'condizione' 用英文对应名 Condition；raw 保留作者原名）。
-  - **Practice_Trial 口径** = 任务正式练习段试次数；学习/训练映射段（如 Constable_2019 E4 的 50 次 "who does this stimulus represent" 训练）**不属于练习**，不填入；同一研究练习数视条件而变时填 "21 or 41" 式文本（与 exp JSON 一致）。
+  - **Practice_Trial 口径** = 任务正式练习段试次数；**与正式试次结构相同（仅无反馈）的熟悉/练习段计入练习**（Kirk_2025_BritJPsy familiarization 12 试次先例，2026-09-02 定案）；纯学习/问答式训练段**不属于练习**，不填入（Constable_2019 E4 的 50 次 "who does this stimulus represent" 训练先例）；同一研究练习数视条件而变时填 "21 or 41" 式文本（与 exp JSON 一致）。缺失/不适用用三态标记（见本节缺失标记规则）。
 - 状态：`Status`（**=1 判定标准**：最关键标准是**库内五件套（raw/Clean/subj_info/Codebook/paper+exp JSON）形成逻辑上完全一致、清晰可追溯的结构**——各层级互相印证、缺口已解释（豁免/占位/排除均有依据）；与原论文表述是否完全一致是**次要指标**，不一致不阻塞 Status=1，而是记录于 `3_Reports/Verifying_original_results_issues.md`（Issue 编号）及 exp JSON detail/CSV Note（先例：Zhang_2023_NeuroImage，Issue 5）；raw 豁免的研究不影响标记）、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
+- **缺失标记（全库统一三态，2026-09-02 定案）**：元数据单元格遇缺失只允许三种表达——① `missing`：**明确无法获得**该信息（如匿名化移除不可恢复、论文未报告且无法补）；② 空白：**不确定**该信息是否存在/有无（默认态，不确定就不要写）；③ `NA`：**明确没有该信息/不适用**（not applicable，如 unpublished 无 DOI、研究明确无练习段）。`/` **仅限 JSON 字段**的未知约定，Dataset_inf.csv 不用 `/`。判定示例：练习计数因匿名化不可恢复→`missing`；练习有无未披露→空白；任务结构明确无练习→`NA`。改标前先查 exp JSON detail/论文/数据，禁止凭值猜测。
 - 同论文多实验行共享的字段（作者/邮箱/年/期刊/DOI 等）只填一次，其余行留空或同步传播均可——以组内非空值一致为准。
 - Legacy: `1_Data/Dataset_inf.xlsx` is an OUTDATED earlier layout (different
   schema: no `Folder_Name`; sheets `Label` + `Sheet1`) — do NOT edit; scheduled
@@ -202,6 +204,8 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
 - CLI 速查：`python 2_Code/read_dataset_inf.py [--folder NAME] [--exp N]`
 
 ## 元数据 JSON
+
+**缺失表达分工（2026-09-02 定案）**：JSON 字段沿用 `"/"` = 未知/不可得 的 JSON 层约定（配合 `detail` 注明来源）；**Dataset_inf.csv 一律不用 `/`**，缺失按三态：`missing`（明确无法获得）/ 空白（不确定）/ `NA`（明确没有/不适用）。两套表达各自独立、不对齐逐字翻译——写 CSV 用三态，写 JSON 用 `/`。正文见「主索引 Dataset_inf.csv」缺失标记规则。
 
 ### Paper-level JSON（`<Study>.json`）— flat 11-field schema
 
@@ -269,7 +273,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   Table 1 pipeline (`Generate_Table1.qmd`) infers `Exp_Implement` by regex-matching
   `Setting`, so non-standard wording silently degrades to NA.
   **Setting = Online 时**：`Physical_Environment.Location` 与 Dataset_inf.csv / paper JSON 的
-  `City` 可不填（在线被试可分布于任何地点，位置无意义）——填 `/` 或 `N/A` 均可，无需追查。
+  `City` 可不填（在线被试可分布于任何地点，位置无意义）——JSON `Location` 填 `/`，Dataset_inf.csv `City` 填 `NA`（不适用，2026-09-02 案例 Kirk/Perrykkad）或留空，无需追查。
 - **Experimental_Design** — what is manipulated/compared; `Conditions` extracted from
   the "per condition:" breakdown of `Trial_number` when present, else `"/"`.
   Full factorial design lives in `Dataset_inf.csv` (`Design`, `Stim_Type` columns).

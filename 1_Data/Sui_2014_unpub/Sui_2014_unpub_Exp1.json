@@ -17,7 +17,7 @@
     },
     "Block_Structure": {
       "Block_number": "/",
-      "Trial_number": "720 trials per participant (24 subjects, 17280 rows; Group = shape-label pairing counterbalance, 3 groups x 8 subjects; CSV numTrials=40 caliber to verify)",
+      "Trial_number": "720 trials per participant (24 subjects, 17280 rows; Group = shape-label pairing counterbalance, 3 groups x 8 subjects; CSV numTrials=720 total per participant, corrected 2026-09-02 from legacy per-block 40)",
       "Practice_trials": "/"
     },
     "Trial_Structure": {
