@@ -2,26 +2,26 @@
 
 ## 1. 当前目标
 
-SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的文件夹名（<Author>_<Year>_<期刊缩写>）作为全项目论文/预印本的关键 ID，以 1_Data/Dataset_inf.csv 为主索引（**49 unique / 98 行**：47 已入库 + 2 暂缓（Hu_YQ_2026_ChinaSciData + Scheller_2026_elife）），使各研究的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 的再生成与比对提供可靠数据源。
-当前最重要推进线路见「3. 当前推进的线路图」（按论文状态四类组织，含问题清单）。**2026-09-02 更新**：Bukowski_2021_ActaPsych Exp1 入库完成（4 行收口，78 人 = 87 E-Merge txt − 9 outlier；imitation 22 / imitation-inhibition 21 / control-inhibition 16 / be-imitated 19；468 单元格逐位复现 0 差异）——该研究两实验全部入库；Hu_2023_SDB 改名 Hu_YQ_2026_ChinaSciData 并标记 deferred（待输入区数据就位后再说，详见「3. 类别四」）。
+SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的文件夹名（<Author>_<Year>_<期刊缩写>）作为全项目论文/预印本的关键 ID，以 1_Data/Dataset_inf.csv 为主索引（**49 unique / 98 行**：47 已入库 + 2 暂缓（Hu_YQ_2026_ChinaSciData + Scheller_2026_elife）），使各研究的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 生成可靠数据源。
+当前最重要推进线路见「3. 当前推进的线路图」（按论文状态四类组织，含问题清单）。全部数据入库或者豁免后，本项目即达成阶段性成果，将对PROJ_STATE.md commit后全面更新，清理历史记录，仅保留未解决问题。
 
 ## 2. 核心文件
+- AGENTS.md — agent 约定与已知 caveats（含 Document map）
+- README.md — 人类读者入口（项目介绍/数据使用）
+- 引用关系：本文档与 README.md、AGENTS.md 相互引用；与 3_Reports/Table1_Issues_Solvability.md 双向关联（未解决清单 ↔ 可解性判定）；数据整理任务统一加载 spe-database-curation 技能
+- .opencode/skills/spe-database-curation/SKILL.md — 通用 curation 技能（自足独立；命名语法、JSON schema、Codebook 规范、DOI/年份核验）
 
+### 2.1 其他重要文档
 - 1_Data/Dataset_inf.csv — 主索引；1_Data/<Study>_<Year>_<Suffix>/ ×47 — 研究数据
 - 2_Code/validate_json_metadata.R — 元数据校验器（known_pending 1 个 + known_unlisted 1 个待入库豁免，名单见 3. 类别四；2026-09-02 更新）；2_Code/validate_clean_csv.R — 内容级校验器
 - 3_Reports/Generate_Table1.qmd + Generate_Table1.docx + Output/table1_problems.txt — Table 1 再生成与比对（2026-08-27 重渲染：118 → 111 行问题）
 - 3_Reports/Table1_Issues_Solvability.md — Table 1 问题可解性分析（107 项逐项判定：可自动确定 ~68 / 需人工 ~39；近似数以文档汇总表为准；与本文档双向关联）
-- 3_Reports/Stage3_1_CrossCheck.md — 阶段 3.1 未解决问题编号清单（P1–P22；与本文档「3. 当前推进的线路图」双向关联）
+- 3_Reports/Stage3_1_CrossCheck_archived.md — 阶段 3.1 未解决问题编号清单（P1–P22；与本文档「3. 当前推进的线路图」双向关联，仅存档）
 - 3_Reports/Verifying_original_results_issues.md — **作者原始结果验证问题统一记录处**（论文原文+作者代码+agent 复现三证据链，核对脚本类似于 2_Code/qjep_verify/，目前有 7个 Issues；后续此类问题一律记录于此）
-- Wang-2016 阶段 4 重建背景与决策记录已并入 `3_Reports/Verifying_original_results_issues.md` Issue 3 §4（原 `Wang_2016_JEPHPP_Stage4_Notes.md` 于 2026-09-01 并入后删除）
 - 2_Code/qjep_verify/ — QJEP 四方核对脚本固化（8 文件 + README；源自 /tmp 临时脚本，2026-08-30 固化）
 - 2_Code/mcivor_verify/ — Mcivor-2021 d′ 描述性核对脚本（verify_dprime.py + README；论文两均值逐位复现 + 3/4 计数命中，2026-09-01 固化）
 - 3_Reports/Process_Data.Rmd — 下游分析（已改用 Folder_Name）
 - REF/README_html2md.md — REF 全文 HTML→MD 管线使用说明（html2Json.py/json2md.py/pdf2md.py 用法、验收清单、模板适配；全文正文归属本文件，AGENTS/PROJ_STATE 只放指针）
-- .opencode/skills/spe-database-curation/SKILL.md — 通用 curation 技能（自足独立；命名语法、JSON schema、Codebook 规范、DOI/年份核验）
-- AGENTS.md — agent 约定与已知 caveats（含 Document map）
-- README.md — 人类读者入口（项目介绍/数据使用）
-- 引用关系：本文档与 README.md、AGENTS.md 相互引用；与 3_Reports/Table1_Issues_Solvability.md 双向关联（未解决清单 ↔ 可解性判定）；数据整理任务统一加载 spe-database-curation 技能
 
 ## 3. 当前推进的线路图（按论文状态四类组织，含问题清单）
 
@@ -77,8 +77,6 @@ License 空（无数据许可声明按 QJEP 先例留空）：Sui_2015 ×2、QJE
 
 ### 触发式工作（跨类别）
 
-- 阶段 6 清理与简化（依赖合作者确认 CSV）：删除 Dataset_inf.xlsx（先二次确认无独有信息）；移除 deprecated Paper_ID/Paper 列并简化 Generate_Table1.qmd 过渡映射；README/AGENTS/SKILL 引用同步
-- 阶段 7 稿件更新支持（稿件版本更新时）：Generate_Table1.qmd --param compare_manu:true 渲染 → 按 Table1_Issues_Solvability.md 先「可自动确定」批（~68 项）后「需人工」批（~39 项）；修正只改数据/元数据，永不反向以稿件覆盖 1_Data/
 - 横切约束：元数据改动 → validate_json_metadata.R EXIT=0；数据改动 → 加跑 validate_clean_csv.R 0 ERROR；Dataset_inf.csv 字节保真（改前往返测试、改后 diff 仅目标单元格）；同一文件多处修改合并一次写入；写盘操作直接 write/edit；与已核实事实冲突的判断暂停问人，不自行覆盖
 
 ## 4. 关键决策（18 条，只保留已完成项目 + 对后续有参考价值的通用决策；规则正文唯一归属 SKILL.md）
