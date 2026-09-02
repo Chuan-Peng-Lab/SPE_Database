@@ -152,17 +152,24 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
 - **Multiple experiments** → each experiment gets its own `Exp1/…ExpN/` subfolder
   with the same five files inside; paper JSON stays at the study root
   (e.g., `1_Data/Sui_2014_APP/Exp1/…Exp4/`).
-- Known deviation (do NOT propagate): `1_Data/Martinez-Perez_2024_CC/` keeps
-  multi-experiment files flat at the study root.
+- Note (2026-09-02 verified): `1_Data/Martinez-Perez_2024_ConsciousCog/` stores a
+  single experiment (Exp2) flat at the study root — its paper Exp1 was excluded
+  (no self-matching task; see Dataset_inf.csv Note), so the folder is a normal
+  single-experiment layout, NOT a multi-experiment deviation. (An older SKILL
+  entry citing the pre-rename folder `Martinez-Perez_2024_CC/` as a flat
+  multi-experiment deviation was removed as outdated.)
 - **Raw input zone（输入区）**: downloaded original exports go into
   `1_Data/<Study>/<Study>_Raw/` (study level; all experiments together; a `Source/`
-  subfolder for the original download is allowed). Supported formats: `.csv`, `.mat`,
-  `.edat2`/`.emrg`, `.psydat`/`.dat`, `.txt`, `.xlsx`. The input zone is **read-only
-  input** — it does NOT participate in validation (`validate_json_metadata.R` and
-  `validate_clean_csv.R` both skip `*_Raw/` and `Source/`), and its files are not
-  standardized products. The standardized trial-level product derived from it is
-  `<Study>_Exp<N>_raw.csv` (in `Exp<N>/` or the study root) — do not confuse the two:
-  `*_Raw/` = downloaded originals (as-is), `*_raw.csv` = processed standard file.
+  subfolder for the original download is allowed). Historical lowercase `<Study>_raw/`
+  variants coexist and remain legal (both `*_Raw/` and `*_raw/` are gitignored and
+  skipped by the validators) — new input zones should use `<Study>_Raw/`. Supported
+  formats: `.csv`, `.mat`, `.edat2`/`.emrg`, `.psydat`/`.dat`, `.txt`, `.xlsx`. The
+  input zone is **read-only input** — it does NOT participate in validation
+  (`validate_json_metadata.R` and `validate_clean_csv.R` both skip `*_Raw/`, `*_raw/`
+  and `Source/`), and its files are not standardized products. The standardized
+  trial-level product derived from it is `<Study>_Exp<N>_raw.csv` (in `Exp<N>/` or the
+  study root) — do not confuse the two: `*_Raw/` = downloaded originals (as-is),
+  `*_raw.csv` = processed standard file.
 
 ## 主索引 Dataset_inf.csv
 
@@ -178,6 +185,7 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
   - **numTrials 口径**：一律填**每被试总试次数（total）**，不填 per-block；应能与实验条件数整除出每条件试次数（如 8 条件×60=480）。多 session/多 run 设计（如 Qian E1 4 sessions×144）按全 session 合计。
   - **Session 语义**：`Session` = 完成一个通常意义上的完整心理学实验的一次参加（如 6 blocks、约 1 小时；完成后被试离开实验室或下线）。被试再次来实验室/上线完成另一个完整实验 = 下一个 session（如纵向研究 T2/T3）。同一参加内的重复任务段（如 fMRI 连续 5 个 run）**不叫 session**——用 `Block`（或 Run）列。案例：Atzeni_2026 T2/T3 = 两次独立上线 → Session 列 ✓；Zhang_2026 的 5 个 fMRI "session" 实为同一次扫描内 5 个 run → Clean 列名 Block（作者原列名 session 保留于 raw）。
   - **纵向/多时点研究**：同一任务多个测量时点（如 T2/T3）**不拆 Exp、不拆 subj_Group**——合并为单 Exp 行，Clean 加 `Session` 列区分时点；`Sample_Size` = 跨时点 unique 被试数（数据口径），各时点 N 与重叠记 Note；`numTrials` 填每时点试次数（文本式注明重复/部分 session）。Clean 列一律英文（作者变量名如 'condizione' 用英文对应名 Condition；raw 保留作者原名）。
+   - **同批被试完成多个实验（2026-09-02 定案）**：**确认同一批被试参加了同一论文/研究内的两个或以上实验**（判定依据：原始导出文件按被试对齐且被试号完全重叠、subj_info 人口学逐行一致、raw 结构同构）时——**合并为单个 Clean 数据文件**，实验/条件差异用列区分（如 `Task`、`Condition`、`Session`、`extraIV` 或研究特有列），Dataset_inf 不拆多 Exp 行、`Sample_Size` = 唯一被试数；合并前**必须核查各实验数据是否真实不同**（比较原始 trialMat/响应/刺激/奖励等字段；若逐行相同则是同数据重复/误拆分，若结构同构但 trial 内容不同才是真多实验）。仅当实验为**明确独立的被试间新招募**时才拆 Exp。案例：Sui_2015_unpub Exp1（无奖励）与 Exp2（rewardValues 1/4/16 有奖励）同批 20 名被试、同刺激体系（emoTex 情绪面孔）、同 trial 结构——**2026-09-02 已合并**为单文件（Session→Phase、extraIV1=逐 trial 奖励值 0/1/4/16、保留 Block/Trial、raw 增 Reward/StartTime/EndTime 时间信息；原 Exp1/Exp2 两文件夹与 Dataset_inf 两行均收口）；Liang_2022_HumBrainMap 为组间拆 Clean（另见 Group 列规则）。核查方法见 SKILL §主索引「同批被试判定」与 parsing-examples.md。
   - **Practice_Trial 口径** = 任务正式练习段试次数；**与正式试次结构相同（仅无反馈）的熟悉/练习段计入练习**（Kirk_2025_BritJPsy familiarization 12 试次先例，2026-09-02 定案）；纯学习/问答式训练段**不属于练习**，不填入（Constable_2019 E4 的 50 次 "who does this stimulus represent" 训练先例）；同一研究练习数视条件而变时填 "21 or 41" 式文本（与 exp JSON 一致）。缺失/不适用用三态标记（见本节缺失标记规则）。
 - 状态：`Status`（**=1 判定标准**：最关键标准是**库内五件套（raw/Clean/subj_info/Codebook/paper+exp JSON）形成逻辑上完全一致、清晰可追溯的结构**——各层级互相印证、缺口已解释（豁免/占位/排除均有依据）；与原论文表述是否完全一致是**次要指标**，不一致不阻塞 Status=1，而是记录于 `3_Reports/Verifying_original_results_issues.md`（Issue 编号）及 exp JSON detail/CSV Note（先例：Zhang_2023_NeuroImage，Issue 5）；raw 豁免的研究不影响标记）、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
 - **缺失标记（全库统一三态，2026-09-02 定案）**：元数据单元格遇缺失只允许三种表达——① `missing`：**明确无法获得**该信息（如匿名化移除不可恢复、论文未报告且无法补）；② 空白：**不确定**该信息是否存在/有无（默认态，不确定就不要写）；③ `NA`：**明确没有该信息/不适用**（not applicable，如 unpublished 无 DOI、研究明确无练习段）。`/` **仅限 JSON 字段**的未知约定，Dataset_inf.csv 不用 `/`。判定示例：练习计数因匿名化不可恢复→`missing`；练习有无未披露→空白；任务结构明确无练习→`NA`。改标前先查 exp JSON detail/论文/数据，禁止凭值猜测。
@@ -319,13 +327,29 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
     （如 Blocktype→extraIV1、Expectancy→extraIV1、Domain→extraIV1 + Valence→extraIV2 等）。
     每研究的 extraIV 具体语义（值、操纵定义、论文文字对应）**必须登记在 Codebook 与 exp JSON detail**
     （同名列在不同研究语义不同，Codebook 分别描述，如 Qian E1 的 Mood vs E2 的 cue 均叫 extraIV1）。
-    仅当列可被其他列+extraIV 完全推导（冗余编码）或为派生/评定/常量时才可删除或保留原名；
-    删除列须 raw 保留原值。**列顺序（2026-09 定案模板 v2）**：`Subject → [Group] → [Session] →
-    Task → [Phase] → [Condition] → Block → Trial → [Practice] → Matching → Shape → [ShapeLoc] →
-    [Shape_Subtype] → Shape-Identity×3 → Label → Label-Identity×3 → [extraIV1] → [extraIV2] →
-    [CorrResponse] → [Response] → RT_ms → RT_sec → ACC → [研究特有保留列尾部]`；
-    `CorrResponse` = 按实验设计的正确反应键（仅当 raw 有 CRESP/CorrectAnswer 类列可直接取时补，否则不加）；
-    新增/重命名/重排后 Codebook 行序必须与 Clean 列序一致。
+     仅当列可被其他列+extraIV 完全推导（冗余编码）或为派生/评定/常量时才可删除或保留原名；
+     删除列须 raw 保留原值。**列顺序（2026-09 定案模板 v2，硬性规范）**：`Subject → [Group] →
+     [Session] → Task → [Phase] → [Condition] → Block → Trial → [Practice] → Matching → Shape →
+     [ShapeLoc] → [Shape_Subtype] → Shape-Identity×3 → Label → Label-Identity×3 → [extraIV1] →
+     [extraIV2] → [CorrResponse] → [Response] → RT_ms → RT_sec → ACC → [研究特有保留列尾部]`；
+     `CorrResponse` = 按实验设计的正确反应键（仅当 raw 有 CRESP/CorrectAnswer 类列可直接取时补，否则不加）；
+     新增/重命名/重排后 Codebook 行序必须与 Clean 列序一致。
+     **列顺序合规要求（2026-09-02 强化，此前 Sui_2015 合并误将 Phase/Task/extraIV1 前置）**：
+     ① 模板 v2 是**唯一合法列序**，所有新建/重排的 `*_Clean.csv` 必须**逐列对齐模板的相对顺序**
+     （模板中带 `[ ]` 的可选列不存在时跳过，但**已存在列的相对先后不得改变**）；产出后把表头与
+     模板逐列对照自查，并以库内 2026-09 后入库的合规样例为参照（`Bukowski_2021_ActaPsych_Exp1_Clean.csv`
+     列序即模板 v2 样板）。
+     ② 关键易错点（曾经踩坑，必须逐条核对）：
+        - `Task` 紧跟 `Subject/[Group]/[Session]` 之后，**不得**放到 Shape/Label 后；
+        - `Phase`/`Condition` 位于 `Task` 之后、`Block` 之前，**不得**前置到 `Task` 前；
+        - `extraIV1`/`extraIV2` 位于 `Label-Identity×3` 之后、`[CorrResponse]`/`Response` 之前，
+          **不得**提前到列首（即使它是核心操纵变量）；
+        - `Shape` 在前、`Label` 在后，各带自己的 Identity×3（Shape-Identity×3 紧跟 Shape、
+          Label-Identity×3 紧跟 Label），**不得**把 Shape/Label 两个 Identity 块堆叠在最后。
+     ③ 校验手段：Clean 表头与模板 v2 逐列比对（写清洗脚本后 `stopifnot` 断言列名顺序 == 模板
+     子序列）；任何列的新增/改名/重排同时更新 Codebook 行序与 exp JSON detail。历史遗留的
+     legacy 列序文件（2026-09 前）需在重清洗时一并纠正，**不得**以"历史文件如此"为新文件
+     放错列开脱。
 - **Identity columns — 3 levels per identity-bearing stimulus column**
   `X` ∈ {Shape, Label}:
   `X_Origin_Identity` (verbatim as in the raw data, original language) →

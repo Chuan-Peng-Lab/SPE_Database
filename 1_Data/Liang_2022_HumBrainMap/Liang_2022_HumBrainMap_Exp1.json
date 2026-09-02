@@ -17,8 +17,8 @@
     },
     "Block_Structure": {
       "Practice_trials": "Criterion-based (six consecutive correct trials)",
-      "Block_number": "6 blocks",
-      "Trial_number": "60 trials per block (360 total trials)"
+      "Block_number": "6 blocks per phase (pre/post; 12 blocks total across two phases)",
+      "Trial_number": "60 trials per block (360 trials per phase; 720 total trials per participant across pre and post phases)"
     },
     "Trial_Structure": {
       "Stimulus_order": "Simultaneously",
@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": ""
+    "detail": "Between-subject TMS design (DLPFC/LpSTS/sham). Clean data merged 2026-09-02 from three historical per-group shard files (Exp1.1/1.2/1.3, one per TMS group) into a single Exp1_Clean.csv with a Group column; the redundant Session column (identical to Phase) was dropped. Phase = test stage (pre = day 1 before cTBS, post = after cTBS); numTrials (Dataset_inf) = 720 total across both phases."
   }
 }

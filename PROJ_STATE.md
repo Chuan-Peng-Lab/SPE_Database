@@ -26,7 +26,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ### 类别一：已入库、无问题（47 篇）
 
-全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库四方核对 + 描述性统计核对），无推进动作、无问题。2026-09-02：**Hu_2023_psyarxiv**（PsyArXiv 预印本，5 实验 5 行）入库收口——仅纳入"self 作为自变量"实验（Exp3a/3b/4a_1/4a_2/6b，依据手稿 Table_1_exp_info 的 Self-ref 列；4b 用户指示不入库），五件套齐全、两级校验 0 ERROR、四方核对 166,323 正式试次与作者 Load_save_data.r 逐一致、Table 1 N 口径全部吻合（38(35)/61(56)/32(29)/32(30)/23(22)）；原始误标 Exp1（实为 exp6b d1+d2）五件套已删除，换为 5 个子文件夹五件套（旧 validator known 条目同步移除）。
+全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库四方核对 + 描述性统计核对），无推进动作、无问题。2026-09-02：**Hu_2023_psyarxiv**（PsyArXiv 预印本，5 实验 5 行）入库收口——仅纳入"self 作为自变量"实验（Exp3a/3b/4a_1/4a_2/6b，依据手稿 Table_1_exp_info 的 Self-ref 列；4b 用户指示不入库），五件套齐全、两级校验 0 ERROR、四方核对 166,323 正式试次与作者 Load_save_data.r 逐一致、Table 1 N 口径全部吻合（38(35)/61(56)/32(29)/32(30)/23(22)）；原始误标 Exp1（实为 exp6b d1+d2）五件套已删除，换为 5 个子文件夹五件套（旧 validator known 条目同步移除）。2026-09-02 另：**Liang_2022_HumBrainMap** 三分片 Clean（Exp1.1/1.2/1.3 = 按 TMS 组 DLPFC/sham/LpSTS 物理分片）合并为单文件 `Liang_2022_HumBrainMap_Exp1_Clean.csv` + `Group` 列（逐值复现 0 差异，78,058 行/109 被试），删 3 分片 Clean + 3 分片 Codebook、新建单一 Codebook；numTrials 360→720（两 phase pre/post 总和，exp JSON 同步）；validator 三条 Liang 分片 known 豁免移除（E3 自然通过 109=109）。同批治理：**Martinez-Perez_2024_ConsciousCog** SKILL 过时 known-deviation 记录（引用旧文件夹名、库内实为单实验平铺）更新为准确说明；**Perrykkad_2022_BMCPsych** subj_info 补 `_Exp1` 中缀、qs_raw 问卷导出移入新建输入区（退出 git 跟踪，历史可恢复）；SKILL 输入区章节注明 `<Study>_Raw/`（推荐）+ 历史 `_raw/` 变体共存合法。2026-09-02 再治理：**Sui_2015_unpub** 原 Exp1/Exp2 两文件夹实为同一批 20 名被试、每次到访内连续完成的无奖励 self-matching 与 reward 变体（.mat startInst 证明 phase 间隔 ~46 分钟同一天两轮；rewardValues 1/4/16 关联身份、逐 trial TpercentReward×500 唯一映射 {1,4,16}）——按 SKILL 新规「同批被试多实验→单 Clean」合并为单实验单文件平铺 study 根（`Sui_2015_unpub_Exp1_*` 五件套 + `Sui_2015_unpub_merge.R` 合并脚本），Session 列改名 Phase、extraIV1=逐 trial 奖励值(0/1/4/16)、保留 Block/Trial、ACC 3/4 特殊码保留；删旧 Exp1/Exp2 子文件夹（git 历史可恢复）；Dataset_inf 两行并单行（Exp=1，numTrials=960，subject 3 例外 720 记 Note）；逐值 QA 18960 行与旧文件全等 0 差异；两级校验 0 ERROR。同批**列顺序硬性规范强化**：SKILL §数据标准化 + AGENTS Key conventions 更新为模板 v2 强制校验（修正 AGENTS 历史旧版模板 Task 后置错误），新增「列顺序合规要求（2026-09-02 强化）」易错点清单（Task/Phase/extraIV1 位置、Shape/Label Identity 块顺序）。
 
 ### 类别二：已入库、有数据缺口
 
@@ -112,11 +112,11 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 - **主索引**：Dataset_inf.csv **102 行 / 48 unique Folder_Name**；磁盘 **48 个研究文件夹**（47 curated + Scheller_2026_elife 输入区保留）；合计 49 研究 = 47 curated + 2 deferred
 - **Status**：`1` 99 行；空白 **3 行**（Hu_YQ_2026_ChinaSciData、Pan_2025_unpub、Sun_2026_DataExp）
-- **Codebook**：87 个（全库统一 canonical `Codebook_*_Clean.xlsx` 命名，2026-09-02 完成 28 个 legacy `CodeBook_*` 改名）
-- **JSON**：**131 个**（46 paper 级 + 85 实验级）
+- **Codebook**：84 个（全库统一 canonical `Codebook_*_Clean.xlsx` 命名；2026-09-02 Liang 三分片 Codebook 随 Clean 合并净减 2）
+- **JSON**：**131 个**（47 paper 级〔46 平铺 Paper_name + 1 Kirk_2025_BritJPsy 嵌套 Paper_ID〕+ 84 实验级；2026-09-02 按顶层键实测校正拆分口径，此前记「46 paper + 85 exp」系把文件名含 `ExpPsych` 的 Orellana-2020 paper JSON 误计入实验级）
 - **校验基线**：
   - 结构级：`validate_json_metadata.R` EXIT=0（131 JSON / 48 文件夹 ↔ CSV 交叉一致；known_pending 1 个 = Hu_YQ_2026_ChinaSciData；known_unlisted 1 个 = Scheller_2026_elife）
-  - 内容级：`validate_clean_csv.R` **86 文件 0 ERROR / 29 WARN**（2026-09-02 实测；此前记 87 为含输入区 2 个 `*_Clean.csv` 的过计数，已修正）
+  - 内容级：`validate_clean_csv.R` **84 文件 0 ERROR / 27 WARN**（2026-09-02 实测；Liang 三分片合并后 86→84 文件，组拆行口径 W2 保留；此前记 87 为含输入区 2 个 `*_Clean.csv` 的过计数，已修正）
   - Table 1 渲染：RENDER_EXIT=0；docx 主表 101 数据行（102 CSV 行 − Hu_YQ 无文件夹；2026-09-02 后未重渲染，行数按 CSV 推算）；table1_problems.txt 111 行冻结清单
   - git：分支 `main`（工作区状态以 git status 为准）
 

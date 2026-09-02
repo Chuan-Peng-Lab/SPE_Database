@@ -186,10 +186,18 @@ mode: primary
 - **Key conventions**: cleaned variables standardized to `Subject`, `Shape`, `Label`,
   `Matching`, `ACC`, `RT_ms`, and 3-level Identity columns
   (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger).
-  **2026-09-01 起全库统一**：`Task` 列（默认 `self-matching`，其他受控值 facialExpression-matching /
-  monetaryValue-matching / self-pseudoWords）+ 任务内额外自变量 `extraIV1`/`extraIV2` +
-  固定列顺序模板（Subject→Group→Session→Condition→Block→Trial→Phase→Practice→Shape→Label→Task→
-  Matching→Identity×3→extraIV1/2→Response→RT_ms→RT_sec→ACC→研究特有尾部）；规则见 SKILL.md §数据标准化。
+   **2026-09-01 起全库统一**：`Task` 列（默认 `self-matching`，其他受控值 facialExpression-matching /
+   monetaryValue-matching / self-pseudoWords）+ 任务内额外自变量 `extraIV1`/`extraIV2` +
+   **固定列顺序模板 v2（硬性规范，不可自定义）**：`Subject→[Group]→[Session]→Task→[Phase]→
+   [Condition]→Block→Trial→[Practice]→Matching→Shape→[ShapeLoc]→[Shape_Subtype]→
+   Shape-Identity×3→Label→Label-Identity×3→[extraIV1]→[extraIV2]→[CorrResponse]→Response→
+   RT_ms→RT_sec→ACC→研究特有尾部`（可选列不存在则跳过，但已存在列相对顺序不得改变）。
+   **列顺序为强制校验项**：新建/重排 Clean 后必须把表头与上述模板逐列对照自查（Task 紧跟
+   Subject 后、Phase 在 Task 后、extraIV1 在 Label-Identity×3 后，均不得提前到列首），以
+   `Bukowski_2021_ActaPsych_Exp1_Clean.csv` 为合规样板；产出前在清洗脚本内用 stopifnot 断言
+   列序；Codebook 行序与 Clean 列序必须一致。易错点与校验细则见 SKILL.md §数据标准化
+   「列顺序合规要求（2026-09-02 强化）」。**严禁照抄本文件历史旧版模板**（该模板曾把 Task
+   置于 Shape/Label 后、Identity 块堆叠末尾，与 v2 冲突，已于 2026-09-02 更正）。
   Cleaned file naming: `<Author>_<Year>_<Suffix>_ExpN_Clean.csv` (Suffix = readable
   journal/database abbreviation, full short journal name, or psyarxiv/unpub tag;
   see the curation skill).

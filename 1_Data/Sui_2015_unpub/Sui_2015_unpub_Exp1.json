@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "/",
+      "Setting": "/",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "/"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching"
+    },
+    "Block_Structure": {
+      "Block_number": "4 blocks x 2 phases (Ses 1/2, ~46 min apart, same-day runs) per condition",
+      "Trial_number": "240 trials per phase per condition (4 blocks x 60) = 480 per condition per participant (960 total across no-reward and reward conditions; subject 3 has only 720 - missing reward-condition phase 1, test run excluded)",
+      "Practice_trials": "12 practice trials per run (not exported)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "SOA": "/",
+      "Stimulus_order": "/",
+      "Response_deadline": "/",
+      "ITI": "/",
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "/",
+      "Shape": "geometric shape (identity-mapped numeric codes 1/2/3; reward condition presents reward feedback icons)",
+      "Label": "/",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "unpublished data (Sui Jie, 2015; no paper/DOI). Same 20 participants completed two conditions in each lab run (phase): a classic self-matching task (no reward) and a reward variant (rewardValues 1/4/16 mapped to Self/Friend/Stranger). extraIV1 = per-trial reward face value: 0 = no-reward condition, 1/4/16 = reward-condition face value (derived from raw Reward column = TpercentReward x500: 0.002/0.008/0.032; mapping verified for all runs). Phase (Clean/raw column) = run index 1/2 within a visit; startInst/endfeedB (raw StartTime/EndTime, seconds) show the two runs of each phase occurred ~46 min apart (same-day runs; no wall-clock date recorded, cross-day possibility cannot be fully excluded). Merged 2026-09-02 from two previously separate Exp1/Exp2 folders into one experiment: Session column renamed Phase, extraIV1 carries per-trial reward value (0/1/4/16), Block(1-4)/Trial(1-60) retained, ACC special codes kept 1=correct/0=incorrect/3=timeout (RT>=1000 ms)/4=no response (RT=0). Column order follows SKILL template v2 (Subject-Task-Phase-Block-Trial-Matching-Shape-ShapeIdentityx3-Label-LabelIdentityx3-extraIV1-Response-RT_ms-RT_sec-ACC). Test participant subject 0 (PractExperiment_2_Subject_3_Ses_1) excluded; subject 3 keeps 720 valid trials. Practice trials not exported."
+  }
+}

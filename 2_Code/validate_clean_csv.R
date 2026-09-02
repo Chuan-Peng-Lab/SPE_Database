@@ -37,10 +37,6 @@ known <- c(
   "Constable_2020_ActaPsych_Exp1"    = "缺 Label/Shape 的 English/Standardized 四个 Identity 三级列（历史文件，待补）",
   "Sun_2026_DataExp_Exp1"            = "nSubj 506 vs subj_info 334 行（全样本 vs 有效样本口径，已知）",
   "Zhang_2023_NeuroImage_Exp1"       = "nSubj 346 vs subj_info 347 行（差 1，待核）",
-  "Liang_2022_HumBrainMap_Exp1"      = "nSubj 35 vs subj_info 109 行（Clean 为历史三分片之一，待核）",
-  "Liang_2022_HumBrainMap_Exp1.1"    = "历史变体分片文件（35 被试；nSubj vs subj_info 不适用，同 Exp1 分片）",
-  "Liang_2022_HumBrainMap_Exp1.2"    = "历史变体分片文件（36 被试；nSubj vs subj_info 不适用）",
-  "Liang_2022_HumBrainMap_Exp1.3"    = "历史变体分片文件（38 被试；nSubj vs subj_info 不适用）",
   "Perrykkad_2022_BMCPsych_Exp1"       = "nSubj 334 vs subj_info 288 行（Pt7E1 N 口径，待核）"
 )
 is_known <- function(base, rule) {
