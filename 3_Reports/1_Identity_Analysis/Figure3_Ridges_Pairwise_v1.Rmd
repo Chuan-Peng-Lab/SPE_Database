@@ -1,0 +1,597 @@
+---
+title: "Figure 3: Ridge Distributions and Pairwise Forest Plots"
+author: "SPE Database Analysis"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+# 强制 knit 时工作目录 = 项目根（3_Reports/），确保 ../1_Data 等相对路径一致
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r packages}
+# ===========================================================================
+# 包加载
+# ===========================================================================
+library(dplyr)
+library(lme4)    # 线性混合模型
+library(MASS)    # mvrnorm 多元正态抽样
+```
+
+```{r paths}
+# ===========================================================================
+# 路径设置（相对于 3_Reports/ 项目根目录）
+# ===========================================================================
+# 原始 trial-level 数据 — 唯一数据来源
+raw_data_dir <- "../1_Data"
+
+# 输出目录
+pic_dir      <- "Output/Pic"
+data_out_dir <- "Output/data"
+
+dir.create(pic_dir,      showWarnings = FALSE, recursive = TRUE)
+dir.create(data_out_dir, showWarnings = FALSE, recursive = TRUE)
+```
+
+```{r constants}
+# ===========================================================================
+# 全局常量（与 Python v11_analysis.py 完全一致）
+# ===========================================================================
+
+IDENTITY_ORDER <- c("NonPerson", "Stranger", "Celebrity", "Acquaintance", "Close")
+
+IDENTITY_COLORS <- c(
+  "NonPerson"     = "#DB3124",
+  "Stranger"      = "#FC8C5A",
+  "Celebrity"     = "#FFDF92",
+  "Acquaintance"  = "#90BED8",
+  "Close"         = "#4B74B2"
+)
+
+RIDGE_HEIGHT    <- 0.85
+BOX_OFFSET      <- 0.11
+BOX_HEIGHT      <- 0.10
+# 注意：XLIM / TICK_POSITIONS 已改为在 combined-figure 块内根据实际数据自动计算，
+# 避免固定 [-0.25, 1.0] 把 Acquaintance/Celebrity 等左尾（< -0.25）截断。
+BOOTSTRAP_N     <- 10000
+BOOTSTRAP_SEED  <- 20260412
+FIG_DPI         <- 320
+```
+
+```{r compute-subject-cohens-d}
+# ===========================================================================
+# 1. 从 1_Data 原始 trial 数据 → 计算 subject-level Cohen's d
+#    复刻 Python pipeline 的 SPE identity 分析
+#    数据来源：仅 ../1_Data/ 下的 *_Clean.csv 文件
+# ===========================================================================
+
+cat("========== Step 1: 读取原始 Clean.csv 文件 ==========\n")
+
+clean_files <- list.files(raw_data_dir,
+                          pattern = "_Clean\\.csv$",
+                          recursive = TRUE,
+                          full.names = TRUE)
+cat(sprintf("找到 %d 个 Clean.csv 文件\n", length(clean_files)))
+
+all_data <- list()
+for (f in clean_files) {
+  df <- tryCatch(
+    read.csv(f, stringsAsFactors = FALSE, colClasses = "character"),
+    error = function(e) NULL
+  )
+  if (!is.null(df)) {
+    df$Source <- tools::file_path_sans_ext(basename(f))
+    all_data[[length(all_data) + 1]] <- df
+  }
+}
+
+merged <- dplyr::bind_rows(all_data)
+if (is.null(merged) || nrow(merged) == 0) {
+  stop("未找到任何 Clean.csv 文件或文件为空，请检查 ../1_Data/ 目录")
+}
+
+# 将数值列转回 numeric
+num_cols <- intersect(c("Subject", "Block", "Trial", "RT_ms", "RT_sec", "ACC"),
+                      colnames(merged))
+for (nc in num_cols) {
+  merged[[nc]] <- as.numeric(merged[[nc]])
+}
+
+cat(sprintf("合并后总数据: %d 行, %d 位被试, %d 个数据集\n",
+            nrow(merged),
+            length(unique(merged$Subject)),
+            length(unique(merged$Source))))
+
+# 检查 Shape_Standardized_Identity 的唯一值
+cat("\nShape_Standardized_Identity 唯一值:\n")
+print(table(merged$Shape_Standardized_Identity))
+
+# ---------------------------------------------------------------------------
+# Cohen's d 计算函数
+# ---------------------------------------------------------------------------
+calc_cohens_d <- function(group1, group2) {
+  n1 <- length(group1); n2 <- length(group2)
+  if (n1 < 2 || n2 < 2) return(NA_real_)
+  pooled_sd <- sqrt(((n1 - 1) * var(group1) + (n2 - 1) * var(group2)) / (n1 + n2 - 2))
+  if (pooled_sd == 0) return(NA_real_)
+  (mean(group1) - mean(group2)) / pooled_sd
+}
+
+# ---------------------------------------------------------------------------
+# 为每位被试 × 每个 Identity 计算 SPE Cohen's d
+# ---------------------------------------------------------------------------
+cat("\n========== Step 2: 计算 subject-level Cohen's d ==========\n")
+
+compute_spe_cohens_d <- function(data, measure = "RT", min_trials = 2) {
+  results <- list()
+  subjects <- unique(data$Subject)
+
+  for (subj in subjects) {
+    subj_df <- data[data$Subject == subj & !is.na(data$Subject), ]
+
+    # Self 试次
+    if (measure == "RT") {
+      self_trials <- subj_df$RT_ms[subj_df$Shape_Standardized_Identity == "Self"
+                                   & subj_df$ACC == 1]
+    } else {
+      self_trials <- subj_df$ACC[subj_df$Shape_Standardized_Identity == "Self"]
+    }
+    self_trials <- self_trials[!is.na(self_trials)]
+
+    if (length(self_trials) < min_trials) next
+
+    for (id in IDENTITY_ORDER) {
+      # 获取该 identity 的试次
+      if (measure == "RT") {
+        other_trials <- subj_df$RT_ms[subj_df$Shape_Standardized_Identity == id
+                                      & subj_df$ACC == 1]
+      } else {
+        other_trials <- subj_df$ACC[subj_df$Shape_Standardized_Identity == id]
+      }
+      other_trials <- other_trials[!is.na(other_trials)]
+
+      if (length(other_trials) < min_trials) next
+
+      # RT: Other - Self (正 = SPE); ACC: Self - Other (正 = SPE)
+      if (measure == "RT") {
+        d <- calc_cohens_d(other_trials, self_trials)
+      } else {
+        d <- calc_cohens_d(self_trials, other_trials)
+      }
+
+      if (!is.na(d)) {
+        results[[length(results) + 1]] <- data.frame(
+          Source    = subj_df$Source[1],
+          Subject   = subj,
+          Identity  = id,
+          Measure   = measure,
+          Cohens_d  = d,
+          n_Self    = length(self_trials),
+          n_Other   = length(other_trials),
+          stringsAsFactors = FALSE
+        )
+      }
+    }
+  }
+  if (length(results) == 0) return(data.frame())
+  do.call(rbind, results)
+}
+
+rt_results  <- compute_spe_cohens_d(merged, "RT")
+acc_results <- compute_spe_cohens_d(merged, "ACC")
+
+# 安全检查
+if (nrow(rt_results) == 0) stop("RT subject-level Cohen's d 计算结果为空，请检查原始数据中的 Identity 值是否匹配")
+if (nrow(acc_results) == 0) stop("ACC subject-level Cohen's d 计算结果为空，请检查原始数据中的 Identity 值是否匹配")
+
+cat(sprintf("RT subject-level effects: %d 行\n", nrow(rt_results)))
+cat(sprintf("ACC subject-level effects: %d 行\n", nrow(acc_results)))
+```
+
+```{r fit-mixed-model}
+# ===========================================================================
+# 2. 拟合混合模型 → 参数化 Bootstrap
+#    复刻 Python fit_mixed_model() + sample_model_predictions()
+# ===========================================================================
+
+cat("\n========== Step 3: 拟合线性混合模型 ==========\n")
+
+prepare_data <- function(df) {
+  df$Subject  <- as.factor(df$Subject)
+  df$Source   <- as.factor(df$Source)
+  df$Identity <- factor(df$Identity, levels = IDENTITY_ORDER, ordered = TRUE)
+  return(df)
+}
+
+rt_results  <- prepare_data(rt_results)
+acc_results <- prepare_data(acc_results)
+
+cat("Fitting RT mixed model ...\n")
+rt_model <- lmer(Cohens_d ~ 0 + Identity + (1 | Subject) + (1 | Source),
+                 data = rt_results, REML = FALSE)
+
+cat("Fitting ACC mixed model ...\n")
+acc_model <- lmer(Cohens_d ~ 0 + Identity + (1 | Subject) + (1 | Source),
+                  data = acc_results, REML = FALSE)
+
+cat("\nRT Model:\n")
+print(summary(rt_model))
+cat("\nACC Model:\n")
+print(summary(acc_model))
+
+# ---------------------------------------------------------------------------
+# 参数化 Bootstrap
+# ---------------------------------------------------------------------------
+cat("\n========== Step 4: 参数化 Bootstrap (N=10000) ==========\n")
+set.seed(BOOTSTRAP_SEED)
+
+bootstrap_model <- function(model, identity_order) {
+  fixed    <- fixef(model)
+  vcov_mat <- as.matrix(vcov(model))
+  samples  <- mvrnorm(n = BOOTSTRAP_N, mu = fixed, Sigma = vcov_mat)
+  colnames(samples) <- names(fixed)
+
+  dist_list <- list()
+  for (id in identity_order) {
+    col_name <- paste0("Identity", id)
+    if (!col_name %in% colnames(samples)) {
+      warning(sprintf("Column '%s' not found. Available: %s",
+                      col_name, paste(colnames(samples), collapse = ", ")))
+      next
+    }
+    dist_list[[id]] <- data.frame(
+      Identity        = id,
+      Predicted_Value = samples[, col_name],
+      stringsAsFactors = FALSE
+    )
+  }
+  do.call(rbind, dist_list)
+}
+
+rt_dist  <- bootstrap_model(rt_model,  IDENTITY_ORDER)
+acc_dist <- bootstrap_model(acc_model, IDENTITY_ORDER)
+
+cat(sprintf("RT distribution: %d rows\n", nrow(rt_dist)))
+cat(sprintf("ACC distribution: %d rows\n", nrow(acc_dist)))
+
+# ---------------------------------------------------------------------------
+# 成对差异
+# ---------------------------------------------------------------------------
+cat("\n========== Step 5: 成对差异计算 ==========\n")
+
+compute_pairwise <- function(model, identity_order) {
+  fixed   <- fixef(model)
+  vcov_m  <- as.matrix(vcov(model))
+  samples <- mvrnorm(n = BOOTSTRAP_N, mu = fixed, Sigma = vcov_m)
+
+  col_map <- setNames(paste0("Identity", identity_order), identity_order)
+  n_ids <- length(identity_order)
+  rows_list <- list()
+
+  for (i in seq_len(n_ids - 1)) {
+    id_a <- identity_order[i]; col_a <- col_map[id_a]
+    for (j in (i + 1):n_ids) {
+      id_b <- identity_order[j]; col_b <- col_map[id_b]
+      diff_samples <- samples[, col_a] - samples[, col_b]
+      diff_samples <- diff_samples[is.finite(diff_samples)]
+      if (length(diff_samples) == 0) next
+
+      qs     <- quantile(diff_samples, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)
+      p_left  <- mean(diff_samples <= 0)
+      p_right <- mean(diff_samples >= 0)
+      p_two   <- min(1.0, 2.0 * min(p_left, p_right))
+      sig     <- (qs[1] > 0 || qs[3] < 0)
+
+      rows_list[[length(rows_list) + 1]] <- data.frame(
+        Identity_A        = id_a,
+        Identity_B        = id_b,
+        diff_mean         = mean(diff_samples),
+        diff_sd           = sd(diff_samples),
+        diff_median       = qs[2],
+        ci95_lower        = qs[1],
+        ci95_upper        = qs[3],
+        p_value_bootstrap = p_two,
+        significant       = sig,
+        stringsAsFactors  = FALSE
+      )
+    }
+  }
+  pairwise_df <- do.call(rbind, rows_list)
+  pairwise_df[order(pairwise_df$diff_mean, decreasing = FALSE), ]
+}
+
+rt_pairwise  <- compute_pairwise(rt_model,  IDENTITY_ORDER)
+acc_pairwise <- compute_pairwise(acc_model, IDENTITY_ORDER)
+
+cat(sprintf("RT: %d 对, %d 显著\n", nrow(rt_pairwise), sum(rt_pairwise$significant)))
+cat(sprintf("ACC: %d 对, %d 显著\n", nrow(acc_pairwise), sum(acc_pairwise$significant)))
+
+# ---------------------------------------------------------------------------
+# 保存中间数据
+# ---------------------------------------------------------------------------
+cat("\n========== Step 6: 保存中间数据 ==========\n")
+
+write.csv(rt_dist,
+          file.path(data_out_dir, "use_example_ridge_distribution_RT_11_v1.csv"),
+          row.names = FALSE, fileEncoding = "UTF-8")
+write.csv(acc_dist,
+          file.path(data_out_dir, "use_example_ridge_distribution_ACC_11_v1.csv"),
+          row.names = FALSE, fileEncoding = "UTF-8")
+write.csv(rt_pairwise,
+          file.path(data_out_dir, "use_example_pairwise_differences_RT_11_v1.csv"),
+          row.names = FALSE, fileEncoding = "UTF-8")
+write.csv(acc_pairwise,
+          file.path(data_out_dir, "use_example_pairwise_differences_ACC_11_v1.csv"),
+          row.names = FALSE, fileEncoding = "UTF-8")
+
+cat("中间数据已保存至:", data_out_dir, "\n")
+```
+
+```{r load-processed-data}
+# ===========================================================================
+# 3. 从 Output/data/ 读取处理好的数据
+# ===========================================================================
+
+rt_dist  <- read.csv(file.path(data_out_dir, "use_example_ridge_distribution_RT_11_v1.csv"),
+                     stringsAsFactors = FALSE)
+acc_dist <- read.csv(file.path(data_out_dir, "use_example_ridge_distribution_ACC_11_v1.csv"),
+                     stringsAsFactors = FALSE)
+rt_pairwise  <- read.csv(file.path(data_out_dir, "use_example_pairwise_differences_RT_11_v1.csv"),
+                         stringsAsFactors = FALSE)
+acc_pairwise <- read.csv(file.path(data_out_dir, "use_example_pairwise_differences_ACC_11_v1.csv"),
+                         stringsAsFactors = FALSE)
+
+cat("RT 分布数据:", nrow(rt_dist), "行\n")
+cat("ACC 分布数据:", nrow(acc_dist), "行\n")
+cat("RT 成对比较:", nrow(rt_pairwise), "对\n")
+cat("ACC 成对比较:", nrow(acc_pairwise), "对\n")
+```
+
+```{r ridge-core-function}
+# ===========================================================================
+# 4. Ridge Distribution + Boxplot 绘图函数
+#    自动计算边距：身份 y 刻度标签与 "Standardized Identity" y 轴标题分层摆放，
+#    互不重叠；x 轴刻度随传入 xlim 自动生成。
+# ===========================================================================
+
+calc_scipy_equiv_bw <- function(x) {
+  n <- length(x)
+  0.32 * n^(-0.2) * sd(x)
+}
+
+draw_ridge_with_box <- function(dist_data, xlim, xlabel, title = NULL,
+                                label_column = "Identity",
+                                cex_axis = 0.85, cex_lab = 1.10, cex_main = 1.15) {
+  order_ids <- IDENTITY_ORDER
+  n_ids     <- length(order_ids)
+
+  y_positions <- setNames(
+    (n_ids - 1 - seq(0, n_ids - 1)) * 1.2,
+    order_ids
+  )
+
+  y_bottom <- min(y_positions) - 0.85
+  y_top    <- max(y_positions) + 0.95
+
+  # ---- 自动左边距：刻度标签占 mgp2(=1) + width 行，ylab 再外移 1.6 行 ----
+  line_in   <- par("cin")[2]
+  w_lab     <- max(strwidth(order_ids, units = "inches", cex = cex_axis))
+  ylab_line <- 1 + w_lab / line_in + 1.6
+  mar_left  <- ylab_line + 1.7
+  par(mar = c(4.6, mar_left, 3.4, 1.2))
+
+  plot.new()
+  plot.window(xlim = xlim, ylim = c(y_bottom, y_top))
+
+  # KDE + 全局最大密度
+  density_cache <- list()
+  global_dmax   <- 0.0
+
+  for (id in order_ids) {
+    vals <- dist_data$Predicted_Value[dist_data[[label_column]] == id]
+    vals <- vals[is.finite(vals)]
+    if (length(vals) < 2) next
+
+    bw   <- calc_scipy_equiv_bw(vals)
+    kde  <- density(vals, bw = bw, kernel = "gaussian", n = 900,
+                    from = xlim[1], to = xlim[2])
+    dens <- kde$y
+    dens[!is.finite(dens)] <- 0
+    dens[dens < 0] <- 0
+
+    density_cache[[id]] <- list(x = kde$x, y = dens)
+    global_dmax <- max(global_dmax, max(dens), na.rm = TRUE)
+  }
+
+  if (!is.finite(global_dmax) || global_dmax <= 0) global_dmax <- 1.0
+
+  # 绘制密度脊 + 箱线图
+  for (id in order_ids) {
+    vals <- dist_data$Predicted_Value[dist_data[[label_column]] == id]
+    vals <- vals[is.finite(vals)]
+    if (length(vals) < 2 || is.null(density_cache[[id]])) next
+
+    xs   <- density_cache[[id]]$x
+    dens <- density_cache[[id]]$y
+    y0   <- y_positions[id]
+
+    dens_scaled <- dens / global_dmax * RIDGE_HEIGHT
+    mask <- dens_scaled > (RIDGE_HEIGHT * 0.01)
+
+    if (any(mask)) {
+      xs_fill <- c(xs[mask], rev(xs[mask]))
+      ys_fill <- c(rep(y0, sum(mask)), y0 + rev(dens_scaled[mask]))
+      polygon(xs_fill, ys_fill,
+              col = adjustcolor(IDENTITY_COLORS[id], alpha.f = 0.8),
+              border = NA)
+      lines(xs[mask], y0 + dens_scaled[mask],
+            col = IDENTITY_COLORS[id], lwd = 1.0)
+    }
+
+    # 箱线图（2.5%/25%/50%/75%/97.5%）
+    qs <- quantile(vals, probs = c(0.025, 0.25, 0.5, 0.75, 0.975))
+    q025 <- qs[1]; q25 <- qs[2]; q50 <- qs[3]; q75 <- qs[4]; q975 <- qs[5]
+
+    yb     <- y0 - BOX_OFFSET
+    cap_h  <- BOX_HEIGHT * 0.45
+    box_y0 <- yb - BOX_HEIGHT / 2
+    box_y1 <- yb + BOX_HEIGHT / 2
+
+    segments(q025, yb, q25, yb, col = "#5a5a5a", lwd = 0.7)
+    segments(q75,  yb, q975, yb, col = "#5a5a5a", lwd = 0.7)
+    segments(q025, yb - cap_h / 2, q025, yb + cap_h / 2, col = "#5a5a5a", lwd = 0.7)
+    segments(q975, yb - cap_h / 2, q975, yb + cap_h / 2, col = "#5a5a5a", lwd = 0.7)
+    rect(q25, box_y0, q75, box_y1, col = "#f4f4f4", border = "#5a5a5a", lwd = 0.8)
+    segments(q50, box_y0, q50, box_y1, col = "#3a3a3a", lwd = 0.9)
+  }
+
+  abline(v = 0, col = "#d27d7d", lty = 2, lwd = 1.0)
+
+  ticks <- seq(ceiling(xlim[1] / 0.25) * 0.25, floor(xlim[2] / 0.25) * 0.25, by = 0.25)
+  axis(1, at = ticks, cex.axis = cex_axis)
+  axis(2, at = y_positions[order_ids], labels = order_ids,
+       las = 1, cex.axis = cex_axis)
+
+  title(xlab = xlabel, cex.lab = cex_lab)
+  title(ylab = "Standardized Identity", line = ylab_line, cex.lab = cex_lab)
+  if (!is.null(title)) {
+    title(main = title, font.main = 2, cex.main = cex_main)
+  }
+  box(bty = "l")
+}
+```
+
+```{r forest-core-function}
+# ===========================================================================
+# 5. Pairwise Forest Plot 绘图函数（自动左边距，最长配对标签不截断）
+# ===========================================================================
+
+draw_pairwise_forest <- function(pairwise_df, title = NULL,
+                                 xlabel = "Difference in Cohen's d",
+                                 cex_axis = 0.80, cex_lab = 1.05, cex_main = 1.10) {
+  df <- pairwise_df
+  df$label <- paste(df$Identity_A, "vs", df$Identity_B)
+  df <- df[order(df$diff_mean), ]
+
+  n_pairs <- nrow(df)
+  y_pos   <- seq_len(n_pairs) - 1
+  colors  <- ifelse(df$significant, "#2E7D32", "#9E9E9E")
+
+  x_min <- min(df$ci95_lower, na.rm = TRUE)
+  x_max <- max(df$ci95_upper, na.rm = TRUE)
+  x_pad <- (x_max - x_min) * 0.1
+  xlim  <- c(x_min - x_pad, x_max + x_pad)
+
+  # 自动左边距：最长配对标签占 mgp2(=1) + width 行
+  line_in  <- par("cin")[2]
+  w_lab    <- max(strwidth(df$label, units = "inches", cex = cex_axis))
+  mar_left <- 1 + w_lab / line_in + 1.5
+  par(mar = c(4.8, mar_left, 3.4, 1.2))
+
+  plot.new()
+  plot.window(xlim = xlim, ylim = c(-0.8, n_pairs - 0.2))
+
+  grid(nx = NULL, ny = NA, col = "grey85", lty = "dashed", lwd = 0.5)
+  abline(v = 0, col = "#d27d7d", lty = 2, lwd = 1.2)
+
+  for (i in seq_len(n_pairs)) {
+    y <- y_pos[i]; row <- df[i, ]
+    old_lend <- par("lend"); par(lend = 2)
+    segments(row$ci95_lower, y, row$ci95_upper, y, col = colors[i], lwd = 2.5)
+    par(lend = old_lend)
+    points(row$diff_mean, y, pch = 21, bg = colors[i], col = "white",
+           cex = 1.2, lwd = 0.6)
+  }
+
+  axis(1, cex.axis = cex_axis)
+  axis(2, at = y_pos, labels = df$label, las = 1, cex.axis = cex_axis)
+  title(xlab = xlabel, cex.lab = cex_lab)
+  if (!is.null(title)) {
+    title(main = title, font.main = 2, cex.main = cex_main)
+  }
+  box(bty = "l")
+
+  # 图例固定在绘图区右下角内侧（"bottomright"+inset 会把图例推到坐标轴标签区，故用显式坐标）
+  usr <- par("usr")
+  legend(x = usr[2], y = usr[3] + (usr[4] - usr[3]) * 0.03,
+         legend = c("Sig. (CI excludes 0)", "N.S. (CI includes 0)"),
+         pch = 21, pt.bg = c("#2E7D32", "#9E9E9E"),
+         col = "white", pt.lwd = 0.6, pt.cex = 1.0,
+         xjust = 1, yjust = 0, cex = 0.75, bty = "n")
+}
+```
+
+```{r combined-figure}
+# ===========================================================================
+# 6. 生成 2×2 组合图
+#    自动 x 轴范围（覆盖 RT & ACC 全部分布，防山脊左右截断）
+#    自动边距 + serif 字体（与 APA 正文一致）
+# ===========================================================================
+
+combined_path <- file.path(pic_dir, "p_ridges_pairwise_combined_11_v1.png")
+
+png(combined_path, width = 20, height = 22, units = "in", res = FIG_DPI)
+par(family = "serif")
+par(oma = c(0.4, 0.4, 0.5, 0.4))
+
+# 动态 x 轴范围：四舍五入到 0.25 刻度网格
+all_v <- c(rt_dist$Predicted_Value, acc_dist$Predicted_Value)
+xr    <- range(all_v, na.rm = TRUE)
+xpad  <- diff(xr) * 0.06
+XLIM  <- c(floor((xr[1] - xpad) / 0.25) * 0.25,
+           ceiling((xr[2] + xpad) / 0.25) * 0.25)
+if (XLIM[2] <= XLIM[1]) XLIM[2] <- XLIM[1] + 0.25
+cat(sprintf("自动 XLIM = [%.2f, %.2f]\n", XLIM[1], XLIM[2]))
+
+layout_matrix <- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2, byrow = TRUE)
+layout(layout_matrix, heights = c(1.0, 0.85))
+
+# Panel A: RT Ridge
+draw_ridge_with_box(rt_dist, XLIM,
+  xlabel = "Cohen's d (Other \u2212 Self Identity) in RT",
+  title  = "A.  RT SPE by Social Identity")
+
+# Panel B: ACC Ridge
+draw_ridge_with_box(acc_dist, XLIM,
+  xlabel = "Cohen's d (Self \u2212 Other Identity) in ACC",
+  title  = "B.  ACC SPE by Social Identity")
+
+# Panel C: RT Pairwise Forest
+draw_pairwise_forest(rt_pairwise,
+  title  = "C.  RT: Pairwise Differences",
+  xlabel = "Difference in Cohen's d (\u0394 = d_A \u2212 d_B)")
+
+# Panel D: ACC Pairwise Forest
+draw_pairwise_forest(acc_pairwise,
+  title  = "D.  ACC: Pairwise Differences",
+  xlabel = "Difference in Cohen's d (\u0394 = d_A \u2212 d_B)")
+
+dev.off()
+cat("\n组合图已保存:", combined_path, "\n")
+```
+
+```{r summary-table}
+# ===========================================================================
+# 7. 成对比较结果汇总
+# ===========================================================================
+
+cat("\n========== RT 成对比较结果 ==========\n")
+rt_display <- rt_pairwise[, c("Identity_A", "Identity_B", "diff_mean",
+                               "ci95_lower", "ci95_upper", "significant")]
+rt_display$diff_mean  <- round(rt_display$diff_mean, 4)
+rt_display$ci95_lower <- round(rt_display$ci95_lower, 4)
+rt_display$ci95_upper <- round(rt_display$ci95_upper, 4)
+print(rt_display, row.names = FALSE)
+cat(sprintf("\nRT: %d/10 组成对比较显著\n", sum(rt_pairwise$significant)))
+
+cat("\n========== ACC 成对比较结果 ==========\n")
+acc_display <- acc_pairwise[, c("Identity_A", "Identity_B", "diff_mean",
+                                 "ci95_lower", "ci95_upper", "significant")]
+acc_display$diff_mean  <- round(acc_display$diff_mean, 4)
+acc_display$ci95_lower <- round(acc_display$ci95_lower, 4)
+acc_display$ci95_upper <- round(acc_display$ci95_upper, 4)
+print(acc_display, row.names = FALSE)
+cat(sprintf("\nACC: %d/10 组成对比较显著\n", sum(acc_pairwise$significant)))
+```
