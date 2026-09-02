@@ -1,0 +1,555 @@
+---
+title: "Bootstrap Analysis of SPE Under Mismatch Conditions"
+author: "SPE Database Analysis"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+# 强制 knit 时工作目录 = 项目根（3_Reports/），确保 ../1_Data 等相对路径一致
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r packages}
+# ===========================================================================
+# 包加载
+# ===========================================================================
+library(dplyr)
+```
+
+```{r paths}
+# ===========================================================================
+# 路径设置（相对于 3_Reports/ 项目根目录）
+# ===========================================================================
+
+# 原始 trial-level 数据目录
+raw_data_dir <- "../1_Data"
+
+# 输出目录
+pic_dir      <- "Output/Pic"
+data_out_dir <- "Output/data"
+
+dir.create(pic_dir,      showWarnings = FALSE, recursive = TRUE)
+dir.create(data_out_dir, showWarnings = FALSE, recursive = TRUE)
+
+cat("原始数据目录:", raw_data_dir, "\n")
+cat("中间数据输出:", data_out_dir, "\n")
+cat("图片输出:", pic_dir, "\n")
+```
+
+```{r bootstrap-constants}
+# ===========================================================================
+# 全局参数
+# ===========================================================================
+N_BOOTSTRAP   <- 500   # Bootstrap 迭代次数
+MIN_SAMPLE_N  <- 10    # 最小样本量
+STEP_N        <- 10    # 样本量步长
+BOOT_SEED     <- 20260412
+
+SHAPE_COLOR   <- "#2E86AB"
+LABEL_COLOR   <- "#A23B72"
+VLINE_SHAPE   <- "#1a5c7a"
+VLINE_LABEL   <- "#7a2a52"
+
+set.seed(BOOT_SEED)
+```
+
+```{r process-data}
+# ===========================================================================
+# 1. 读取 → 合并 → 过滤 → 计算 Cohen's d → Bootstrap
+#    复刻 Python bootstrap_analysis_v6.py 的完整流程
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# 1a. 读取所有 *_Clean.csv 文件
+# ---------------------------------------------------------------------------
+cat("========== Step 1: 读取 Clean.csv 文件 ==========\n")
+
+clean_files <- list.files(raw_data_dir,
+                          pattern = "_Clean\\.csv$",
+                          recursive = TRUE,
+                          full.names = TRUE)
+
+cat(sprintf("找到 %d 个 Clean.csv 文件\n", length(clean_files)))
+
+all_data_list <- list()
+for (f in clean_files) {
+  df <- tryCatch(
+    read.csv(f, stringsAsFactors = FALSE, colClasses = "character"),
+    error = function(e) NULL
+  )
+  if (!is.null(df)) {
+    df$Source <- basename(dirname(f))
+    all_data_list[[length(all_data_list) + 1]] <- df
+  }
+}
+
+merged_df <- dplyr::bind_rows(all_data_list)
+if (is.null(merged_df) || nrow(merged_df) == 0) {
+  stop("未找到任何 Clean.csv 文件或文件为空，请检查 ../1_Data/ 目录")
+}
+
+# 将数值列转回 numeric（Subject, RT_ms, RT_sec, ACC, Block, Trial 等）
+num_cols <- intersect(c("Subject", "Block", "Trial", "RT_ms", "RT_sec", "ACC"),
+                      colnames(merged_df))
+for (nc in num_cols) {
+  merged_df[[nc]] <- as.numeric(merged_df[[nc]])
+}
+
+cat(sprintf("合并后总数据: %d 行\n", nrow(merged_df)))
+
+# 确保 Label_Standardized_Identity 列存在（部分数据可能无此列）
+if (!"Label_Standardized_Identity" %in% colnames(merged_df)) {
+  merged_df$Label_Standardized_Identity <- merged_df$Shape_Standardized_Identity
+}
+
+# 仅保留 Nonmatching 试次
+mismatch_df <- merged_df[merged_df$Matching == "Nonmatching", ]
+cat(sprintf("Mismatch 试次: %d 行, %d 位被试\n",
+            nrow(mismatch_df), length(unique(mismatch_df$Subject))))
+
+# ---------------------------------------------------------------------------
+# 1b. Cohen's d 计算函数
+# ---------------------------------------------------------------------------
+cohens_d <- function(group1, group2) {
+  n1 <- length(group1); n2 <- length(group2)
+  if (n1 < 2 || n2 < 2) return(NA_real_)
+  m1 <- mean(group1); m2 <- mean(group2)
+  v1 <- var(group1); v2 <- var(group2)
+  pooled_sd <- sqrt(((n1 - 1) * v1 + (n2 - 1) * v2) / (n1 + n2 - 2))
+  if (pooled_sd == 0) return(NA_real_)
+  (m1 - m2) / pooled_sd
+}
+
+# ---------------------------------------------------------------------------
+# 1c. 个体级 Cohen's d 计算
+# ---------------------------------------------------------------------------
+calc_subject_cohens_d <- function(df, measure = "RT", min_trials = 2) {
+  results <- list()
+  for (subj in unique(df$Subject)) {
+    subj_df <- df[df$Subject == subj, ]
+    self_data    <- subj_df[subj_df$Primary == "Self", ]
+    stranger_data <- subj_df[subj_df$Primary == "Stranger", ]
+
+    if (measure == "RT") {
+      self_vals    <- self_data$RT_ms[self_data$ACC == 1]
+      self_vals    <- self_vals[!is.na(self_vals)]
+      stranger_vals <- stranger_data$RT_ms[stranger_data$ACC == 1]
+      stranger_vals <- stranger_vals[!is.na(stranger_vals)]
+    } else {
+      self_vals    <- self_data$ACC[!is.na(self_data$ACC)]
+      stranger_vals <- stranger_data$ACC[!is.na(stranger_data$ACC)]
+    }
+
+    if (length(self_vals) < min_trials || length(stranger_vals) < min_trials) next
+
+    d <- if (measure == "RT") {
+      cohens_d(stranger_vals, self_vals)  # RT: Stranger - Self
+    } else {
+      cohens_d(self_vals, stranger_vals)  # ACC: Self - Stranger
+    }
+
+    if (!is.na(d)) {
+      results[[length(results) + 1]] <- data.frame(
+        Subject = subj, Cohens_d = d, stringsAsFactors = FALSE
+      )
+    }
+  }
+  do.call(rbind, results)
+}
+
+# ---------------------------------------------------------------------------
+# 1d. Conservative 过滤（复刻 Python process_data_conservative）
+# ---------------------------------------------------------------------------
+filter_valid_subjects <- function(df, id_col) {
+  # 初始化为与 df$Subject 相同类型的空向量（避免 NULL）
+  valid <- df$Subject[0]
+  for (subj in unique(df$Subject)) {
+    subj_df <- df[df$Subject == subj, ]
+    ids <- unique(subj_df[[id_col]])
+    ids <- ids[!is.na(ids)]
+    if ("Self" %in% ids && "Stranger" %in% ids && length(ids) >= 3) {
+      valid <- c(valid, subj)
+    }
+  }
+  valid
+}
+
+process_conservative <- function(df, analysis_type = "Shape") {
+  if (is.null(df) || nrow(df) == 0) return(data.frame())
+
+  if (analysis_type == "Shape") {
+    primary_col   <- "Shape_Standardized_Identity"
+    secondary_col <- "Label_Standardized_Identity"
+  } else {
+    primary_col   <- "Label_Standardized_Identity"
+    secondary_col <- "Shape_Standardized_Identity"
+  }
+
+  valid_subjects <- filter_valid_subjects(df, primary_col)
+  if (length(valid_subjects) == 0) return(data.frame())
+
+  df_f <- df[df$Subject %in% valid_subjects, , drop = FALSE]
+
+  df_f$Primary <- ifelse(df_f[[primary_col]] %in% c("Self", "Stranger"),
+                         df_f[[primary_col]], "Other")
+  df_f$Secondary <- ifelse(df_f[[secondary_col]] %in% c("Self", "Stranger"),
+                           df_f[[secondary_col]], "Other")
+
+  # 过滤条件
+  mask <- (df_f$Primary == "Self") |
+          ((df_f$Primary == "Stranger") & (df_f$Secondary != "Self")) |
+          (df_f$Primary == "Other")
+  df_f[mask, , drop = FALSE]
+}
+
+# ---------------------------------------------------------------------------
+# 1e. Liberal 过滤（复刻 Python process_data_liberal）
+# ---------------------------------------------------------------------------
+process_liberal <- function(df, analysis_type = "Shape") {
+  if (is.null(df) || nrow(df) == 0) return(data.frame())
+
+  primary_col <- if (analysis_type == "Shape") {
+    "Shape_Standardized_Identity"
+  } else {
+    "Label_Standardized_Identity"
+  }
+
+  df_f <- df
+  df_f$Primary <- ifelse(df_f[[primary_col]] %in% c("Self", "Stranger"),
+                         df_f[[primary_col]], "Other")
+  df_f[df_f$Primary %in% c("Self", "Stranger"), , drop = FALSE]
+}
+
+# ---------------------------------------------------------------------------
+# 1f. Bootstrap 分析
+# ---------------------------------------------------------------------------
+bootstrap_analysis <- function(cohens_d_vec, n_bootstrap = 500,
+                               min_n = 10, step = 10, max_n = NULL) {
+  total_n <- length(cohens_d_vec)
+  if (total_n < min_n) return(data.frame())
+
+  if (is.null(max_n)) max_n <- total_n
+  max_n <- min(max_n, total_n)
+
+  sample_sizes <- seq(min_n, max_n, by = step)
+  if (max_n %% step != 0 && !max_n %in% sample_sizes) {
+    sample_sizes <- c(sample_sizes, max_n)
+  }
+  sample_sizes <- sort(unique(sample_sizes[sample_sizes <= total_n]))
+
+  results <- list()
+  for (n in sample_sizes) {
+    boot_means <- replicate(n_bootstrap,
+      mean(sample(cohens_d_vec, size = n, replace = TRUE))
+    )
+    results[[length(results) + 1]] <- data.frame(
+      SampleSize = n,
+      Mean_d     = mean(boot_means),
+      CI_lower   = quantile(boot_means, 0.025, na.rm = TRUE),
+      CI_upper   = quantile(boot_means, 0.975, na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )
+  }
+  do.call(rbind, results)
+}
+
+# ===========================================================================
+# 2. 运行完整分析
+# ===========================================================================
+cat("\n========== Step 2: 运行 Bootstrap 分析 ==========\n")
+
+run_full_analysis <- function(data, approach = "Conservative", n_boot = 500) {
+  if (is.null(data) || nrow(data) == 0) {
+    cat(sprintf("  %s: 无有效数据，跳过\n", approach))
+    return(list(aligned = list(RT = data.frame(), ACC = data.frame()),
+                max     = list(RT = data.frame(), ACC = data.frame())))
+  }
+
+  results_aligned <- list()
+  results_max     <- list()
+
+  fn <- if (approach == "Conservative") process_conservative else process_liberal
+
+  for (measure in c("RT", "ACC")) {
+    # data 已经是 Nonmatching 数据，无需再次过滤
+    dm <- data
+
+    shape_data <- fn(dm, "Shape")
+    label_data <- fn(dm, "Label")
+
+    shape_cohens <- calc_subject_cohens_d(shape_data, measure)
+    label_cohens <- calc_subject_cohens_d(label_data, measure)
+
+    cat(sprintf("  %s %s - Shape N=%d, Label N=%d\n",
+                approach, measure,
+                nrow(shape_cohens), nrow(label_cohens)))
+
+    # Aligned: 使用较小的 N 对齐
+    max_n_aligned <- min(nrow(shape_cohens), nrow(label_cohens), na.rm = TRUE)
+    if (max_n_aligned >= MIN_SAMPLE_N) {
+      shape_boot_a <- bootstrap_analysis(shape_cohens$Cohens_d, n_boot, max_n = max_n_aligned)
+      label_boot_a <- bootstrap_analysis(label_cohens$Cohens_d, n_boot, max_n = max_n_aligned)
+      if (nrow(shape_boot_a) > 0) shape_boot_a$Identity <- "Shape"
+      if (nrow(label_boot_a) > 0) label_boot_a$Identity <- "Label"
+      results_aligned[[measure]] <- rbind(shape_boot_a, label_boot_a)
+    } else {
+      results_aligned[[measure]] <- data.frame()
+    }
+
+    # Max: 各自最大 N
+    shape_boot_m <- bootstrap_analysis(shape_cohens$Cohens_d, n_boot)
+    label_boot_m <- bootstrap_analysis(label_cohens$Cohens_d, n_boot)
+    if (nrow(shape_boot_m) > 0) shape_boot_m$Identity <- "Shape"
+    if (nrow(label_boot_m) > 0) label_boot_m$Identity <- "Label"
+    results_max[[measure]] <- rbind(shape_boot_m, label_boot_m)
+  }
+  list(aligned = results_aligned, max = results_max)
+}
+
+cat("\n--- Conservative Approach ---\n")
+cons_results <- run_full_analysis(mismatch_df, "Conservative", N_BOOTSTRAP)
+
+cat("\n--- Liberal Approach ---\n")
+lib_results  <- run_full_analysis(mismatch_df, "Liberal", N_BOOTSTRAP)
+
+# ===========================================================================
+# 3. 提取绘图所需的数据框
+# ===========================================================================
+cat("\n========== Step 3: 提取绘图数据框 ==========\n")
+
+rt_cons  <- cons_results$aligned[["RT"]]
+acc_cons <- cons_results$aligned[["ACC"]]
+rt_lib   <- lib_results$max[["RT"]]
+acc_lib  <- lib_results$max[["ACC"]]
+
+for (nm in c("rt_cons", "acc_cons", "rt_lib", "acc_lib")) {
+  df <- get(nm)
+  if (!is.null(df) && nrow(df) > 0) {
+    cat(sprintf("  %s: %d rows, max N=%d\n", nm, nrow(df), max(df$SampleSize)))
+  } else {
+    cat(sprintf("  %s: EMPTY\n", nm))
+  }
+}
+
+# ===========================================================================
+# 4. 保存中间数据到 Output/data/
+# ===========================================================================
+cat("\n========== Step 4: 保存中间数据 ==========\n")
+
+save_boot_csv <- function(df, filename) {
+  if (!is.null(df) && nrow(df) > 0) {
+    write.csv(df, file.path(data_out_dir, filename),
+              row.names = FALSE, fileEncoding = "UTF-8")
+  }
+}
+
+save_boot_csv(rt_cons,  "bootstrap_rt_conservative_aligned_v6_v1.csv")
+save_boot_csv(acc_cons, "bootstrap_acc_conservative_aligned_v6_v1.csv")
+save_boot_csv(rt_lib,   "bootstrap_rt_liberal_max_v6_v1.csv")
+save_boot_csv(acc_lib,  "bootstrap_acc_liberal_max_v6_v1.csv")
+
+cat("中间数据已保存至:", data_out_dir, "\n")
+```
+
+```{r load-processed-data}
+# ===========================================================================
+# 5. 从 Output/data/ 读取处理好的数据
+# ===========================================================================
+
+read_boot_csv <- function(filename) {
+  fpath <- file.path(data_out_dir, filename)
+  if (file.exists(fpath)) {
+    df <- read.csv(fpath, stringsAsFactors = FALSE)
+    df$Identity <- as.factor(df$Identity)
+    cat(sprintf("  %s: %d rows\n", filename, nrow(df)))
+    return(df)
+  } else {
+    cat(sprintf("  %s: NOT FOUND\n", filename))
+    return(data.frame())
+  }
+}
+
+rt_cons  <- read_boot_csv("bootstrap_rt_conservative_aligned_v6_v1.csv")
+acc_cons <- read_boot_csv("bootstrap_acc_conservative_aligned_v6_v1.csv")
+rt_lib   <- read_boot_csv("bootstrap_rt_liberal_max_v6_v1.csv")
+acc_lib  <- read_boot_csv("bootstrap_acc_liberal_max_v6_v1.csv")
+```
+
+```{r helpers}
+# ===========================================================================
+# 6. 绘图辅助函数
+# ===========================================================================
+
+find_ci_exclusion_n <- function(subset_df) {
+  if (nrow(subset_df) == 0) return(list(n = NULL, above = FALSE))
+  above_zero <- subset_df[subset_df$CI_lower > 0, ]
+  below_zero <- subset_df[subset_df$CI_upper < 0, ]
+  if (nrow(above_zero) > 0) {
+    return(list(n = min(above_zero$SampleSize), above = TRUE))
+  } else if (nrow(below_zero) > 0) {
+    return(list(n = min(below_zero$SampleSize), above = FALSE))
+  } else {
+    return(list(n = NULL, above = FALSE))
+  }
+}
+
+draw_identity_trajectory <- function(subset_df, color, vline_color,
+                                     cex_n = 0.85) {
+  if (nrow(subset_df) == 0) return()
+
+  polygon(
+    c(subset_df$SampleSize, rev(subset_df$SampleSize)),
+    c(subset_df$CI_lower, rev(subset_df$CI_upper)),
+    col = adjustcolor(color, alpha.f = 0.18), border = NA
+  )
+  lines(subset_df$SampleSize, subset_df$Mean_d, col = color, lwd = 2)
+  points(subset_df$SampleSize, subset_df$Mean_d,
+         pch = 16, col = color, cex = 0.5)
+
+  conv <- find_ci_exclusion_n(subset_df)
+  if (!is.null(conv$n)) {
+    conv_n <- conv$n
+    conv_row <- subset_df[subset_df$SampleSize == conv_n, ]
+    if (nrow(conv_row) > 0) {
+      ref_y <- if (conv$above) conv_row$CI_lower[1] else conv_row$CI_upper[1]
+      y_lims <- par("usr")
+      segments(conv_n, y_lims[3], conv_n, ref_y,
+               col = vline_color, lty = 2, lwd = 1.2)
+      # N 标注放在刻度数字之下、x 轴标题之上，三者分层避免重叠
+      mtext(sprintf("N=%d", conv_n),
+            side = 1, line = 2.4, at = conv_n,
+            col = vline_color, cex = cex_n, font = 2)
+      points(conv_n, y_lims[3], pch = 25, col = vline_color,
+             bg = vline_color, cex = 0.6)
+    }
+  }
+}
+```
+
+```{r panel-function}
+# ===========================================================================
+# 7. 单面板绘图函数
+# ===========================================================================
+
+draw_bootstrap_panel <- function(data, panel_label, measure, approach,
+                                 cex_axis = 1.0, cex_lab = 1.0, cex_main = 1.1) {
+  if (nrow(data) == 0) {
+    plot.new()
+    text(0.5, 0.5, "No Data", cex = 1.5)
+    return()
+  }
+
+  shape_df <- data[data$Identity == "Shape", ]
+  label_df <- data[data$Identity == "Label", ]
+
+  max_n    <- max(data$SampleSize, na.rm = TRUE)
+  x_margin <- max(20, round(max_n * 0.08))
+
+  # 数据驱动 y 范围：覆盖全部 CI 带并留 15% 边距（避免带被顶/底截断或留白过大）
+  y_data <- range(c(data$CI_lower, data$CI_upper), na.rm = TRUE)
+  y_pad  <- max(0.05, diff(y_data) * 0.15)
+  y_lim  <- c(y_data[1] - y_pad, y_data[2] + y_pad)
+
+  par(mar = c(6.0, 5.4, 3.8, 1.2))
+  plot.new()
+  plot.window(xlim = c(0, max_n + x_margin), ylim = y_lim)
+
+  abline(h = 0, col = "black", lty = 2, lwd = 1.5)
+
+  draw_identity_trajectory(shape_df, SHAPE_COLOR, VLINE_SHAPE)
+  draw_identity_trajectory(label_df, LABEL_COLOR, VLINE_LABEL)
+
+  axis(1, cex.axis = cex_axis)
+  axis(2, cex.axis = cex_axis, las = 1)
+  box(bty = "l")
+
+  y_label <- if (measure == "RT") {
+    "Cohen's d (Stranger - Self)"
+  } else {
+    "Cohen's d (Self - Stranger)"
+  }
+
+  approach_full <- if (approach == "Conservative") {
+    "Conservative Approach"
+  } else {
+    "Liberal Approach"
+  }
+  panel_title <- sprintf("%s: %s  \u2014  %s", panel_label, measure, approach_full)
+  title(main = panel_title, font.main = 2, cex.main = cex_main,
+        family = "serif", line = 1.7)
+  # x 轴标题下移（line 4.6），与 "N=xxx" 收敛标注（line 2.4）分离，避免重合
+  title(xlab = "Number of Participants (Sample Size)",
+        line = 4.6, cex.lab = cex_lab, font.lab = 2)
+  title(ylab = y_label, line = 4.2, cex.lab = cex_lab, font.lab = 2)
+
+  legend("topright",
+         legend = c("\u25A0 Shape", "\u25A0 Label"),
+         text.col = c(SHAPE_COLOR, LABEL_COLOR),
+         text.font = 2, cex = 0.9, bty = "n",
+         inset = c(0.02, 0.02))
+}
+```
+
+```{r combined-figure}
+# ===========================================================================
+# 8. 生成 2×2 组合图
+#    - 总标题放在顶部 outer margin（不再压住 A/B 面板标题）
+#    - 各面板 y 范围数据驱动
+# ===========================================================================
+
+combined_path <- file.path(pic_dir, "combined_figures_v6_v1.png")
+
+png(combined_path, width = 15, height = 11, units = "in", res = 300)
+par(family = "serif")
+par(oma = c(0.4, 0.4, 2.0, 0.4))   # 顶部 outer margin 给总标题
+
+layout_matrix <- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2, byrow = TRUE)
+layout(layout_matrix)
+
+draw_bootstrap_panel(rt_cons,  "A", "RT",  "Conservative")
+draw_bootstrap_panel(acc_cons, "B", "ACC", "Conservative")
+draw_bootstrap_panel(rt_lib,   "C", "RT",  "Liberal")
+draw_bootstrap_panel(acc_lib,  "D", "ACC", "Liberal")
+
+mtext("Bootstrap Estimation of the Self-Prioritization Effect Under Mismatch Conditions",
+      side = 3, line = 1.0, outer = TRUE,
+      font = 2, cex = 1.05, family = "serif")
+
+dev.off()
+cat("\n组合图已保存:", combined_path, "\n")
+```
+
+```{r summary}
+# ===========================================================================
+# 9. 结果汇总
+# ===========================================================================
+
+print_summary <- function(data, approach, measure) {
+  if (nrow(data) == 0) return()
+  cat(sprintf("\n--- %s %s ---\n", approach, measure))
+  for (id in c("Shape", "Label")) {
+    sub <- data[data$Identity == id, ]
+    if (nrow(sub) == 0) next
+    max_n <- max(sub$SampleSize)
+    final <- sub[sub$SampleSize == max_n, ][1, ]
+    sig <- (final$CI_lower > 0 || final$CI_upper < 0)
+    conv <- find_ci_exclusion_n(sub)
+    conv_str <- if (!is.null(conv$n)) {
+      sprintf(", CI excludes 0 at N=%d", conv$n)
+    } else {
+      ", CI never excludes 0"
+    }
+    cat(sprintf("  %s: N=%d, d=%.3f, CI[%.3f, %.3f], Sig:%s%s\n",
+                id, max_n, final$Mean_d, final$CI_lower, final$CI_upper,
+                ifelse(sig, "Yes", "No"), conv_str))
+  }
+}
+
+cat("\n========== Bootstrap Analysis Results ==========\n")
+print_summary(rt_cons,  "Conservative", "RT")
+print_summary(acc_cons, "Conservative", "ACC")
+print_summary(rt_lib,   "Liberal",      "RT")
+print_summary(acc_lib,  "Liberal",      "ACC")
+```

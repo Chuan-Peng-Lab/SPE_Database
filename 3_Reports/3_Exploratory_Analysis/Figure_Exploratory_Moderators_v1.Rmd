@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Moderator Analysis - Spearman Bootstrap (APA figures)"
+title: "Exploratory Moderator Analysis - Spearman Bootstrap (APA figures, v1)"
 author: "SPE Database Analysis"
 date: "`r Sys.Date()`"
 output: html_document
@@ -20,8 +20,9 @@ library(patchwork)
 # ===========================================================================
 # 路径设置（相对于 3_Reports/ 项目根目录）
 # ===========================================================================
-# 预计算的 visualization 数据（Python v09 pipeline 输出）
-data_dir <- "../Datasets/8_Exploratory_Analysis/Output/09"
+# 预计算的 visualization 数据（Python v10 pipeline 输出，已排除 Pan_2025_unpub、
+# Wang_2016_JEPHPP，并对 Stranger cohens_dz 做 |z|>3 离群剔除）
+data_dir <- "../Datasets/8_Exploratory_Analysis/Output/10"
 
 pic_dir      <- "Output/Pic"
 data_out_dir <- "Output/data"
@@ -32,7 +33,7 @@ dir.create(data_out_dir, showWarnings = FALSE, recursive = TRUE)
 
 ```{r load-data}
 # ===========================================================================
-# 1. 加载预计算的 visualization 数据（v09 pipeline）
+# 1. 加载预计算的 visualization 数据（v10 pipeline，已排除研究 + |z|>3）
 # ===========================================================================
 analysis_df <- read.csv(file.path(data_dir, "visualization_analysis_dataset.csv"),
                         stringsAsFactors = FALSE)
@@ -47,53 +48,6 @@ cat(sprintf("分析数据: %d 行\n", nrow(analysis_df)))
 cat(sprintf("数值结果: %d 行\n", nrow(num_results)))
 print(num_results[, c("moderator", "measure", "n_datasets", "spearman_rho",
                       "spearman_rho_boot_ci_lower", "spearman_rho_boot_ci_upper")])
-```
-
-```{r exclude-outlier}
-# ===========================================================================
-# 排除异常值：trial_number_max = 28037（约为次高值 2026 的 14 倍，疑似录入异常）
-# ===========================================================================
-OUTLIER_MODERATOR <- "trial_number_max"
-OUTLIER_VALUE     <- 28037
-
-analysis_df_excl <- analysis_df[!(analysis_df$moderator_name == OUTLIER_MODERATOR
-                                   & abs(analysis_df$moderator_value - OUTLIER_VALUE) < 1), ]
-
-cat(sprintf("排除异常值前: %d 行\n", nrow(analysis_df)))
-cat(sprintf("排除异常值后: %d 行\n", nrow(analysis_df_excl)))
-```
-
-```{r exclude-outlier-stats}
-# ===========================================================================
-# 对 trial_number 面板（C/D）计算排除异常值后的 Spearman（bootstrap）
-# ===========================================================================
-bootstrap_spearman <- function(x, y, n_boot = 10000, seed = 42) {
-  set.seed(seed)
-  n <- length(x)
-  boot_rho <- numeric(n_boot)
-  for (i in seq_len(n_boot)) {
-    idx <- sample.int(n, size = n, replace = TRUE)
-    boot_rho[i] <- cor(x[idx], y[idx], method = "spearman")
-  }
-  list(rho    = cor(x, y, method = "spearman"),
-       p      = cor.test(x, y, method = "spearman")$p.value,
-       ci_lo  = quantile(boot_rho, 0.025, na.rm = TRUE),
-       ci_hi  = quantile(boot_rho, 0.975, na.rm = TRUE),
-       p_boot = 2 * min(mean(boot_rho <= 0), mean(boot_rho >= 0)))
-}
-
-excl_results <- lapply(c("RT_ms", "ACC"), function(meas) {
-  sub <- analysis_df_excl[analysis_df_excl$moderator_name == "trial_number_max"
-                          & analysis_df_excl$measure == meas, ]
-  b <- bootstrap_spearman(sub$moderator_value, sub$cohens_dz)
-  data.frame(moderator = "trial_number_max", measure = meas,
-             n_excl = nrow(sub),
-             spearman_rho_excl = b$rho, spearman_p_excl = b$p,
-             ci_lower_excl = b$ci_lo, ci_upper_excl = b$ci_hi,
-             p_boot_excl = b$p_boot, stringsAsFactors = FALSE)
-})
-excl_results <- do.call(rbind, excl_results)
-print(excl_results)
 ```
 
 ```{r constants}
@@ -114,13 +68,16 @@ X_LABELS <- c(
   "trial_number_max"           = "Maximum trial number"
 )
 
-# APA 样式：serif 字体 + 黑白 + 无网格
-apa_theme <- theme_classic(base_size = 13, base_family = "serif") +
+# APA 样式：serif 字体 + 黑白 + 无网格（字号整体上调，保证可读性）
+apa_theme <- theme_classic(base_size = 15, base_family = "serif") +
   theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 13),
-    axis.title = element_text(face = "bold"),
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.title = element_text(face = "bold", size = 15),
+    axis.text  = element_text(size = 14),
     axis.line  = element_line(color = "black", size = 0.6),
     axis.ticks = element_line(color = "black"),
+    axis.ticks.length = unit(0.12, "cm"),
+    plot.margin = margin(8, 8, 8, 8),
     panel.grid = element_blank()
   )
 ```
@@ -135,7 +92,7 @@ draw_panel_ggplot <- function(raw_df, measure, is_duration, title) {
   x_max <- ceiling((max(x) + 20) / 100) * 100
   if (x_max <= x_min) x_max <- x_min + 100
 
-  # 回归线 + 95% CI 带（跨全轴范围，与 Python v09 一致）
+  # 回归线 + 95% CI 带（跨全轴范围，与 Python v10 一致）
   x_grid <- seq(x_min, x_max, length.out = 120)
   fit <- lm(cohens_dz ~ moderator_value, data = raw_df)
   pred <- predict(fit, newdata = data.frame(moderator_value = x_grid),
@@ -147,9 +104,9 @@ draw_panel_ggplot <- function(raw_df, measure, is_duration, title) {
     geom_ribbon(data = line_df, aes(x = x, ymin = lwr, ymax = upr),
                 inherit.aes = FALSE, fill = "grey85", alpha = 0.55) +
     geom_line(data = line_df, aes(x = x, y = y), inherit.aes = FALSE,
-              color = "black", size = 0.7) +
-    geom_point(color = "black", size = 1.8, alpha = 0.6) +
-    geom_hline(yintercept = 0, color = "grey50", linetype = "dashed", size = 0.4) +
+              color = "black", size = 0.8) +
+    geom_point(color = "black", size = 2.1, alpha = 0.65) +
+    geom_hline(yintercept = 0, color = "grey50", linetype = "dashed", size = 0.45) +
     coord_cartesian(xlim = c(x_min, x_max)) +
     labs(title = title,
          x = X_LABELS[[if (is_duration) "stimulus_duration_ms_first" else "trial_number_max"]],
@@ -172,8 +129,8 @@ specs <- list(
 )
 
 panels <- lapply(specs, function(s) {
-  raw <- analysis_df_excl[analysis_df_excl$moderator_name == s$mod
-                          & analysis_df_excl$measure == s$meas, ]
+  raw <- analysis_df[analysis_df$moderator_name == s$mod
+                     & analysis_df$measure == s$meas, ]
   key <- paste0(s$mod, "_", s$meas)
   draw_panel_ggplot(raw, s$meas, s$dur, PANEL_TITLES[[key]])
 })
@@ -189,7 +146,7 @@ combined <- (panels[["stimulus_duration_ms_first_RT_ms"]] |
             (panels[["trial_number_max_RT_ms"]] |
              panels[["trial_number_max_ACC"]])
 
-combined_path <- file.path(pic_dir, "Figure_Exploratory_Moderators_Main.png")
+combined_path <- file.path(pic_dir, "Figure_Exploratory_Moderators_Main_v1.png")
 ggsave(combined_path, combined, width = 12, height = 8, dpi = 300)
 cat("\n组合图已保存:", combined_path, "\n")
 ```
@@ -199,10 +156,10 @@ cat("\n组合图已保存:", combined_path, "\n")
 # 6. 四张单面板图
 # ===========================================================================
 indiv_specs <- list(
-  list(name = "Figure_StimulusDuration_RT_Stranger.png",  mod = "stimulus_duration_ms_first", meas = "RT_ms"),
-  list(name = "Figure_StimulusDuration_ACC_Stranger.png", mod = "stimulus_duration_ms_first", meas = "ACC"),
-  list(name = "Figure_TrialNumber_RT_Stranger.png",       mod = "trial_number_max",           meas = "RT_ms"),
-  list(name = "Figure_TrialNumber_ACC_Stranger.png",      mod = "trial_number_max",           meas = "ACC")
+  list(name = "Figure_StimulusDuration_RT_Stranger_v1.png",  mod = "stimulus_duration_ms_first", meas = "RT_ms"),
+  list(name = "Figure_StimulusDuration_ACC_Stranger_v1.png", mod = "stimulus_duration_ms_first", meas = "ACC"),
+  list(name = "Figure_TrialNumber_RT_Stranger_v1.png",       mod = "trial_number_max",           meas = "RT_ms"),
+  list(name = "Figure_TrialNumber_ACC_Stranger_v1.png",      mod = "trial_number_max",           meas = "ACC")
 )
 
 for (s in indiv_specs) {
@@ -214,7 +171,7 @@ for (s in indiv_specs) {
 
 ```{r captions}
 # ===========================================================================
-# 7. 图注（统计量移出图内，供正文图注使用；报告剔除 28037 异常值前后）
+# 7. 图注（统计量移出图内，供正文图注使用）
 # ===========================================================================
 caption_rows <- num_results %>%
   mutate(
@@ -224,30 +181,18 @@ caption_rows <- num_results %>%
       moderator == "trial_number_max"           & measure == "RT_ms" ~ "C",
       moderator == "trial_number_max"           & measure == "ACC" ~ "D",
       TRUE ~ NA_character_
-    )
-  ) %>%
-  left_join(excl_results, by = c("moderator", "measure")) %>%
-  arrange(panel)
-
-caption_rows <- caption_rows %>%
-  mutate(
-    before = sprintf(
-      "n = %d; Spearman \u03C1 = %.3f, p = %.3f; 95%% CI [%.3f, %.3f]; p_boot = %.4f",
+    ),
+    caption = sprintf(
+      "n = %d; Spearman \u03C1 = %.3f, p = %.3f; bootstrap 95%% CI [%.3f, %.3f]; p_boot = %.4f",
       n_datasets, spearman_rho, spearman_p,
       spearman_rho_boot_ci_lower, spearman_rho_boot_ci_upper, spearman_rho_boot_p
     ),
-    after = ifelse(
-      is.na(n_excl),
-      "",
-      sprintf(" | excl. 28037-trial outlier (n = %d): \u03C1 = %.3f, p = %.3f; 95%% CI [%.3f, %.3f]; p_boot = %.4f",
-              n_excl, spearman_rho_excl, spearman_p_excl,
-              ci_lower_excl, ci_upper_excl, p_boot_excl)
-    ),
-    caption = paste0(before, after)
-  )
+    note = "Excluded Pan_2025_unpub and Wang_2016_JEPHPP; |z|>3 outliers removed from Stranger Cohen's dz."
+  ) %>%
+  arrange(panel)
 
 print(caption_rows[, c("panel", "caption")], row.names = FALSE)
-write.csv(caption_rows, file.path(data_out_dir, "exploratory_figure_captions.csv"),
+write.csv(caption_rows, file.path(data_out_dir, "exploratory_figure_captions_v1.csv"),
           row.names = FALSE)
-cat("\n图注已保存:", file.path(data_out_dir, "exploratory_figure_captions.csv"), "\n")
+cat("\n图注已保存:", file.path(data_out_dir, "exploratory_figure_captions_v1.csv"), "\n")
 ```
