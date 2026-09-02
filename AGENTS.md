@@ -110,7 +110,8 @@ mode: primary
 
 - **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
   **49 studies / 98 rows** per `Dataset_inf.csv` (47 curated
-  folders on disk + 1 pending entry + 1 deferred, 2026-09-02 verified; 2026-09-02
+  folders on disk + 2 deferred entries (Hu_YQ_2026_ChinaSciData ex Hu_2023_SDB +
+  Scheller_2026_elife), 2026-09-02 verified; 2026-09-02
   Bukowski_2021_ActaPsych **Exp1 入库**（4 行收口，78 人 = 87 E-Merge txt − 9
   outlier；imitation 22 / imitation-inhibition 21 / control-inhibition 16 /
   be-imitated 19；468 单元格逐位复现 0 差异）——Bukowski 两实验全部入库；
@@ -212,7 +213,8 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   `Raw Data/*.csv` referenced by the analysis notebooks) were never uploaded.
   The input-zone folder is kept (validator `known_unlisted` whitelist). Re-ingest
   when the authors share the matching data.
-- **1 CSV `Folder_Name` entry is pending — not curated (verified 2026-09-02)**: `Hu_2023_SDB`
+- **1 CSV `Folder_Name` entry is deferred — not curated (verified 2026-09-02)**: `Hu_YQ_2026_ChinaSciData`
+  （原 `Hu_2023_SDB`，2026-09-02 改名并标记 deferred，与 Scheller_2026_elife 同类处置）
   has no folder at all; expected pending/uncatalogued, do NOT "fix". The validator
   (`validate_json_metadata.R`) whitelists it (`known_pending` list);
   `Generate_Table1.qmd` excludes folderless entries from the generated Table 1

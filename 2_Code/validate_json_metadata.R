@@ -157,7 +157,7 @@ dataset_inf <- file.path(data_dir, "Dataset_inf.csv")
 # Known-pending studies: listed in Dataset_inf.csv but data not yet curated
 # (documented in AGENTS.md). Add new pending entries here explicitly.
 known_pending <- c(
-  "Hu_2023_SDB"
+  "Hu_YQ_2026_ChinaSciData"
 )
 
 # Known un-listed folders: input-zone folders whose data arrived but that are
