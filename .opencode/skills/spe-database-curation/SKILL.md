@@ -69,7 +69,7 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
 □ 两级校验：validate_json_metadata.R EXIT=0 + validate_clean_csv.R 0 ERROR
 □ Dataset_inf.csv 收口（字节保真：往返测试 → 写入 → diff 仅目标单元格 → ID 行序保持）
 □ known_pending/known_unlisted 白名单同步
-□ PROJ_STATE.md 登记：3 节对应类别行更新 + 7 节完成进度追加一行
+□ PROJ_STATE.md 登记：3 节对应类别行更新 + 5 节现状快照数字同步（完成进度不追加——历史已精简，只入 git commit）
 □ AGENTS/README 计数同步（如有）
 （Table 1 渲染不做：qmd 为动态 keep-by-folder 逻辑，新研究自动入表；仅在稿件版本更新时 --param compare_manu:true 渲染）
 ```
@@ -129,8 +129,8 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
 - **Tags**: `_raw` (unprocessed), `_subj_info` (participant level), `_Clean`
   (minimally preprocessed), `Codebook_*_Clean.xlsx` for codebooks.
 - **Canonical casing**: `Codebook_` (lowercase b), `_raw_` (lowercase).
-  Existing outliers (`CodeBook_…` — 28 legacy files, `Raw/` subfolders) are
-  legacy — do not propagate to new files.
+  28 个 legacy `CodeBook_…` 已于 2026-09-02 统一改名（无遗留）；`Raw/`
+  subfolders 为 legacy — do not propagate.
 - **Filenames must be pure ASCII** (no diacritics).
 
 ### 文件夹结构
@@ -301,7 +301,8 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
     `(Subject, Block, Trial)` 必须仍唯一；不唯一时把被删列维度**合入 Trial 编号**
     （Hu_2020 先例：Trial 1-24 每 bin 循环，删 Bin 后 `Trial = (Bin-1)*24 + Trial` → block 内 1-120 唯一）。
     反向排查方法：全库扫描 Clean 的 `(Subject, Block, Trial)` 重复键（仅 Hu_2020/Hu_2023_psyarxiv/Zhang_2023
-    命中；Hu_2023 为跨 Session 重复属另一类问题——Session 列被清洗丢弃，须保留 Session 并按其分组排序）。
+    命中；Hu_2023 原为跨 Session 重复——Session 列被旧清洗丢弃，2026-09-02 重入库已保留 Session 并按其
+    分组排序解决，校验键 (Subject, Session, Block, Trial) 唯一）。
     独立脚本模式（Wozniak_2018/Hu_2020 同款）：Rmd 段删除留指针注释、`<Study>_clean.R` 从 Rmd 原代码复制
     仅改问题处、守卫按有效被试断言（无效被试已知重复不参与唯一性断言）。
 - **任务与附加自变量命名（2026-09 定案，全库统一）**：
@@ -400,7 +401,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 ## Codebook 编写规则
 
 - One `Codebook_<Study>_Exp<N>_Clean.xlsx` per `*_Clean.csv`, in the same folder,
-  canonical casing `Codebook_` (legacy `CodeBook_` must not be propagated).
+  canonical casing `Codebook_` (lowercase b — 全库唯一命名，legacy `CodeBook_` 已 2026-09-02 全部改名)。
 - **Structure** (verified across existing codebooks): a single worksheet `Sheet1`
   with exactly 4 columns and one row per variable of the Clean.csv:
 

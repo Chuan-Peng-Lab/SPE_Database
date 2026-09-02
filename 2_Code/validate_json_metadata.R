@@ -92,7 +92,7 @@ for (f in sort(json_files)) {
     next
   }
 
-  exp_match <- regmatches(stem, regexpr("_Exp[0-9]+(\\.[0-9]+)?$", stem))
+  exp_match <- regmatches(stem, regexpr("_Exp[0-9]+([A-Za-z]+(_[0-9]+)?|\\.[0-9]+)?$", stem))
   is_exp <- length(exp_match) > 0 && startsWith(stem, study)
 
   if (!is_exp) {
@@ -217,7 +217,7 @@ if (!file.exists(dataset_inf)) {
 # are documented in PROJ_STATE.md; new studies must not add more). Non-standard
 # variants (e.g. _Exp1.1_ files) are excluded from the check.
 # ------------------------------------------------------------------------------
-clean_files <- list.files(data_dir, pattern = "_Exp[0-9]+_Clean[.]csv$",
+clean_files <- list.files(data_dir, pattern = "_Exp[0-9]+([A-Za-z]+(_[0-9]+)?|\\.[0-9]+)?_Clean[.]csv$",
                           recursive = TRUE, full.names = TRUE)
 clean_files <- clean_files[!grepl("/[.]_", clean_files)]
 clean_files <- clean_files[!grepl("(_Raw/|_raw/|/Raw/|/Source/)", clean_files)]

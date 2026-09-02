@@ -1,0 +1,44 @@
+{
+  "exp3a": {
+    "schema_version": "2",
+    "Collected_date": "2014-11",
+    "Physical_Environment": {
+      "Location": "Tsinghua University, Beijing",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "22-inch CRT monitors",
+        "Monitor": "22-inch",
+        "Software": "E-prime 2.0"
+      },
+      "Viewing_distance": "60 cm (chin rest)"
+    },
+    "Experimental_Design": {
+      "Conditions": "6 conditions (good-self, neutral-self, bad-self, good-other, neutral-other, bad-other); 2 (matching) x 2 (reference: self/other) x 3 (moral character: good/neutral/bad), within-subject"
+    },
+    "Block_Structure": {
+      "Block_number": "6",
+      "Trial_number": "720 (6 blocks x 120 per subject)",
+      "Practice_trials": "until >=60% accuracy (60-1500 trials across subjects)"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "/",
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "Response_deadline": "/",
+      "ITI": "/",
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual perceptual matching task",
+      "Fixation": "0.8° x 0.8°",
+      "Shape": "3.7° x 3.7°",
+      "Label": "3.6° x 1.6°",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Explicit self-referencing test (self-binding vs valence account). extraIV1 = moral valence of the SHAPE-side concept (Good/Neutral/Bad, derived from raw Shape text; author's Load_save_data.r derives Valence from the shape side too). Matching = YesNoResp (true matching status). Shape = geometry file (Target); Shape identity = raw Shape text (e.g. Goodself); Label = Chinese label text (好我/好人/凡我/凡人/坏我/坏人). No-response trials (empty response, RT=0) coded ACC=NA/RT_ms=NA. Practice trials retained with Phase=Practice. Subject re-coded +3000 per author. Table 1 N=38 (35): 2 practice-only subjects (271, 35) + 1 low-accuracy excluded."
+  }
+}

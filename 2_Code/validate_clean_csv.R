@@ -35,7 +35,6 @@ clean_files <- clean_files[!grepl("(_Raw/|_raw/|/Raw/|/Source/)", clean_files)]
 # ---------- 已知例外（历史遗留，修复后移出） ----------
 known <- c(
   "Constable_2020_ActaPsych_Exp1"    = "缺 Label/Shape 的 English/Standardized 四个 Identity 三级列（历史文件，待补）",
-  "Hu_2023_psyarxiv_Exp1"            = "nSubj 20 vs subj_info 23 行（subj_info 含无 trial 被试？待核）",
   "Sun_2026_DataExp_Exp1"            = "nSubj 506 vs subj_info 334 行（全样本 vs 有效样本口径，已知）",
   "Zhang_2023_NeuroImage_Exp1"       = "nSubj 346 vs subj_info 347 行（差 1，待核）",
   "Liang_2022_HumBrainMap_Exp1"      = "nSubj 35 vs subj_info 109 行（Clean 为历史三分片之一，待核）",
@@ -136,12 +135,12 @@ for (cf in clean_files) {
     }
   }
   # ---- W2 CSV 引用（Folder_Name + Exp 精确匹配） ----
-  exp_s <- sub(".*_Exp([0-9]+)$", "\\1", base)
+  exp_s <- sub(".*_Exp([0-9A-Za-z_]+)$", "\\1", base)
   folder <- NULL
   for (fn in unique(inf[["Folder_Name"]])) {
     if (!is.na(fn) && startsWith(base, paste0(fn, "_Exp"))) { folder <- fn; break }
   }
-  if (!is.null(folder) && grepl("^[0-9]+$", exp_s)) {
+  if (!is.null(folder) && grepl("^[0-9A-Za-z_]+$", exp_s)) {
     ir <- inf[inf[["Folder_Name"]] == folder & as.character(inf[["Exp"]]) == exp_s, ]
     if (nrow(ir)) {
       vv <- as.character(ir[["Valid_Subj"]][1]); ss <- as.character(ir[["Sample_Size"]][1])
@@ -161,7 +160,7 @@ for (cf in clean_files) {
       cat(sprintf("[WARN] %s: ACC 值域外值: %s\n", base, paste(head(as.character(odd), 8), collapse = ",")))
   }
   # ---- W4 非标准命名 ----
-  if (!grepl("_Exp[0-9]+$", base)) {
+  if (!grepl("_Exp[0-9]+([A-Za-z]+(_[0-9]+)?|\\.[0-9]+)?$", base)) {
     if (base %in% names(known))
       cat(sprintf("[KNOWN] %s: W4 非标准命名（历史变体）\n", base))
     else {

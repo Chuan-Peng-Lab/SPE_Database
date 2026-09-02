@@ -1,0 +1,44 @@
+{
+  "exp4a_2": {
+    "schema_version": "2",
+    "Collected_date": "2017-04",
+    "Physical_Environment": {
+      "Location": "Wenzhou University, Wenzhou",
+      "Setting": "Laboratory (group testing room, 3-12 participants)",
+      "Equipment": {
+        "Presenting": "19-inch CRT monitors",
+        "Monitor": "19-inch",
+        "Software": "E-prime 2.0"
+      },
+      "Viewing_distance": "/ (no chin rest; visual angles not controlled)"
+    },
+    "Experimental_Design": {
+      "Conditions": "Implicit self-binding (same design as Exp4a_1); 2 (matching) x 2 (self/other) x 3 (moral word), within-subject"
+    },
+    "Block_Structure": {
+      "Block_number": "12",
+      "Trial_number": "720 (12 blocks x 60 per subject)",
+      "Practice_trials": "until >=60% accuracy"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "/",
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "Response_deadline": "/",
+      "ITI": "/",
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual perceptual matching task",
+      "Fixation": "0.8° x 0.8°",
+      "Shape": "3.7° x 3.7°",
+      "Label": "3.6° x 1.6°",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Implicit self-binding replication (Wenzhou site). Same conventions as Exp4a_1. Subject IDs verbatim (4141-4172). Table 1 N=32 (30): 2 low-accuracy excluded."
+  }
+}

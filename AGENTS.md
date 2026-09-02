@@ -100,8 +100,8 @@ mode: primary
 - 字段语义类约定（License=数据许可 / Country-City=数据采集地 / Email 以 CSV 为准 / 多任务口径 / 全文核查）见 `spe-database-curation` 技能（SKILL.md），此处不重复。
 
 ### 会话收尾（强制）
-- 更新根目录 `PROJ_STATE.md`（7 节结构，2026-09-01 起）：**更新重点是第 3 节「当前推进的线路图」与第 7 节「完成进度」**——每次收尾时逐论文检查其状态是否发生变化（问题消解/新增、类别迁移、入库进展），状态变化更新到 3 节对应类别行，本次会话完成的具体动作追加到 7 节表格一行；其余节（当前目标/核心文件/关键决策/效率教训/REF）仅在确有必要时微调。只记已确认事实。
-- **更新时机：只在 session 收尾统一更新一次**，工作过程中不逐条实时写入 PROJ_STATE.md（避免文档膨胀）；同一 session 内的多次修改合并为收尾时「7. 完成进度」表格一行。若 session 尚未结束，改动先记在对话/待办中，不写文档。
+- 更新根目录 `PROJ_STATE.md`（2026-09-02 精简为「现状 + 未解决问题」结构）：**更新重点是第 3 节「当前推进的线路图」（四类状态 + 问题清单）与第 5 节「库内现状快照」数字**——每次收尾时逐论文检查其状态是否发生变化（问题消解/新增、类别迁移、入库进展），状态变化更新到 3 节对应类别行，本次会话完成的具体动作**不再追加历史记录**（历史已精简，只入 git commit）；其余节仅在确有必要时微调。只记已确认事实。
+- **更新时机：只在 session 收尾统一更新一次**，工作过程中不逐条实时写入 PROJ_STATE.md（避免文档膨胀）；同一 session 内的多次修改合并为收尾一次写入。若 session 尚未结束，改动先记在对话/待办中，不写文档。
 - 若本会话沉淀了可复用的约定/流程，同步补充到 `spe-database-curation` 技能（SKILL.md）。
 - **沉淀去重（2026-08 阶段 2 教训）**：四文档按分工各存专属正文、相互指针引用，**不复制同样内容到多个文件**——每条规则正文只写一个归属文件（AGENTS.md=agent 操作纪律 / SKILL.md=curation 字段语义 / PROJ_STATE.md=会话事实快照），其余文件只放一行指针（含目标节/编号）。操作要求：① 写入前 `grep` 目标文件确认该规则尚无正文，避免文件内重复；② 删除/重编号后立即同步更新所有指针中的引用位置；③ 沉淀后 `grep` 复核每条规则只有一处正文、其余为指针。
 - 如需提交：**必须先获得用户明确确认**（见文首「全局最高级规则」），确认后按逻辑分组 commit（≤3 个）。
@@ -109,7 +109,7 @@ mode: primary
 ## Project context
 
 - **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
-  **49 studies / 98 rows** per `Dataset_inf.csv` (47 curated
+  **49 studies / 102 rows** per `Dataset_inf.csv` (47 curated
   folders on disk + 2 deferred entries (Hu_YQ_2026_ChinaSciData ex Hu_2023_SDB +
   Scheller_2026_elife), 2026-09-02 verified; 2026-09-02
   Bukowski_2021_ActaPsych **Exp1 入库**（4 行收口，78 人 = 87 E-Merge txt − 9
@@ -137,8 +137,9 @@ mode: primary
       sometimes `*_Raw/` subfolders with per-participant exports (E-Prime `.edat2`,
       MATLAB `.mat`, PsychoPy `.psydat`).
     - cleaned data: `*_ExpN_Clean.csv`.
-    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 81 files total:
-      53 canonical `Codebook_` + 28 legacy `CodeBook_`; 2026-09-01 verified; 2026-09-01 全库同步后计数),
+    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 81 tracked +
+      2026-09-02 新入库未提交若干，全库统一 canonical `Codebook_` 小写 b 命名,
+      28 个 legacy `CodeBook_*` 已于 2026-09-02 统一改名),
       study-level `.json` (paper metadata) and experiment-level `.json`
       (methodology, v2 hierarchical schema: five components under `exp<N>`).
   - `1_Data/Dataset_inf.csv` — **master index** (newest version; `Dataset_inf.xlsx`
@@ -178,7 +179,7 @@ mode: primary
       RStudio's bundled quarto（2026-08-31 实测路径：
       `/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render
       Generate_Table1.qmd`——注意是 `app/quarto/bin/`，不是 `app/bin/quarto/`）。
-      Operational details: PROJ_STATE.md.
+      Operational details: PROJ_STATE.md §5.
     - `Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md` — Chinese report of the
       3-way consistency check (manuscript Table 1 vs CSV vs folders).
 - **Stack**: R / R Markdown / Shiny. RStudio project (`SPE_Database.Rproj`).

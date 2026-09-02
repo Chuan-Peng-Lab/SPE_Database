@@ -338,7 +338,7 @@ E-Prime 的 Subject 号被误填为 Session 号（Study 3 = umv5p 存档）。�
 - 论文：Zhang, Y., Wang, F., & Sui, J. (2023). Decoding individual differences in self-prioritization from the resting-state functional connectome. *NeuroImage*, 120205. DOI: 10.1016/j.neuroimage.2023.120205
 - 数据仓库：OSF https://osf.io/hbrus/（全量存档 2026-08-31 下载：data/ 聚合行为+FC 矩阵、data/external_dataset/ 老年外部验证样本聚合、codes/、output/）
 - 核对时间：2026-08-31（全量 OSF 存档复核 + git 历史源文件恢复 + SPE 公式复算）
-- 核对脚本：本会话 Python 比对（SPE 复算逻辑见 PROJ_STATE 对应条目；无固化脚本）
+- 核对脚本：本会话 Python 比对（SPE 复算逻辑原记于 PROJ_STATE.md 完成进度，2026-09-02 精简后见 git 历史；无固化脚本）
 
 ## 1. 问题描述
 

@@ -1,0 +1,44 @@
+{
+  "exp4a_1": {
+    "schema_version": "2",
+    "Collected_date": "2015-06",
+    "Physical_Environment": {
+      "Location": "Tsinghua University, Beijing",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "22-inch CRT monitors",
+        "Monitor": "22-inch",
+        "Software": "E-prime 2.0"
+      },
+      "Viewing_distance": "60 cm (chin rest)"
+    },
+    "Experimental_Design": {
+      "Conditions": "Implicit self-binding: learned shape<->self/other labels (2 shapes), moral-character words presented INSIDE the shapes (to be ignored); 2 (matching) x 2 (self/other) x 3 (moral word), within-subject"
+    },
+    "Block_Structure": {
+      "Block_number": "6",
+      "Trial_number": "360 (6 blocks x 60 per subject)",
+      "Practice_trials": "until >=60% accuracy"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "/",
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "Response_deadline": "/",
+      "ITI": "/",
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual perceptual matching task",
+      "Fixation": "0.8° x 0.8°",
+      "Shape": "3.7° x 3.7°",
+      "Label": "3.6° x 1.6°",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Implicit self-binding (self x good character). Matching = shape<->self/other label (YesNoResp). Shape = geometry file (SqrG.bmp etc. = square/circle with moral word rendered inside); extraIV1 = the moral word inside the shape (Good/Normal/Bad, Normal=Neutral). Shape identity = learned association (raw Shape column Self/Other); Label = 自己/他人. Subject re-coded +4100 per author (raw 1-32). Table 1 N=32 (29): 3 low-accuracy excluded."
+  }
+}

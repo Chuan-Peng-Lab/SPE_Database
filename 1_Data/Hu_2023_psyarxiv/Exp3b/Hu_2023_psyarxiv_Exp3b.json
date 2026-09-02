@@ -1,0 +1,44 @@
+{
+  "exp3b": {
+    "schema_version": "2",
+    "Collected_date": "2017-04",
+    "Physical_Environment": {
+      "Location": "Wenzhou University, Wenzhou",
+      "Setting": "Laboratory (group testing room, 3-12 participants)",
+      "Equipment": {
+        "Presenting": "19-inch CRT monitors",
+        "Monitor": "19-inch",
+        "Software": "E-prime 2.0"
+      },
+      "Viewing_distance": "/ (no chin rest; visual angles not controlled)"
+    },
+    "Experimental_Design": {
+      "Conditions": "6 conditions (good-self, neutral-self, bad-self, good-other, neutral-other, bad-other); 2 (matching) x 2 (reference) x 3 (moral character), within-subject, self/other BLOCKED"
+    },
+    "Block_Structure": {
+      "Block_number": "6 (3 self blocks + 3 other blocks)",
+      "Trial_number": "720 (6 blocks x 120 per subject)",
+      "Practice_trials": "until >=60% accuracy"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Simultaneously",
+      "SOA": "/",
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "Response_deadline": "/",
+      "ITI": "/",
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual perceptual matching task",
+      "Fixation": "0.8° x 0.8°",
+      "Shape": "3.7° x 3.7°",
+      "Label": "3.6° x 1.6°",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Explicit self-referencing, blocked design: self-referencing trials and other-referencing trials in separate blocks (3 each, order counterbalanced 31/30 subjects). extraIV1 = SHAPE-side moral valence (derived from Shape text; note author's Load_save_data.r codes valence from the label-side Morality column instead - the two agree on match trials). Matching = YesNoResp. Shape = geometry file; Label = Chinese text (好我/好他/好她 etc.); other = a specific him/her (Stranger). Subject IDs verbatim (31001-31065). Table 1 N=61 (56): 4 low-accuracy + 1 manual exclusion (31003, zero hit rate in one condition) per author script."
+  }
+}

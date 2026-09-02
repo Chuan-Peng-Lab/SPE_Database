@@ -1,0 +1,44 @@
+{
+  "exp6b": {
+    "schema_version": "2",
+    "Collected_date": "2016-01",
+    "Physical_Environment": {
+      "Location": "Tsinghua University, Beijing",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "22-inch CRT monitors",
+        "Monitor": "22-inch",
+        "Software": "E-prime 2.0"
+      },
+      "Viewing_distance": "60 cm (chin rest)"
+    },
+    "Experimental_Design": {
+      "Conditions": "ERP study based on Exp3a design but sequential presentation; 6 conditions (good-self, neutral-self, bad-self, good-other, neutral-other, bad-other); 2 (matching) x 2 (reference) x 3 (moral character), within-subject"
+    },
+    "Block_Structure": {
+      "Block_number": "Day1: 9; Day2: 18 (+ variable extra runs)",
+      "Trial_number": "Day1: 1080 (9 x 120); Day2: 1620 (18 x 90) + 0-1620 extra per subject",
+      "Practice_trials": "until >=60% accuracy"
+    },
+    "Trial_Structure": {
+      "Stimulus_order": "Sequentially",
+      "SOA": "/",
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "Response_deadline": "/",
+      "ITI": "/",
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual perceptual matching task (EEG recorded day 2)",
+      "Fixation": "0.8° x 0.8°",
+      "Shape": "3.7° x 3.7°",
+      "Label": "3.6° x 1.6°",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "ERP study (explicit self-referencing, sequential presentation). Two days: day 1 = practice/behavioral run (Session 1), day 2 = EEG recording (Session 2/3; raw d2 file Session field kept verbatim - subject 6205/6223 day-2 data labeled Session 3, 6 subjects have extra Session-3 runs). Paper analyzes day-1 behavior only (Table 1 N=23 (22)); DB includes d1+d2 per user decision. extraIV1 = SHAPE-side moral valence (from Shape text; author codes from label-side morality column). Label = label .bmp file name; label identity = raw identity column (1:1 with file name). No-response -> ACC=NA/RT_ms=NA. One fully-empty artifact row (subject 6205 session 2) dropped from Clean (kept in raw)."
+  }
+}
