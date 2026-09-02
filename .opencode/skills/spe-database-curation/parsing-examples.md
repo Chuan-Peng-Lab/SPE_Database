@@ -1,6 +1,7 @@
 # 原始数据解析与验证先例（附属参考文件 — 按需读取）
 
 本文件是 `SKILL.md` 的附属参考：遇到特定数据格式/作者产物特征时，按主文件「原始数据解析与验证先例」速查表定位到对应节，只读所需节即可。每条先例 = 规则 + 案例 + 出处，来自 2026-08 阶段 4/5 与 2026-09-01 各研究入库沉淀。
+**自足性说明**：本文件为**案例示证集**——规则正文一律以 SKILL.md 为准，此处案例（含研究名/文件路径/Issue 号）仅用于示范规则如何落地，**非规范本身**；迁移他库或案例过时时，规则不失效，删除/替换对应案例即可。文内标注「本库现状/待办」的句子为仓库状态快照（详见 PROJ_STATE.md），会随入库进展过时。
 
 ## E-Prime
 
@@ -23,7 +24,7 @@ E-Merge/DataAid 式合并导出可能含：
 
 ### `.edat2`/`.emrg2`（二进制，库内不可解析）
 
-无现成二进制解析工具（E-DataAid/E-Merge 官方唯一；rprime/convert-eprime/eMergeR 均只处理文本导出；pyedat2 pip 不可装；olefile 可开 OLE2 容器但私有流编码无公开文档）——**用户决定自行将 edat2/emrg2 转为 txt**（案例：Wang_2016 核对背景见 `3_Reports/Verifying_original_results_issues.md` Issue 3 §4；Bukowski Exp1 待用户转换）。
+无现成二进制解析工具（E-DataAid/E-Merge 官方唯一；rprime/convert-eprime/eMergeR 均只处理文本导出；pyedat2 pip 不可装；olefile 可开 OLE2 容器但私有流编码无公开文档）——**用户决定自行将 edat2/emrg2 转为 txt**（规则：库内遇 `.edat2`/`.emrg*` 一律暂停转交用户转换，不自行尝试解析；出处：Wang_2016 转换先例见 `3_Reports/Verifying_original_results_issues.md` Issue 3 §4）。
 
 ### E-Merge 扁平导出 txt（多被试合并文件，UTF-16LE）（2026-09-01 Wang_2016 先例）
 

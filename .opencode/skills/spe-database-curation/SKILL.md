@@ -16,8 +16,14 @@ metadata:
 SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数据库按 FAIR 原则（Wilkinson et al. 2016）
 组织为三层结构：root → study → experiment，每层带机器可读 JSON 元数据。
 
-本技能**自足独立**：不依赖仓库级文档（README/AGENTS/PROJ_STATE），同一套约定适用于任何采用本
-文件夹/JSON 布局的 SPE 风格数据库。仓库级工具路径仅以操作注记形式出现。
+本技能是 SPE_Database 仓库的 curation 规范，**规则正文自足**：文件命名/文件夹布局/JSON schema/Identity
+三级标准化/ACC 编码/列序模板 v2/Codebook/主索引字段语义/缺失三态/校验规则等正文不依赖仓库级文档
+（README/AGENTS/PROJ_STATE），可直接迁移到任何采用本文件夹/JSON 布局的 SPE 风格数据库。
+**两类内容仅适用于 SPE_Database 仓库，迁移他库时整体删除**：
+① 仓库工具路径与命令注记（`2_Code/`、`1_Data/utils.R`、`read_dataset_inf.py`、`Rscript …validate_*.R`
+   等；细节在 tools.md）；
+② 本仓库集成收尾注记（PROJ_STATE.md 登记、AGENTS/README 计数、exFAT 卫生——正文均存 AGENTS.md，
+   此处仅一行指针或操作注记）。
 
 **文件组成**：
 - `SKILL.md`（本文件）— 工作流 + 核心规则 + 速查表（日常加载）
@@ -55,7 +61,13 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
 9. **Codebook**：按「Codebook 编写规则」生成（单 `Sheet1` 4 列，覆盖全部 Clean 列，行数==Clean 列数；枚举值取数据 unique 含 NA/timeout/None 等特殊值）。
 
 **收尾**
-10. **落盘 + 校验 + 同步**：`cp` /tmp → 目标；更新 `Dataset_inf.csv`（每实验一行 `Folder_Name`+`Exp`，UTF-8 **带 BOM** 字节保真，不动 legacy `Dataset_inf.xlsx`）；`validate_json_metadata.R` EXIT=0 + `validate_clean_csv.R` 0 ERROR；`known_pending`/`known_unlisted` 白名单同步；更新 PROJ_STATE.md（见下方收尾检查清单）；exFAT 卫生（git 前清理 `._*`，绝不提交 `._*`/`.DS_Store`）。
+
+10. **落盘 + 校验 + 同步（通用收尾）**：`cp` /tmp → 目标；更新 `Dataset_inf.csv`（每实验一行
+    `Folder_Name`+`Exp`，UTF-8 **带 BOM** 字节保真——写入纪律见 §主索引「写入纪律：CSV 字节保真编辑」，
+    不动 legacy `Dataset_inf.xlsx`）；`validate_json_metadata.R` EXIT=0 + `validate_clean_csv.R` 0 ERROR；
+    `known_pending`/`known_unlisted` 白名单同步。**本仓库集成注记（仅 SPE_Database 适用，迁移他库删除）**：
+    更新 PROJ_STATE.md（3 节类别行 + 5 节快照数字，见下方检查清单）；AGENTS/README 计数同步（如有）；
+    exFAT 卫生（git 前清理 `._*`、不提交 macOS cruft——正文见 AGENTS.md §会话约定，此处仅指针）。
 
 ### 入库后四方核对（场景 B 收尾必做）
 
@@ -65,12 +77,17 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
 ### 收尾检查清单（第 10 步，不含渲染）
 
 ```
+**通用收尾（迁移他库保留）**
 □ 五件套齐全且命名合规（raw/Clean/subj_info/Codebook/paper+exp JSON）
 □ 两级校验：validate_json_metadata.R EXIT=0 + validate_clean_csv.R 0 ERROR
-□ Dataset_inf.csv 收口（字节保真：往返测试 → 写入 → diff 仅目标单元格 → ID 行序保持）
+□ Dataset_inf.csv 收口（字节保真：往返测试 → 写入 → diff 仅目标单元格 → ID 行序保持；
+  纪律见 §主索引「写入纪律：CSV 字节保真编辑」）
 □ known_pending/known_unlisted 白名单同步
+
+**本仓库集成（仅 SPE_Database 适用，迁移他库删除）**
 □ PROJ_STATE.md 登记：3 节对应类别行更新 + 5 节现状快照数字同步（完成进度不追加——历史已精简，只入 git commit）
 □ AGENTS/README 计数同步（如有）
+□ exFAT 卫生：git 前清理 ._*、不提交 macOS cruft（正文见 AGENTS.md §会话约定）
 （Table 1 渲染不做：qmd 为动态 keep-by-folder 逻辑，新研究自动入表；仅在稿件版本更新时 --param compare_manu:true 渲染）
 ```
 
@@ -120,9 +137,10 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
   - Full journal names used verbatim: `Cognition` (`Lee_2023_Cognition`),
     `Cortex` (`Smith_2024_Cortex`), `NeuroImage` (`Zhang_2023_NeuroImage`),
     `elife` (`Scheller_2026_elife`, deferred — input folder kept, CSV rows removed).
-  - Database abbreviations: `SDB` = Science Databank (`Hu_2023_SDB`, folder
-    pending). When the source is a data repository rather than a journal, use the
-    repository's abbreviation.
+  - Database abbreviations: when the source is a data repository rather than a
+    journal, use the repository's abbreviation, e.g. `ChinaSciData`
+    (`Hu_YQ_2026_ChinaSciData`, deferred — 无文件夹；原 `Hu_2023_SDB`/`SDB` 旧名已于
+    2026-09-02 废弃，见 AGENTS.md caveats).
   - Preprint/unpublished tags (lowercase): `psyarxiv` for PsyArXiv preprints
     (e.g., `Navon_2021_psyarxiv`, `Hu_2023_psyarxiv`); `unpub` for
     unpublished data without a preprint server (e.g., `Sui_2014_unpub`,
@@ -163,7 +181,7 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
   subfolder for the original download is allowed). Historical lowercase `<Study>_raw/`
   variants coexist and remain legal (both `*_Raw/` and `*_raw/` are gitignored and
   skipped by the validators) — new input zones should use `<Study>_Raw/`. Supported
-  formats: `.csv`, `.mat`, `.edat2`/`.emrg`, `.psydat`/`.dat`, `.txt`, `.xlsx`. The
+  formats: `.csv`, `.mat`, `.edat2`/`.emrg*`, `.psydat`/`.dat`, `.txt`, `.xlsx`. The
   input zone is **read-only input** — it does NOT participate in validation
   (`validate_json_metadata.R` and `validate_clean_csv.R` both skip `*_Raw/`, `*_raw/`
   and `Source/`), and its files are not standardized products. The standardized
@@ -207,9 +225,28 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则。数
   `fileEncoding="UTF-8-BOM"` + `check.names=FALSE`，第一列名不残留 `\ufeff`）。
   等价写法：`read.csv("1_Data/Dataset_inf.csv", check.names=FALSE, fileEncoding="UTF-8-BOM")`
 - **取值一律用列名**：Python `row["Folder_Name"]` / R `inf$Folder_Name`，**禁止按列位置
-  `r[0]`/`[1]` 取值**（ID 在第 1 列、Folder_Name 在第 2 列，位置易错）；改 CSV 前做
-  往返测试、写后 truncate 末尾 `\r\n` 才字节保真（见 AGENTS.md §防坑「CSV 字节保真编辑纪律」）。
+  `r[0]`/`[1]` 取值**（ID 在第 1 列、Folder_Name 在第 2 列，位置易错）。
 - CLI 速查：`python 2_Code/read_dataset_inf.py [--folder NAME] [--exp N]`
+
+### 写入纪律：CSV 字节保真编辑（正文，2026-08/09 教训沉淀）
+
+编辑 Dataset_inf.csv 及其他 CSV 产物时必须字节保真（UTF-8 BOM/CRLF/QUOTE_MINIMAL/末行无换行按
+文件原格式保持）。操作纪律：
+
+1. **引号风格为 QUOTE_MINIMAL**（仅含逗号/特殊字符的字段加引号）——勿凭 `head` 拆分输出臆断为
+   全字段引号；改前先做往返测试（读入原样写出，diff 应为 0）确认格式可复现。
+2. **原文件末行无换行符**，csv.writer 默认每行加行尾——**往返测试与写入都必须先把 writer 自动
+   追加的末尾 `\r\n` 截掉（`out = out[:-2]`）再比较/落盘**：直接比较必然 False，那是格式预期差异
+   而非内容差异；先截断，截断后仍 False 的部分才是需要查的真差异（教训：Hobbs 入库编辑时
+   `roundtrip equal: False`——测试环节就要先截断，不要等 diff 失败再定位）。
+3. **读字段一律用 `header.index('列名')` 定位索引再取值**，禁止假设 `r[0]`/`r[1]` 的列顺序
+   （教训：加 `subj_Group` 列时 `r[0]` 误当 Folder_Name（实为 ID 列）致 74 行组名全失配填 All——
+   值合法、validator 不报错，靠抽查非默认值行数才暴露）。
+4. **改后三重验证**：diff 仅目标列变化 + 非目标列 0 差异 + 抽查非默认值行数符合预期（"值合法但
+   内容错"validator 检测不到，靠人工核对兜底）。
+5. **非主索引 CSV（`*_subj_info.csv` 等）格式各异**：subj_info 可能是 UTF-8 无 BOM + LF 行尾，
+   与 Dataset_inf 的 BOM+CRLF 不同（教训：往返测试连败 2 次才发现）——编辑前先 `xxd`/`head -c`
+   检测 BOM 与行尾，按原格式写回（含末行无换行），往返测试按检测结果放宽末尾行尾。
 
 ## 元数据 JSON
 
@@ -337,12 +374,13 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
      **列顺序合规要求（2026-09-02 强化，此前 Sui_2015 合并误将 Phase/Task/extraIV1 前置）**：
      ① 模板 v2 是**唯一合法列序**，所有新建/重排的 `*_Clean.csv` 必须**逐列对齐模板的相对顺序**
      （模板中带 `[ ]` 的可选列不存在时跳过，但**已存在列的相对先后不得改变**）；产出后把表头与
-     模板逐列对照自查，并以库内 2026-09 后入库的合规样例为参照（`Bukowski_2021_ActaPsych_Exp1_Clean.csv`
-     列序即模板 v2 样板）。
+     模板逐列对照自查——**模板 v2 本身即规范**；本库可参照 2026-09 后入库的合规样例
+     （`Bukowski_2021_ActaPsych_Exp1_Clean.csv` 列序即模板 v2 样板；该文件为本库样张，非规范本身，
+     他库以模板文字为准）。
      ② 关键易错点（曾经踩坑，必须逐条核对）：
         - `Task` 紧跟 `Subject/[Group]/[Session]` 之后，**不得**放到 Shape/Label 后；
         - `Phase`/`Condition` 位于 `Task` 之后、`Block` 之前，**不得**前置到 `Task` 前；
-        - `extraIV1`/`extraIV2` 位于 `Label-Identity×3` 之后、`[CorrResponse]`/`Response` 之前，
+        - `extraIV1`/`extraIV2` 位于 `Label-Identity×3` 之后、`[CorrResponse]`/`[Response]` 之前，
           **不得**提前到列首（即使它是核心操纵变量）；
         - `Shape` 在前、`Label` 在后，各带自己的 Identity×3（Shape-Identity×3 紧跟 Shape、
           Label-Identity×3 紧跟 Label），**不得**把 Shape/Label 两个 Identity 块堆叠在最后。
@@ -472,7 +510,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 |---|---|---|
 | E-Prime `.txt` 日志 | UTF-16LE 读取；LogFrame 切块；中断被试可有未闭合块 | parsing-examples.md §E-Prime |
 | E-Prime 合并导出 `.xlsx` | 语义重复列（Label/Label2）；Group 字段可能非设计/临床分组；日期三类混杂 | §E-Prime |
-| `.edat2`/`.emrg2` | 二进制私有格式，库内无可解析工具——用户 E-DataAid 转 txt | §E-Prime |
+| `.edat2`/`.emrg*` | 二进制私有格式（E-Merge 导出库内见 `.emrg`/`.emrg2`/`.emrg3`），无可解析工具——用户 E-DataAid 转 txt | §E-Prime |
 | PsychoPy 导出 | 无响应 `keys` = 字符串 "None"；Builder 宽格式 csv；RT 单位（秒或已×1000） | §PsychoPy |
 | MATLAB/Psychtoolbox `.dat` | 空格分隔；列定义权威 = 实验脚本 fprintf 格式串；练习试次可能不落盘 | §MATLAB |
 | 作者聚合 `.xlsx` | 外链公式读缓存值；"ER" 列实为正确率；编号体系不对称；文件名 vs 行内编号 | §作者共享产物特征 |
@@ -519,13 +557,32 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 3. The validator whitelists not-yet-curated studies (`known_pending`) that are
    allowed to lack a folder; once such a study is curated, remove it from the
    whitelist. **反向豁免 `known_unlisted`（2026-08-31 首次启用）**：有文件夹但 CSV 无行的
-   研究（方向与 `known_pending` 相反）——用于**条目从 CSV 移除**的情形（数据不可得/撤回，
-   如 Scheller_2026_elife：OSF 仅 TOJ 数据、匹配任务 trial 数据从未上传、用户指示不下载 →
-   删 CSV 行、输入区文件夹保留并加入 `known_unlisted` 豁免；重入时移除并注释更新）。SKILL 处理
-   原则：删除 CSV 行前先确认（用户决策），输入区文件不删除。
+   研究（方向与 `known_pending` 相反）——用于**条目从 CSV 移除**的情形（数据不可得/撤回 → 删 CSV
+   行、输入区文件夹保留并加入 `known_unlisted` 豁免；重入时移除并注释更新；本库现状示例见
+   PROJ_STATE.md / AGENTS.md caveats 的 deferred 条目）。SKILL 处理原则：删除 CSV 行前先确认
+   （用户决策），输入区文件不删除。
 4. **Validator blind spots**（校验器只校验存在的文件，以下缺失不会被发现，需人工核对）：
    缺 paper 级 JSON、缺 codebook、CSV 中重复的 `(Folder_Name, Exp)` 组合。
 5. One-time schema migrations live in `2_Code/migrate_exp_json_to_v2.py`
    (v1 flat `table` → v2 hierarchical); re-run only if legacy files reappear.
-6. exFAT drive: purge AppleDouble files (`find . -name '._*' -delete`) before git ops;
-   never commit `._*` files.
+
+### 文件操作安全纪律（正文，通用——写/删/下载前必读）
+
+任何会写、删、下载文件的 curation 操作遵守以下纪律（2026-08 教训沉淀；AGENTS.md §防坑
+保留各条教训案例，纪律正文以此处为准）：
+
+1. **覆盖保护**：任何会写文件的命令（`curl -o`、shell 重定向 `>`、write 工具）执行前先 `ls -la`
+   检查目标路径是否已存在；目标已存在且非本会话自己刚创建的产物 → 先向用户确认，或改存别的名字。
+2. **下载两段式**：下载类命令一律先落到临时路径（`/tmp/xxx.tmp`），`stat -f %z` 确认非空后再
+   `mv` 到目标；禁止直接 `-o`/`>` 覆盖现有文件（教训：curl 失败时 `-o` 把已有文件清成 0 字节，
+   且 gitignore 目录无备份则内容永久丢失）。
+3. **写后核对**：覆盖/写入后立即 `ls -la` 核对大小与时间戳，与预期不符马上报告，不自我安慰
+   "恰好一致"。
+4. **删除谨慎**：删除前先 `git check-ignore <路径>` / `git ls-files` 确认是否被跟踪——不被跟踪的
+   文件 `rm` 即永久丢失；批量删除前先列出「将被删除清单」并向用户确认保留策略；非明确垃圾的删除
+   先 `mv` 到 `_trash_<日期>/` 暂存，用户确认后再物理删除；删除后立即汇报删了什么（文件数+类别）。
+5. **工具路径核查**：工具若含绝对路径，先确认它读的就是当前文件——校验器/扫描脚本可能硬编码已
+   迁移的旧路径，运行时读到旧副本且输出"恰好与预期一致"会掩盖错误。改数据前 `grep` 工具源码确认
+   数据源路径；改后重跑若输出异常，先怀疑工具路径而非数据本身。
+6. **编辑锚点**：编辑文档追加条目时用将被保留的现有文本作锚点，oldString 不要误取整条历史记录；
+   改后立即 grep 确认旧内容仍在。

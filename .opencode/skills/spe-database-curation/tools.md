@@ -17,7 +17,7 @@
 - 路径用脚本所在目录的相对路径，并修正 Rmd 中的失效路径（旧文件夹名）；脚本内做工作目录自适应（Rscript 的 `--file=` 参数）。
 - 输出 `*_Clean.csv` 带一致性守卫（如 stopifnot 行数/被试数）；行尾 CRLF/LF 差异直接无视，不做转换。
 - 排除已确认的问题被试（如测试运行）时，在脚本注释中写明证据（内部编号/默认人口学/按键反转等）与依据条目（PROJ_STATE.md 已知问题）。
-- 修改数据文件后同步更新同目录 subj_info、Dataset_inf.csv（字节保真）与 codebook；Clean_Data.Rmd 对应段如需同步修改，diff 应只含目标改动。
+- 修改数据文件后同步更新同目录 subj_info、Dataset_inf.csv（字节保真——纪律见 SKILL.md §主索引「写入纪律：CSV 字节保真编辑」）与 codebook；Clean_Data.Rmd 对应段如需同步修改，diff 应只含目标改动。
 
 ### Subject 编号与数据对齐规则（2026-08 阶段 3 沉淀，Vicovaro_2022_JEPHPP Exp2 教训）
 

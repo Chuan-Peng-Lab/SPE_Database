@@ -27,17 +27,19 @@ mode: primary
 - **Never** fire background exploration tasks that may take more than a few hours.
 - **Never** `git add`/commit macOS cruft（`.DS_Store`、`.Rhistory`、`.Rproj.user`、
   `Thumbs.db`；`.gitignore` 已覆盖多数），也不要把 `._*` AppleDouble sidecar 当真实数据读取。
+- **exFAT 卫生（正文归属此处）**：git 操作前先 purge AppleDouble（`find . -name '._*' -delete`），
+  绝不提交 `._*`/`.DS_Store`（SKILL.md §校验与卫生「文件操作安全纪律」及收尾清单对该纪律仅放指针）。
 
 ## Document map（四文档分工与引用关系）
 
 - `README.md` — 面向**人类读者**：项目介绍、数据使用指引。代理也应按需引用。
 - `AGENTS.md`（本文件）— 面向**agent**：环境约束、效率约定、caveats。
 - `PROJ_STATE.md` — **会话状态快照**：**每个 session 结束时统一更新一次**（工作过程中不逐条实时记录，避免文档冗长）；新会话先读它再开工。
-- `.opencode/skills/spe-database-curation/SKILL.md` — **通用 curation 技能**：自足独立、
-  不依赖本仓库文档；任何数据整理/入库任务一律加载
+- `.opencode/skills/spe-database-curation/SKILL.md` — **通用 curation 技能**：自足独立（规则正文
+  不依赖本仓库文档，仅一行指针引用，见下方引用方向）；任何数据整理/入库任务一律加载
   `skill(name="spe-database-curation")`。
 
-- 引用方向：README ↔ AGENTS ↔ PROJ_STATE 三份相互引用，并**统一指向技能**；技能不反向依赖这三份文档。
+- 引用方向：README ↔ AGENTS ↔ PROJ_STATE 三份相互引用，并**统一指向技能**；技能规则正文不反向依赖这三份文档（仓库文档对技能仅允许一行指针引用，如 SKILL.md §主索引「写入纪律」正文反向收编后，AGENTS 仅保留对该节的一行指针）。
 
 ### 其他重要文档：
 - `3_Reports/Table1_Issues_Solvability.md` — **Table 1 问题可解性分析**：逐项判定稿件 Table 1 差异的可解性（可自动确定 / 需人工），与 PROJ_STATE.md 双向关联（未解决清单 ↔ 可解性判定）；依据 `Generate_Table1.qmd` 输出的 `table1_problems.txt`。
@@ -91,12 +93,13 @@ mode: primary
 - 查预印本版本年：OSF API 按 GUID 直取 `api.osf.io/v2/preprints/<guid>/versions/`；`filter[doi]` 返回 HTTP 400，勿用。
 - 外查前先查本地权威源：paper JSON（`DOI`/`Year`/`Journal`）、`Repo_Link`、`Dataset_inf.csv`。
 
-### 防坑（2026-08 阶段 2 会话沉淀，agent 操作纪律）
-- **覆盖/替换已有文件也必须经过用户确认**（2026-08-28 教训：`curl -o` 静默覆盖了用户刚下载的 Scheller html——curl 失败（HTTP 406）时 `-o` 把 1 MB 完整文件清成 0 字节，gitignore 目录无备份、内容永久丢失）。操作纪律：① 任何会写文件的命令（`curl -o`、shell 重定向 `>`、write 工具）执行前先 `ls -la` 检查目标路径是否已存在；目标已存在且非本会话自己刚创建的产物 → 先向用户确认，或改存别的名字；② 下载类命令一律先下到 `/tmp/xxx.tmp`，`stat -f %z` 确认非空后再 `mv` 到目标，禁止直接 `-o`/`>` 覆盖现有文件；③ 覆盖/写入后立即 `ls -la` 核对大小与时间戳，与预期不符马上报告，不自我安慰"恰好一致"。
-- **删除文件必须万分谨慎，尤其是不在 git 中记录的文件**（2026-08-28 教训：`REF/` 全目录被 `.gitignore` 忽略，一次清理 `_files` 删 390 文件 + 误删 Scheller html/json/md 均不可恢复，用户重新下载才找回）。操作纪律：① 删除前先 `git check-ignore <路径>` / `git ls-files` 确认是否被跟踪——不被跟踪的文件 `rm` 即永久丢失；② 批量删除前先列出「将被删除清单」并向用户确认保留策略（如"只删 js/css，图片全保留"），不要自作主张按引用白名单删；③ 非明确垃圾（0 字节残留、浏览器缓存）以外的删除，先 `mv` 到 `REF/_trash_<日期>/` 暂存，用户确认后再物理删除；④ 删除后立即汇报删了什么（文件数+类别），便于用户及时发现误删；⑤ 对用户的删除指令理解不确定时（如"删整个文件夹"），先复述删除范围再执行，不要扩大范围。
-- **工具若含绝对路径，先确认它读的就是当前文件**：校验器/扫描脚本可能硬编码已迁移的旧路径（如 `analyze_csv_blanks.py` 曾指向 `/Volumes/T3/...`），运行时读到旧副本且输出"恰好与预期一致"会掩盖错误。改数据前 `grep` 工具源码确认数据源路径；改后重跑若输出异常，先怀疑工具路径而非数据本身。
-- **编辑文档追加条目时用将被保留的现有文本作锚点**：edit 的 oldString 不要误取整条历史记录（曾把 PROJ_STATE「项目迁移」条目整体替换掉）；改后立即 grep 确认旧内容仍在。
-- **CSV 字节保真编辑（Dataset_inf.csv）读取/写入纪律**（2026-08-28 教训：加 `subj_Group` 列时 `r[0]` 误当 Folder_Name（实为 ID 列）致 74 行组名全失配填 All——值合法、validator 不报错，靠抽查非默认值行数才暴露）。操作纪律：① 引号风格为 **QUOTE_MINIMAL**（仅含逗号/特殊字符的字段加引号），勿凭 `head` 拆分输出臆断为全字段引号；改前先做往返测试（读入原样写出，diff 应为 0）确认格式可复现；② 原文件**末行无换行符**，csv.writer 默认每行加行尾——**往返测试必须先把 writer 自动追加的末尾 `\r\n` 截掉（`out = out[:-2]`）再与原文件比较**：直接比较必然 False，那是格式预期差异而非内容差异，先截断；截断后仍 False 的部分才是需要查的真差异。写入时同样 truncate 掉末尾 `\r\n` 才字节保真（2026-08-30 教训：Hobbs 入库编辑时再次撞 `roundtrip equal: False` 才想起截断——测试环节就要先截断，不要等 diff 失败再定位）；③ 读字段一律用 `header.index('列名')` 定位索引再取值，**禁止假设 `r[0]`/`r[1]` 的列顺序**；④ 改后三重验证：diff 仅目标列变化 + 非目标列 0 差异 + 抽查非默认值行数符合预期（"值合法但内容错"validator 检测不到，靠人工核对兜底）。**⑤ 非主索引 CSV（`*_subj_info.csv` 等）格式各异**（2026-08-30 教训：往返测试连败 2 次才发现 subj_info 是 UTF-8 无 BOM + LF 行尾，与 Dataset_inf 的 BOM+CRLF 不同）——编辑前先 `xxd`/`head -c` 检测 BOM 与行尾，按原格式写回（含末行无换行），往返测试按检测结果放宽末尾行尾。
+### 防坑（2026-08 阶段 2 会话沉淀，agent 操作纪律；纪律正文统一在 SKILL.md §校验与卫生「文件操作安全纪律」，此处保留教训与指针）
+
+- **覆盖/替换已有文件也必须经过用户确认**（教训 2026-08-28：`curl -o` 静默覆盖用户刚下载的 Scheller html——curl 失败（HTTP 406）时 `-o` 把 1 MB 完整文件清成 0 字节，gitignore 目录无备份、内容永久丢失）。纪律正文（覆盖前 `ls -la`、下载先 /tmp 再 mv、写后核对）见 SKILL.md §校验与卫生「文件操作安全纪律」。
+- **删除文件必须万分谨慎，尤其是不在 git 中记录的文件**（教训 2026-08-28：`REF/` 全目录被 `.gitignore` 忽略，一次清理 `_files` 删 390 文件 + 误删 Scheller html/json/md 均不可恢复，用户重新下载才找回）。纪律正文（git check-ignore 确认跟踪、删除清单确认、_trash_ 暂存、删后汇报、范围复述）见 SKILL.md §校验与卫生「文件操作安全纪律」。
+- **工具若含绝对路径，先确认它读的就是当前文件**（教训：`analyze_csv_blanks.py` 曾指向 `/Volumes/T3/...`，读到旧副本且输出"恰好与预期一致"掩盖错误）。纪律正文（改前 grep 工具源码确认数据源、异常先怀疑路径）见 SKILL.md §校验与卫生「文件操作安全纪律」。
+- **编辑文档追加条目时用将被保留的现有文本作锚点**（教训：曾把 PROJ_STATE「项目迁移」条目整体替换掉）。纪律正文见 SKILL.md §校验与卫生「文件操作安全纪律」。
+- **CSV 字节保真编辑（Dataset_inf.csv 等）纪律正文见 SKILL.md §主索引「写入纪律：CSV 字节保真编辑」**（教训 2026-08-28：加 `subj_Group` 列时 `r[0]` 误当 Folder_Name 致 74 行组名失配填 All；2026-08-30：Hobbs 往返测试先截末尾 `\r\n`；subj_info 无 BOM+LF 行尾 vs Dataset_inf BOM+CRLF）——此处仅指针，不重复正文。
 - 字段语义类约定（License=数据许可 / Country-City=数据采集地 / Email 以 CSV 为准 / 多任务口径 / 全文核查）见 `spe-database-curation` 技能（SKILL.md），此处不重复。
 
 ### 会话收尾（强制）
@@ -149,7 +152,7 @@ mode: primary
     the BOM is what keeps diacritics like `ö`/`é`/`ü` from garbling).
     40-column structure (incl. `DOI`), key columns:
     `Folder_Name` (== study folder; **project-wide key ID for papers/preprints** —
-    one row per experiment: `Folder_Name` + `Exp`), `Paper_ID` (**deprecated** —
+    row key = `Folder_Name` + `Exp` + `subj_Group`, see `subj_Group` below), `Paper_ID` (**deprecated** —
     legacy link to the old manuscript Table 1; do NOT create new values), `Country`,
     `Stim_language`, `Stim_Type`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`,
     `subj_Group` (被试分组：**每 group 一行**，行唯一性 = `Folder_Name`+`Exp`+`subj_Group`
@@ -164,7 +167,8 @@ mode: primary
     Load via `skill(name="spe-database-curation")` when adding/editing study metadata.
   - `2_Code/` — data cleaning tooling, three parallel implementations of the same
     standardization logic:
-    - `Clean_Data.Rmd` (5053 lines) — master per-paper manual pipeline (authoritative).
+    - `Clean_Data.Rmd` (5053 lines) — 历史配方参考（2026-08 起已降级；现行主路径 =
+      独立清洗脚本 `<Study>_clean.R`，见 SKILL.md §工具与脚本）。
     - `SPE_Interactive_Clean_V3.R` — console-based interactive cleaner (single/batch).
     - `SPE_Shiny_App_V4.2.R` — Shiny web app (single/batch, ZIP download).
   - `3_Reports/` — analysis: `Reports.Rmd`, `Process_Data.Rmd`, `Subject_Table.Rmd`,
@@ -190,8 +194,8 @@ mode: primary
    monetaryValue-matching / self-pseudoWords）+ 任务内额外自变量 `extraIV1`/`extraIV2` +
    **固定列顺序模板 v2（硬性规范，不可自定义）**：`Subject→[Group]→[Session]→Task→[Phase]→
    [Condition]→Block→Trial→[Practice]→Matching→Shape→[ShapeLoc]→[Shape_Subtype]→
-   Shape-Identity×3→Label→Label-Identity×3→[extraIV1]→[extraIV2]→[CorrResponse]→Response→
-   RT_ms→RT_sec→ACC→研究特有尾部`（可选列不存在则跳过，但已存在列相对顺序不得改变）。
+   Shape-Identity×3→Label→Label-Identity×3→[extraIV1]→[extraIV2]→[CorrResponse]→[Response]→
+   RT_ms→RT_sec→ACC→[研究特有保留列尾部]`（可选列不存在则跳过，但已存在列相对顺序不得改变）。
    **列顺序为强制校验项**：新建/重排 Clean 后必须把表头与上述模板逐列对照自查（Task 紧跟
    Subject 后、Phase 在 Task 后、extraIV1 在 Label-Identity×3 后，均不得提前到列首），以
    `Bukowski_2021_ActaPsych_Exp1_Clean.csv` 为合规样板；产出前在清洗脚本内用 stopifnot 断言
@@ -201,7 +205,7 @@ mode: primary
   Cleaned file naming: `<Author>_<Year>_<Suffix>_ExpN_Clean.csv` (Suffix = readable
   journal/database abbreviation, full short journal name, or psyarxiv/unpub tag;
   see the curation skill).
-- **Raw data formats**: CSV dominant (331 files); also E-Prime `.edat2`/`.emrg`,
+- **Raw data formats**: CSV dominant (331 files); also E-Prime `.edat2`/`.emrg*`
   MATLAB `.mat`/`.m`, PsychoPy `.psydat`/`.dat`. No parquet anywhere.
 - **Version**: v0.1.5 (2026-06-28). See `README.md` for full changelog.
 - **Current state**: see `PROJ_STATE.md` (root) for the latest verified status,
