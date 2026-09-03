@@ -14,6 +14,9 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - `1_Data/<Study>_<Year>_<Suffix>/` ×47 — 研究数据五件套（raw / Clean / subj_info / Codebook / paper+exp JSON）
 - `AGENTS.md` — agent 约定与已知 caveats；`README.md` — 人类读者入口；三份相互引用，数据整理任务统一加载 `spe-database-curation` 技能
 - `.opencode/skills/spe-database-curation/SKILL.md` — 通用 curation 技能（自足独立；命名语法、JSON schema、Codebook 规范、DOI/年份核验）
+
+### 2.1 其他重要文档
+- `For_COLLABORATORS.md` — **合作者推进指南**（正文归属本文件）：4 个待数据研究（Pan/Sun/Hu_YQ/Scheller）补齐路径 + 未来新研究入库 4 步 + REF/ 不上 GitHub 的版本同步提醒
 - `2_Code/validate_json_metadata.R` — 结构级校验器；`2_Code/validate_clean_csv.R` — 内容级校验器
 - `3_Reports/Generate_Table1.qmd` + `Output/table1_problems.txt` — Table 1 再生成与比对
 - `3_Reports/Table1_Issues_Solvability.md` — Table 1 问题逐项可解性判定（与本文档 §3 双向关联）
@@ -22,17 +25,18 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - `2_Code/qjep_verify/`、`2_Code/mcivor_verify/`、`2_Code/orellano2020_verify/`、`2_Code/wang2016_verify/`、`2_Code/hobbs_verify/`、`2_Code/wozniak2020_verify/` — 各研究四方核对脚本固化
 - `REF/README_html2md.md` — REF 全文 HTML→MD 转换管线使用说明（正文归属本文件，AGENTS/PROJ_STATE 只放指针）
 
-## 3. 当前推进的线路图（按论文状态四类组织，含问题清单）
+## 3. 当前论文状态分类
 
 ### 类别一：已入库、无问题（47 篇）
 
-全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库四方核对 + 描述性统计核对），无推进动作、无问题。2026-09-02：**Hu_2023_psyarxiv**（PsyArXiv 预印本，5 实验 5 行）入库收口——仅纳入"self 作为自变量"实验（Exp3a/3b/4a_1/4a_2/6b，依据手稿 Table_1_exp_info 的 Self-ref 列；4b 用户指示不入库），五件套齐全、两级校验 0 ERROR、四方核对 166,323 正式试次与作者 Load_save_data.r 逐一致、Table 1 N 口径全部吻合（38(35)/61(56)/32(29)/32(30)/23(22)）；原始误标 Exp1（实为 exp6b d1+d2）五件套已删除，换为 5 个子文件夹五件套（旧 validator known 条目同步移除）。2026-09-02 另：**Liang_2022_HumBrainMap** 三分片 Clean（Exp1.1/1.2/1.3 = 按 TMS 组 DLPFC/sham/LpSTS 物理分片）合并为单文件 `Liang_2022_HumBrainMap_Exp1_Clean.csv` + `Group` 列（逐值复现 0 差异，78,058 行/109 被试），删 3 分片 Clean + 3 分片 Codebook、新建单一 Codebook；numTrials 360→720（两 phase pre/post 总和，exp JSON 同步）；validator 三条 Liang 分片 known 豁免移除（E3 自然通过 109=109）。同批治理：**Martinez-Perez_2024_ConsciousCog** SKILL 过时 known-deviation 记录（引用旧文件夹名、库内实为单实验平铺）更新为准确说明；**Perrykkad_2022_BMCPsych** subj_info 补 `_Exp1` 中缀、qs_raw 问卷导出移入新建输入区（退出 git 跟踪，历史可恢复）；SKILL 输入区章节注明 `<Study>_Raw/`（推荐）+ 历史 `_raw/` 变体共存合法。2026-09-02 再治理：**Sui_2015_unpub** 原 Exp1/Exp2 两文件夹实为同一批 20 名被试、每次到访内连续完成的无奖励 self-matching 与 reward 变体（.mat startInst 证明 phase 间隔 ~46 分钟同一天两轮；rewardValues 1/4/16 关联身份、逐 trial TpercentReward×500 唯一映射 {1,4,16}）——按 SKILL 新规「同批被试多实验→单 Clean」合并为单实验单文件平铺 study 根（`Sui_2015_unpub_Exp1_*` 五件套 + `Sui_2015_unpub_merge.R` 合并脚本），Session 列改名 Phase、extraIV1=逐 trial 奖励值(0/1/4/16)、保留 Block/Trial、ACC 3/4 特殊码保留；删旧 Exp1/Exp2 子文件夹（git 历史可恢复）；Dataset_inf 两行并单行（Exp=1，numTrials=960，subject 3 例外 720 记 Note）；逐值 QA 18960 行与旧文件全等 0 差异；两级校验 0 ERROR。同批**列顺序硬性规范强化**：SKILL §数据标准化 + AGENTS Key conventions 更新为模板 v2 强制校验（修正 AGENTS 历史旧版模板 Task 后置错误），新增「列顺序合规要求（2026-09-02 强化）」易错点清单（Task/Phase/extraIV1 位置、Shape/Label Identity 块顺序）。
+全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库四方核对 + 描述性统计核对），无推进动作、无问题。
 
 ### 类别二：已入库、有数据缺口
 
 | 论文 | 缺口 | 处置状态 | 下一步动作 |
 |---|---|---|---|
 | Sun_2026_DataExp | 无 raw.csv ×1（62 MB Clean 在库，448,800 行/506 被试完整，两级校验 0 ERROR；subj_info 334 为历史遗留 KNOWN） | 已知问题，Clean 确认完整 | 用户后续再决定是否补 raw（不阻塞） |
+| Pan_2025_unpub | trial 数据齐全（40 被试 28,037 行 + 40 逐被试导出在库）但人口学与说明性元数据缺失：subj_info Gender/Handedness/Ethnicity/Employment_Status/Country/First_Language 全 `/`（Age 由 raw year 列 2000–2005 推导），paper JSON 仅 Unpublished 手稿占位、exp JSON 方法字段大部 `/`，License 未声明（2026-09-02 用户判定与 Sun 同类） | 已知问题，Clean 确认完整 | 等作者/用户提供原始数据与相关说明文件后补填（不阻塞） |
 | Orellana-2020 Study 2 | Subject 34 仅 edat2（无 txt）；Subject 1-28 人口学缺失 | 已记 CSV Note | 不主动追；等作者/用户提供原始导出 |
 | Zhang-2024 | exp1 数据 43 vs 论文 42 分析（差 1 原因未知）；人口学缺失 | 数据口径 43，论文口径记 Note | 不主动改 |
 
@@ -111,7 +115,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 ## 5. 当前库内现状快照（2026-09-02 实测）
 
 - **主索引**：Dataset_inf.csv **102 行 / 48 unique Folder_Name**；磁盘 **48 个研究文件夹**（47 curated + Scheller_2026_elife 输入区保留）；合计 49 研究 = 47 curated + 2 deferred
-- **Status**：`1` 99 行；空白 **3 行**（Hu_YQ_2026_ChinaSciData、Pan_2025_unpub、Sun_2026_DataExp）
+- **Status**：`1` 99 行；空白 **3 行**（Hu_YQ_2026_ChinaSciData=deferred；Pan_2025_unpub 与 Sun_2026_DataExp=类别二数据缺口，收口前有意留空，见 §3）
 - **Codebook**：84 个（全库统一 canonical `Codebook_*_Clean.xlsx` 命名；2026-09-02 Liang 三分片 Codebook 随 Clean 合并净减 2）
 - **JSON**：**131 个**（47 paper 级〔46 平铺 Paper_name + 1 Kirk_2025_BritJPsy 嵌套 Paper_ID〕+ 84 实验级；2026-09-02 按顶层键实测校正拆分口径，此前记「46 paper + 85 exp」系把文件名含 `ExpPsych` 的 Orellana-2020 paper JSON 误计入实验级）
 - **校验基线**：
@@ -121,8 +125,6 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
   - git：分支 `main`（工作区状态以 git status 为准）
 
 ## 6. 散落未解决问题（自历史记录提取，不属于上述四类表）
-
-- ~~**Hu_2023_psyarxiv Session 结构问题**~~（2026-09-02 已解决）：原始误标 Exp1 Clean 跨 Session 打散、Session 列被丢弃——重入库后按 (Subject, Session, Block, Trial) 排序并保留 Session 列，`(Subject, Session, Block, Trial)` 全库唯一校验通过。
 - **Dalmaso E2 Label 列 = missing**（2026-09-01 记录）：意大利语原文无一手资料，待 OSF 原始数据补充后填实。
 - **白名单豁免**：known_pending 1（Hu_YQ_2026_ChinaSciData）+ known_unlisted 1（Scheller_2026_elife）——入库时移除。
 

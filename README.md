@@ -16,6 +16,7 @@ This project is in parallel with an on-going preregistered meta-analysis leading
 - **Per-study metadata**: paper-level `<Study>.json` + experiment-level `<Study>_Exp<N>.json` (v2 schema) + `Codebook_<Study>_Exp<N>_Clean.xlsx`.
 - **Contributing / adding data**: follow the curation conventions in `.opencode/skills/spe-database-curation/SKILL.md` (folder naming, JSON schemas, codebook rules, DOI/year verification workflow) — load it via `skill(name="spe-database-curation")` for any data-curation task.
 - **For agents**: repository conventions and efficiency rules live in `AGENTS.md`; project state lives in `PROJ_STATE.md` (see also the Document map in AGENTS.md).
+- **For collaborators (合作者)**: how to provide raw data / full texts for the four pending studies and for new ingestions, then let the agent finish the rest — see `For_COLLABORATORS.md` (中文).
 
 ## Leading Team
 

@@ -11,14 +11,14 @@ mode: primary
 以下情况**均不构成**确认：会话惯例、收尾清单、任务"完成"的推断、用户只说"修复/更新/插入/列出"等不含提交指令的话。
 **不要每次回复都询问是否提交**：提交事宜只在用户主动询问/指示时处理。任务完成正常汇报结果即可；若有未提交改动，简单提示一句"改动未提交"即可，不重复追问。用户询问提交时，agent 列出待提交文件与 commit message 草案，获得明确确认后再提交。
 
-**Agent 禁止过度无效思考（三试即止原则，2026-09-01 沉淀）**：遇到阻碍（解析失败/编号对不上/验证不通过/结构不清），**最多尝试 3 次不同方法；第 3 次仍无法解决，立即停下并向用户报告，禁止继续反复读取/反复推理**。报告格式：一句话说清「我卡在 X，已试 A/B/C 三种方法，原因是 Y，需要您决定/提供 Z」。具体触发即止场景：
+**Agent 禁止过度无效思考（三试即止原则）**：遇到阻碍（解析失败/编号对不上/验证不通过/结构不清），**最多尝试 3 次不同方法；第 3 次仍无法解决，立即停下并向用户报告，禁止继续反复读取/反复推理**。报告格式：一句话说清「我卡在 X，已试 A/B/C 三种方法，原因是 Y，需要您决定/提供 Z」。具体触发即止场景：
 1. **同一数据反复读取**：为"找答案"反复读取同一批文件（sav/xlsx/txt header 等）超过 2 轮 → 停止。数据不会因多读一遍而变，答案要么在已读内容里、要么需要用户提供，不会在第 3 遍读取时出现。
 2. **同一细节反复提出新假设**：编号重复、口径差异等问题，第 2 个假设失败后 → 停止，把已排除的假设 + 证据列给用户，请用户裁决。
 3. **无思路的试探性命令**：动手前先写一句话思路（问题是什么 → 权威来源是谁 → 用什么键连接 → 预期输出是什么），写不出来 → 先问用户，不执行。
 4. **用户指定来源 = 唯一权威**：用户明确说"读 X 文件/以 X 为准"后，只用 X 推进，不主动引入其他文件交叉验证纠缠（用户要求的四方核对等验证除外）。
 5. **用户催促/否定 = 立即停**：用户说"不要再看 X""不要浪费时间""别瞎思考"时，立即停止当前路径，转为提问或改走用户指示的方向，不解释、不辩解、不"最后再看一眼"。
 
-反面教材（2026-09-01 Bukowski Exp2 会话）：被试编号确认环节反复读取 sav/Book1/txt header 多轮（>3 次尝试）、对 E-Prime Subject 重复与 sav Mea_* 口径提出多个未经验证的假设，用户多次打断（"你糊涂就把你的问题提出来""不要做任何的思考了""不要再看.sav文件了"）。正确做法：第 1 轮确认「txt header Subject 有重复 + sav 编号体系不同」后，应立即把冲突事实 + 候选方案提交用户裁决（用户随后用 fix_subjID.xlsx 一锤定音）。
+反面教材（Bukowski Exp2 会话）：被试编号确认环节反复读取 sav/Book1/txt header 多轮（>3 次尝试）、对 E-Prime Subject 重复与 sav Mea_* 口径提出多个未经验证的假设，用户多次打断（"你糊涂就把你的问题提出来""不要做任何的思考了""不要再看.sav文件了"）。正确做法：第 1 轮确认「txt header Subject 有重复 + sav 编号体系不同」后，应立即把冲突事实 + 候选方案提交用户裁决（用户随后用 fix_subjID.xlsx 一锤定音）。
 
 ## 会话约定（通用）
 
@@ -33,7 +33,7 @@ mode: primary
 ## Document map（四文档分工与引用关系）
 
 - `README.md` — 面向**人类读者**：项目介绍、数据使用指引。代理也应按需引用。
-- `AGENTS.md`（本文件）— 面向**agent**：环境约束、效率约定、caveats。
+- `AGENTS.md`（本文件）— 面向**agent**：环境约束、效率约定、caveats；**只写 agent 做事的规则与避坑经验，不写状态性文字**（规模计数/待办/逐研究状态一律归 PROJ_STATE.md）。
 - `PROJ_STATE.md` — **会话状态快照**：**每个 session 结束时统一更新一次**（工作过程中不逐条实时记录，避免文档冗长）；新会话先读它再开工。
 - `.opencode/skills/spe-database-curation/SKILL.md` — **curation 技能（SPE_Database 规范）**：规则正文
   自足（不依赖本仓库文档，可迁移他库）；工具路径与仓库集成注记仅本仓库适用，见下方引用方向；任何数据整理/入库任务一律加载
@@ -45,14 +45,15 @@ mode: primary
 - `3_Reports/Table1_Issues_Solvability.md` — **Table 1 问题可解性分析**：逐项判定稿件 Table 1 差异的可解性（可自动确定 / 需人工），与 PROJ_STATE.md 双向关联（未解决清单 ↔ 可解性判定）；依据 `Generate_Table1.qmd` 输出的 `table1_problems.txt`。
 - `3_Reports/Verifying_original_results_issues.md` — **作者原始结果验证问题统一记录处**：入库四方核对中发现作者/OSF 原始产物与论文或数据不一致、或论文统计量无法复现的问题，一律记录于此（不再单独建文档）；正文见该文件头部，AGENTS/PROJ_STATE 只放指针。
 - `REF/README_html2md.md` — **REF 全文 HTML → MD 转换管线使用说明**：`REF/html2Json.py`（HTML→JSON）+ `REF/json2md.py`（JSON→MD）的批量用法、摘要验收清单、新模板适配；全文正文归属本文件，AGENTS/PROJ_STATE 只放指针。
+- `For_COLLABORATORS.md` — **给合作者的推进指南**（人类读者操作文档）：待数据研究补齐路径（数据放哪 + agent 指令模板）、未来新研究入库 4 步、REF/ 不上 GitHub 需联系 hcp4715 同步版本；正文归属本文件，其余文档只放指针。
 
 ## 项目总体逻辑（单向数据管道）
 
 本项目是一条**单向数据管道**：`原始公开数据 → 规范数据 → 稿件产出`。
-数据只向前流动；稿件永不反向作为数据源（稿件 v16 已废弃，其 12 个
-待收录条目信息已登记入 Dataset_inf.csv Note 列，见 PROJ_STATE.md）。
+数据只向前流动；稿件永不反向作为数据源（稿件 v16 已废弃，其待收录条目信息
+已登记入 Dataset_inf.csv Note 列）。
 
-**阶段一：整理与入库（agent + skill 自动化，2026-08 起）**
+**阶段一：整理与入库（agent + skill 自动化）**
 - 输入：各研究公开数据（论文/preprint/unpublished）下载至**输入区**
   `1_Data/<Study>/<Study>_Raw/`（只读，不参与校验；详见 SKILL.md §文件与文件夹规范（Raw input zone）
 - 执行：agent 加载 `spe-database-curation` 技能 → 扫描输入区识别
@@ -61,7 +62,7 @@ mode: primary
   产出 `*_raw.csv` / `*_ExpN_Clean.csv` / `*_subj_info.csv` /
   Codebook / paper+实验 JSON → 更新 Dataset_inf.csv（字节保真）
 - 校验（两级，任何改动后必跑）：`Rscript 2_Code/validate_json_metadata.R`
-  （结构级）+ `Rscript 2_Code/validate_clean_csv.R`（内容级，2026-08 新增）
+  （结构级）+ `Rscript 2_Code/validate_clean_csv.R`（内容级）
 
 **阶段二：信息提取与分析产出**
 - 工具：`3_Reports/` 各 Rmd（Process_Data、Subject_Table、Reports、
@@ -93,61 +94,41 @@ mode: primary
 - 查预印本版本年：OSF API 按 GUID 直取 `api.osf.io/v2/preprints/<guid>/versions/`；`filter[doi]` 返回 HTTP 400，勿用。
 - 外查前先查本地权威源：paper JSON（`DOI`/`Year`/`Journal`）、`Repo_Link`、`Dataset_inf.csv`。
 
-### 防坑（2026-08 阶段 2 会话沉淀，agent 操作纪律；纪律正文统一在 SKILL.md §校验与卫生「文件操作安全纪律」，此处保留教训与指针）
+### 防坑（agent 操作纪律；纪律正文统一在 SKILL.md §校验与卫生「文件操作安全纪律」，此处保留教训与指针）
 
-- **覆盖/替换已有文件也必须经过用户确认**（教训 2026-08-28：`curl -o` 静默覆盖用户刚下载的 Scheller html——curl 失败（HTTP 406）时 `-o` 把 1 MB 完整文件清成 0 字节，gitignore 目录无备份、内容永久丢失）。纪律正文（覆盖前 `ls -la`、下载先 /tmp 再 mv、写后核对）见 SKILL.md §校验与卫生「文件操作安全纪律」。
-- **删除文件必须万分谨慎，尤其是不在 git 中记录的文件**（教训 2026-08-28：`REF/` 全目录被 `.gitignore` 忽略，一次清理 `_files` 删 390 文件 + 误删 Scheller html/json/md 均不可恢复，用户重新下载才找回）。纪律正文（git check-ignore 确认跟踪、删除清单确认、_trash_ 暂存、删后汇报、范围复述）见 SKILL.md §校验与卫生「文件操作安全纪律」。
+- **覆盖/替换已有文件也必须经过用户确认**（教训：`curl -o` 静默覆盖用户刚下载的 Scheller html——curl 失败（HTTP 406）时 `-o` 把 1 MB 完整文件清成 0 字节，gitignore 目录无备份、内容永久丢失）。纪律正文（覆盖前 `ls -la`、下载先 /tmp 再 mv、写后核对）见 SKILL.md §校验与卫生「文件操作安全纪律」。
+- **删除文件必须万分谨慎，尤其是不在 git 中记录的文件**（教训：`REF/` 全目录被 `.gitignore` 忽略，一次清理 `_files` 删 390 文件 + 误删 Scheller html/json/md 均不可恢复，用户重新下载才找回）。纪律正文（git check-ignore 确认跟踪、删除清单确认、_trash_ 暂存、删后汇报、范围复述）见 SKILL.md §校验与卫生「文件操作安全纪律」。
 - **工具若含绝对路径，先确认它读的就是当前文件**（教训：`analyze_csv_blanks.py` 曾指向 `/Volumes/T3/...`，读到旧副本且输出"恰好与预期一致"掩盖错误）。纪律正文（改前 grep 工具源码确认数据源、异常先怀疑路径）见 SKILL.md §校验与卫生「文件操作安全纪律」。
 - **编辑文档追加条目时用将被保留的现有文本作锚点**（教训：曾把 PROJ_STATE「项目迁移」条目整体替换掉）。纪律正文见 SKILL.md §校验与卫生「文件操作安全纪律」。
-- **CSV 字节保真编辑（Dataset_inf.csv 等）纪律正文见 SKILL.md §主索引「写入纪律：CSV 字节保真编辑」**（教训 2026-08-28：加 `subj_Group` 列时 `r[0]` 误当 Folder_Name 致 74 行组名失配填 All；2026-08-30：Hobbs 往返测试先截末尾 `\r\n`；subj_info 无 BOM+LF 行尾 vs Dataset_inf BOM+CRLF）——此处仅指针，不重复正文。
+- **CSV 字节保真编辑（Dataset_inf.csv 等）纪律正文见 SKILL.md §主索引「写入纪律：CSV 字节保真编辑」**（教训：加 `subj_Group` 列时 `r[0]` 误当 Folder_Name 致 74 行组名失配填 All；Hobbs 往返测试先截末尾 `\r\n`；subj_info 无 BOM+LF 行尾 vs Dataset_inf BOM+CRLF）——此处仅指针，不重复正文。
 - 字段语义类约定（License=数据许可 / Country-City=数据采集地 / Email 以 CSV 为准 / 多任务口径 / 全文核查）见 `spe-database-curation` 技能（SKILL.md），此处不重复。
 
 ### 会话收尾（强制）
-- 更新根目录 `PROJ_STATE.md`（2026-09-02 精简为「现状 + 未解决问题」结构）：**更新重点是第 3 节「当前推进的线路图」（四类状态 + 问题清单）与第 5 节「库内现状快照」数字**——每次收尾时逐论文检查其状态是否发生变化（问题消解/新增、类别迁移、入库进展），状态变化更新到 3 节对应类别行，本次会话完成的具体动作**不再追加历史记录**（历史已精简，只入 git commit）；其余节仅在确有必要时微调。只记已确认事实。
+- 更新根目录 `PROJ_STATE.md`（「现状 + 未解决问题」结构）：**更新重点是第 3 节「当前推进的线路图」（四类状态 + 问题清单）与第 5 节「库内现状快照」数字**——每次收尾时逐论文检查其状态是否发生变化（问题消解/新增、类别迁移、入库进展），状态变化更新到 3 节对应类别行，本次会话完成的具体动作**不再追加历史记录**（历史已精简，只入 git commit）；其余节仅在确有必要时微调。只记已确认事实。
 - **更新时机：只在 session 收尾统一更新一次**，工作过程中不逐条实时写入 PROJ_STATE.md（避免文档膨胀）；同一 session 内的多次修改合并为收尾一次写入。若 session 尚未结束，改动先记在对话/待办中，不写文档。
 - 若本会话沉淀了可复用的约定/流程，同步补充到 `spe-database-curation` 技能（SKILL.md）。
-- **沉淀去重（2026-08 阶段 2 教训）**：四文档按分工各存专属正文、相互指针引用，**不复制同样内容到多个文件**——每条规则正文只写一个归属文件（AGENTS.md=agent 仓库纪律与教训（会话收尾、exFAT、commit 规则等）+ 防坑教训指针 / SKILL.md=curation 规则正文，含字段语义与可执行纪律正文（写入纪律、文件操作安全纪律等）/ PROJ_STATE.md=会话事实快照），其余文件只放一行指针（含目标节/编号）。操作要求：① 写入前 `grep` 目标文件确认该规则尚无正文，避免文件内重复；② 删除/重编号后立即同步更新所有指针中的引用位置；③ 沉淀后 `grep` 复核每条规则只有一处正文、其余为指针。
+- **沉淀去重**：四文档按分工各存专属正文、相互指针引用，**不复制同样内容到多个文件**——每条规则正文只写一个归属文件（AGENTS.md=agent 仓库纪律与教训（会话收尾、exFAT、commit 规则等）+ 防坑教训指针 / SKILL.md=curation 规则正文，含字段语义与可执行纪律正文（写入纪律、文件操作安全纪律等）/ PROJ_STATE.md=会话事实快照），其余文件只放一行指针（含目标节/编号）。操作要求：① 写入前 `grep` 目标文件确认该规则尚无正文，避免文件内重复；② 删除/重编号后立即同步更新所有指针中的引用位置；③ 沉淀后 `grep` 复核每条规则只有一处正文、其余为指针。
 - 如需提交：**必须先获得用户明确确认**（见文首「全局最高级规则」），确认后按逻辑分组 commit（≤3 个）。
 
 ## Project context
 
-- **What**: SPE (Self-Prioritization Effect) Database — curated trial-level data from
-  **49 studies / 102 rows** per `Dataset_inf.csv` (47 curated
-  folders on disk + 2 deferred entries (Hu_YQ_2026_ChinaSciData ex Hu_2023_SDB +
-  Scheller_2026_elife), 2026-09-02 verified; 2026-09-02
-  Bukowski_2021_ActaPsych **Exp1 入库**（4 行收口，78 人 = 87 E-Merge txt − 9
-  outlier；imitation 22 / imitation-inhibition 21 / control-inhibition 16 /
-  be-imitated 19；468 单元格逐位复现 0 差异）——Bukowski 两实验全部入库；
-  2026-09-01
-  Svensson_2022_PsychRes（Exp1/2/3 子文件夹，3 行收口）与 Mcivor_2021_EJN（2 行收口）
-  入库；2026-08-31
-  四新研究入库: Zhang_2026_JNeurosci（OA/YA 拆 2 行）、Qi_2025_SciData、
-  Atzeni_2026_PsychRes（T2/T3 合并）、Golubickis_2021_ActaPsych（Exp1/Exp2
-  子文件夹）；2026-08-31
-  Wozniak_2020_PLOS 入库（3 行）；2026-08-31 Scheller_2026_elife 2 行删除
-  （匹配任务 trial 数据不可得，待作者提供后重入）；2026-08-30
-  added Orellana-Corrales_2020_ExpPsych, Vicovaro_2024_PeerJ,
-  Zhang_2024_PsychJ; 2026-08-30 Hobbs_2023_PsychMed 入库, 38→39 文件夹 /
-  8→7 pending) using the self-matching task
-  (Sui, He & Humphreys 2012). Earlier published counts (44 papers / 70 datasets /
-  3603 participants) refer to the manuscript and have NOT been re-verified against
-  the CSV. Companion to a preregistered meta-analysis (OSF: euqmf).
+- **What**: SPE (Self-Prioritization Effect) Database — 使用 self-matching task
+  (Sui, He & Humphreys 2012) 的研究的 curated trial-level 数据库（逐研究五件套 +
+  `1_Data/Dataset_inf.csv` 主索引）。收录规模/待办/逐研究状态属状态性信息，
+  一律以 `PROJ_STATE.md` 为准（本文件不记录）。
+
 - **Structure**:
-  - `1_Data/` — 47 curated study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
-    master index (legacy `Dataset_inf.xlsx` outdated — pending deletion after
-    collaborators confirm the CSV). Each folder contains:
+  - `1_Data/` — curated study folders (`<Author>_<Year>_<Journal>/`), plus `Dataset_inf.csv`
+    master index（旧版 `Dataset_inf.xlsx` 已过时，勿用）。Each folder contains:
     - raw data: `*_raw.csv` (trial-level), `*_subj_info.csv` (subject-level),
       sometimes `*_Raw/` subfolders with per-participant exports (E-Prime `.edat2`,
       MATLAB `.mat`, PsychoPy `.psydat`).
     - cleaned data: `*_ExpN_Clean.csv`.
-    - metadata: `Codebook_*_Clean.xlsx` (variable codebooks; 81 tracked +
-      2026-09-02 新入库未提交若干，全库统一 canonical `Codebook_` 小写 b 命名,
-      28 个 legacy `CodeBook_*` 已于 2026-09-02 统一改名),
+    - metadata: `Codebook_*_Clean.xlsx`,
       study-level `.json` (paper metadata) and experiment-level `.json`
       (methodology, v2 hierarchical schema: five components under `exp<N>`).
-  - `1_Data/Dataset_inf.csv` — **master index** (newest version; `Dataset_inf.xlsx`
-    is outdated, no `Folder_Name` column, and is scheduled for deletion once
-    collaborators confirm the CSV), **UTF-8 with BOM** (do NOT strip the BOM —
+  - `1_Data/Dataset_inf.csv` — **master index**（旧版 `Dataset_inf.xlsx` 过时且无
+    `Folder_Name` 列，勿用）, **UTF-8 with BOM** (do NOT strip the BOM —
     Chinese collaborators open it in Excel on Chinese Windows which defaults to GBK;
     the BOM is what keeps diacritics like `ö`/`é`/`ü` from garbling).
     40-column structure (incl. `DOI`), key columns:
@@ -167,7 +148,7 @@ mode: primary
     Load via `skill(name="spe-database-curation")` when adding/editing study metadata.
   - `2_Code/` — data cleaning tooling, three parallel implementations of the same
     standardization logic:
-    - `Clean_Data.Rmd` (5053 lines) — 历史配方参考（2026-08 起已降级；现行主路径 =
+    - `Clean_Data.Rmd` (5053 lines) — 历史配方参考；现行主路径 =
       独立清洗脚本 `<Study>_clean.R`，见 SKILL.md §工具与脚本）。
     - `SPE_Interactive_Clean_V3.R` — console-based interactive cleaner (single/batch).
     - `SPE_Shiny_App_V4.2.R` — Shiny web app (single/batch, ZIP download).
@@ -180,7 +161,7 @@ mode: primary
       `Folder_Name`; comparison treats manuscript "Not specified"=missing and
       `CC0`=`CC0 1.0 Universal` as equal). Outputs `Generate_Table1.docx` +
       `Output/table1_problems.txt` (known issue classes listed there); render with
-      RStudio's bundled quarto（2026-08-31 实测路径：
+      RStudio's bundled quarto（实测路径：
       `/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render
       Generate_Table1.qmd`——注意是 `app/quarto/bin/`，不是 `app/bin/quarto/`）。
       Operational details: PROJ_STATE.md §5.
@@ -190,9 +171,9 @@ mode: primary
 - **Key conventions**: cleaned variables standardized to `Subject`, `Shape`, `Label`,
   `Matching`, `ACC`, `RT_ms`, and 3-level Identity columns
   (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger).
-   **2026-09-01 起全库统一**：`Task` 列（默认 `self-matching`，其他受控值 facialExpression-matching /
-   monetaryValue-matching / self-pseudoWords）+ 任务内额外自变量 `extraIV1`/`extraIV2` +
-   **固定列顺序模板 v2（硬性规范，不可自定义）**：`Subject→[Group]→[Session]→Task→[Phase]→
+  `Task` 列（默认 `self-matching`，其他受控值 facialExpression-matching /
+  monetaryValue-matching / self-pseudoWords）+ 任务内额外自变量 `extraIV1`/`extraIV2` +
+  **固定列顺序模板 v2（硬性规范，不可自定义）**：`Subject→[Group]→[Session]→Task→[Phase]→
    [Condition]→Block→Trial→[Practice]→Matching→Shape→[ShapeLoc]→[Shape_Subtype]→
    Shape-Identity×3→Label→Label-Identity×3→[extraIV1]→[extraIV2]→[CorrResponse]→[Response]→
    RT_ms→RT_sec→ACC→[研究特有保留列尾部]`（可选列不存在则跳过，但已存在列相对顺序不得改变）。
@@ -200,46 +181,20 @@ mode: primary
    Subject 后、Phase 在 Task 后、extraIV1 在 Label-Identity×3 后，均不得提前到列首），以
    `Bukowski_2021_ActaPsych_Exp1_Clean.csv` 为合规样板；产出前在清洗脚本内用 stopifnot 断言
    列序；Codebook 行序与 Clean 列序必须一致。易错点与校验细则见 SKILL.md §数据标准化
-   「列顺序合规要求（2026-09-02 强化）」。**严禁照抄本文件历史旧版模板**（该模板曾把 Task
-   置于 Shape/Label 后、Identity 块堆叠末尾，与 v2 冲突，已于 2026-09-02 更正）。
+   「列顺序合规要求」。**严禁照抄本文件历史旧版模板**（该模板曾把 Task
+   置于 Shape/Label 后、Identity 块堆叠末尾，与 v2 冲突）。
   Cleaned file naming: `<Author>_<Year>_<Suffix>_ExpN_Clean.csv` (Suffix = readable
   journal/database abbreviation, full short journal name, or psyarxiv/unpub tag;
   see the curation skill).
-- **Raw data formats**: CSV dominant (331 files); also E-Prime `.edat2`/`.emrg*`
+- **Raw data formats**: CSV dominant; also E-Prime `.edat2`/`.emrg*`
   MATLAB `.mat`/`.m`, PsychoPy `.psydat`/`.dat`. No parquet anywhere.
-- **Version**: v0.1.5 (2026-06-28). See `README.md` for full changelog.
-- **Current state**: see `PROJ_STATE.md` (root) for the latest verified status,
-  known issues, failed approaches and next steps; update it at the end of every session.
+- **Version**: v0.1.5. See `README.md` for full changelog.
 
-## Known data-quality caveats (verified 2026-08)
+## Known data-quality caveats
 
 Treat these as known issues, not new discoveries — do not "find" them again:
 
-- **4 studies previously lacked codebooks AND paper-level JSONs — 已补齐（2026-08-27 阶段 1）**: `Lee_2023_Cognition`, `Orellana-Corrales_2021_APP`, `Smith_2024_Cortex`, `Svensson_2023_QJEP` 现均有 paper JSON + 实验级 JSON + `Codebook_*_Clean.xlsx`（各研究 subj_info 当时已全覆盖：Lee/Smith/Svensson 由各自 `*_raw.csv` 生成（2026-08），Orellana-Corrales_2021_APP 由 Clean.csv 唯一 Subject 生成（2026-08-27，仍无任何原始数据，人口学 /）；Svensson exp JSON 的 `Equipment.Software` 论文未披露留 `/`）。
-- **Missing raw data**: `Sun_2026_DataExp/` has `Sun_2026_DataExp_Exp1_Clean.csv`
-  (largest cleaned file, 62 MB) but no `*_raw.csv`（实验级 JSON 已于 2026-08 补齐；
-  raw 追补归阶段 4，用户+agent 共同决定）。
-- **Deferred study — rows removed from CSV (do NOT "fix")**: `Scheller_2026_elife`
-  (DOI `10.7554/eLife.100932`, OSF `osf.io/a62df`) — rows deleted from
-  `Dataset_inf.csv` (2026-08-31, user decision): the OSF archive contains TOJ
-  trial-level data only; the shape-label matching-task trial data (per-participant
-  `Raw Data/*.csv` referenced by the analysis notebooks) were never uploaded.
-  The input-zone folder is kept (validator `known_unlisted` whitelist). Re-ingest
-  when the authors share the matching data.
-- **1 CSV `Folder_Name` entry is deferred — not curated (verified 2026-09-02)**: `Hu_YQ_2026_ChinaSciData`
-  （原 `Hu_2023_SDB`，2026-09-02 改名并标记 deferred，与 Scheller_2026_elife 同类处置）
-  has no folder at all; expected pending/uncatalogued, do NOT "fix". The validator
-  (`validate_json_metadata.R`) whitelists it (`known_pending` list);
-  `Generate_Table1.qmd` excludes folderless entries from the generated Table 1
-  (dynamic keep-by-folder logic). (2026-08-30: `Orellana-Corrales_2023_QJEP` 与
-  `Hobbs_2023_PsychMed` 已入库；2026-08-31: `Wozniak_2020_PLOS` 与
-  `Golubickis_2021_ActaPsych` 已入库；2026-09-01: `Svensson_2022_PsychRes`
-  （Exp1/2/3 子文件夹五件套 + CSV 3 行收口）与 `Mcivor_2021_EJN`
-  （平铺五件套 + CSV 2 行收口 + d′ 描述性核对）已入库；
-  2026-09-02: `Bukowski_2021_ActaPsych` Exp1 入库（4 行收口，78 人 =
-  87 E-Merge txt − 9 outlier；468 单元格逐位复现 0 差异）——两实验全部入库，
-  均移出本清单与白名单。)
-- **Manuscript Table 1 vs data has known discrepancies (verified 2026-08)**: Exp-number
+- **Manuscript Table 1 vs data has known discrepancies**: Exp-number
   copy-paste errors (e.g. `P5E1`–`P5E3` all labeled "Exp4" in the manuscript),
   N-count differences (manuscript "—" vs CSV concrete values), Trials wording
   differences (`numTrials` vs per-block counts), and some Study-label attributions
@@ -258,17 +213,9 @@ Treat these as known issues, not new discoveries — do not "find" them again:
   `Processed_Data_Filtered.csv` (60 MB), `Haciahmet_2023_Psychophysiol_Exp1_raw.csv`
   (42 MB), `Share_Data.RData` (31 MB). Avoid loading these into memory / context casually.
 
-## Repo state (verified 2026-08)
+## Repo layout（git 卫生，防误判）
 
-- Single branch `main` (tracks `origin/main`).
-- Root-level `._*` files and `Contact*.xlsx` are gitignored; study folders
-  `Smith_2024_Cortex/`, `Lee_2023_Cognition/`, etc. are also gitignored at repo root
-  (only their `1_Data/...` paths are tracked).
-
-## TODO / planned work
-
-- (Done 2026-08) Codebook authoring rules added to `spe-database-curation` SKILL.md:
-  §Codebook 编写规则 specifies the single-`Sheet1` 4-column template
-  (`Variable_name | Variable_description | Variable_value | Variable_category`),
-  per-column content rules (definitions, valid values, units, missing/invalid codes)
-  and the creation workflow from the Clean.csv header + paper methods + data values.
+- Root-level `._*` files and `Contact*.xlsx` are gitignored；部分研究在仓库根的
+  同名条目亦被 gitignore（如 `Smith_2024_Cortex/`、`Lee_2023_Cognition/`），
+  实际跟踪路径只有 `1_Data/<Study>/...`——勿因根目录缺文件而误判缺失。
+- 分支/工作区状态一律以 `git status` 为准，本文件不记录。
