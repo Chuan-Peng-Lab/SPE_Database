@@ -1,0 +1,37 @@
+{
+  "exp2": {
+    "schema_version": "2",
+    "Collected_date": "2020-10 to 2021-03",
+    "Physical_Environment": {
+      "Location": "Online (SONA and Prolific recruitment)",
+      "Setting": "Online",
+      "Equipment": {"Presenting": "/", "Monitor": "/", "Software": "Inquisit 6 (Millisecond)"},
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (personal prime: self vs stranger name) x 3 (emotional target: happy, neutral, sad) x 2 (match vs unmatch); 30 trials per condition"
+    },
+    "Block_Structure": {
+      "Block_number": "5 blocks of 72 trials",
+      "Trial_number": "360 trials total per participant",
+      "Practice_trials": "12 (6 self-paced + 6 timed practice, identical structure to test trials); plus 6 demonstration trials with instructions and no prime (not counted)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms (pre-prime fixation)",
+      "Stimulus_duration": "name prime 200 ms; shape-emotion pair 150 ms",
+      "SOA": "50 ms (prime offset to pair onset)",
+      "Stimulus_order": "Sequential: fixation, personal-name prime (own first name = self; stranger's chosen name = stranger) above fixation, 50 ms fixation, then simultaneous shape (above) and emotion-face image with circle outline (below)",
+      "Response_deadline": "1500 ms",
+      "ITI": "0 ms (blank screen until response)",
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "fixation cross",
+      "Shape": "geometric shapes: triangle (1.tif), diamond (2.tif), pentagon (3.tif); each shape first associated with one emotion category (happy/neutral/sad) during learning",
+      "Label": "emotional face images: happy.tif, neutral.tif, sad.tif (schematic faces with circle outline)",
+      "Colors": {"Stimulus": "white/grey screen; emotion-face images with surrounding circle outline; name primes in black text", "Background": "grey"}
+    },
+    "detail": "Experiment 2 of Lee, Martin & Sui (2026, BritJPsy, DOI 10.1111/bjop.70100): reverse priming direction. Participants first associated three geometric shapes with three emotions (happy/neutral/sad face images); in the test, personal name primes (participant's own first name = self; a name chosen for a stranger = stranger) preceded shape-emotion pairs. Task is a shape-emotion matching variant (no self-referential association in the pairings), coded in the database as Task=facialExpression-matching with extraIV1 = personal prime (self/stranger). NOTE (paper-data discrepancy, recorded for Verifying_original_results_issues): the paper Methods sentence states the non-self prime was 'the participant's best friend's first name', but the Inquisit script E3a.iqx and the data record the non-self prime as a STRANGER name (participants chose a name for an imagined stranger); the Introduction/Abstract/Figure 5 and OSF analysis code consistently describe the prime contrast as self vs stranger. Data were therefore coded self/stranger. Authors excluded 8 of the 50 complete participants from analyses for chance-level accuracy (mean ACC <=55%; excluded IDs: 18491, 49142931, 18689, 18541, 18365, 956227845, 560455705, 949712262) -> analysed N=42. One further logged session (463627897) quit partway (54 trials) and is not part of this dataset. Timeout trials are ACC=NA in this database (authors counted them as incorrect). RT_ms is Inquisit latency from pair onset. Data source: OSF enfma archive Data_files/E2_SSt_E_data (author-internal naming e3a, run by Inquisit script E3a.iqx; 50 participants x 360 trials = 18000 rows; matched author OSF_analysis.Rmd cleaning exactly)."
+  }
+}

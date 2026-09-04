@@ -20,6 +20,15 @@ mode: primary
 
 反面教材（Bukowski Exp2）：被试编号确认中反复读 sav/txt header（>3 次）、连续提未经验证的编号口径假设，被用户多次打断。正确做法：第 1 轮确认冲突事实（txt header Subject 有重复 + sav 编号体系不同）后，立即把冲突 + 候选方案提交用户一锤定音（用户随后用 fix_subjID.xlsx 解决）。
 
+**Agent 禁止命令链依赖工作目录（cwd 纪律 — 2026-09-04 定案，Lee_2026 教训）**：任何会改变进程工作目录的步骤（R 清洗脚本内含 `setwd`、`cd` 等）与依赖特定 cwd 的后续命令**严禁用 `&&` 串在同一个 bash 调用里**。规则：
+1. 含 `setwd`/`cd` 的脚本一律**单独调用**；跑完后当前 shell 的 cwd 已切走，后续命令的相对路径 ≠ 你以为的路径。
+2. 校验/读取类命令（Python/grep/diff/校验器）一律**从仓库根目录执行**、路径写仓库根相对（`1_Data/...`）；需要脚本自身目录时用脚本内自适应（Rscript `--file=` 解析），且该脚本单独跑。
+3. 独立步骤拆成**独立工具调用**（各自显式 `workdir`），不为"一条命令跑完"而链式串联。
+4. 命令报错（如 `FileNotFoundError`）→ 立即以一句话向用户定位（哪条命令、什么错、实际 cwd 是哪个目录），**不静默重试、不把异常当"卡住"继续等待/继续跑**。
+5. 输出文件落在子目录 ≠ shell 当前在该子目录；两个事实分开记忆，不混为一谈。
+
+反面教材（Lee_2026_BritJPsy 入库，2026-09-04，连续 2 次）：`Rscript …_clean.R`（内含 setwd 切到研究子目录）后 `&&` 链一段写死 `1_Data/Lee_2026_BritJPsy/...` 仓库根路径的 Python 校验 → 从子目录找不到路径，`FileNotFoundError`，浪费大量时间，一度卡死。正确做法：R 脚本单独跑，校验另行从仓库根执行。
+
 ## 数据文件格式约定（全局规则，全项目任何文件操作一律遵守）
 
 - 主索引 `1_Data/Dataset_inf.csv`：UTF-8 **带 BOM** + CRLF + QUOTE_MINIMAL + 文件末尾无换行。**BOM 勿去**——中文 Windows Excel 默认 GBK 打开，BOM 是 `ö/é/ü` 等不乱码的唯一保障；BOM/行尾对标准读取透明（读取用 `read_dataset_inf.py` / `utils.R` 封装，或 Python `utf-8-sig` / R `fileEncoding="UTF-8-BOM"`）。

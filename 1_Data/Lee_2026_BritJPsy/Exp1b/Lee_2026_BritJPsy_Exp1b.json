@@ -1,0 +1,37 @@
+{
+  "exp1b": {
+    "schema_version": "2",
+    "Collected_date": "2020-10 to 2021-02",
+    "Physical_Environment": {
+      "Location": "Online (SONA and Prolific recruitment)",
+      "Setting": "Online",
+      "Equipment": {"Presenting": "/", "Monitor": "/", "Software": "Inquisit 6 (Millisecond)"},
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (emotion prime: sad vs neutral) x 3 (personal target: self, friend, stranger) x 2 (match vs unmatch); 30 trials per condition"
+    },
+    "Block_Structure": {
+      "Block_number": "5 blocks of 72 trials",
+      "Trial_number": "360 trials total per participant",
+      "Practice_trials": "12 (6 self-paced + 6 timed practice, identical structure to test trials); plus 6 demonstration trials with instructions and no prime (not counted)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms (pre-prime fixation)",
+      "Stimulus_duration": "emotion prime 200 ms; shape-label pair 150 ms",
+      "SOA": "50 ms (prime offset to pair onset)",
+      "Stimulus_order": "Sequential: fixation, schematic sad/neutral emotion-face prime above fixation, 50 ms fixation, then simultaneous shape (above) and person-word label (below)",
+      "Response_deadline": "1500 ms",
+      "ITI": "0 ms (blank screen until response)",
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "fixation cross",
+      "Shape": "geometric shapes: triangle (1.tif), diamond (2.tif), pentagon (3.tif)",
+      "Label": "person words: self, friend, stranger",
+      "Colors": {"Stimulus": "white/grey screen, shape images and white label text", "Background": "grey"}
+    },
+    "detail": "Experiment 1b of Lee, Martin & Sui (2026, BritJPsy, DOI 10.1111/bjop.70100), sad vs neutral primes. Procedure identical to Experiment 1a except primes were sad and neutral emotional faces. Authors excluded 11 of the 53 complete participants from analyses for chance-level accuracy (mean ACC <=55%; excluded IDs: 325084622, 26988398, 8839912, 873303424, 18582, 766810170, 699174698, 18610, 216462780, 718214387, 18594) -> analysed N=42. Two further logged sessions (349253591, 18542) quit partway (197 and 350 of 360 trials) and are not part of this dataset. Timeout trials are ACC=NA in this database (authors counted them as incorrect). RT_ms is Inquisit latency from pair onset. Sad prime file: s.tif. extraIV1 = emotion prime (sad/neutral). Data source: OSF enfma archive Data_files/E1b_SN_P_data (all *_SAT rows of complete participants; 53 participants x 360 trials = 19080 rows; matched author OSF_analysis.Rmd cleaning exactly)."
+  }
+}

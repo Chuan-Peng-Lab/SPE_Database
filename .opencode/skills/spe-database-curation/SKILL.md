@@ -451,7 +451,8 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   不得凭值猜测；⑤ 有 `Response` 实际按键列的文件可用「应按键 vs 实际键」验证或重建 ACC；
   无 `Response` 列的文件只能依据原码语义映射或留待 raw 追补；⑥ Codebook 的 `Variable_value`
   同步列出码义。特殊码涉及的文件（重编码前逐研究确认）：Constable 系列 ACC=3、Dalmaso ACC=2、
-  Hu_2020 ACC=-1/2、Sui_2015 ACC=3/4、Vicovaro/Xu/Zhang/Sun/Hu_2023 ACC=NA。
+   Hu_2020 ACC=-1/2、Sui_2015 ACC=3/4、Vicovaro/Xu/Zhang/Sun/Hu_2023 ACC=NA。
+- **Matching 列取值全库统一（2026-09-04 定案）**：`Matching` = 呈现的 Shape-Label 对与已学联结一致；`Nonmatching` = 不一致（重组合）。**严格二值**：空白/NA 一律视为非规范值（不允许缺失标记），`validate_clean_csv.R` W5 报错且不列出错值。清洗脚本把作者原始词（match/unmatch、matching/mismatching、Matched/Mismatched、Yes/No 等）映射为规范取值；raw 保留作者原词。Codebook `Variable_value` 同步列出。已知例外：`Zhang_2023_NeuroImage_Exp1` 全 NA 占位行（subject 62，源数据空行、历史保留，已记 CSV Note）→ 报 W5 WARN，待合作者核查数据后再处置，勿静默删除/改写。
 - **Minimal preprocessing, NO filtering**: cleaning only renames/reorganizes variables
   and standardizes Identity; it keeps ALL trials, participants and values. Invalid
   values stay in the file (e.g., `ACC = -1` no response, `2` wrong key; `RT_ms`

@@ -251,7 +251,7 @@ clean2 <- data.frame(
   Phase = .exp2$Phase,
   Block = .exp2$Block,
   Trial = .exp2$Trial,
-  Matching = ifelse(.exp2$YesNoResp == "Yes", "matching", "mismatching"),
+  Matching = ifelse(.exp2$YesNoResp == "Yes", "Matching", "Nonmatching"),
   Shape = .exp2$Target,                        # 实际刺激文件原样（用户确认）
   Shape_Origin_Identity = .exp2$Shape,         # 数据原样（身份词英文）
   Shape_English_Identity = .exp2$Shape,
@@ -319,9 +319,9 @@ stopifnot(identical(as.integer(.grp_tab), c(33L, 35L, 35L)))  # counter 33 / imi
 # ---- 描述性统计方向核对（论文：self 最快最准、stranger 最慢；仅正式试次） ----
 .direction <- function(d, exp_label) {
   d <- d[d$Phase == "formal", ]
-  .s <- d$Shape_Standardized_Identity[d$Matching == "matching"]
-  .rt <- d$RT_ms[d$Matching == "matching"]
-  .acc <- d$ACC[d$Matching == "matching"]
+  .s <- d$Shape_Standardized_Identity[d$Matching == "Matching"]
+  .rt <- d$RT_ms[d$Matching == "Matching"]
+  .acc <- d$ACC[d$Matching == "Matching"]
   .m <- tapply(.rt, .s, function(x) mean(x, na.rm = TRUE))
   .a <- tapply(.acc, .s, function(x) mean(x, na.rm = TRUE))
   cat(sprintf("  %s matching RT (ms): self %.1f / close %.1f / stranger %.1f | ACC: self %.3f / close %.3f / stranger %.3f\n",
@@ -457,7 +457,7 @@ clean1 <- data.frame(
   Phase = .exp1$Phase,
   Block = .exp1$Block,
   Trial = as.integer(.exp1$Trial),
-  Matching = ifelse(.exp1$YesNoResp == "Yes", "matching", "mismatching"),
+  Matching = ifelse(.exp1$YesNoResp == "Yes", "Matching", "Nonmatching"),
   Shape = .exp1$Target,                        # 实际刺激文件原样（同 Exp2）
   Shape_Origin_Identity = .exp1$Shape,         # 数据原样（身份词英文）
   Shape_English_Identity = .exp1$Shape,

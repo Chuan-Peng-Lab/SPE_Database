@@ -1,0 +1,37 @@
+{
+  "exp1a": {
+    "schema_version": "2",
+    "Collected_date": "2020-11 to 2023-06 (SONA/Prolific waves incl. a June 2023 additional Prolific collection)",
+    "Physical_Environment": {
+      "Location": "Online (SONA and Prolific recruitment)",
+      "Setting": "Online",
+      "Equipment": {"Presenting": "/", "Monitor": "/", "Software": "Inquisit 6 (Millisecond)"},
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (emotion prime: happy vs neutral) x 3 (personal target: self, friend, stranger) x 2 (match vs unmatch); 30 trials per condition"
+    },
+    "Block_Structure": {
+      "Block_number": "5 blocks of 72 trials",
+      "Trial_number": "360 trials total per participant",
+      "Practice_trials": "12 (6 self-paced + 6 timed practice, identical structure to test trials); plus 6 demonstration trials with instructions and no prime (not counted)"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms (pre-prime fixation)",
+      "Stimulus_duration": "emotion prime 200 ms; shape-label pair 150 ms",
+      "SOA": "50 ms (prime offset to pair onset)",
+      "Stimulus_order": "Sequential: fixation, schematic happy/neutral emotion-face prime above fixation, 50 ms fixation, then simultaneous shape (above) and person-word label (below)",
+      "Response_deadline": "1500 ms",
+      "ITI": "0 ms (blank screen until response)",
+      "Feedback_duration": "500 ms"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "fixation cross",
+      "Shape": "geometric shapes: triangle (1.tif), diamond (2.tif), pentagon (3.tif)",
+      "Label": "person words: self, friend, stranger",
+      "Colors": {"Stimulus": "white/grey screen, shape images and white label text", "Background": "grey"}
+    },
+    "detail": "Experiment 1a of Lee, Martin & Sui (2026, BritJPsy, DOI 10.1111/bjop.70100), happy vs neutral primes. Participants first associated three geometric shapes with three people (self, a named best friend, a stranger; assignment counterbalanced), then judged whether presented shape-label pairs matched. Response keys b/v with match-key mapping counterbalanced across participants (per-trial correct key stored). Authors excluded 7 of the 50 complete participants from analyses for chance-level performance (mean ACC <=55% and/or mean RT <200 ms; excluded IDs: 341596032, 410727822, 779744600, 824333539, 620667597, 686063772, 455480753) -> analysed N=43. Three further logged sessions (test subject '1' and two who quit partway, 727358861, 498626665) were incomplete and are not part of this dataset. Timeout trials (no response in 1500 ms, recorded response='0') were counted as incorrect by the authors; in this database ACC codes no-response as NA per database convention (users should recode as incorrect to match the paper). RT_ms is Inquisit latency from pair onset. Emotion prime files: h.tif (happy), n.tif (neutral). extraIV1 = emotion prime (happy/neutral). Data source: OSF enfma archive Data_files/E1a_HN_P_data (merged from all *_SAT rows; 50 participants x 360 trials = 18000 rows; matched author OSF_analysis.Rmd cleaning exactly)."
+  }
+}

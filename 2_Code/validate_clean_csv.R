@@ -12,6 +12,8 @@
 #   W2 Subject 数 vs Dataset_inf.csv Valid_Subj/Sample_Size（口径差异，已知）
 #   W3 ACC 值域异常（不在 {-1,0,1,2,3,4} 内）
 #   W4 非标准命名 *_Clean.csv（不匹配 <Study>_Exp<N>_Clean.csv）
+#   W5 Matching 值域异常（严格：仅允许 Matching/Nonmatching；空白/NA 亦报错；
+#      不列出错值；2026-09-04 全库统一规范，Zhang_2023_NeuroImage_Exp1 占位 NA 行 → WARN 待核查）
 # 排除：输入区目录（*_Raw/、*Raw/、Source/ 等，见 SKILL.md 输入区规范）。
 # 用法：Rscript 2_Code/validate_clean_csv.R
 # 退出码：存在 ERROR（非已知例外）→ 1，否则 0。
@@ -84,7 +86,7 @@ n_err <- n_warn <- n_info <- 0
 for (cf in clean_files) {
   base <- sub("_Clean[.]csv$", "", basename(cf))
   hdr  <- names(fread(cf, nrows = 0))
-  sel  <- intersect(c("Subject", "ACC"), hdr)
+  sel  <- intersect(c("Subject", "ACC", "Matching"), hdr)
   dt   <- if (length(sel)) fread(cf, select = sel) else fread(cf, select = 1L)
   n_rows <- nrow(dt)
   n_subj <- if ("Subject" %in% hdr) length(unique(dt[["Subject"]])) else NA_integer_
@@ -154,6 +156,16 @@ for (cf in clean_files) {
     odd <- vals[is.na(numv) | !numv %in% ACC_OK]
     if (length(odd))
       cat(sprintf("[WARN] %s: ACC 值域外值: %s\n", base, paste(head(as.character(odd), 8), collapse = ",")))
+  }
+  # ---- W5 Matching 值域（2026-09-04 严格规范：仅允许 Matching/Nonmatching；
+  #      空白/NA 亦视为非规范值 → 报错，不列出错值） ----
+  if ("Matching" %in% hdr) {
+    vals <- unique(dt[["Matching"]])
+    bad  <- vals[is.na(vals) | !vals %in% c("Matching", "Nonmatching")]
+    if (length(bad)) {
+      cat(sprintf("[WARN] %s: Matching 列含非规范取值（仅允许 Matching/Nonmatching）\n", base))
+      n_warn <- n_warn + 1
+    }
   }
   # ---- W4 非标准命名 ----
   if (!grepl("_Exp[0-9]+([A-Za-z]+(_[0-9]+)?|\\.[0-9]+)?$", base)) {

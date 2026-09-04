@@ -1,0 +1,51 @@
+Subject_ID,Exp_id,Date,Age,Gender,Handedness,Ethnicity,Platform
+18157,2,2020-10-23,20,Female,Right,Other,Other
+18487,2,2020-10-25,20,Female,Right,White,Other
+18345,2,2020-10-26,19,Female,Right,White,Other
+18255,2,2020-10-26,18,Female,Right,White,Other
+18095,2,2020-10-27,23,Female,Left,White,Other
+18081,2,2020-10-27,25,Female,Ambidextrous,White,Other
+18227,2,2020-10-28,18,Female,Right,White,Other
+18491,2,2020-10-28,30,Female,Right,White,Other
+18463,2,2020-10-31,22,Female,Right,White,Other
+18461,2,2020-11-03,22,Female,Right,White,Other
+18541,2,2020-11-04,25,Female,Right,White,Other
+18357,2,2020-11-05,20,Male,Right,White,Other
+18369,2,2020-11-05,19,Female,Right,Black or African American,Other
+18165,2,2020-11-14,21,Female,Right,White,Other
+18479,2,2020-11-20,22,Female,Right,White,Other
+18547,2,2020-11-26,20,Male,Right,White,Other
+18613,2,2020-11-30,21,Male,Left,White,Other
+18503,2,2020-12-03,19,Male,Right,White,Other
+18607,2,2020-12-04,20,Female,Right,Mixed race,Other
+18689,2,2020-12-05,21,Female,Right,White,Other
+18697,2,2020-12-07,18,Male,Right,White,Other
+18581,2,2020-12-07,20,Female,Right,Asian or Pacific Islander,Other
+18695,2,2020-12-08,22,Female,Right,Other,Other
+18365,2,2020-12-09,19,Female,Right,White,Other
+18153,2,2021-01-04,20,Male,Right,White,Other
+18389,2,2021-01-08,21,Male,Right,White,Other
+18511,2,2020-11-21,19,Female,Right,White,Other
+18543,2,2021-01-05,19,Female,Right,White,Other
+635791725,2,2020-11-06,25,Male,Right,White,Other
+255960019,2,2020-11-08,27,Female,Right,White,Other
+713179473,2,2021-02-11,24,Do not want to answer,Right,White,Other
+631611863,2,2021-02-20,22,Do not want to answer,Right,White,Other
+117077739,2,2021-02-19,21,Male,Right,Asian or Pacific Islander,Other
+956227845,2,2021-02-19,18,Female,Right,White,Other
+49142931,2,2021-02-23,31,Female,Right,White,Other
+103072159,2,2021-02-25,22,Female,Right,Hispanic or Latino,Prolific
+55303198,2,2021-02-25,21,Male,Right,White,Prolific
+944598726,2,2021-02-25,24,Male,Right,White,Prolific
+868688001,2,2021-02-25,61,Male,Right,White,Prolific
+560455705,2,2021-02-25,57,Female,Right,White,Prolific
+930695304,2,2021-02-25,28,Male,Left,White,Prolific
+960474018,2,2021-02-25,19,Male,Right,White,Prolific
+926348212,2,2021-02-25,31,Female,Right,White,Prolific
+863833706,2,2021-02-25,25,Male,Right,White,Prolific
+281498604,2,2021-02-25,20,Male,Right,White,Prolific
+949712262,2,2021-02-25,65,Female,Right,White,Prolific
+875425861,2,2021-02-25,24,Male,Right,White,Prolific
+373575540,2,2021-02-25,45,Male,Right,Hispanic or Latino,Prolific
+227603765,2,2021-02-25,19,Male,Right,White,Prolific
+580214113,2,2021-02-25,32,Male,Right,Asian or Pacific Islander,Prolific

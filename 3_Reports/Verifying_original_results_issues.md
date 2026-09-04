@@ -404,3 +404,24 @@ SD 差异排查：无单个被试剔除可使 SD 变为 112（剔除最极端被
 - 库内数据以原始文件为准（附录其余全部单元格复现，证明文件即分析数据）；唯一 SD 差异不涉及任何结论（论文相关统计量方向全部验证通过：mixed > blocked、self 最快最准、SPE RT mixed 63/55 ms、blocked 26/11 ms 均复现）；
 - 差异已记录于 exp JSON detail（`Golubickis_2021_ActaPsych_Exp1.json`）；
 - **是否联系作者说明由项目负责人决定**（当前不主动联系）。
+
+---
+
+# Issue 8 — Lee_2026_BritJPsy Exp2：论文 Methods 将非自我 prime 描述为"best friend's first name"，但数据/脚本实为"stranger"（2026-09-04）
+
+> **一句话结论**：论文 Experiment 2（British Journal of Psychology, DOI 10.1111/bjop.70100）Methods 段称 personal primes 为「participant's first name 与 best friend's first name」，但 Inquisit 脚本 E3a.iqx（提示被试为想象中的陌生人取名，从姓名列表选）与 OSF 数据（Cue 取值 self/stranger）均为 **stranger**；论文 Abstract/Introduction/Figure 5 标题及 OSF 分析代码亦一致使用 "self vs stranger"。Methods 句应为笔误。库内按数据编码 self/stranger，不阻塞 Status=1。
+
+- 论文：Lee, N. A., Martin, D., & Sui, J. (2026). Happy me: Asymmetric bidirectional links between the self and positivity underpin biased processing. *British Journal of Psychology*. DOI: 10.1111/bjop.70100
+- 数据仓库：OSF https://osf.io/enfma/（Data_files/E2_SSt_E_data；项目未设置数据许可）
+- 核对时间：2026-09-04（阶段 5 入库核对）
+- 证据：
+  - `Inquisit_expt_scripts/E3a.iqx`：prime 文本元素 `text.YourCue`（本人名）与 `text.StrangerCue`；前置问卷让被试从名单中为「someone you don't know」选一个陌生人名（male/female/all 三选项下拉）；
+  - OSF 数据 Cue 水平 = {self, stranger}（无 friend 水平）；E2 表头亦无 FriendName/Friend* 列（E1a/E1b 才有）；
+  - 论文本身不一致：Abstract「self-primes facilitated positivity-bias」；Exp2 Introduction「personal-identity primes (self, stranger)」；Figure 5 标题却写 "Prime (Self vs Friend)"；Results 用 "stranger prime"；
+  - OSF_analysis.Rmd：`mutate(Cue = fct_relevel(Cue, "self", "stranger"))`。
+
+## 处置
+
+- 库内数据以原始文件与脚本为准：Exp2 extraIV1 prime 编码 self/stranger；该差异不影响任何统计结论（论文 Exp2 全部方向性结果（self prime 缩小 happy-sad bias、facilitate happy targets）均以 self/stranger 编码复现）；
+- 差异已记录于 exp JSON detail（`Lee_2026_BritJPsy_Exp2.json`）与 Dataset_inf.csv Note；
+- **是否联系作者说明由项目负责人决定**（当前不主动联系）。
