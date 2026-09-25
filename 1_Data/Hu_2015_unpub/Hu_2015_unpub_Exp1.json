@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "2015-10-21 to 2015-12-02 ",
+    "Physical_Environment": {
+      "Location": "Tsinghua University, Department of Psychology, Beijing, China (laboratory rooms; participants tested individually in dimly lit room)",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "1024 × 768, 100 Hz",
+        "Software": "E-Prime 2.0"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (matching: matching, nonmatching) × 3 (association type: self-other, high reward-low reward, happy-sad) × 6 (block) × 2 (group: control, subclinical depression), mixed design; group between-subjects, matching/association/block within-subjects"
+    },
+    "Block_Structure": {
+      "Block_number": "6 formal blocks (BlockList.Sample 1-2 per session, 7 sessions total per codebook); practice trials present (SubTrial=1)",
+      "Trial_number": "/",
+      "Practice_trials": "Present"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "SOA": "/",
+      "Stimulus_order": "simultaneous (shape and label displayed together)",
+      "Response_deadline": "/",
+      "ITI": "1000 ms",
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (geometric shapes + Chinese labels)",
+      "Fixation": "/",
+      "Shape": "Circle (C.bmp), Diamond (D.bmp), Trapezoid (Tra.bmp), Pentagon (P.bmp), Square (S.bmp), Triangle (T.bmp)",
+      "Label": "你 (you/self), 生人 (stranger/other), 高兴 (happy), 中性 (neutral), ￥1 (low reward), ￥16 (high reward)",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Experiment 1 (Task1) of Hu et al. (2015). 36 Tsinghua University students (right-handed, normal/corrected vision); 30 low BDI (<10, control group), 6 high BDI (>20, subclinical depression group). 3 control participants excluded (6008, 6015, 6031) for invalid trials/technical issues. Final: 27 control, 6 depression. IRB approved by Tsinghua University Psychology Department. E-Prime 2.0, 1024×768, 100 Hz, dimly lit room. Mixed design: 2 (matching/nonmatching) × 3 (association: self-other, high-low reward, happy-sad) × 6 (blocks) × 2 (group: control/depression). Three association types learned: self-other (self/other shapes), reward (high/low reward shapes), emotion (happy/sad shapes). 7 sessions (Session 1-7 per codebook), each with practice (SubTrial=1) and formal blocks (SubTrial=2-3). BlockList.Sample 1-2 merged across tasks. ITI 1000 ms. Stimuli: 6 geometric shapes (Circle, Diamond, Trapezoid, Pentagon, Square, Triangle) paired with Chinese labels. Shape identities: self, other, happy, neutral, low reward (1), high reward (16). Label identities: 你(self), 生人(other), 高兴(happy), 中性(neutral), ￥1(low reward), ￥16(high reward). Standardized identities: Self, Stranger, Happy, Neutral, Low_reward, High_reward. Response keys: 1, 2 (YesNoResp: Yes/No). Data collected Oct-Dec 2015."
+  }
+}
