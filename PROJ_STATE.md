@@ -6,7 +6,7 @@
 
 SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的文件夹名（<Author>_<Year>_<期刊缩写>）作为全项目论文/预印本的关键 ID，以 `1_Data/Dataset_inf.csv` 为主索引，使各研究的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 生成可靠数据源。
 
-当前规模：**50 unique 研究 / 104 行**（48 已入库 + 2 暂缓：Hu_YQ_2026_ChinaSciData + Scheller_2026_elife；2026-09-04 新增 Lee_2026_BritJPsy 三实验入库）。全部数据入库或豁免后即达成阶段性成果。
+当前规模：**50 unique 研究 / 109 行**（49 已入库 + 1 暂缓：Scheller_2026_elife；2026-09-25 新增 Hu_YQ_2026_ChinaSciData 三实验入库）。全部数据入库或豁免后即达成阶段性成果。
 
 ## 2. 核心文件
 
@@ -61,7 +61,6 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 | 论文 | 状态 | 原因 / 前置条件 | 下一步动作 |
 |---|---|---|---|
-| Hu_YQ_2026_ChinaSciData | deferred（原 Hu_2023_SDB） | 无输入区数据 | 输入区数据就位后入库（CSV 行保留，空白随行填齐） |
 | Scheller_2026_elife | deferred（CSV 行已移除） | OSF 仅 TOJ trial 数据、匹配任务数据从未上传；用户指示不下载 OSF | 作者提供匹配数据后重入（known_unlisted 豁免保留） |
 
 入库流程：用户将原始数据放入输入区后，加载 `spe-database-curation` 技能走 10 步流程；**入库后必做四方核对**（论文-代码-数据-原始数据 + 描述性统计核对）；验收：五件套齐全、命名合规、CSV 行更新、两级校验 EXIT=0、Generate_Table1.qmd 重渲染 RENDER_EXIT=0。
@@ -70,7 +69,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 - **License 空 41 行 / 18 研究**（无数据许可声明留空；2026-09-04 实测：含 Lee_2026_BritJPsy×3 新入库行）：Amodeo×2、Atzeni×1、Bukowski×7、Golubickis×2、Kolvoort×1、Lee_2026×3、Liu×1、Orellana-2020×3、Orellana-2023_QJEP×2、Pan×1、Sui_2014_APP×4、Sui_2014_unpub×1、Sui_2015×1、Svensson×3、Vicovaro×2、Wozniak_2020×3、Zhang_2024×2、Zhang_2026×2
 - **City 空 2 行**：Sui_2014_unpub×1、Sui_2015×1；**City `NA`（Online 研究不适用）6 行**：Kirk×2、Perrykkad×1、Lee_2026×3
-- Stim_language 空 1 行（Hu_YQ_2026_ChinaSciData，deferred 入库时填齐）；Country 空 0；Journal 空 0（Journal `NA` 10 行 = preprint/unpublished 无期刊，not applicable）
+- Stim_language 空 0；Country 空 0；Journal 空 0（Journal `NA` 10 行 = preprint/unpublished 无期刊，not applicable）
 
 ### 其他冻结项
 
@@ -115,19 +114,19 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 5. 当前库内现状快照（2026-09-04 实测）
 
-- **主索引**：Dataset_inf.csv **104 行 / 49 unique Folder_Name**；磁盘 **49 个研究文件夹**（48 curated + Scheller_2026_elife 输入区保留）；合计 50 研究 = 48 curated + 2 deferred
-- **Status**：`1` 101 行；空白 **3 行**（Hu_YQ_2026_ChinaSciData=deferred；Pan_2025_unpub 与 Sun_2026_DataExp=类别二数据缺口，收口前有意留空，见 §3）
-- **Codebook**：86 个（全库统一 canonical `Codebook_*_Clean.xlsx` 命名；2026-09-04 +3 = Lee_2026 三实验）
-- **JSON**：**134 个**（48 paper 级〔47 平铺 Paper_name + 1 Kirk_2025_BritJPsy 嵌套 Paper_ID〕+ 86 实验级；2026-09-04 +4 = Lee paper + Exp1a/1b/2 三实验；此前记「131」含 1 个历史计数差，按磁盘实测校正）
+- **主索引**：Dataset_inf.csv **109 行 / 49 unique Folder_Name**；磁盘 **49 个研究文件夹**（49 curated + Scheller_2026_elife 输入区保留）；合计 50 研究 = 49 curated + 1 deferred
+- **Status**：`1` 107 行；空白 **2 行**（Pan_2025_unpub 与 Sun_2026_DataExp=类别二数据缺口，收口前有意留空，见 §3）
+- **Codebook**：89 个（全库统一 canonical `Codebook_*_Clean.xlsx` 命名；2026-09-25 +3 = Hu_YQ 三实验）
+- **JSON**：**138 个**（49 paper 级〔48 平铺 Paper_name + 1 Kirk_2025_BritJPsy 嵌套 Paper_ID〕+ 89 实验级；2026-09-25 +4 = Hu_YQ paper + Exp1/2/3 三实验）
 - **校验基线**：
-  - 结构级：`validate_json_metadata.R` EXIT=0（134 JSON / 49 文件夹 ↔ CSV 交叉一致；known_pending 1 个 = Hu_YQ_2026_ChinaSciData；known_unlisted 1 个 = Scheller_2026_elife）
-  - 内容级：`validate_clean_csv.R` **86 文件 0 ERROR / 28 WARN**（2026-09-04 实测；Lee_2026 三新文件各含 1 条 W2 nSubj vs Valid_Subj 口径差异 WARN——Clean 含作者剔除被试、Valid 为分析样本，属预期；新增 W5 Matching 二值严格检查后，Zhang_2023_NeuroImage_Exp1 占位 NA 行报 1 条 W5 WARN，待合作者核查数据——见 SKILL.md Matching 规范条目）
+  - 结构级：`validate_json_metadata.R` EXIT=0（138 JSON / 49 文件夹 ↔ CSV 交叉一致；known_pending 0 个；known_unlisted 1 个 = Scheller_2026_elife）
+  - 内容级：`validate_clean_csv.R` **89 文件 0 ERROR / 29 WARN**（2026-09-25 实测；Lee_2026 三新文件各含 1 条 W2 nSubj vs Valid_Subj 口径差异 WARN——Clean 含作者剔除被试、Valid 为分析样本，属预期；新增 W5 Matching 二值严格检查后，Zhang_2023_NeuroImage_Exp1 占位 NA 行报 1 条 W5 WARN，待合作者核查数据——见 SKILL.md Matching 规范条目）
   - Table 1 渲染：未重渲染（qmd 动态 keep-by-folder，新研究自动入表；仅稿件版本更新时触发）
   - git：分支 `main`（工作区状态以 git status 为准）
 
 ## 6. 散落未解决问题（自历史记录提取，不属于上述四类表）
 - **Dalmaso E2 Label 列 = missing**（2026-09-01 记录）：意大利语原文无一手资料，待 OSF 原始数据补充后填实。
-- **白名单豁免**：known_pending 1（Hu_YQ_2026_ChinaSciData）+ known_unlisted 1（Scheller_2026_elife）——入库时移除。
+- **白名单豁免**：known_pending 0 + known_unlisted 1（Scheller_2026_elife）。
 
 ## 7. 历史归档说明
 

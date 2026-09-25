@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "schema_version": "2",
+    "Collected_date": "2015-10-21 to 2015-12-02",
+    "Physical_Environment": {
+      "Location": "Tsinghua University, Department of Psychology, Beijing, China (laboratory rooms; participants tested individually in dimly lit room)",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "1024 × 768, 100 Hz",
+        "Software": "E-Prime 2.0"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "2 (matching: matching, nonmatching) × 3 (identity: self, friend, stranger) × 4 (emotion: control, neutral, happy, sad) × 6 (block) × 2 (group: control, subclinical depression), mixed design; group between-subjects, matching/identity/emotion/block within-subjects"
+    },
+    "Block_Structure": {
+      "Block_number": "6 formal blocks; practice trials present",
+      "Trial_number": "36 trials per TrialList cycle ; multiple cycles per block",
+      "Practice_trials": "Present"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "/",
+      "Stimulus_duration": "/",
+      "SOA": "/",
+      "Stimulus_order": "simultaneous (shape with emotion expression and label displayed together)",
+      "Response_deadline": "/",
+      "ITI": "1000 ms",
+      "Feedback_duration": "/"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual (circular shapes with emotional expressions + Chinese labels)",
+      "Fixation": "/",
+      "Shape": "Three base circle types (c, hc, vc) × 4 emotions (control, happy, neutral, sad) = 12 shape-emotion combinations: c.bmp, c_eh.bmp, c_en.bmp, c_es.bmp, hc.bmp, hc_eh.bmp, hc_en.bmp, hc_es.bmp, vc.bmp, vc_eh.bmp, vc_en.bmp, vc_es.bmp",
+      "Label": "自己 (self), 朋友 (friend), 生人 (stranger)",
+      "Colors": {
+        "Stimulus": "/",
+        "Background": "/"
+      }
+    },
+    "detail": "Experiment 2 (Task2) of Hu et al. (2015). Same 36 participants as Exp1 (30 control low BDI, 6 subclinical depression high BDI; 3 excluded: 6008, 6015, 6031). IRB approved by Tsinghua University Psychology Department. E-Prime 2.0, 1024×768, 100 Hz, dimly lit room. Mixed design: 2 (matching/nonmatching) × 3 (identity: self, friend, stranger) × 4 (emotion: control, neutral, happy, sad) × 6 (blocks) × 2 (group: control/depression). Participants learn to associate three distinct circle types (c, hc, vc) with self, friend, stranger; each circle type appears with 4 emotional expressions. 6 sessions (Session 1-6 per codebook), 6 formal blocks (BlockList.Sample 1-6). Each block contains multiple TrialList cycles of 36 trials (TrialList.Cycle sequences: 2-6, 8-12, 14-18, 20-24, 26-30, 32-36). Practice trials have BlockList.Sample=NA. ITI 1000 ms, Target.OnsetDelay 10 ms. Stimuli: 12 circle-emotion images (3 identities × 4 emotions). Labels: 自己(self), 朋友(friend), 生人(stranger) with English translations self, friend, stranger. Selfpic and Stranger picture assignments (c, hc, vc) counterbalanced per participant. Response keys: m, n (Target.CRESP, Target.RESP). Data collected Oct-Dec 2015. Standardized to SPE Database schema v2 on 2026-09-25: per-participant files merged into a single trial-level CSV; column order aligned to the v2 template; Matching canonicalized to Matching/Nonmatching; identity columns canonicalized (Self/Close/Stranger); a between-subjects Group column added; study-specific columns moved to the tail. Source: clean/ (read-only)."
+  }
+}
