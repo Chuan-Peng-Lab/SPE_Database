@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": "Data Express; methodology details not documented; derived from Clean.csv structure extraIV1 = stimulus domain (ability/moral), extraIV2 = stimulus valence (negative/positive). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
+    "detail": "Data Express; methodology details not documented; derived from Clean.csv structure extraIV1 = stimulus domain (ability/moral), extraIV2 = stimulus valence (negative/positive). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals). 2026-09-25: the Clean CSV exceeded 50 MB and was split at whole-subject boundaries (SKILL.md 'large-file split' rule) into Sun_2026_DataExp_Exp1_Clean_part1.csv (255 subjects, 225,120 rows, 37.6 MB, subjects phase_003_subj_10..phase_016_subj_20) and Sun_2026_DataExp_Exp1_Clean_part2.csv (251 subjects, 223,680 rows, 37.5 MB, subjects phase_016_subj_24..phase_020_subj_6); both parts share this JSON, the single subj_info and the single codebook, and rbind(part1, part2) restores the original file byte-for-byte."
   }
 }

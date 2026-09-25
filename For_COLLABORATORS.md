@@ -5,7 +5,7 @@
 
 ## 0. 背景与分工
 
-- **现状**：主索引 `1_Data/Dataset_inf.csv` 现有 **108 行 / 50 unique Folder_Name**（49 个研究已入库 + 1 个 deferred 仅有 CSV 行〔Hu_YQ_2026_ChinaSciData〕；另有 1 个 deferred 仅保留输入区〔Scheller_2026_elife〕）。仍待处理 **4 项**：Sun_2026_DataExp（已入库但有缺口）；Hu_YQ_2026_ChinaSciData、Scheller_2026_elife（deferred 未入库）；Zhao_2026_PsychonBullRev（已入库，Status 待论文作者确认后收口）。前 3 项见 §2（可由合作者放数据推进）；Zhao 由论文作者回复驱动，**无需合作者提供材料**。（`Pan_2025_unpub` 已于 2026-09-25 靠合作者补的逐被试人口学表 + 实验程序 `exp1.js` 补齐并收口，Status=1，不再是待办。）
+- **现状**：主索引 `1_Data/Dataset_inf.csv` 现有 **113 行 / 50 unique Folder_Name**（50 个研究已入库；`Scheller_2026_elife` 为唯一 deferred，仅保留输入区）。仍待处理 **4 项**：Sun_2026_DataExp（已入库但缺原始导出）；**Hu_YQ_2026_ChinaSciData（已入库，但实验层级/来源待修——见 `3_Reports/Hu_YQ_2026_Issues.md`）**；Scheller_2026_elife（deferred 未入库，匹配任务数据从未上传）；Zhao_2026_PsychonBullRev（已入库，Status 待论文作者确认后收口）。前 3 项见 §2（可由合作者放数据推进）；Zhao 由论文作者回复驱动，**无需合作者提供材料**。（`Pan_2025_unpub` 已于 2026-09-25 靠合作者补的逐被试人口学表 + 实验程序 `exp1.js` 补齐并收口，Status=1，不再是待办。）
 - **分工**：合作者**只负责提供原始材料**（原始数据导出 + 论文全文 + 人口学/说明文件）；识别实验/被试结构、写清洗脚本、生成五件套、登记 CSV、两级校验、四方核对等全部由 **agent** 完成。
 - **如何调用 agent**：在仓库根目录启动 AI 编程 agent，把 §2 / §3 的指令模板发给它即可。技能放在跨工具约定的 `.agents/skills/spe-database-curation/`，**opencode 与 DSH 会自动加载** `spe-database-curation` 技能；**若使用其他 agent（Claude Code / Cursor / Copilot / ChatGPT 等），或它没有自动加载技能，请先让它完整阅读 `.agents/skills/spe-database-curation/SKILL.md` 再动手**——该技能是入库规范的唯一正文来源，不读它 agent 无法按本库规范工作。
 - **没有本地仓库 / 不使用 agent？** 本指南的「放哪里」是**本地路径**（输入区被 git 忽略、无法 push）。若你没有仓库检出、或不使用 AI agent：请把原始数据 + 论文全文 + 说明文件经共享渠道（OSF / 邮件 / 网盘）发给维护者 **hcp4715**，由他放入仓库并驱动 agent 完成入库。
@@ -24,12 +24,12 @@
 | **只有聚合数据？** | 若只有汇总表（如 xlsx），也放进去并在给 agent 的指令中注明来源；agent 会判断能否使用 |
 | **放好之后** | 不需要做任何清洗，把 §2 的指令模板发给 agent 即可 |
 
-## 2. 待数据研究：补齐入库（3 个）
+## 2. 待合作者推进的研究（3 个：补原始数据 / 修复结构 / 重入）
 
 | 研究 | 现状缺口 | 数据放到哪里 | 放好后发给 agent 的指令（可复制） |
 |---|---|---|---|
-| **Sun_2026_DataExp**（数据论文） | 无原始 trial 导出：库内只有 62 MB Clean + subj_info，无 `*_raw.csv` | 新建 `1_Data/Sun_2026_DataExp/Sun_2026_DataExp_Raw/` 放入原始导出 | 「Sun_2026_DataExp 原始数据已放入 `1_Data/Sun_2026_DataExp/Sun_2026_DataExp_Raw/`，请生成 `*_raw.csv`，与 Clean 做逐值核对，并跑两级校验后汇报。」 |
-| **Hu_YQ_2026_ChinaSciData**（中国科学数据 数据论文；原 Hu_2023_SDB；整研究未入库，CSV 行已预留） | 无任何数据/文件夹 | 新建 `1_Data/Hu_YQ_2026_ChinaSciData/Hu_YQ_2026_ChinaSciData_Raw/` 放入从数据论文仓库下载的原始数据；数据论文全文放 `REF/`（第 3 步；版本同步找 hcp4715） | 「请将 Hu_YQ_2026_ChinaSciData 入库：原始数据已放入 `1_Data/Hu_YQ_2026_ChinaSciData/Hu_YQ_2026_ChinaSciData_Raw/`，全文在 `REF/`。CSV 行已预留，请走完整入库流程（五件套 → CSV 收口 → 两级校验）并做四方核对。」 |
+| **Sun_2026_DataExp**（数据论文） | 无原始 trial 导出：库内只有 Clean（75 MB，2026-09-25 已按被试边界分片为 `..._Clean_part1/2.csv`，各 ~37.5 MB）+ subj_info，无 `*_raw.csv` | 新建 `1_Data/Sun_2026_DataExp/Sun_2026_DataExp_Raw/` 放入原始导出 | 「Sun_2026_DataExp 原始数据已放入 `1_Data/Sun_2026_DataExp/Sun_2026_DataExp_Raw/`，请生成 `*_raw.csv`，与 Clean 做逐值核对，并跑两级校验后汇报。」 |
+| **Hu_YQ_2026_ChinaSciData**（中国科学数据 数据论文；原 Hu_2023_SDB） | 已入库（3 个 Exp 文件夹 / 6 行），但**实验层级与事实不符**：北京 2015 的一个实验（含两个任务）被拆成 Exp1+Exp2、开封数据编为 Exp3，导致 36 名北京被试被计数两次（应为 2 实验 / 4 行）；且**无输入区原始数据**、清洗脚本数据源 `clean/` 已不存在 → 不可重跑 | ① 原始导出放入 `1_Data/Hu_YQ_2026_ChinaSciData/Hu_YQ_2026_ChinaSciData_Raw/`（北京 2015 每被试导出或 `Data_for_Exp1/2.csv`、开封 2023 导出、实验程序、Codebook）；② 按 `3_Reports/Hu_YQ_2026_Issues.md`（H1–H14）回复事实与口径 | 「Hu_YQ_2026_ChinaSciData 原始数据已放入 `..._Raw/`，并已按 `3_Reports/Hu_YQ_2026_Issues.md` 回复 H1–H14；请据此重构（北京两任务合并为 Exp1、开封改编号为 Exp2、主索引 6→4 行）、重建 Codebook/JSON、跑两级校验并做四方核对。」 |
 | **Scheller_2026_elife**（eLife；DOI 10.7554/eLife.100932） | OSF 只有 TOJ 任务 trial 数据；**shape-label 匹配任务**的逐被试 trial 数据从未上传（论文分析所用 Raw Data/*.csv）。CSV 行已移除、输入区保留 | `1_Data/Scheller_2026_elife/Scheller_2026_elife_raw/`（已存在，内含 OSF 的 "Data and Analysis Scripts"；匹配数据建议放单独子文件夹如 `Matching_task_data/`，勿动已有 TOJ 内容） | 「Scheller_2026_elife 匹配任务数据已放入 `1_Data/Scheller_2026_elife/Scheller_2026_elife_raw/`，请重入本条目：先在 Dataset_inf.csv 登记两行（移除 known_unlisted 豁免），再走入库流程 + 四方核对 + 两级校验。」 |
 
 ## 3. 未来新研究入库（4 步，其余交给 agent）

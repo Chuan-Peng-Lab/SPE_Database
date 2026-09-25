@@ -14,6 +14,9 @@
 #   W4 非标准命名 *_Clean.csv（不匹配 <Study>_Exp<N>_Clean.csv）
 #   W5 Matching 值域异常（严格：仅允许 Matching/Nonmatching；空白/NA 亦报错；
 #      不列出错值；2026-09-04 全库统一规范，Zhang_2023_NeuroImage_Exp1 占位 NA 行 → WARN 待核查）
+#   E4 分片表头不一致（*_Clean_part<N>.csv 之间列名/列序不同）
+# 分片：*_Clean_part<N>.csv 剥离 _part<N> 后按**同一逻辑数据集**处理（E3/W2 用各片合计被试数，
+#   各片表头必须逐列一致 → E4），见 SKILL.md §文件与文件夹规范「大文件拆分」。
 # 排除：输入区目录（*_Raw/、*Raw/、Source/ 等，见 SKILL.md 输入区规范）。
 # 用法：Rscript 2_Code/validate_clean_csv.R
 # 退出码：存在 ERROR（非已知例外）→ 1，否则 0。
@@ -28,11 +31,14 @@ data_dir <- if (length(args)) args[1] else "1_Data"
 if (!dir.exists(data_dir)) data_dir <- file.path("..", "1_Data")
 stopifnot(dir.exists(data_dir))
 
-# 产物区 Clean 文件（排除输入区 *_Raw/ 与 Source/ 等）
-clean_files <- sort(list.files(data_dir, pattern = "_Clean[.]csv$",
+# 产物区 Clean 文件（含大文件分片 *_Clean_part<N>.csv；排除输入区 *_Raw/ 与 Source/ 等）
+clean_files <- sort(list.files(data_dir, pattern = "_Clean([.]csv|_part[0-9]+[.]csv)$",
                                 recursive = TRUE, full.names = TRUE))
 clean_files <- clean_files[!grepl("/[.]_", clean_files)]
 clean_files <- clean_files[!grepl("(_Raw/|_raw/|/Raw/|/Source/)", clean_files)]
+# 逻辑数据集名 = 剥离 _part<N> 后的名字（分片合并为 1 个数据集）
+clean_base  <- sub("_Clean(_part[0-9]+)?[.]csv$", "", basename(clean_files))
+clean_bases <- unique(clean_base)
 
 # ---------- 已知例外（历史遗留，修复后移出） ----------
 known <- c(
@@ -83,11 +89,22 @@ find_subj_info <- function(cf, base) {
 }
 
 n_err <- n_warn <- n_info <- 0
-for (cf in clean_files) {
-  base <- sub("_Clean[.]csv$", "", basename(cf))
-  hdr  <- names(fread(cf, nrows = 0))
+for (base in clean_bases) {
+  parts <- clean_files[clean_base == base]
+  cf    <- parts[1]                       # 代表文件（用于定位同目录 subj_info）
+  hdr   <- names(fread(cf, nrows = 0))
+  # ---- E4 分片表头一致性 ----
+  if (length(parts) > 1) {
+    hdr_ok <- vapply(parts, function(p) identical(names(fread(p, nrows = 0)), hdr), logical(1))
+    if (!all(hdr_ok)) {
+      cat(sprintf("[ERROR] %s: E4 分片表头不一致（%d 片；不一致: %s）\n", base, length(parts),
+                  paste(basename(parts)[!hdr_ok], collapse = ",")))
+      n_err <- n_err + 1
+    }
+  }
   sel  <- intersect(c("Subject", "ACC", "Matching"), hdr)
-  dt   <- if (length(sel)) fread(cf, select = sel) else fread(cf, select = 1L)
+  dt   <- rbindlist(lapply(parts, function(p)
+    if (length(sel)) fread(p, select = sel) else fread(p, select = 1L)))
   n_rows <- nrow(dt)
   n_subj <- if ("Subject" %in% hdr) length(unique(dt[["Subject"]])) else NA_integer_
 
@@ -177,14 +194,15 @@ for (cf in clean_files) {
     }
   }
   # ---- INFO ----
-  cat(sprintf("[INFO] %s: rows=%d nSubj=%s subj_info=%s\n", base, n_rows,
+  cat(sprintf("[INFO] %s: rows=%d nSubj=%s subj_info=%s%s\n", base, n_rows,
               ifelse(is.na(n_subj), "-", n_subj),
-              ifelse(is.na(si_n), "-", si_n)))
+              ifelse(is.na(si_n), "-", si_n),
+              if (length(parts) > 1) sprintf(" parts=%d", length(parts)) else ""))
   n_info <- n_info + 1
 }
 
-cat(sprintf("\n==== SUMMARY: files=%d errors=%d warns=%d infos=%d ====\n",
-            length(clean_files), n_err, n_warn, n_info))
+cat(sprintf("\n==== SUMMARY: files=%d datasets=%d errors=%d warns=%d infos=%d ====\n",
+            length(clean_files), length(clean_bases), n_err, n_warn, n_info))
 if (n_err > 0) quit(status = 1)
 cat("All Clean.csv files conform to the content conventions.\n")
 

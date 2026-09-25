@@ -222,14 +222,20 @@ if (!file.exists(dataset_inf)) {
 # same folder or the study root. Missing files are reported as WARN (known gaps
 # are documented in PROJ_STATE.md; new studies must not add more). Non-standard
 # variants (e.g. _Exp1.1_ files) are excluded from the check.
+# 大文件分片 *_Clean_part<N>.csv 剥离 _part<N> 后与主文件同一逻辑数据集，只检查一次
+# （见 SKILL.md §文件与文件夹规范「大文件拆分」）。
 # ------------------------------------------------------------------------------
-clean_files <- list.files(data_dir, pattern = "_Exp[0-9]+([A-Za-z]+(_[0-9]+)?|\\.[0-9]+)?_Clean[.]csv$",
+clean_files <- list.files(data_dir, pattern = "_Exp[0-9]+([A-Za-z]+(_[0-9]+)?|\\.[0-9]+)?_Clean(_part[0-9]+)?[.]csv$",
                           recursive = TRUE, full.names = TRUE)
 clean_files <- clean_files[!grepl("/[.]_", clean_files)]
 clean_files <- clean_files[!grepl("(_Raw/|_raw/|/Raw/|/Source/)", clean_files)]
+clean_bases <- sub("_Clean(_part[0-9]+)?[.]csv$", "", basename(clean_files))   # <Study>_Exp<N>
+keep <- !duplicated(clean_bases)
+clean_files <- clean_files[keep]; clean_bases <- clean_bases[keep]
 missing_exp_json <- character(0)
-for (cf in clean_files) {
-  base <- sub("_Clean[.]csv$", "", basename(cf))   # <Study>_Exp<N>
+for (i in seq_along(clean_files)) {
+  cf   <- clean_files[i]
+  base <- clean_bases[i]                           # <Study>_Exp<N>
   if (!file.exists(file.path(dirname(cf), paste0(base, ".json"))) &&
       !file.exists(file.path(dirname(dirname(cf)), paste0(base, ".json")))) {
     missing_exp_json <- c(missing_exp_json, path_rel(cf))

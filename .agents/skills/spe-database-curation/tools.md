@@ -58,6 +58,7 @@
 - `2_Code/make_codebooks.R` — Codebook 模板生成（单 Sheet1 4 列、枚举值取数据 unique 含特殊码），改 `jobs` 列表复用。
 - `2_Code/analyze_csv_blanks.py` — 重扫 Dataset_inf.csv 空白基线。
 - `2_Code/validate_json_metadata.R` / `validate_clean_csv.R` — 两级校验器（规则见主文件「校验与卫生」）。
+- `2_Code/split_clean_csv.py` — 大文件分片：> 50 MB 的 `*_Clean.csv` 按被试边界拆为 `_Clean_part<N>.csv`（默认 dry-run 只报告方案；`--apply` 先备份原件再写盘，并逐字节校验「分片拼接 == 原件数据行」）。两个校验器已支持分片（各片合计被试数用于 E3/W2，新增 E4 分片表头一致性；规则见主文件 §文件与文件夹规范「大文件拆分」）。
 - `2_Code/migrate_exp_json_to_v2.py` — v1 flat `table` → v2 hierarchical 一次性迁移；仅当旧文件重现时重跑。
 - 各研究核对脚本目录（四方核对固化）：`2_Code/qjep_verify/`（Issue 1）、`2_Code/orellana2020_verify/`（Issue 2）、`2_Code/wozniak2020_verify/`（Issue 4）、`2_Code/hobbs_verify/`（Table 2 全量复现，最后一例）、`2_Code/mcivor_verify/`（d′ 描述性核对）。
 

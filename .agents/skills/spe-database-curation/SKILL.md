@@ -85,6 +85,8 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 ```
 **通用收尾（迁移他库保留）**
 □ 五件套齐全且命名合规（raw/Clean/subj_info/Codebook/paper+exp JSON）
+□ Clean 文件 ≤ 50 MB；超限按 §文件与文件夹规范「大文件拆分」按被试边界分片
+  （分片共用 1 份 Codebook/1 份 exp JSON、不新增 Dataset_inf 行、两级校验须覆盖分片）
 □ 两级校验：validate_json_metadata.R EXIT=0 + validate_clean_csv.R 0 ERROR
 □ Dataset_inf.csv 收口（字节保真：往返测试 → 写入 → diff 仅目标单元格 → ID 行序保持；
   纪律见 §主索引「写入纪律：CSV 字节保真编辑」）
@@ -150,13 +152,14 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
     `elife` (`Scheller_2026_elife`; deferred — 输入区保留、CSV 行已移除).
   - Database abbreviations: when the source is a data repository rather than a
     journal, use the repository's abbreviation, e.g. `ChinaSciData`
-    (`Hu_YQ_2026_ChinaSciData`; deferred — 无文件夹；原 `Hu_2023_SDB`/`SDB` 旧名已废弃).
+    (`Hu_YQ_2026_ChinaSciData`; 原 `Hu_2023_SDB`/`SDB` 旧名已废弃).
   - Preprint/unpublished tags (lowercase): `psyarxiv` for PsyArXiv preprints
     (e.g., `Navon_2021_psyarxiv`, `Hu_2023_psyarxiv`); `unpub` for
     unpublished data without a preprint server (e.g., `Sui_2014_unpub`,
     `Sui_2015_unpub`, `Pan_2025_unpub`).
 - **Tags**: `_raw` (unprocessed), `_subj_info` (participant level), `_Clean`
-  (minimally preprocessed), `Codebook_*_Clean.xlsx` for codebooks.
+  (minimally preprocessed), `_Clean_part<N>`（大文件分片，见「大文件拆分（单一
+  `*_Clean.csv` > 50 MB）」）, `Codebook_*_Clean.xlsx` for codebooks.
 - **Canonical casing**: `Codebook_` (lowercase b), `_raw_` (lowercase);
   legacy `CodeBook_…`/`Raw/` 变体已统一/不再沿用 — do not propagate.
 - **Filenames must be pure ASCII** (no diacritics).
@@ -194,11 +197,34 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
   study root) — do not confuse the two: `*_Raw/` = downloaded originals (as-is),
   `*_raw.csv` = processed standard file.
 
+### 大文件拆分（单一 `*_Clean.csv` > 50 MB）
+
+`*_Clean.csv` 写盘后若 **> 50 MB（十进制 10^6 B）**，拆分为多个分片，命名为
+`<Folder_Name>_Exp<N>_Clean_part1.csv`、`<Folder_Name>_Exp<N>_Clean_part2.csv`…（canonical
+`_Clean`；`_part<N>` 紧接 `_Clean` 之后、序号从 1 起、升序；拆到**每片 ≤ 50 MB** 为止，
+必要时允许 3 片以上）。理由：GitHub 单文件硬上限 100 MB，50 MB 阈值留 2 倍余量；
+同时避免把一个大实验的 Clean 误当成两个数据集。
+
+- **拆分单元 = 被试**：同一 `Subject` 的全部行必须落在同一分片（边界取数据中 Subject 的
+  **连续整段**，保全全行序）；不重排、不过滤、不改任何单元格。
+- **各分片表头逐字节相同**（同一模板 v2 列序）；`rbind(part1, part2, …)` 必须还原原数据集
+  （除重复表头外零差异）；拆分后核对「各片行数之和 = 原行数」「各片被试数之和 = 原被试数」。
+- **仍视为 1 个数据集**：不新增 `Exp`、不新增 `Dataset_inf.csv` 行（`Sample_Size`/`Valid_Subj`
+  为各片合计）；`*_subj_info.csv` 1 份、exp JSON 1 份。
+- **Codebook 1 份**（`Codebook_<Folder_Name>_Exp<N>_Clean.xlsx`，不带 `_part` 后缀）——
+  本规则是 §Codebook「一 Clean 一 Codebook」的**唯一例外**：各片列完全相同，共用同一 Codebook。
+- exp JSON `detail` 注明拆分原因、片数、各片被试数与行数。
+- **校验**：两个校验器均把 `_Clean_part<N>.csv` 纳入扫描，剥离 `_part<N>` 后按**逻辑数据集**
+  处理（E3/W2 用各片合计被试数比对；新增「各片表头必须一致」检查，不一致 → ERROR）。
+- **适用范围**：仅产物区 `*_Clean.csv`；输入区 `*_Raw/`、`Source/` 内的原始导出保持原样不拆。
+- **工具**：`python3 2_Code/split_clean_csv.py <路径>/<Folder_Name>_Exp<N>_Clean.csv --apply`
+  （按被试边界切分、写前逐字节校验可还原、原文件先备份；`--dry-run` 只报告拆分点）。
+
 ## 主索引 Dataset_inf.csv
 
-### 列说明（40 列，按用途分组）
+### 列说明（37 列，按用途分组）
 
-- 键列：`ID`（**复合键**：格式 `<Folder_Name>_Exp<Exp>_<subj_Group>`，组名空格以下划线编码（如 `Constable_2021_CogEmo_Exp1_Happy_self`）；行唯一性即 `Folder_Name+Exp+subj_Group` 三元组唯一性；此前为数字行号，历史文档中的数字 ID 引用均为旧口径，不再使用）、`Folder_Name`（**关键 ID = 研究/study 文件夹名**）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
+- 键列：`ID`（**复合键**：格式 `<Folder_Name>_Exp<Exp>_<subj_Group>`，组名空格以下划线编码（如 `Constable_2021_CogEmo_Exp1_Happy_self`）；行唯一性即 `Folder_Name+Exp+subj_Group` 三元组唯一性；此前为数字行号，历史文档中的数字 ID 引用均为旧口径，不再使用）、`Folder_Name`（**关键 ID = 研究/study 文件夹名**）、`Exp`（实验号）〔历史列 `Study`（论文内序号）、`Paper_ID`/`Paper` 已废弃（**不再恢复**、勿新建值）〕
 - **行序约定**：数据行**始终按 ID 列字母序排列**（纯字典序，Python `sorted(key=ID)` 即同款）；新增研究入库时**追加后立即重排**（或直接插入排序位置），任何编辑后行序保持排序；校验手段：`python sorted` 检查或 `git diff` 只应显示内容/插入行而非整体乱序
 - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
 - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
@@ -470,6 +496,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 
 - One `Codebook_<Folder_Name>_Exp<N>_Clean.xlsx` per `*_Clean.csv`, in the same folder,
   canonical casing `Codebook_` (lowercase b — 全库唯一命名，legacy `CodeBook_` 已全部改名)。
+  分片文件（`_Clean_part<N>.csv`）**共用同一 Codebook**，见 §文件与文件夹规范「大文件拆分」。
 - **Structure**: a single worksheet `Sheet1` with exactly 4 columns and one row per variable of the Clean.csv:
 
   | Column | Content |
@@ -548,7 +575,9 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
    v2 component completeness; exits non-zero on violations).
 2. After any clean-data change run the **content-level checker**:
    `Rscript 2_Code/validate_clean_csv.R` — for every `*_Clean.csv` outside the raw
-   input zone: E1 missing `Subject` column; E2 incomplete Identity triple
+   input zone（`_Clean_part<N>.csv` 分片剥离 `_part<N>` 后按**同一逻辑数据集**校验：
+   各片合计被试数用于 E3/W2，各片表头必须一致，见 §文件与文件夹规范「大文件拆分」）:
+   E1 missing `Subject` column; E2 incomplete Identity triple
    (`X_Origin_Identity` without `X_English_Identity`/`X_Standardized_Identity`);
    E3 Subject count vs `*_subj_info.csv` rows; W1 missing standard columns (with
    alternative-column hints); W2 Subject count vs CSV `Valid_Subj`/`Sample_Size`

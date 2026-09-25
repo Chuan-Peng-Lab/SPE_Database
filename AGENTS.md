@@ -48,7 +48,7 @@ mode: primary
 - `PROJ_STATE.md` — 会话状态快照：新会话先读它再开工；每 session 收尾更新一次（见 §会话收尾）。
 - `.agents/skills/spe-database-curation/SKILL.md` — curation 规则正文归属（自足、可迁移他库）；任何数据整理/入库任务一律先加载 `skill(name="spe-database-curation")`（跨工具技能根 `.agents/skills`，DSH/opencode 均自动加载）。
 - 引用方向：README ↔ AGENTS ↔ PROJ_STATE 相互引用并**统一指向技能**；每条规则正文只写一个归属文件，其余文件只放一行指针（含目标节）。
-- 其他重要文档（正文均在各自文件，此处只放指针）：`3_Reports/Table1_Issues_Solvability.md`（稿件 Table 1 差异逐项可解性判定，与 PROJ_STATE §3 双向关联）；`3_Reports/Verifying_original_results_issues.md`（四方核对发现的问题统一记录处）；`REF/README_html2md.md`（REF 全文 html→json→md 管线用法）；`For_COLLABORATORS.md`（给合作者的推进指南：待数据补齐路径、新研究入库 4 步、REF 不上 GitHub 需联系 hcp4715）。
+- 其他重要文档（正文均在各自文件，此处只放指针）：`3_Reports/Table1_Issues_Solvability.md`（稿件 Table 1 差异逐项可解性判定，与 PROJ_STATE §3 双向关联）；`3_Reports/Verifying_original_results_issues.md`（四方核对发现的问题统一记录处）；`3_Reports/Hu_YQ_2026_Issues.md`（`Hu_YQ_2026_ChinaSciData` 条目待合作者处理的问题清单 H1–H14：实验层级/任务命名、来源缺口、Year/License 等）；`REF/README_html2md.md`（REF 全文 html→json→md 管线用法）；`For_COLLABORATORS.md`（给合作者的推进指南：待数据补齐路径、新研究入库 4 步、REF 不上 GitHub 需联系 hcp4715）。
 
 ## 项目逻辑与任务判别（单向数据管道）
 
@@ -108,7 +108,7 @@ mode: primary
 1. **稿件 Table 1 与数据存在已知出入**（Exp 编号错抄如 P5E1–P5E3 全标 Exp4、N 口径差异、Trials 措辞、Study 归属等）——冻结于 `3_Reports/Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md`，逐项可解性见 `Table1_Issues_Solvability.md`，`Generate_Table1.qmd` 输出 `table1_problems.txt`；勿再当新发现报告。
 2. **清洗 = 最小预处理，不过滤**：ACC 等可能含无效值（-1 无反应、2 错键），有意保留并记录于 Codebook；使用者须按自己分析目标预处理。
 3. **缺失代码引用**：`2_Code/README_Auto_Clean.md` 引用的 `SPE_Auto_Clean.R`/`Test_Auto_Clean.R` 不存在，勿寻找。
-4. **大文件（>10 MB）勿整读**：`Sun_2026_DataExp_Exp1_Clean.csv` 62 MB、`Processed_Data_Filtered.csv` 60 MB、`Haciahmet_2023_Psychophysiol_Exp1_raw.csv` 42 MB、`Share_Data.RData` 31 MB。
+4. **大文件（>10 MB）勿整读**：`Sun_2026_DataExp_Exp1_Clean_part1/2.csv`（各 ~37.5 MB；原 75 MB 单文件于 2026-09-25 按被试边界分片）、`Hu_YQ_2026_ChinaSciData_Exp2_Clean_part1/2.csv`（31.4 / 28.5 MB，同上）、`Processed_Data_Filtered.csv` 60 MB、`Haciahmet_2023_Psychophysiol_Exp1_raw.csv` 42 MB、`Share_Data.RData` 31 MB。分片规则与读写口径见 SKILL.md §文件与文件夹规范「大文件拆分」（分片共用 1 份 Codebook/JSON、不新增主索引行）。
 5. **Table 1 渲染命令（RStudio 自带 quarto）**：`/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render Generate_Table1.qmd`——注意是 `app/quarto/bin/`，不是 `app/bin/quarto/`（流程 `1_Data → Dataset_inf.csv → Table 1`，ID 列 = Folder_Name，比对口径"Not specified"=missing、CC0=CC0 1.0 Universal；操作细节 PROJ_STATE §5）。
 
 ## Repo layout（git 卫生，防误判）
