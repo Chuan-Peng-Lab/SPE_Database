@@ -1,44 +1,44 @@
 {
   "exp1": {
     "schema_version": "2",
-    "Collected_date": "/",
+    "Collected_date": "2023-12",
     "Physical_Environment": {
       "Location": "/",
-      "Setting": "/",
+      "Setting": "Online",
       "Equipment": {
         "Presenting": "/",
         "Monitor": "/",
-        "Software": "/"
+        "Software": "jsPsych 7.3.1 (jspsych-psychophysics 3.4.0 plugin; naodao.com)"
       },
-      "Viewing_distance": "/"
+      "Viewing_distance": "~30-80 cm (per-subject, measured via virtual chinrest)"
     },
     "Experimental_Design": {
-      "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching"
+      "Conditions": "self-matching, self-mismatching, friend-matching, friend-mismatching, stranger-matching, stranger-mismatching; presentation order (shape-first vs word-first) = extraIV1"
     },
     "Block_Structure": {
-      "Block_number": "/",
-      "Trial_number": "28037 rows total (40 subjects; practice + test phases, Phase column)",
-      "Practice_trials": "/"
+      "Block_number": "6",
+      "Trial_number": "720 per subject (6 blocks x 120 trials)",
+      "Practice_trials": "24 per round, loop until accuracy >= 85% (variable rounds)"
     },
     "Trial_Structure": {
-      "Fixation_duration": "/",
-      "Stimulus_duration": "/",
-      "SOA": "/",
-      "Stimulus_order": "/",
-      "Response_deadline": "/",
-      "ITI": "/",
-      "Feedback_duration": "/"
+      "Fixation_duration": "500-1000 ms",
+      "Stimulus_duration": "50 ms",
+      "SOA": "150 ms",
+      "Stimulus_order": "sequential (shape-first or word-first)",
+      "Response_deadline": "1550 ms",
+      "ITI": "~100 ms blank",
+      "Feedback_duration": "300 ms (practice only)"
     },
     "Stimulus_Properties": {
       "Modality": "Visual",
-      "Fixation": "/",
-      "Shape": "geometric shape",
-      "Label": "/",
+      "Fixation": "white cross",
+      "Shape": "3 geometric shapes (Circle/Square/Triangle), ambiguous (noise-masked) versions presented against a noise background (files C/S/T_ambi40.png)",
+      "Label": "自我/朋友/他人 (Self/Friend/Stranger)",
       "Colors": {
-        "Stimulus": "/",
-        "Background": "/"
+        "Stimulus": "white",
+        "Background": "black"
       }
     },
-    "detail": "unpublished data; age derived from birth year (raw year column 2000-2005); timing/equipment not documented extraIV1 = probe stimulus form (Word vs Image). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
+    "detail": "unpublished data; method metadata inferred from experiment program exp1.js (jsPsych 7.3.1, naodao.com; data corresponds to version 1 of 3 program versions). extraIV1 = stim_order (word-first / shape-first); Task = self-matching (2026-09). Setting = Online (naodao.com; City not applicable). 2026-09-25 re-clean: 763 no-response trials restored (ACC=NA; Clean 28037 -> 28800 rows), gender recovered from per-subject files (10 Male / 30 Female), column order aligned to v2 template. Shape files C/S/T_ambi40.png = ambiguous (noise-masked) Circle/Square/Triangle presented against a noise background."
   }
 }

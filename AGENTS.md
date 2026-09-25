@@ -46,7 +46,7 @@ mode: primary
 - `README.md` — 人类读者入口：项目介绍、数据使用指引、版本 changelog。
 - `AGENTS.md`（本文件）— agent 干活规则 + 避坑经验；**不写状态性文字**（规模计数/待办/逐研究状态一律归 PROJ_STATE.md）。
 - `PROJ_STATE.md` — 会话状态快照：新会话先读它再开工；每 session 收尾更新一次（见 §会话收尾）。
-- `.opencode/skills/spe-database-curation/SKILL.md` — curation 规则正文归属（自足、可迁移他库）；任何数据整理/入库任务一律先加载 `skill(name="spe-database-curation")`。
+- `.agents/skills/spe-database-curation/SKILL.md` — curation 规则正文归属（自足、可迁移他库）；任何数据整理/入库任务一律先加载 `skill(name="spe-database-curation")`（跨工具技能根 `.agents/skills`，DSH/opencode 均自动加载）。
 - 引用方向：README ↔ AGENTS ↔ PROJ_STATE 相互引用并**统一指向技能**；每条规则正文只写一个归属文件，其余文件只放一行指针（含目标节）。
 - 其他重要文档（正文均在各自文件，此处只放指针）：`3_Reports/Table1_Issues_Solvability.md`（稿件 Table 1 差异逐项可解性判定，与 PROJ_STATE §3 双向关联）；`3_Reports/Verifying_original_results_issues.md`（四方核对发现的问题统一记录处）；`REF/README_html2md.md`（REF 全文 html→json→md 管线用法）；`For_COLLABORATORS.md`（给合作者的推进指南：待数据补齐路径、新研究入库 4 步、REF 不上 GitHub 需联系 hcp4715）。
 

@@ -14,7 +14,7 @@ This project is in parallel with an on-going preregistered meta-analysis leading
 - **Data readability** (since 2026-08-30): `Shape`/`Label` columns hold actual stimulus values (shape names / label words); original numeric codes are kept in the raw `ShapeCode`/`LabelCode` columns and the Clean `*_Origin_Identity` columns.
 - **Cleaned data**: `*_ExpN_Clean.csv` uses standardized columns `Subject`, `Shape`, `Label`, `Matching`, `ACC`, `RT_ms`, plus 3-level Identity columns (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger). Cleaning is minimal preprocessing — invalid values (e.g., `ACC = -1`) are kept and documented in the codebook; users preprocess per their own analysis goals.
 - **Per-study metadata**: paper-level `<Folder_Name>.json` + experiment-level `<Folder_Name>_Exp<N>.json` (v2 schema) + `Codebook_<Folder_Name>_Exp<N>_Clean.xlsx`.
-- **Contributing / adding data**: follow the curation conventions in `.opencode/skills/spe-database-curation/SKILL.md` (folder naming, JSON schemas, codebook rules, DOI/year verification workflow) — load it via `skill(name="spe-database-curation")` for any data-curation task.
+- **Contributing / adding data**: follow the curation conventions in `.agents/skills/spe-database-curation/SKILL.md` (folder naming, JSON schemas, codebook rules, DOI/year verification workflow) — load it via `skill(name="spe-database-curation")` for any data-curation task.
 - **For agents**: repository conventions and efficiency rules live in `AGENTS.md`; project state lives in `PROJ_STATE.md` (see also the Document map in AGENTS.md).
 - **For collaborators (合作者)**: You only need to provide raw data and full texts, then let the AI agent finish the rest — see `For_COLLABORATORS.md` (中文).
 

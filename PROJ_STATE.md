@@ -13,7 +13,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - `1_Data/Dataset_inf.csv` — **主索引**（UTF-8 带 BOM，40 列；行唯一性 = `Folder_Name`+`Exp`+`subj_Group` 三元组；行序按 ID 列字母序）。`Dataset_inf.xlsx` 为旧版，待合作者确认 CSV 后删除。
 - `1_Data/<Folder_Name>/` ×49 — curated 研究五件套（raw / Clean / subj_info / Codebook / paper+exp JSON；磁盘另有 1 个 deferred 输入区文件夹 Scheller_2026_elife）
 - `AGENTS.md` — agent 约定与已知 caveats；`README.md` — 人类读者入口；三份相互引用，数据整理任务统一加载 `spe-database-curation` 技能
-- `.opencode/skills/spe-database-curation/SKILL.md` — 通用 curation 技能（自足独立；命名语法、JSON schema、Codebook 规范、DOI/年份核验）
+- `.agents/skills/spe-database-curation/SKILL.md` — 通用 curation 技能（自足独立；命名语法、JSON schema、Codebook 规范、DOI/年份核验）
 
 ### 2.1 其他重要文档
 - `For_COLLABORATORS.md` — **合作者推进指南**（正文归属本文件）：4 个待数据研究（Pan/Sun/Hu_YQ/Scheller）补齐路径 + 未来新研究入库 4 步 + REF/ 不上 GitHub 的版本同步提醒
@@ -28,16 +28,16 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 3. 当前论文状态分类
 
-### 类别一：已入库、无问题（37 篇）
+### 类别一：已入库、无问题（38 篇）
 
-全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库四方核对 + 描述性统计核对），无推进动作、无问题。（37 = 49 curated 减去类别二/三涉及的 12 篇去重研究。）
+全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库四方核对 + 描述性统计核对），无推进动作、无问题。（38 = 49 curated 减去类别二/三涉及的 11 篇去重研究。）
+2026-09-25 自类别二迁入：`Pan_2025_unpub`（用新补原始材料重清洗后收口，Status=1；未发表数据无全文核查/四方核对环节，数据许可由项目负责人确认为 `CC BY 4.0`）。
 
 ### 类别二：已入库、有数据缺口
 
 | 论文 | 缺口 | 处置状态 | 下一步动作 |
 |---|---|---|---|
 | Sun_2026_DataExp | 无 raw.csv ×1（62 MB Clean 在库，448,800 行/506 被试完整，两级校验 0 ERROR；subj_info 334 为历史遗留 KNOWN） | 已知问题，Clean 确认完整 | 用户后续再决定是否补 raw（不阻塞） |
-| Pan_2025_unpub | trial 数据齐全（40 被试 28,037 行 + 40 逐被试导出在库）但人口学与说明性元数据缺失：subj_info Gender/Handedness/Ethnicity/Employment_Status/Country/First_Language 全 `/`（Age 由 raw year 列 2000–2005 推导），paper JSON 仅 Unpublished 手稿占位、exp JSON 方法字段大部 `/`，License 未声明（2026-09-02 用户判定与 Sun 同类） | 已知问题，Clean 确认完整 | 等作者/用户提供原始数据与相关说明文件后补填（不阻塞） |
 | Orellana-2020 Study 2 | Subject 34 仅 edat2（无 txt）；Subject 1-28 人口学缺失 | 已记 CSV Note | 不主动追；等作者/用户提供原始导出 |
 | Zhang-2024 | exp1 数据 43 vs 论文 42 分析（差 1 原因未知）；人口学缺失 | 数据口径 43，论文口径记 Note | 不主动改 |
 | Zhao_2026_PsychonBullRev（Psychon Bull Rev，DOI 10.3758/s13423-026-03000-8；3 实验 ×4 行〔Exp3 按任务组拆两行〕，2026-09-09 录入） | OSF（osf.io/j2pxc）共享的是作者**筛选后的分析试次文件**：仅留有反应且 RT≥200 ms 的试次（缺无反应/过速试次约 2–5%）、无 block/trial 编号与逐试次形状几何/标签文字（身份绑定 counterbalanced 未记录）；屏幕标签语言/文字与呈现软件未确认；数据仓库未公开、License 未声明（已去信请求公开 + CC BY 4.0 与原始导出）；**输入区 `Zhao_2026_PsychonBullRev_Raw/` 当前不存在**（clean.R 头部称已归档、脚本 stopifnot 依赖该目录），原始 OSF 导出（hddm_trial_data / behavior_questionnaire xlsx）未在库内保留 → clean.R 无法重跑、缺 provenance（2026-09-25 发现） | Clean/subj_info/Codebook/JSON 已建，两级校验 0 ERROR（Exp3 两条 W2 为「Clean 两组 44 人 vs CSV 按组 22」口径，与 Constable_2021 等先例同类）；Status 留空 | 作者回复后：补原始导出（若可得）重跑 clean.R、确认语言/软件后更新 Origin/Environmental_Info/Stim_language、公开 OSF 后填 Repo_Link 公开态与 License，再置 Status=1；**回填/重新下载 OSF 原始 xlsx 至输入区，恢复 clean.R 可重跑性（2026-09-25 待办）** |
@@ -70,8 +70,9 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ### CSV 遗留空白
 
-- **License 空 45 行 / 19 研究**（无数据许可声明留空；2026-09-09 +4 = Zhao_2026_PsychonBullRev×4 待 OSF 公开后确认；含 Lee_2026_BritJPsy×3 新入库行）：Amodeo×2、Atzeni×1、Bukowski×7、Golubickis×2、Kolvoort×1、Lee_2026×3、Liu×1、Orellana-2020×3、Orellana-2023_QJEP×2、Pan×1、Sui_2014_APP×4、Sui_2014_unpub×1、Sui_2015×1、Svensson×3、Vicovaro×2、Wozniak_2020×3、Zhang_2024×2、Zhang_2026×2、Zhao_2026×4
-- **City 空 2 行**：Sui_2014_unpub×1、Sui_2015×1；**City `NA`（Online 研究不适用）6 行**：Kirk×2、Perrykkad×1、Lee_2026×3
+- **License 空 44 行 / 18 研究**（无数据许可声明留空；2026-09-09 +4 = Zhao_2026_PsychonBullRev×4 待 OSF 公开后确认；含 Lee_2026_BritJPsy×3 新入库行；2026-09-25 −1 = Pan_2025_unpub 确认为 CC BY 4.0）：Amodeo×2、Atzeni×1、Bukowski×7、Golubickis×2、Kolvoort×1、Lee_2026×3、Liu×1、Orellana-2020×3、Orellana-2023_QJEP×2、Sui_2014_APP×4、Sui_2014_unpub×1、Sui_2015×1、Svensson×3、Vicovaro×2、Wozniak_2020×3、Zhang_2024×2、Zhang_2026×2、Zhao_2026×4
+- **City 空白 4 行**：Sui_2014_unpub×1、Sui_2015×1、Dalmaso×2（跨日本/意大利两国、REF 全文未点名城市 → 三态「不确定」；2026-09-25 由 `NA` 改正）
+- **City `NA`（Online 研究不适用）13 行**：Kirk×2、Perrykkad×1、Lee_2026×3、Pan×1、Golubickis×2、Lee_2023×2、Liu_2023×1、Svensson_2023×1；其中 8 行为 2026-09-25 由非规范拼写 `N/A` 统一（线上依据 = 各 REF 全文明述 Prolific / SONA / Testable / Inquisit），同日 4 个 paper JSON 的 `City` 与 Golubickis 两个 exp JSON 的 `Location` 亦由 `N/A` 改为 SKILL 规定的 JSON 记号 `/`
 - Stim_language 空 5 行（Hu_YQ_2026_ChinaSciData 与 Zhao_2026×4，deferred/收口时填齐）；Country 空 0；Journal 空 0（Journal `NA` 10 行 = preprint/unpublished 无期刊，not applicable）
 
 ### 其他冻结项
@@ -118,12 +119,12 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 ## 5. 当前库内现状快照（2026-09-04 实测）
 
 - **主索引**：Dataset_inf.csv **108 行 / 50 unique Folder_Name**（2026-09-09 +4 = Zhao_2026_PsychonBullRev）；磁盘 **50 个研究文件夹**（49 curated 含 Zhao_2026_PsychonBullRev + Scheller_2026_elife 输入区保留；Hu_YQ_2026_ChinaSciData 无文件夹；Sui_2015 空壳已删）；合计 51 研究 = 49 curated（含 Zhao，Status 留空）+ 2 deferred
-- **Status**：`1` 101 行；空白 **7 行**（Hu_YQ_2026_ChinaSciData=deferred；Pan_2025_unpub 与 Sun_2026_DataExp=类别二数据缺口；Zhao_2026_PsychonBullRev×4=2026-09-09 录入待收口，见 §3）
+- **Status**：`1` **102 行**；空白 **6 行**（Hu_YQ_2026_ChinaSciData=deferred；Sun_2026_DataExp=类别二数据缺口；Zhao_2026_PsychonBullRev×4=2026-09-09 录入待收口，见 §3；`Pan_2025_unpub` 2026-09-25 收口置 1）
 - **Codebook**：89 个（全库统一 canonical `Codebook_*_Clean.xlsx` 命名；2026-09-09 +3 = Zhao 三实验）
 - **JSON**：**138 个**（49 paper 级〔48 平铺 Paper_name + 1 Kirk_2025_BritJPsy 嵌套 Paper_ID〕+ 89 实验级；2026-09-09 +4 = Zhao paper + Exp1/2/3）
 - **校验基线**：
-  - 结构级：`validate_json_metadata.R` EXIT=0（138 JSON / 50 文件夹 ↔ CSV 交叉一致；known_pending 1 个 = Hu_YQ_2026_ChinaSciData；known_unlisted 1 个 = Scheller_2026_elife；注：2026-09-09 为兼容 Windows 路径修复正则转义——`path_rel()` 替代 `sub(paste0("^", normalizePath(data_dir), "/"),…)`）
-  - 内容级：`validate_clean_csv.R` **89 文件 0 ERROR / 28 WARN**（2026-09-09 实测；Zhao_2026 Exp3 两条 W2 = Clean 双组 44 人 vs CSV 按任务组 22 人的组间口径，预期，与 Constable_2021 同型）
+  - 结构级：`validate_json_metadata.R` EXIT=0（138 JSON / 50 文件夹 ↔ CSV 交叉一致；known_pending 1 个 = Hu_YQ_2026_ChinaSciData；known_unlisted 1 个 = Scheller_2026_elife；注：2026-09-09 为兼容 Windows 路径修复正则转义——`path_rel()` 替代 `sub(paste0("^", normalizePath(data_dir), "/"),…)`；2026-09-25 复跑 EXIT=0）
+  - 内容级：`validate_clean_csv.R` **89 文件 0 ERROR / 28 WARN**（2026-09-09 实测 / 2026-09-25 复跑一致（Pan 重清洗后）；Zhao_2026 Exp3 两条 W2 = Clean 双组 44 人 vs CSV 按任务组 22 人的组间口径，预期，与 Constable_2021 同型）
   - Table 1 渲染：未重渲染（qmd 动态 keep-by-folder，新研究自动入表；仅稿件版本更新时触发）
   - git：分支 `main`（工作区状态以 git status 为准）
 
