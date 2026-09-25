@@ -1,0 +1,149 @@
+[  0] style='Normal (Web)'               runs=  7 img=False | The Self-Prioritization Effect Database with Standardized Meta-Data for Experimental Task
+[  1] style='Normal'                     runs= 10 img=False | Cai Zhenxin1, Tuo Liu, XXXX, Jie Suix, Hu Chuan-Peng1*
+[  2] style='Normal'                     runs=  6 img=False | 1 School of Psychology, Nanjing Normal University, 210024 Nanjing, China
+[  3] style='Normal'                     runs=  8 img=False | *Email: hcp4715@hotmail.com
+[  4] style='Normal'                     runs=  0 img=False | 
+[  5] style='Normal'                     runs=  1 img=False | Abstract
+[  6] style='Normal'                     runs= 92 img=False | The self-matching task, also known as self-tagging task, self-assiciative learning task, is widely used to investigate how self-related information is
+[  7] style='Normal'                     runs=  4 img=False | Keywords: Self-matching task, self-prioritization effect, open data, experimental design.
+[  8] style='Normal'                     runs=  0 img=False | 
+[  9] style='Normal'                     runs=  1 img=False | Introduction
+[ 10] style='Normal'                     runs= 68 img=False | The self plays a central role in cognition. Self-relevant information is processed faster and more accurately across perception, attention, and memory
+[ 11] style='Normal'                     runs= 60 img=False | In the era of credibility revolution, open data becomes a new norm (Houtkoop et al., 2018; Milham et al., 2018; Munafò et al., 2017). Specialized data
+[ 12] style='Normal'                     runs= 51 img=False | For cognitive paradigms such as the self-matching task, the lack of standardized meta-data and data organization slows down the reuse of open data sca
+[ 13] style='Normal'                     runs= 35 img=False | To address these issues, we developed a standardized framework for data organization and documentation, applied this framework to available open data,
+[ 14] style='Normal'                     runs=  1 img=False | Method
+[ 15] style='Normal'                     runs=  0 img=False | 
+[ 16] style='Normal'                     runs=  1 img=False | Folder Structure
+[ 17] style='Normal'                     runs= 16 img=False | 	Following the FAIR principle (Wilkinson et al., 2016), we adopted a three-level folder structure for the database: root folder, study folder, and exp
+[ 18] style='Normal'                     runs= 10 img=False | The root folder contains information spanning all studies included in the database. The study sub-folder contains information related to a specific st
+[ 19] style='Normal'                     runs=  1 img=True | 
+[ 20] style='Caption'                    runs=  7 img=False | Figure  Database Folder Structure.
+[ 21] style='Normal'                     runs=  7 img=False | The root folder also contains a master metadata file ("Dataset_inf.csv"), which serves as the primary index for the entire database, and study-specifi
+[ 22] style='Normal'                     runs= 11 img=False | The study-specific folder contains a JSON file, e.g., `Amodeo_2024_CABN.json`, and experiment-specific sub-folders. The JSON file contains study-level
+[ 23] style='Normal'                     runs= 14 img=False | For those studies reported more than one experiment, each experiment has its own subfolders (e.g., `Exp1`, `Exp2`). Each experimental-level sub-folder
+[ 24] style='Heading 2'                  runs=  1 img=False | Standardization of the task implementation
+[ 25] style='Normal'                     runs= 28 img=False | 	To further facilitate cross-study integration of datasets, we developed a framework for standardizing the implementation of the self-matching task. T
+[ 26] style='Normal'                     runs=  1 img=True | 
+[ 27] style='Normal'                     runs=  1 img=True | 
+[ 28] style='Caption'                    runs=  7 img=False | Figure 2 (a) Standardized implementation framework and five-component decomposition of the self-matching task; (b) an example of the experiment-specif
+[ 29] style='Normal'                     runs= 26 img=False | The Physical Environment variables describe the overall environmental conditions under which participants completed the task, including basic settings
+[ 30] style='Normal'                     runs= 13 img=False | The Experimental Design variables define the structure of the study, including both between-subject factors (e.g., cultural group) and within-subject 
+[ 31] style='Normal'                     runs= 29 img=False | The Block Structure describe the block structure of the task, including number of blocks as well and details within a block: trial sequence and compos
+[ 32] style='Normal'                     runs= 19 img=False | The Trial Structure zoom in each trial and describe how each trial is implemented, including fixation duration, stimulus exposure, stimulus onset asyn
+[ 33] style='Normal'                     runs= 15 img=False | Finally, the Stimulus Properties describe details of the stimuli, including their modality, their visual/auditory properties, and attributes of labels
+[ 34] style='Heading 2'                  runs=  2 img=False | Summary of data included in SPE database
+[ 35] style='Normal'                     runs= 21 img=False | The Self-Matching Database is hosted on the Open Science Framework (OSF) website (XXX) and Science Data Bank (XXX). At the time of publication, the da
+[ 36] style='Normal'                     runs=  0 img=False | 
+[ 37] style='Normal'                     runs=  6 img=False | Table 1
+[ 38] style='Normal'                     runs=  1 img=False | Overview of Studies Included in the SPE Database
+[ 39] style='Normal'                     runs=  1 img=False | Note. k = number of experiments. The diversity of countries, languages, stimulus modalities, and experimental designs ensures that future re-analyses 
+[ 40] style='Normal'                     runs=  0 img=False | 
+[ 41] style='Normal'                     runs=  0 img=False | 
+[ 42] style='Normal'                     runs=  0 img=False | 
+[ 43] style='Normal'                     runs= 58 img=False | As we mentioned in the section Folder Structure, data files include both raw trial-level data files shared from each team (e.g., "Amodeo_2024_CABN_Exp
+[ 44] style='Normal'                     runs=  1 img=True | 
+[ 45] style='Caption'                    runs=  8 img=False | Figure 3  Raw codebook of experimental dataset variables
+[ 46] style='Normal'                     runs=  3 img=False | Example uses of the SPE Database
+[ 47] style='Normal'                     runs=  7 img=False | The Self-Prioritization Database provides a valuable resource for both methodological and theoretical investigations of the self-prioritization effect
+[ 48] style='Normal'                     runs=  5 img=False | The Magnitude of Self-Prioritization Effect Varies Across Social Distance
+[ 49] style='Normal'                     runs= 40 img=False | The self-prioritization effect (SPE) is typically quantified as the performance difference between self-referential and other-referential conditions. 
+[ 50] style='Normal (Web)'               runs=  1 img=True | 
+[ 51] style='Caption'                    runs=  7 img=False | Figure  Self-prioritization effects along the social distance continuum and pairwise comparisons across social identities..
+[ 52] style='Normal'                     runs= 38 img=False | For reaction time (RT), robust SPEs were observed across all five baseline conditions, with all effect sizes significantly greater than zero (all 95% 
+[ 53] style='Normal'                     runs= 53 img=False | For RT, 8 of the 10 pairwise comparisons were statistically significant. The Celebrity-based SPE was significantly larger than that those derived from
+[ 54] style='Normal'                     runs= 51 img=False | A similar pattern emerged for accuracy (ACC). Six of the 10 pairwise comparisons reached statistical significance. Celebrity-based SPEs were significa
+[ 55] style='Normal'                     runs= 20 img=False | Taken together, these findings indicate that the estimated magnitude of the SPE varies systematically as a function of the baseline condition employed
+[ 56] style='Normal'                     runs=  1 img=False | Presence of Self-Prioritization Effect Under Nonmatching Conditions
+[ 57] style='Normal'                     runs= 25 img=False | Previous studies have reported inconsistent findings regarding the presence of self-prioritization effects (SPEs) under nonmatching conditions. Althou
+[ 58] style='Normal'                     runs= 16 img=False |  Leveraging the large sample size of the current database (72 experiments, 853,015 nonmatch trials, 1, 676 participants), we estimated the SPE using a
+[ 59] style='Normal'                     runs= 10 img=False | To address this ambiguity, we adopted two alternative operationalizations of the self-prioritization effect (SPE) under nonmatching conditions: shape-
+[ 60] style='Normal'                     runs= 38 img=False | Critically, neither the shape-based nor the label-based operationalization guarantees a clean self versus non-self contrast, because nonmatching trial
+[ 61] style='Normal'                     runs= 30 img=False | To fully exploit the available datasets while preserving interpretability, we implemented both conservative and liberal approach for estimating the SP
+[ 62] style='Normal'                     runs= 14 img=False |  In contrast, the liberal approach maximized dataset coverage by retaining all eligible experiments and nonmatching trials regardless of the presence 
+[ 63] style='Normal'                     runs=  1 img=True | 
+[ 64] style='Normal'                     runs=  7 img=False | Figure  Bootstrap estimation of the self-prioritization effect under nonmatching conditions. A and B, the conservative approach; C and D, the liberal 
+[ 65] style='Caption'                    runs=  1 img=False | Table 
+[ 66] style='Normal'                     runs=  1 img=False | Summary of Liberal Approach Results
+[ 67] style='Normal'                     runs=  6 img=False | Note. For RT, d = (Mean_Stranger − Mean_Self) / Pooled_SD, such that positive values indicate faster responses to self trials (SPE). For ACC, d = (Mea
+[ 68] style='Normal'                     runs= 78 img=False | Using the conservative approach, robust SPE is observed for both reaction time (RT) and accuracy (ACC). For RT, the label-based operationalization yie
+[ 69] style='Normal'                     runs= 70 img=False | When applying the liberal approach, the label-based SPE was found for reaction time (RT), although the effect size was smaller than that observed unde
+[ 70] style='Normal'                     runs= 28 img=False | Collectively, leveraging the large sample size of the current database, we found that SPE exist for nonmatching trials when conservative operational c
+[ 71] style='Caption'                    runs=  0 img=False | 
+[ 72] style='Normal'                     runs= 17 img=False | The Association Between Presenting Duration / Trial Number and magnitude of SPE
+[ 73] style='Normal'                     runs= 53 img=False | The third example illustrates a unique advantage of the current database: the standardized coding of methodological variations in task implementation 
+[ 74] style='Normal'                     runs= 32 img=False | We found a robust negative association between stimulus presentation duration (treated as a continuous variable, range: 100 – 1,500 ms, n = 40 dataset
+[ 75] style='Normal'                     runs= 46 img=False | We also observed significant positive associations between the maximum number of trials in a dataset and SPE magnitude (Figures 5C and 5D). For reacti
+[ 76] style='Normal'                     runs= 26 img=False | Together, these exploratory findings indicate that SPE magnitude varies systematically as a function of how the task is implemented. Specifically, sho
+[ 77] style='Normal (Web)'               runs=  2 img=True | 
+[ 78] style='Caption'                    runs=  3 img=False | Figure  Exploratory moderators of the self-prioritization effect under matching conditions.
+[ 79] style='Normal (Web)'               runs=  0 img=False | 
+[ 80] style='Normal'                     runs=  1 img=False | Discussion
+[ 81] style='Normal'                     runs= 46 img=False | The present study introduces both standardized data organization framework for self-matching task and the first manually curated, large-scale standard
+[ 82] style='Normal'                     runs= 20 img=False | The SPE database provides a valuable resource for understanding of SPE. Through three illustrative examples, we demonstrated how standardized, large-s
+[ 83] style='Normal'                     runs= 30 img=False | It worth noting that the SPE database provides the first standardized framework for annotation of data generated from self-matching task. We decompose
+[ 84] style='Normal'                     runs= 18 img=False | Importantly, this standardized framework can extend beyond the self-matching task. Many laboratory-based cognitive tasks share similar structural comp
+[ 85] style='Normal'                     runs= 59 img=False | Limitations of the current database should be acknowledged. First, the curation of SPE database relied heavily on manual extraction, limiting the scal
+[ 86] style='Normal'                     runs=  7 img=False | To conclude, we believe the SPE database will serve as a value resource for community-driven initiatives including large-scale collaborative projects 
+[ 87] style='Normal'                     runs=  1 img=False | 
+[ 88] style='Normal (Web)'               runs=  1 img=False | Reference
+[ 89] style='Bibliography'               runs=  8 img=False | Appelbaum, M., Cooper, H., Kline, R. B., Mayo-Wilson, E., Nezu, A. M., & Rao, S. M. (2018). Journal article reporting standards for quantitative resea
+[ 90] style='Bibliography'               runs=  3 img=False | Aron, A., Aron, E. N., & Smollan, D. (1992). Inclusion of other in the self scale and the structure of interpersonal closeness. 1–17. https://doi.org/
+[ 91] style='Bibliography'               runs=  5 img=False | Bridges, D., Pitiot, A., MacAskill, M. R., & Peirce, J. W. (2020). The timing mega-study: Comparing a range of experiment generators, both lab-based a
+[ 92] style='Bibliography'               runs=  5 img=False | Cheung, M. W.-L., & Jak, S. (2016). Analyzing big data in psychology: A split/analyze/meta-analyze approach. Frontiers in Psychology, 7, 1–13. https:/
+[ 93] style='Bibliography'               runs=  5 img=False | Cicchini, G. M., Mikellidou, K., & Burr, D. C. (2024). Serial Dependence in Perception. Annual Review of Psychology, 75(1), 129–154. https://doi.org/1
+[ 94] style='Bibliography'               runs=  5 img=False | Constable, M. D., Rajsic, J., Welsh, T. N., & Pratt, J. (2019). It is not in the details: Self-related shapes are rapidly classified but their feature
+[ 95] style='Bibliography'               runs=  5 img=False | Desebrock, C., & Spence, C. (2021). The Self-Prioritization Effect: Self-referential processing in movement highlights modulation at multiple stages. 
+[ 96] style='Bibliography'               runs=  3 img=False | Ghai, S. (2024). Big-team science does not guarantee generalizability. 1–8. https://doi.org/https://doi.org/10.1038/s41562-024-01902-y
+[ 97] style='Bibliography'               runs=  5 img=False | Ghai, S., Thériault, R., Forscher, P., Shoda, Y., Syed, M., Puthillam, A., Peng, H. C., Basnight-Brown, D., Majid, A., Azevedo, F., & Singh, L. (2025)
+[ 98] style='Bibliography'               runs=  5 img=False | Gold, J. I., & Shadlen, M. N. (2007). The neural basis of decision making. Annual Review of Neuroscience, 30(1), 535–574. https://doi.org/10.1146/annu
+[ 99] style='Bibliography'               runs=  5 img=False | Golubickis, M., & Macrae, C. N. (2021). Judging me and you: Task design modulates self-prioritization. Acta Psychologica, 218, 103350. https://doi.org
+[100] style='Bibliography'               runs=  5 img=False | Grossmann, I., & Jowhari, N. (2018). Cognition and the self: Attempt of an independent close replication of the effects of self-construal priming on s
+[101] style='Bibliography'               runs=  3 img=False | Haaf, J. M., Hoffstadt, M., & Lesche, S. (2024). Attentional control data collection: A resource for efficient data reuse. PsyArXiv. https://doi.org/1
+[102] style='Bibliography'               runs=  5 img=False | Houtkoop, B. L., Chambers, C., Macleod, M., Bishop, D. V. M., Nichols, T. E., & Wagenmakers, E.-J. (2018). Data sharing in psychology: A survey on bar
+[103] style='Bibliography'               runs=  5 img=False | Kirk, N. W., & Cunningham, S. J. (2025). Listen to yourself! Prioritization of self-associated and own voice cues. British Journal of Psychology, 116(
+[104] style='Bibliography'               runs=  5 img=False | Lemaire, P., & Brun, F. (2016). Effects of problem presentation durations on arithmetic strategies: A study in young and older adults. Journal of Cogn
+[105] style='Bibliography'               runs=  3 img=False | Lin, Z., Ma, Q., Huang, X., Wu, X., & Zhang, Y. (2023). Pervasive failure to report properties of visual stimuli in experimental research in psycholog
+[106] style='Bibliography'               runs=  5 img=False | Liu, Z., Hu, M., Zheng, Y., Sui, J., & Chuan-Peng, H. (2025). A multiverse assessment of the reliability of the self-matching task as a measurement of
+[107] style='Bibliography'               runs=  5 img=False | Milham, M. P., Craddock, R. C., Son, J. J., Fleischmann, M., Clucas, J., Xu, H., Koo, B., Krishnakumar, A., Biswal, B. B., Castellanos, F. X., Colcomb
+[108] style='Bibliography'               runs=  5 img=False | Moreau, D., & Gamble, B. (2022). Conducting a meta-analysis in the age of open science: Tools, tips, and practical recommendations. Psychological Meth
+[109] style='Bibliography'               runs=  5 img=False | Munafò, M. R., Nosek, B. A., Bishop, D. V. M., Button, K. S., Chambers, C. D., Percie Du Sert, N., Simonsohn, U., Wagenmakers, E.-J., Ware, J. J., & I
+[110] style='Bibliography'               runs=  5 img=False | Poldrack, R. A., Markiewicz, C. J., Appelhoff, S., Ashar, Y. K., Auer, T., Baillet, S., Bansal, S., Beltrachini, L., Benar, C. G., Bertazzoli, G., Bho
+[111] style='Bibliography'               runs=  5 img=False | Rahnev, D. (2025). A comprehensive assessment of current methods for measuring metacognition. Nature Communications, 16(1), 701–719. https://doi.org/1
+[112] style='Bibliography'               runs=  5 img=False | Rahnev, D., Desender, K., Lee, A. L. F., Adler, W. T., Aguilar-Lleyda, D., Akdoğan, B., Arbuzova, P., Atlas, L. Y., Balcı, F., Bang, J. W., Bègue, I.,
+[113] style='Bibliography'               runs=  5 img=False | Ratcliff, R., Smith, P. L., Brown, S. D., & McKoon, G. (2016). Diffusion decision model: Current issues and history. Trends in Cognitive Sciences, 20(
+[114] style='Bibliography'               runs=  5 img=False | Robbins, K., Truong, D., Jones, A., Callanan, I., & Makeig, S. (2022). Building FAIR Functionality: Annotating Events in Time Series Data Using Hierar
+[115] style='Bibliography'               runs=  5 img=False | Rodriguez, J. E., & Williams, D. R. (2022). psymetadata: An R package containing open datasets from meta-analyses in psychology. Journal of OPEN Psych
+[116] style='Bibliography'               runs=  3 img=False | Rose, H. (1991). Culture and the self: Implications for cognition, emotion, and motivation. 1–30.
+[117] style='Bibliography'               runs=  5 img=False | Schäfer, S., Frings, C., & Wentura, D. (2016). About the composition of self-relevance: Conjunctions not features are bound to the self. Psychonomic B
+[118] style='Bibliography'               runs=  5 img=False | Schäfer, S., Wesslein, A.-K., Spence, C., Wentura, D., & Frings, C. (2016). Self-prioritization in vision, audition, and touch. Experimental Brain Res
+[119] style='Bibliography'               runs=  5 img=False | Sui, J., & Gu, X. (2017). Self as Object: Emerging Trends in Self Research. Trends in Neurosciences, 40(11), 643–653. https://doi.org/10.1016/j.tins.2
+[120] style='Bibliography'               runs=  5 img=False | Sui, J., He, X., Golubickis, M., Svensson, S. L., & Neil Macrae, C. (2023). Electrophysiological correlates of self-prioritization. Consciousness and 
+[121] style='Bibliography'               runs=  5 img=False | Sui, J., He, X., & Humphreys, G. W. (2012). Perceptual effects of social salience: Evidence from self-prioritization effects on perceptual matching. J
+[122] style='Bibliography'               runs=  5 img=False | Sui, J., & Humphreys, G. W. (2015). The Integrative Self: How Self-Reference Integrates Perception and Memory. Trends in Cognitive Sciences, 19(12), 7
+[123] style='Bibliography'               runs=  5 img=False | Sui, J., & Rotshtein, P. (2019). Self-prioritization and the attentional systems. Current Opinion in Psychology, Attention & Perception, 29, 148–152. 
+[124] style='Bibliography'               runs=  5 img=False | Sui, J., Rotshtein, P., & Humphreys, G. W. (2013). Coupling social attention to the self forms a network for personal significance. Proceedings of the
+[125] style='Bibliography'               runs=  5 img=False | Sun, S., Wang, N., Wen, J., & Chuan-Peng, H. (2023). A dataset of cognitive ontology for neuroimaging studies of self-reference. China Scientific Data
+[126] style='Bibliography'               runs=  5 img=False | Sun, S., Wang, N., Wen, J., & Hu, C. (2023). A cognitive ontological dataset for neuroimaging studies of self-reference. China Scientific Data, 8(3). 
+[127] style='Bibliography'               runs=  5 img=False | Wilkinson, M. D., Dumontier, M., Aalbersberg, Ij. J., Appleton, G., Axton, M., Baak, A., Blomberg, N., Boiten, J.-W., Da Silva Santos, L. B., Bourne, 
+[128] style='Bibliography'               runs=  1 img=False | 
+[129] style='Bibliography1'              runs=  0 img=False | 
+[130] style='Normal'                     runs=  0 img=False | 
+[131] style='Normal'                     runs=  0 img=False | 
+[132] style='Normal'                     runs=  0 img=False | 
+[133] style='Normal'                     runs=  0 img=False | 
+[134] style='Normal'                     runs=  0 img=False | 
+[135] style='Normal'                     runs=  0 img=False | 
+[136] style='Normal'                     runs=  0 img=False | 
+
+== tables ==
+table 0: 95x11 style=Table
+   row0: Num | ID | Study | Exp | Country | Language | N (M/F) | Stimulus | Trials | License | Exp_Implement
+   row1: 1 | Amodeo_2024_CABN | L Amodeo et al. (2024) | Exp1 | Belgium | Dutch | 37 (///) | geometric shape | 360 | NA | Lab Experiment
+   last: 94 | Zhang_2026_JNeurosci | Zhang (2026) | Exp1 | China | English | 32 (14/18) | geometric shape | 450 (5 blocks x 90; inco | NA | Lab Experiment
+table 1: 9x7 style=Normal Table
+   row0:  | Measure | Dimension | N Max | Cohen's d | 95% CI | N min
+   row1: Liberal 
+Approach | RT | Shape | 964 | 0.023 | [0.004, 0.041] | 630
+   last: Conservative
+ Approach | ACC | Label | 647 | 0.061 | [0.036, 0.088] | 120

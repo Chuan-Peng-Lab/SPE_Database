@@ -40,6 +40,14 @@ stopifnot(dir.exists(data_dir))
 # --- helpers -------------------------------------------------------------------
 is_ascii <- function(x) !is.na(iconv(x, from = "UTF-8", to = "ASCII", sub = NA))
 
+# Windows-compatible relative-path helper: strip the data_dir prefix from an
+# absolute file path without regex-escaping issues from backslashes.
+path_rel <- function(f) {
+  dd <- normalizePath(data_dir, winslash = "/")
+  ff <- gsub("\\\\", "/", f)
+  if (startsWith(ff, paste0(dd, "/"))) substring(ff, nchar(dd) + 2L) else ff
+}
+
 year_in <- function(x) {
   m <- regmatches(x, regexpr("(18|19|20)[0-9]{2}", x))
   if (length(m)) m[[1]] else NA_character_
@@ -69,7 +77,7 @@ if (!length(json_files)) {
 }
 
 for (f in sort(json_files)) {
-  rel    <- sub(paste0("^", normalizePath(data_dir), "/"), "", f)
+  rel    <- path_rel(f)
   folder <- basename(dirname(f))
   stem   <- sub("\\.json$", "", basename(f))
 
@@ -226,7 +234,7 @@ for (cf in clean_files) {
   base <- sub("_Clean[.]csv$", "", basename(cf))   # <Study>_Exp<N>
   if (!file.exists(file.path(dirname(cf), paste0(base, ".json"))) &&
       !file.exists(file.path(dirname(dirname(cf)), paste0(base, ".json")))) {
-    missing_exp_json <- c(missing_exp_json, sub(paste0(data_dir, "/"), "", cf))
+    missing_exp_json <- c(missing_exp_json, path_rel(cf))
   }
 }
 if (length(missing_exp_json)) {

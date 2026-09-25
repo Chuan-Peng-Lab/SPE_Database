@@ -1,0 +1,80 @@
+manuscript Table 1 : 94 rows
+regenerated Table 1: 107 rows
+
+== studies only in the regenerated table ==
+  + Hu_2023_psyarxiv Exp3a
+  + Hu_2023_psyarxiv Exp3b
+  + Hu_2023_psyarxiv Exp4a
+  + Hu_2023_psyarxiv Exp6b
+  + Lee_2026_BritJPsy Exp1a
+  + Lee_2026_BritJPsy Exp1b
+  + Lee_2026_BritJPsy Exp2
+  + Zhao_2026_PsychonBullRev Exp1
+  + Zhao_2026_PsychonBullRev Exp2
+  + Zhao_2026_PsychonBullRev Exp3
+
+== studies only in the manuscript table ==
+  - Hu_2023_psyarxiv Exp1
+  - Sui_2015_unpub Exp2
+
+== row-count differences per (ID, Exp) ==
+  Bukowski_2021_ActaPsych Exp1: manu 1 -> new 4
+  Hu_2023_psyarxiv Exp1: manu 1 -> new 0
+  Hu_2023_psyarxiv Exp3a: manu 0 -> new 1
+  Hu_2023_psyarxiv Exp3b: manu 0 -> new 1
+  Hu_2023_psyarxiv Exp4a: manu 0 -> new 2
+  Hu_2023_psyarxiv Exp6b: manu 0 -> new 1
+  Lee_2026_BritJPsy Exp1a: manu 0 -> new 1
+  Lee_2026_BritJPsy Exp1b: manu 0 -> new 1
+  Lee_2026_BritJPsy Exp2: manu 0 -> new 1
+  Sui_2015_unpub Exp2: manu 1 -> new 0
+  Zhao_2026_PsychonBullRev Exp1: manu 0 -> new 1
+  Zhao_2026_PsychonBullRev Exp2: manu 0 -> new 1
+  Zhao_2026_PsychonBullRev Exp3: manu 0 -> new 2
+
+== cell-level differences (rows matched by (ID, Exp), in order) ==
+  Amodeo_2024_CABN Exp1 [N (M/F)] manu='37 (///)' -> new='37'
+  Amodeo_2024_CABN Exp1 [N (M/F)] manu='30 (///)' -> new='30'
+  Bukowski_2021_ActaPsych Exp1 [Language] manu='English' -> new='German'
+  Bukowski_2021_ActaPsych Exp1 [N (M/F)] manu='132 (0/132)' -> new='19 (0/19)'
+  Bukowski_2021_ActaPsych Exp1 [Trials] manu='180' -> new='360'
+  Bukowski_2021_ActaPsych Exp1 [License] manu='CC BY 4.0' -> new='NA'
+  Constable_2020_ActaPsych Exp1 [N (M/F)] manu='48 (///)' -> new='48'
+  Constable_2020_ActaPsych Exp1 [N (M/F)] manu='44 (///)' -> new='44'
+  Constable_2021_CogEmo Exp1 [Stimulus] manu='grey scale squares' -> new='face'
+  Constable_2021_CogEmo Exp1 [Stimulus] manu='grey scale squares' -> new='face'
+  Feldborg_2021_IJERPH Exp1 [N (M/F)] manu='48 (5/43)' -> new='53 (10/43)'
+  Feldborg_2021_IJERPH Exp1 [N (M/F)] manu='54 (12/40)' -> new='49 (7/40)'
+  Hu_2020_CollabraPsy Exp1 [Trials] manu='480' -> new='600'
+  Kirk_2025_BritJPsy Exp2 [N (M/F)] manu='126 (90/0)' -> new='90 (90/0)'
+  Lee_2023_Cognition Exp1 [N (M/F)] manu='57' -> new='47'
+  Lee_2023_Cognition Exp2 [N (M/F)] manu='65' -> new='51'
+  Liang_2022_HumBrainMap Exp1 [Trials] manu='360' -> new='720'
+  Liang_2022_HumBrainMap Exp1 [Trials] manu='360' -> new='720'
+  Liang_2022_HumBrainMap Exp1 [Trials] manu='360' -> new='720'
+  Liu_2023_CogRes Exp1 [N (M/F)] manu='302 (132/161)' -> new='299 (132/161)'
+  Orellana-Corrales_2021_APP Exp2 [N (M/F)] manu='34 (11/23)' -> new='33 (11/23)'
+  Pan_2025_unpub Exp1 [License] manu='/' -> new='NA'
+  Qian_2020_QJEP Exp1 [N (M/F)] manu='26 (10/16)' -> new='24 (9/15)'
+  Qian_2020_QJEP Exp2 [N (M/F)] manu='26 (7/19)' -> new='25 (7/18)'
+  Smith_2024_Cortex Exp1 [Trials] manu='NA' -> new='360'
+  Sui_2014_APP Exp1 [License] manu='/' -> new='NA'
+  Sui_2014_APP Exp2 [License] manu='/' -> new='NA'
+  Sui_2014_APP Exp3 [License] manu='/' -> new='NA'
+  Sui_2014_APP Exp4 [License] manu='/' -> new='NA'
+  Sui_2014_unpub Exp1 [Trials] manu='40' -> new='720'
+  Sui_2014_unpub Exp1 [License] manu='/' -> new='NA'
+  Sui_2015_unpub Exp1 [Trials] manu='480' -> new='960'
+  Wozniak_2018_PLOS Exp1 [N (M/F)] manu='19 (9/9)' -> new='18 (9/9)'
+  Wozniak_2018_PLOS Exp2 [N (M/F)] manu='20 (9/9)' -> new='18 (9/9)'
+  Wozniak_2022_PsychRes Exp1 [N (M/F)] manu='23 (7/11)' -> new='18 (7/11)'
+  Wozniak_2022_PsychRes Exp1 [Trials] manu='360' -> new='720'
+  Wozniak_2022_PsychRes Exp2 [N (M/F)] manu='21 (6/12)' -> new='18 (6/12)'
+  Wozniak_2022_PsychRes Exp2 [Trials] manu='360' -> new='720'
+  Wozniak_2022_PsychRes Exp3 [Trials] manu='360' -> new='720'
+  Zhang_2024_PsychJ Exp1 [N (M/F)] manu='43 (///)' -> new='43'
+  Zhang_2024_PsychJ Exp2 [N (M/F)] manu='36 (///)' -> new='36'
+
+total cell differences: 41
+
+by column: N (M/F)=20, Trials=11, License=7, Stimulus=2, Language=1
