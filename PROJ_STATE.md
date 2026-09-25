@@ -4,14 +4,14 @@
 
 ## 1. 当前目标
 
-SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的文件夹名（<Author>_<Year>_<期刊缩写>）作为全项目论文/预印本的关键 ID，以 `1_Data/Dataset_inf.csv` 为主索引，使各研究的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 生成可靠数据源。
+SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的研究文件夹名 `<Folder_Name>`（= 该 study 在全库的唯一 ID，格式 `<Author>_<Year>_<期刊缩写>`）作为全项目论文/预印本的关键 ID，以 `1_Data/Dataset_inf.csv` 为主索引，使各研究的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 生成可靠数据源。
 
-当前规模：**51 unique 研究 / 108 行**（49 已入库 + Zhao_2026_PsychonBullRev 四行条目〔2026-09-09 录入，Status 留空，待作者确认原始导出/标签语言/许可后收口〕+ 2 暂缓：Hu_YQ_2026_ChinaSciData + Scheller_2026_elife）。全部数据入库或豁免后即达成阶段性成果。
+当前规模：**51 unique 研究 / 108 行**（49 已入库〔含 Zhao_2026_PsychonBullRev 四行条目，2026-09-09 录入，Status 留空，待作者确认原始导出/标签语言/许可后收口〕+ 2 暂缓：Hu_YQ_2026_ChinaSciData + Scheller_2026_elife）。全部数据入库或豁免后即达成阶段性成果。
 
 ## 2. 核心文件
 
 - `1_Data/Dataset_inf.csv` — **主索引**（UTF-8 带 BOM，40 列；行唯一性 = `Folder_Name`+`Exp`+`subj_Group` 三元组；行序按 ID 列字母序）。`Dataset_inf.xlsx` 为旧版，待合作者确认 CSV 后删除。
-- `1_Data/<Study>_<Year>_<Suffix>/` ×47 — 研究数据五件套（raw / Clean / subj_info / Codebook / paper+exp JSON）
+- `1_Data/<Folder_Name>/` ×49 — curated 研究五件套（raw / Clean / subj_info / Codebook / paper+exp JSON；磁盘另有 1 个 deferred 输入区文件夹 Scheller_2026_elife）
 - `AGENTS.md` — agent 约定与已知 caveats；`README.md` — 人类读者入口；三份相互引用，数据整理任务统一加载 `spe-database-curation` 技能
 - `.opencode/skills/spe-database-curation/SKILL.md` — 通用 curation 技能（自足独立；命名语法、JSON schema、Codebook 规范、DOI/年份核验）
 
@@ -20,7 +20,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - `2_Code/validate_json_metadata.R` — 结构级校验器；`2_Code/validate_clean_csv.R` — 内容级校验器
 - `3_Reports/Generate_Table1.qmd` + `Output/table1_problems.txt` — Table 1 再生成与比对
 - `3_Reports/Table1_Issues_Solvability.md` — Table 1 问题逐项可解性判定（与本文档 §3 双向关联）
-- `3_Reports/Verifying_original_results_issues.md` — **作者原始结果验证问题统一记录处**（Issue 1–7，与本文档 §3 类别三关联）
+- `3_Reports/Verifying_original_results_issues.md` — **作者原始结果验证问题统一记录处**（Issue 1–8，与本文档 §3 类别三关联）
 - `3_Reports/Stage3_1_CrossCheck_archived.md` — 阶段 3.1 未解决问题编号清单（P1–P22，仅存档）
 - `2_Code/qjep_verify/`、`2_Code/mcivor_verify/`、`2_Code/orellano2020_verify/`、`2_Code/wang2016_verify/`、`2_Code/hobbs_verify/`、`2_Code/wozniak2020_verify/` — 各研究四方核对脚本固化
 - `REF/README_html2md.md` — REF 全文 HTML→MD 转换管线使用说明（正文归属本文件，AGENTS/PROJ_STATE 只放指针）
@@ -28,9 +28,9 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 3. 当前论文状态分类
 
-### 类别一：已入库、无问题（47 篇）
+### 类别一：已入库、无问题（37 篇）
 
-全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库四方核对 + 描述性统计核对），无推进动作、无问题。
+全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库四方核对 + 描述性统计核对），无推进动作、无问题。（37 = 49 curated 减去类别二/三涉及的 12 篇去重研究。）
 
 ### 类别二：已入库、有数据缺口
 
@@ -40,7 +40,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 | Pan_2025_unpub | trial 数据齐全（40 被试 28,037 行 + 40 逐被试导出在库）但人口学与说明性元数据缺失：subj_info Gender/Handedness/Ethnicity/Employment_Status/Country/First_Language 全 `/`（Age 由 raw year 列 2000–2005 推导），paper JSON 仅 Unpublished 手稿占位、exp JSON 方法字段大部 `/`，License 未声明（2026-09-02 用户判定与 Sun 同类） | 已知问题，Clean 确认完整 | 等作者/用户提供原始数据与相关说明文件后补填（不阻塞） |
 | Orellana-2020 Study 2 | Subject 34 仅 edat2（无 txt）；Subject 1-28 人口学缺失 | 已记 CSV Note | 不主动追；等作者/用户提供原始导出 |
 | Zhang-2024 | exp1 数据 43 vs 论文 42 分析（差 1 原因未知）；人口学缺失 | 数据口径 43，论文口径记 Note | 不主动改 |
-| Zhao_2026_PsychonBullRev（Psychon Bull Rev，DOI 10.3758/s13423-026-03000-8；3 实验 ×4 行〔Exp3 按任务组拆两行〕，2026-09-09 录入） | OSF（osf.io/j2pxc）共享的是作者**筛选后的分析试次文件**：仅留有反应且 RT≥200 ms 的试次（缺无反应/过速试次约 2–5%）、无 block/trial 编号与逐试次形状几何/标签文字（身份绑定 counterbalanced 未记录）；屏幕标签语言/文字与呈现软件未确认；数据仓库未公开、License 未声明（已去信请求公开 + CC BY 4.0 与原始导出） | Clean/subj_info/Codebook/JSON 已建，两级校验 0 ERROR（Exp3 两条 W2 为「Clean 两组 44 人 vs CSV 按组 22」口径，与 Constable_2021 等先例同类）；Status 留空 | 作者回复后：补原始导出（若可得）重跑 clean.R、确认语言/软件后更新 Origin/Environmental_Info/Stim_language、公开 OSF 后填 Repo_Link 公开态与 License，再置 Status=1 |
+| Zhao_2026_PsychonBullRev（Psychon Bull Rev，DOI 10.3758/s13423-026-03000-8；3 实验 ×4 行〔Exp3 按任务组拆两行〕，2026-09-09 录入） | OSF（osf.io/j2pxc）共享的是作者**筛选后的分析试次文件**：仅留有反应且 RT≥200 ms 的试次（缺无反应/过速试次约 2–5%）、无 block/trial 编号与逐试次形状几何/标签文字（身份绑定 counterbalanced 未记录）；屏幕标签语言/文字与呈现软件未确认；数据仓库未公开、License 未声明（已去信请求公开 + CC BY 4.0 与原始导出）；**输入区 `Zhao_2026_PsychonBullRev_Raw/` 当前不存在**（clean.R 头部称已归档、脚本 stopifnot 依赖该目录），原始 OSF 导出（hddm_trial_data / behavior_questionnaire xlsx）未在库内保留 → clean.R 无法重跑、缺 provenance（2026-09-25 发现） | Clean/subj_info/Codebook/JSON 已建，两级校验 0 ERROR（Exp3 两条 W2 为「Clean 两组 44 人 vs CSV 按组 22」口径，与 Constable_2021 等先例同类）；Status 留空 | 作者回复后：补原始导出（若可得）重跑 clean.R、确认语言/软件后更新 Origin/Environmental_Info/Stim_language、公开 OSF 后填 Repo_Link 公开态与 License，再置 Status=1；**回填/重新下载 OSF 原始 xlsx 至输入区，恢复 clean.R 可重跑性（2026-09-25 待办）** |
 
 通用判定原则：Clean 已完成且说明文件（Codebook/JSON）齐全的研究，可豁免 `*_raw.csv`，不强制追补。
 
@@ -117,12 +117,12 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 5. 当前库内现状快照（2026-09-04 实测）
 
-- **主索引**：Dataset_inf.csv **108 行 / 50 unique Folder_Name**（2026-09-09 +4 = Zhao_2026_PsychonBullRev）；磁盘 **49 个研究文件夹**（48 curated 中 + Zhao_2026_PsychonBullRev + Scheller_2026_elife 输入区保留；Sui_2015 空壳已删）；合计 51 研究 = 49 curated（含 Zhao，Status 留空）+ 2 deferred
+- **主索引**：Dataset_inf.csv **108 行 / 50 unique Folder_Name**（2026-09-09 +4 = Zhao_2026_PsychonBullRev）；磁盘 **50 个研究文件夹**（49 curated 含 Zhao_2026_PsychonBullRev + Scheller_2026_elife 输入区保留；Hu_YQ_2026_ChinaSciData 无文件夹；Sui_2015 空壳已删）；合计 51 研究 = 49 curated（含 Zhao，Status 留空）+ 2 deferred
 - **Status**：`1` 101 行；空白 **7 行**（Hu_YQ_2026_ChinaSciData=deferred；Pan_2025_unpub 与 Sun_2026_DataExp=类别二数据缺口；Zhao_2026_PsychonBullRev×4=2026-09-09 录入待收口，见 §3）
 - **Codebook**：89 个（全库统一 canonical `Codebook_*_Clean.xlsx` 命名；2026-09-09 +3 = Zhao 三实验）
 - **JSON**：**138 个**（49 paper 级〔48 平铺 Paper_name + 1 Kirk_2025_BritJPsy 嵌套 Paper_ID〕+ 89 实验级；2026-09-09 +4 = Zhao paper + Exp1/2/3）
 - **校验基线**：
-  - 结构级：`validate_json_metadata.R` EXIT=0（138 JSON / 49 文件夹 ↔ CSV 交叉一致；known_pending 1 个 = Hu_YQ_2026_ChinaSciData；known_unlisted 1 个 = Scheller_2026_elife；注：2026-09-09 为兼容 Windows 路径修复正则转义——`path_rel()` 替代 `sub(paste0("^", normalizePath(data_dir), "/"),…)`）
+  - 结构级：`validate_json_metadata.R` EXIT=0（138 JSON / 50 文件夹 ↔ CSV 交叉一致；known_pending 1 个 = Hu_YQ_2026_ChinaSciData；known_unlisted 1 个 = Scheller_2026_elife；注：2026-09-09 为兼容 Windows 路径修复正则转义——`path_rel()` 替代 `sub(paste0("^", normalizePath(data_dir), "/"),…)`）
   - 内容级：`validate_clean_csv.R` **89 文件 0 ERROR / 28 WARN**（2026-09-09 实测；Zhao_2026 Exp3 两条 W2 = Clean 双组 44 人 vs CSV 按任务组 22 人的组间口径，预期，与 Constable_2021 同型）
   - Table 1 渲染：未重渲染（qmd 动态 keep-by-folder，新研究自动入表；仅稿件版本更新时触发）
   - git：分支 `main`（工作区状态以 git status 为准）
@@ -133,6 +133,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **`Constable_2019_JEPHPP` 文件夹名期刊缩写与论文不符**（2026-09-24 发现）：Crossref/稿件参考文献均为 *Memory & Cognition* 47, 1145–1157（doi:10.3758/s13421-019-00924-6），非 JEP:HPP。改名牵动全库关键 ID，**待用户裁决**，本次未动。
 - **分析层口径（`3_Reports` 三段分析）**：`Subject` 编号仅在数据集内唯一（1,441 个取值 ↔ 4,521 个 数据集×被试），v1 代码按裸 `Subject` 分组导致跨研究串号；已由 `_v2` 版本改为「数据集×被试」唯一键 + `(1|数据集:被试)` 嵌套随机效应，并加入 RT 窗口 (0, 10000] ms、ACC ∈ {0,1}。**§3 各自研究条目内的效应量与论文一致性不受影响**（本项只涉及跨库聚合分析层）。
 - **`Generate_Table1.qmd` 已失效**：`stopifnot("Paper_ID" %in% names(inf))` 依赖已移除的 `Paper_ID` 列；现用 `Generate_Table1_v2.R` 出表，旧 qmd 待重写。
+- **Zhao_2026_PsychonBullRev 论文侧未收录项**（2026-09-25 记录，待补）：① 保存的 HTML 不含 Table 1–3（HDDM 模型比较 R̂ / DIC 值，原文以独立链接提供）；② Online Supplementary Materials（BTS/SCS/SEB 问卷分析、Response Efficiency、PPC）未下载，`REF/Zhao_2026_PsychonBullRev.md` 的 Supplementary Information 仅存链接；③ 逐被试问卷分（BTS/SCS/SEB）在 OSF behavior xlsx 中、未入 DB（`Questionnaire_Data=1` 已标记，属设计）。待办：抓取补充材料与 Table 1–3 入 REF（如需 HDDM 结果核对）。
 
 ## 7. 历史归档说明
 

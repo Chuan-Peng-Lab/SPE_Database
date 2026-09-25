@@ -2,7 +2,7 @@
 
 This project was inspired by [the Confidence Database](https://doi.org/10.1038/s41562-019-0813-1). We aimed at curating a database that include trial-level data and other meta-data from as many empirical studies that used self-matching task from [Sui, He, &amp; Humphreys (2012)](http://www.ncbi.nlm.nih.gov/pubmed/22963229). `<!-- OSF, preprint, and publication links will be directly added to this paragraph -->`
 
-Currently, the SPE database includes trial-level data from **50 studies** (**48 curated on disk + 2 deferred entries**) / **104 rows** per the master index `1_Data/Dataset_inf.csv` (see `PROJ_STATE.md`). <!-- Earlier published counts (44 papers / 70 datasets / 3603 participants) refer to the manuscript and have not been re-verified against the CSV -->. Each dataset includes information on reaction times (RTs), accuracy (ACC), and other information reported in papers. Participants in these included studies come from diverse cultural backgrounds and age range, facilitating cross-study comparisons and meta-analytic investigations.
+Currently, the SPE database includes trial-level data from **51 studies** (**49 curated on disk + 2 deferred entries**) / **108 rows** per the master index `1_Data/Dataset_inf.csv` (see `PROJ_STATE.md`). <!-- Earlier published counts (44 papers / 70 datasets / 3603 participants) refer to the manuscript and have not been re-verified against the CSV -->. Each dataset includes information on reaction times (RTs), accuracy (ACC), and other information reported in papers. Participants in these included studies come from diverse cultural backgrounds and age range, facilitating cross-study comparisons and meta-analytic investigations.
 
 The SPE Database is continuously updated as new studies and datasets become available. We welcome contributions from researchers who wish to share their data and help expand this resource. If you are interested in contributing or collaborating, please feel free to reach out!
 
@@ -10,13 +10,13 @@ This project is in parallel with an on-going preregistered meta-analysis leading
 
 ## Data & metadata
 
-- **Master index**: `1_Data/Dataset_inf.csv` (UTF-8 with BOM) — one row per experiment-sample, keyed by `Folder_Name` (the project-wide ID for papers/preprints, == study folder) + `Exp` + `subj_Group`. Key columns: `FirstAuthor`, `Year` (official print year), `Journal`, `DOI` (paper DOI), `Country`/`City`, `Stim_Type`, `Stim_language`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`, `Repo_Link` (data repository link). Current inventory: **48 curated studies on disk + 1 deferred entry (Hu_YQ_2026_ChinaSciData, ex Hu_2023_SDB) + 1 deferred (Scheller_2026_elife)** (authoritative counts live in the CSV).
+- **Master index**: `1_Data/Dataset_inf.csv` (UTF-8 with BOM) — one row per experiment-sample, keyed by `Folder_Name` (the project-wide **study ID** = the study folder name) + `Exp` + `subj_Group`. Key columns: `FirstAuthor`, `Year` (official print year), `Journal`, `DOI` (paper DOI), `Country`/`City`, `Stim_Type`, `Stim_language`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`, `Repo_Link` (data repository link). Current inventory: **49 curated studies on disk + 1 deferred entry (Hu_YQ_2026_ChinaSciData, ex Hu_2023_SDB) + 1 deferred (Scheller_2026_elife)** (authoritative counts live in the CSV).
 - **Data readability** (since 2026-08-30): `Shape`/`Label` columns hold actual stimulus values (shape names / label words); original numeric codes are kept in the raw `ShapeCode`/`LabelCode` columns and the Clean `*_Origin_Identity` columns.
 - **Cleaned data**: `*_ExpN_Clean.csv` uses standardized columns `Subject`, `Shape`, `Label`, `Matching`, `ACC`, `RT_ms`, plus 3-level Identity columns (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger). Cleaning is minimal preprocessing — invalid values (e.g., `ACC = -1`) are kept and documented in the codebook; users preprocess per their own analysis goals.
-- **Per-study metadata**: paper-level `<Study>.json` + experiment-level `<Study>_Exp<N>.json` (v2 schema) + `Codebook_<Study>_Exp<N>_Clean.xlsx`.
+- **Per-study metadata**: paper-level `<Folder_Name>.json` + experiment-level `<Folder_Name>_Exp<N>.json` (v2 schema) + `Codebook_<Folder_Name>_Exp<N>_Clean.xlsx`.
 - **Contributing / adding data**: follow the curation conventions in `.opencode/skills/spe-database-curation/SKILL.md` (folder naming, JSON schemas, codebook rules, DOI/year verification workflow) — load it via `skill(name="spe-database-curation")` for any data-curation task.
 - **For agents**: repository conventions and efficiency rules live in `AGENTS.md`; project state lives in `PROJ_STATE.md` (see also the Document map in AGENTS.md).
-- **For collaborators (合作者)**: how to provide raw data / full texts for the four pending studies and for new ingestions, then let the agent finish the rest — see `For_COLLABORATORS.md` (中文).
+- **For collaborators (合作者)**: You only need to provide raw data and full texts, then let the AI agent finish the rest — see `For_COLLABORATORS.md` (中文).
 
 ## Leading Team
 
@@ -147,13 +147,13 @@ root
 │  README.md
 ├─1_Data 
 │   └─ Dataset_inf.csv  # master index (UTF-8 with BOM); legacy Dataset_inf.xlsx pending removal
-│   └─ <Author>_<Year>_<Suffix>   # Suffix = readable journal/database abbreviation (e.g. JEPHPP, ActaPsych, ConsciousCog, QJEP), full short journal name (Cognition, Cortex), psyarxiv/unpub tag, or data-repo abbreviation (SDB)
-│       └─ <Author>_<Year>_<Suffix>_<Exp-id>_Clean.csv
-│       └─ <Author>_<Year>_<Suffix>_<Exp-id>_subj_info.csv
-│       └─ Codebook_<Author>_<Year>_<Suffix>_<Exp-id>_Clean.xlsx
-│       └─ <Author>_<Year>_<Suffix>.json  # Including Meta data for each paper.
-│       └─ <Author>_<Year>_<Suffix>_<Exp-id>.json  # Including methodological information for the specific experiment.
-│       └─ <Author>_<Year>_<Suffix>_<Exp-id>_raw.csv
+│   └─ <Folder_Name>   # = the study (folder name = project-wide study ID); <Folder_Name> = <Author>_<Year>_<Suffix>, Suffix = readable journal/database abbreviation (e.g. JEPHPP, ActaPsych, ConsciousCog, QJEP), full short journal name (Cognition, Cortex), psyarxiv/unpub tag, or data-repo abbreviation (SDB)
+│       └─ <Folder_Name>_<Exp-id>_Clean.csv
+│       └─ <Folder_Name>_<Exp-id>_subj_info.csv
+│       └─ Codebook_<Folder_Name>_<Exp-id>_Clean.xlsx
+│       └─ <Folder_Name>.json  # Including Meta data for each paper.
+│       └─ <Folder_Name>_<Exp-id>.json  # Including methodological information for the specific experiment.
+│       └─ <Folder_Name>_<Exp-id>_raw.csv
 ├─2_Code
 │   └─ Clean_Data.Rproj
 │   └─ Clean_Data.Rmd
