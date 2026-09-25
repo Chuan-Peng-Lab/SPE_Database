@@ -1,0 +1,44 @@
+{
+  "exp1": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "Tsinghua University, Beijing, China (assumed from ethics approval and local recruitment; software to be confirmed)",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "/"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "3 (identity: true self, general self, stranger) x 2 (trial type: matching, nonmatching), within-subjects; 60 trials per condition (shape identity x trial type)"
+    },
+    "Block_Structure": {
+      "Block_number": "6 blocks",
+      "Trial_number": "360 trials total per participant (60 per condition; randomized order across 6 blocks)",
+      "Practice_trials": "practice block with feedback until 6 consecutive correct responses (variable length); practice data not included in the shared files"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms (fixation cross on grey background)",
+      "Stimulus_duration": "100 ms (simultaneous shape-label pair)",
+      "SOA": "0 ms (simultaneous presentation; shape above, label below, 3.5 deg apart)",
+      "Stimulus_order": "Simultaneous: fixation cross, then shape (2.4 x 2.4 deg) above and label (approx. 4.4 x 2.4 deg) below",
+      "Response_deadline": "1100 ms (blank screen after stimulus during which response was made; 'Too Slow' feedback otherwise)",
+      "ITI": "not reported separately",
+      "Feedback_duration": "500 ms (Correct / Incorrect / Too Slow after each trial)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "fixation cross on grey background (RGB 127, 127, 127)",
+      "Shape": "geometric shapes: circle, square, triangle (2.4 x 2.4 deg); identity binding counterbalanced across participants and not recorded in the shared files",
+      "Label": "identity words: true self, general self, stranger (on-screen language/wording to be confirmed with authors)",
+      "Colors": {
+        "Stimulus": "not reported",
+        "Background": "grey (RGB 127, 127, 127)"
+      }
+    },
+    "detail": "Experiment 1 of Zhao & Wang (2026, Psychon Bull Rev, DOI 10.3758/s13423-026-03000-8). Shape-label matching (Sui et al., 2012): participants learned shape-identity associations (circle/square/triangle to true self/general self/stranger; assignment counterbalanced), then judged whether presented shape-label pairs matched. Response keys Z/M with match-key assignment counterbalanced across participants (not recorded; shared data code response 1 = 'match' key, 0 = 'non-match' key). HDDM (dockerHDDM) analyses used the same trials. Data source: OSF https://osf.io/j2pxc/ (anonymized view-only link at retrieval), file data/hddm_trial_data/exp1_hddm_trial_data.xlsx (shared by authors) plus data/behavior_questionnaire_data/exp1_behavior_questionnaire.xlsx for demographics. Authors recruited 48, excluded 3 for below-chance overall accuracy, analysed 45 (33 female; Mage 22.84, SD 2.15; all 45 participants are present in the shared file; excluded ids absent). Shared trial file keeps only trials with a response and RT >= 200 ms (rows 15659 < 45 x 360 = 16200; removed trials were no-response/too-fast, all non-errors in RT terms), matching the paper's exclusion of RT < 200 ms; no block/trial numbering and no per-trial shape geometry or label word were recorded in the shared file. Label identity is recorded here only on matching trials (where it equals the shape identity by construction); 'missing' elsewhere. Questionnaires after the task (online): BTS, SCS (independent/interdependent), SEB (per-subject totals in the behavior xlsx). Ethics: Tsinghua University Ethics Committee THU-04-2025-1135. On-screen stimulus language/wording and presentation software to be confirmed with the authors (2026-09-09 email)."
+  }
+}

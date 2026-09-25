@@ -1,0 +1,13 @@
+{
+  "Paper_name": "Beyond the unitary self: Behavioral and drift-diffusion modeling evidence for a true self-prioritization effect and intra-self competition",
+  "Summary": "Three shape-label matching experiments (Sui et al., 2012 paradigm) tested whether the true self, conceptualized as the central core of identity, commands a distinct processing advantage over more peripheral self-aspects. Experiment 1 (45 participants) contrasted true self, general self and stranger identities within subjects and found a robust true self-prioritization effect (TSPE): true-self-associated shapes were responded to faster and more accurately, while the general self showed no prioritization over the stranger baseline. Experiment 2 (47 participants) removed the true self and pitted the general self against friend and stranger, documenting robust general self-prioritization. Experiment 3 (44 participants, between-subjects task assignment: true self vs general self matching task, each paired with friend and stranger) explicitly distinguished the two self concepts and found comparable prioritization for both. Hierarchical drift diffusion modeling (HDDM) showed the effects were primarily driven by increased drift rates (v) for the prioritized identity, with inconsistent non-decision time (t0) modulations; results are consistent with a hierarchical account in which the true self acts as a salient contextual anchor.",
+  "Year": "2026",
+  "Author": "Yue Zhao, Fei Wang",
+  "Journal": "Psychonomic Bulletin & Review",
+  "Country": "China",
+  "City": "Beijing",
+  "Extra_Var": "/",
+  "Email": "wf3126@mail.tsinghua.edu.cn",
+  "DOI": "10.3758/s13423-026-03000-8",
+  "Conclusion": "The self is not cognitively flat: stimuli associated with the true self are processed with higher priority than those linked to the general self or others when both self-aspects compete (Experiment 1), and the general self regains prioritization when the true self is absent (Experiments 2-3). These true and general self-prioritization effects are driven primarily by enhanced evidence accumulation (drift rate) rather than by faster encoding/motor components, supporting a hierarchical, core-periphery structure of self-representation within the shape-label matching paradigm."
+}

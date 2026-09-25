@@ -1,0 +1,136 @@
+################ 1. IDENTITY / BASELINE ANALYSIS (v2) ################
+Measure     Identity  n_boot  d_mean   d_sd  ci95_lower  ci95_upper  exceeds_zero
+     RT    NonPerson   10000  0.2513 0.0249      0.2031      0.3003          True
+     RT     Stranger   10000  0.2340 0.0177      0.1996      0.2690          True
+     RT    Celebrity   10000  0.2405 0.0329      0.1763      0.3056          True
+     RT Acquaintance   10000  0.1675 0.0440      0.0812      0.2531          True
+     RT        Close   10000  0.1626 0.0181      0.1280      0.1980          True
+    ACC    NonPerson   10000  0.2074 0.0163      0.1759      0.2399          True
+    ACC     Stranger   10000  0.1360 0.0114      0.1137      0.1586          True
+    ACC    Celebrity   10000  0.1525 0.0214      0.1105      0.1945          True
+    ACC Acquaintance   10000  0.1303 0.0290      0.0738      0.1866          True
+    ACC        Close   10000  0.0855 0.0118      0.0621      0.1085          True
+
+--- RT pairwise (v2) ---
+  Identity_A   Identity_B  diff_mean  diff_sd  diff_median  ci95_lower  ci95_upper  p_value_bootstrap  significant
+    Stranger    Celebrity    -0.0062   0.0292      -0.0060     -0.0634      0.0505             0.8480        False
+Acquaintance        Close     0.0048   0.0417       0.0050     -0.0755      0.0868             0.9098        False
+   NonPerson    Celebrity     0.0110   0.0340       0.0114     -0.0549      0.0779             0.7378        False
+   NonPerson     Stranger     0.0172   0.0195       0.0172     -0.0213      0.0553             0.3716        False
+    Stranger Acquaintance     0.0666   0.0422       0.0663     -0.0151      0.1482             0.1144        False
+    Stranger        Close     0.0714   0.0082       0.0714      0.0554      0.0876             0.0000         True
+   Celebrity Acquaintance     0.0728   0.0504       0.0730     -0.0286      0.1711             0.1508        False
+   Celebrity        Close     0.0776   0.0285       0.0772      0.0219      0.1337             0.0070         True
+   NonPerson Acquaintance     0.0838   0.0436       0.0843     -0.0026      0.1679             0.0566        False
+   NonPerson        Close     0.0886   0.0191       0.0888      0.0512      0.1257             0.0000         True
+RT: 3/10 significant
+
+--- ACC pairwise (v2) ---
+  Identity_A   Identity_B  diff_mean  diff_sd  diff_median  ci95_lower  ci95_upper  p_value_bootstrap  significant
+    Stranger    Celebrity    -0.0163   0.0189      -0.0163     -0.0535      0.0211             0.3864        False
+    Stranger Acquaintance     0.0059   0.0272       0.0059     -0.0469      0.0588             0.8272        False
+   Celebrity Acquaintance     0.0222   0.0326       0.0221     -0.0423      0.0848             0.4944        False
+Acquaintance        Close     0.0447   0.0268       0.0448     -0.0084      0.0969             0.0964        False
+    Stranger        Close     0.0506   0.0053       0.0505      0.0402      0.0611             0.0000         True
+   NonPerson    Celebrity     0.0550   0.0222       0.0550      0.0113      0.0988             0.0136         True
+   Celebrity        Close     0.0669   0.0184       0.0669      0.0309      0.1032             0.0002         True
+   NonPerson     Stranger     0.0713   0.0128       0.0711      0.0462      0.0967             0.0000         True
+   NonPerson Acquaintance     0.0772   0.0283       0.0774      0.0221      0.1325             0.0062         True
+   NonPerson        Close     0.1218   0.0124       0.1216      0.0977      0.1463             0.0000         True
+ACC: 6/10 significant
+
+################ 2. MISMATCH ANALYSIS (v2) ################
+              Approach Measure Dimension  N_max  Cohens_d  CI_lower  CI_upper  N_min  CI_excludes_zero_at_max
+Conservative (aligned)      RT     Shape   1563    0.1234    0.1028    0.1443   40.0                     True
+Conservative (aligned)      RT     Label   1563    0.2516    0.2271    0.2745   20.0                     True
+Conservative (aligned)     ACC     Shape   1494    0.0522    0.0355    0.0698  170.0                     True
+Conservative (aligned)     ACC     Label   1494    0.0494    0.0299    0.0692  210.0                     True
+         Liberal (max)      RT     Shape   3604    0.0049   -0.0083    0.0171    NaN                    False
+         Liberal (max)      RT     Label   3192    0.1250    0.1117    0.1383   40.0                     True
+         Liberal (max)     ACC     Shape   3524    0.0092   -0.0022    0.0197    NaN                    False
+         Liberal (max)     ACC     Label   3114    0.0094   -0.0029    0.0206    NaN                    False
+
+################ 3. EXPLORATORY (v11 pipeline + v2 figure) ################
+panel                  moderator measure  n_datasets  spearman_rho  spearman_p  spearman_rho_boot_ci_lower  spearman_rho_boot_ci_upper  spearman_rho_boot_p
+    A stimulus_duration_ms_first   RT_ms          54       -0.3112      0.0220                     -0.5393                     -0.0519               0.0182
+    B stimulus_duration_ms_first     ACC          54       -0.3351      0.0132                     -0.5478                     -0.0953               0.0096
+    C           trial_number_max   RT_ms          64        0.0445      0.7267                     -0.2219                      0.3020               0.7480
+    D           trial_number_max     ACC          65        0.1743      0.1648                     -0.0985                      0.4334               0.2050
+
+sensitivity (drop 3 largest trial numbers):
+       moderator measure     analysis  n_datasets                                                 excluded_x  spearman_rho  spearman_p                               caption
+trial_number_max   RT_ms exclude_top3          60 [np.float64(1620.0), np.float64(960.0), np.float64(960.0)]        0.0768      0.5598 n = 60; Spearman ρ = 0.077, p = 0.560
+trial_number_max     ACC exclude_top3          61 [np.float64(1620.0), np.float64(960.0), np.float64(960.0)]        0.1951      0.1318 n = 61; Spearman ρ = 0.195, p = 0.132
+
+range of x:
+                 moderator measure  n_datasets  x_min  x_max
+stimulus_duration_ms_first   RT_ms          54  100.0 3000.0
+stimulus_duration_ms_first     ACC          54  100.0 3000.0
+          trial_number_max   RT_ms          64   64.0 1620.0
+          trial_number_max     ACC          65   64.0 1620.0
+
+################ 4. DATABASE SCALE ################
+studies (Folder_Name with data): 49
+index rows (Exp x group)       : 107
+unique (Folder_Name, Exp)      : 88
+sum Sample_Size                : 4875
+Clean files (= datasets)       : 89
+Clean rows total               : 2131109
+  matching                     : 1063027
+  nonmatching                  : 1068081
+unique dataset x subject       : 3306
+
+################ 5. CONSERVATIVE ELIGIBILITY ################
+datasets with >=1 eligible participant (conservative): 38
+datasets excluded: 51
+   - Atzeni_2026_PsychRes_Exp1_Clean.csv
+   - Constable_2019_JEPHPP_Exp1_Clean.csv
+   - Constable_2019_JEPHPP_Exp2_Clean.csv
+   - Constable_2019_JEPHPP_Exp3_Clean.csv
+   - Constable_2020_ActaPsych_Exp1_Clean.csv
+   - Constable_2021_CogEmo_Exp1_Clean.csv
+   - Constable_2021_CogEmo_Exp2_Clean.csv
+   - Dalmaso_2024_ConsciousCog_Exp1_Clean.csv
+   - Dalmaso_2024_ConsciousCog_Exp2_Clean.csv
+   - Feldborg_2021_IJERPH_Exp1_Clean.csv
+   - Haciahmet_2023_Psychophysiol_Exp1_Clean.csv
+   - Hu_2020_CollabraPsy_Exp1_Clean.csv
+   - Hu_2023_psyarxiv_Exp3a_Clean.csv
+   - Hu_2023_psyarxiv_Exp3b_Clean.csv
+   - Hu_2023_psyarxiv_Exp4a_1_Clean.csv
+   - Hu_2023_psyarxiv_Exp4a_2_Clean.csv
+   - Hu_2023_psyarxiv_Exp6b_Clean.csv
+   - Lee_2023_Cognition_Exp1_Clean.csv
+   - Lee_2023_Cognition_Exp2_Clean.csv
+   - Lee_2026_BritJPsy_Exp2_Clean.csv
+   - Liu_2023_CogRes_Exp1_Clean.csv
+   - Mcivor_2021_EJN_Exp1_Clean.csv
+   - Navon_2021_psyarxiv_Exp2_Clean.csv
+   - Orellana-Corrales_2020_ExpPsych_Exp1_Clean.csv
+   - Orellana-Corrales_2020_ExpPsych_Exp2_Clean.csv
+   - Orellana-Corrales_2020_ExpPsych_Exp3_Clean.csv
+   - Orellana-Corrales_2021_APP_Exp1_Clean.csv
+   - Orellana-Corrales_2021_APP_Exp2_Clean.csv
+   - Orellana-Corrales_2023_QJEP_Exp1_Clean.csv
+   - Qi_2025_SciData_Exp1_Clean.csv
+   - Qian_2020_QJEP_Exp2_Clean.csv
+   - Schaefer_2019_JCogPsych_Exp1_Clean.csv
+   - Schaefer_2019_JCogPsych_Exp2_Clean.csv
+   - Schaefer_2019_JCogPsych_Exp3_Clean.csv
+   - Sun_2026_DataExp_Exp1_Clean.csv
+   - Svensson_2022_PsychRes_Exp1_Clean.csv
+   - Svensson_2022_PsychRes_Exp2_Clean.csv
+   - Svensson_2022_PsychRes_Exp3_Clean.csv
+   - Svensson_2023_QJEP_Exp1_Clean.csv
+   - Vicovaro_2022_JEPHPP_Exp1_Clean.csv
+   - Vicovaro_2022_JEPHPP_Exp2_Clean.csv
+   - Vicovaro_2024_PeerJ_Exp1_Clean.csv
+   - Vicovaro_2024_PeerJ_Exp2_Clean.csv
+   - Wozniak_2020_PLOS_Exp1_Clean.csv
+   - Wozniak_2020_PLOS_Exp2_Clean.csv
+   - Wozniak_2020_PLOS_Exp3_Clean.csv
+   - Wozniak_2022_PsychRes_Exp1_Clean.csv
+   - Wozniak_2022_PsychRes_Exp2_Clean.csv
+   - Wozniak_2022_PsychRes_Exp3_Clean.csv
+   - Zhang_2023_NeuroImage_Exp1_Clean.csv
+   - Zhao_2026_PsychonBullRev_Exp1_Clean.csv

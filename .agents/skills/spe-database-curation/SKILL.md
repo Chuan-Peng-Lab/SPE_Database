@@ -41,7 +41,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 
 ### 入口判定：按论文文件夹现状选择起点
 
-加载本技能后**第一步**：查看目标论文的 `1_Data/<Study>/` 现状，按下表选入口，不要从头跑 10 步：
+加载本技能后**第一步**：查看目标论文的 `1_Data/<Folder_Name>/` 现状，按下表选入口，不要从头跑 10 步：
 
 | 文件夹现状 | 入口 | 对应原场景 |
 |---|---|---|
@@ -54,9 +54,9 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 ### 统一流程（10 步）
 
 **数据产出（仅全新数据需要；其余入口跳过）**
-1. **建文件夹 + 输入区**：`1_Data/<Study>/<Study>_Raw/`（命名语法见「文件与文件夹规范」：印刷年、纯 ASCII、期刊/库缩写）。
+1. **建文件夹 + 输入区**：`1_Data/<Folder_Name>/<Folder_Name>_Raw/`（命名语法见「文件与文件夹规范」：印刷年、纯 ASCII、期刊/库缩写）。
 2. **扫描输入区**：识别 实验/被试/会话 结构；格式异常或多格式混存 → 暂停（决策点 #7）；先查「原始数据解析与验证先例」速查表定位格式条目。
-3. **清洗脚本**：`<Study>_clean.R`（对照标准列新写；规范见「工具与脚本」§独立清洗脚本）→ 产出 `*_raw.csv`（标准 trial 级）+ `*_ExpN_Clean.csv`；`*_subj_info.csv` 从 raw/输入区人口学生成。
+3. **清洗脚本**：`<Folder_Name>_clean.R`（对照标准列新写；规范见「工具与脚本」§独立清洗脚本）→ 产出 `*_raw.csv`（标准 trial 级）+ `*_ExpN_Clean.csv`；`*_subj_info.csv` 从 raw/输入区人口学生成。
 4. **内容级校验**：`Rscript 2_Code/validate_clean_csv.R`（E1–E3 必须 0 ERROR；W 级提示记录）。
 
 **元数据核心（场景 A/B 共用）**
@@ -119,6 +119,8 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 
 ### 文件命名语法
 
+`<Folder_Name>` = 研究文件夹名 = 该 **study** 在全库的唯一 ID（study folder name）；其语法为：
+
 `<FirstAuthorLast>_<Year>_<Suffix>[_Exp<N>][_<tag>]`
 
 - **Year** = official **print** year; online-first year does not go into names
@@ -139,7 +141,10 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
     Experimental Psychology), `APP` (Attention, Perception, & Psychophysics),
     `PsychRes` (Psychological Research), `PLOS` (PLOS ONE), `PsychMed`
     (Psychological Medicine), `EJN` (European J. Neuroscience), `DataExp`
-    (Data Express).
+    (Data Express), `ExpPsych` (Experimental Psychology), `JNeurosci` (The
+    Journal of Neuroscience), `PeerJ` (PeerJ), `PsychJ` (PsyCh Journal),
+    `PsychonBullRev` (Psychonomic Bulletin & Review), `SciData` (Scientific
+    Data).
   - Full journal names used verbatim: `Cognition` (`Lee_2023_Cognition`),
     `Cortex` (`Smith_2024_Cortex`), `NeuroImage` (`Zhang_2023_NeuroImage`),
     `elife` (`Scheller_2026_elife`; deferred — 输入区保留、CSV 行已移除).
@@ -159,8 +164,8 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 ### 文件夹结构
 
 - **Root**: `1_Data/Dataset_inf.csv` — master index（见「主索引 Dataset_inf.csv」节）。
-- **Study folder**: `<Author>_<Year>_<Journal>` containing the paper-level
-  `<Author>_<Year>_<Journal>.json` at its root.
+- **Study folder**: `<Folder_Name>`（= 该 study 在全库的唯一 ID，命名语法见「文件命名语法」）containing the paper-level
+  `<Folder_Name>.json` at its root.
 - **Single experiment** → files live flat in the study folder
   (e.g., `1_Data/Amodeo_2024_CABN/`):
   ```
@@ -177,15 +182,15 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 - 例外核查：`1_Data/Martinez-Perez_2024_ConsciousCog/` 为**单实验**（Exp2）平铺 study 根——其
   paper Exp1 无 self-matching 任务未收录（见 CSV Note），属正常单实验布局，非多实验偏差。
 - **Raw input zone（输入区）**: downloaded original exports go into
-  `1_Data/<Study>/<Study>_Raw/` (study level; all experiments together; a `Source/`
-  subfolder for the original download is allowed). Historical lowercase `<Study>_raw/`
+  `1_Data/<Folder_Name>/<Folder_Name>_Raw/` (study level; all experiments together; a `Source/`
+  subfolder for the original download is allowed). Historical lowercase `<Folder_Name>_raw/`
   variants coexist and remain legal (both `*_Raw/` and `*_raw/` are gitignored and
-  skipped by the validators) — new input zones should use `<Study>_Raw/`. Supported
+  skipped by the validators) — new input zones should use `<Folder_Name>_Raw/`. Supported
   formats: `.csv`, `.mat`, `.edat2`/`.emrg*`, `.psydat`/`.dat`, `.txt`, `.xlsx`. The
   input zone is **read-only input** — it does NOT participate in validation
   (`validate_json_metadata.R` and `validate_clean_csv.R` both skip `*_Raw/`, `*_raw/`
   and `Source/`), and its files are not standardized products. The standardized
-  trial-level product derived from it is `<Study>_Exp<N>_raw.csv` (in `Exp<N>/` or the
+  trial-level product derived from it is `<Folder_Name>_Exp<N>_raw.csv` (in `Exp<N>/` or the
   study root) — do not confuse the two: `*_Raw/` = downloaded originals (as-is),
   `*_raw.csv` = processed standard file.
 
@@ -193,7 +198,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 
 ### 列说明（40 列，按用途分组）
 
-- 键列：`ID`（**复合键**：格式 `<Folder_Name>_Exp<Exp>_<subj_Group>`，组名空格以下划线编码（如 `Constable_2021_CogEmo_Exp1_Happy_self`）；行唯一性即 `Folder_Name+Exp+subj_Group` 三元组唯一性；此前为数字行号，历史文档中的数字 ID 引用均为旧口径，不再使用）、`Folder_Name`（关键 ID）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
+- 键列：`ID`（**复合键**：格式 `<Folder_Name>_Exp<Exp>_<subj_Group>`，组名空格以下划线编码（如 `Constable_2021_CogEmo_Exp1_Happy_self`）；行唯一性即 `Folder_Name+Exp+subj_Group` 三元组唯一性；此前为数字行号，历史文档中的数字 ID 引用均为旧口径，不再使用）、`Folder_Name`（**关键 ID = 研究/study 文件夹名**）、`Exp`（实验号）、`Study`（论文内序号）、`Paper_ID`/`Paper`（**deprecated**，勿新建值）
 - **行序约定**：数据行**始终按 ID 列字母序排列**（纯字典序，Python `sorted(key=ID)` 即同款）；新增研究入库时**追加后立即重排**（或直接插入排序位置），任何编辑后行序保持排序；校验手段：`python sorted` 检查或 `git diff` 只应显示内容/插入行而非整体乱序
 - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
 - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
@@ -252,7 +257,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 
 **缺失表达分工**：JSON 字段沿用 `"/"` = 未知/不可得 的 JSON 层约定（配合 `detail` 注明来源）；**Dataset_inf.csv 一律不用 `/`**，缺失按三态：`missing`（明确无法获得）/ 空白（不确定）/ `NA`（明确没有/不适用）。两套表达各自独立、不对齐逐字翻译——写 CSV 用三态，写 JSON 用 `/`。正文见「主索引 Dataset_inf.csv」缺失标记规则。
 
-### Paper-level JSON（`<Study>.json`）— flat 11-field schema
+### Paper-level JSON（`<Folder_Name>.json`）— flat 11-field schema
 
 ```json
 {
@@ -273,7 +278,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
   (`Paper_ID > KIRK_2025_BJP > {…}` with embedded `Experiments`; the inner key
   keeps the old paper ID). Accept, do not restructure.
 
-### Experiment-level JSON（`<Study>_Exp<N>.json`）— v2 hierarchical schema
+### Experiment-level JSON（`<Folder_Name>_Exp<N>.json`）— v2 hierarchical schema
 
 Top-level key MUST match the filename suffix (`exp1` ↔ `_Exp1`). Five components
 follow the task-standardization framework:
@@ -352,7 +357,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
     反向排查方法：全库扫描 Clean 的 `(Subject, Block, Trial)` 重复键（仅 Hu_2020/Hu_2023_psyarxiv/Zhang_2023
     命中；Hu_2023 原为跨 Session 重复——Session 列曾被旧清洗丢弃，重入库已保留 Session 并按其
     分组排序解决，校验键 (Subject, Session, Block, Trial) 唯一）。
-    独立脚本模式（Wozniak_2018/Hu_2020 同款）：Rmd 段删除留指针注释、`<Study>_clean.R` 从 Rmd 原代码复制
+    独立脚本模式（Wozniak_2018/Hu_2020 同款）：Rmd 段删除留指针注释、`<Folder_Name>_clean.R` 从 Rmd 原代码复制
     仅改问题处、守卫按有效被试断言（无效被试已知重复不参与唯一性断言）。
 - **任务与附加自变量命名（全库统一）**：
   - `Task` 列：**全库标准列**，区分"联结对象是否含自参照身份"的任务类型。默认值 `self-matching`
@@ -463,7 +468,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 
 ## Codebook 编写规则
 
-- One `Codebook_<Study>_Exp<N>_Clean.xlsx` per `*_Clean.csv`, in the same folder,
+- One `Codebook_<Folder_Name>_Exp<N>_Clean.xlsx` per `*_Clean.csv`, in the same folder,
   canonical casing `Codebook_` (lowercase b — 全库唯一命名，legacy `CodeBook_` 已全部改名)。
 - **Structure**: a single worksheet `Sheet1` with exactly 4 columns and one row per variable of the Clean.csv:
 
@@ -515,7 +520,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 
 ## 工具与脚本（细节见 tools.md）
 
-- **主路径（agent 自动化入库标准方式）**：独立清洗脚本 `<Study>_clean.R`（与 `1_Data/utils.R`
+- **主路径（agent 自动化入库标准方式）**：独立清洗脚本 `<Folder_Name>_clean.R`（与 `1_Data/utils.R`
   同库，`source()` 引用）→ 产出标准五件套。`2_Code/Clean_Data.Rmd` 已降级为**历史配方参考**
   （含旧文件夹名注释，不改）；`SPE_Interactive_Clean_V3.R` / `SPE_Shiny_App_V4.2.R`
   为人工备用（控制台/网页交互）。
@@ -532,7 +537,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
      **所有段**都加段号后缀（不能只给后段加）；守卫 `stopifnot(length(unique(Subject)) == 预期被试数)`。
   3. **subj_info 与 Clean 的 Subject 对齐用键，不用行序**：构建期保留临时映射列，人口学按映射键
      对齐；**禁止依赖文件行序**。写出 Clean 前删除临时列。
-  4. **构建期中间映射内嵌脚本，不落盘独立文件**：研究文件夹只允许标准产物 + `<Study>_clean.R`，
+  4. **构建期中间映射内嵌脚本，不落盘独立文件**：研究文件夹只允许标准产物 + `<Folder_Name>_clean.R`，
      不产生 subject_map 等中间 CSV。
 - **辅助工具**（`repo_fetch.py` OSF/PsychArchives 下载、`scan_raw.py` raw 扫描；端点与用法见 tools.md）。
 

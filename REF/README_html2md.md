@@ -27,9 +27,11 @@ PsycNet（Wang_2016_JEPHPP）未适配——其 md 为人工转换，勿用本�
 
 ```bash
 cd REF
-python3 html2Json.py        # 1. 只处理尚无 .md 的 html（新文件自动识别模板）
-python3 json2md.py          # 2. 渲染为新 md
+/Users/hcp4715/miniconda3/bin/python3.12 html2Json.py   # 1. 只处理尚无 .md 的 html（新文件自动识别模板）
+/Users/hcp4715/miniconda3/bin/python3.12 json2md.py     # 2. 渲染为新 md
 ```
+
+**解释器统一用 miniconda 的 python3.12**（`/Users/hcp4715/miniconda3/bin/python3.12`，同时具备 `bs4` + `shadow_web`）；默认 `python3`（homebrew）缺依赖会报 `ModuleNotFoundError`。下文命令同此。
 
 两条命令跑完即完成。**验收只看脚本打印的摘要**，不要读 HTML/JSON 全文（省 token）：
 
@@ -57,10 +59,10 @@ grep -n '^## \|^### ' REF/xxx.md | head  # 只看章节结构
 
 | 命令 | 行为 |
 |---|---|
-| `python3 html2Json.py` | 默认：跳过已有 `.md` 的 html（保护已转换文件；Wang 不会被碰） |
-| `python3 html2Json.py --force` | 全部重处理（含 Wang → 会生成空 json，json2md 会自动跳过，事后可删） |
-| `python3 json2md.py` | 默认：跳过已有 `.md` 的 json |
-| `python3 json2md.py --force` | 全部重渲染 |
+| `/Users/hcp4715/miniconda3/bin/python3.12 html2Json.py` | 默认：跳过已有 `.md` 的 html（保护已转换文件；Wang 不会被碰） |
+| `/Users/hcp4715/miniconda3/bin/python3.12 html2Json.py --force` | 全部重处理（含 Wang → 会生成空 json，json2md 会自动跳过，事后可删） |
+| `/Users/hcp4715/miniconda3/bin/python3.12 json2md.py` | 默认：跳过已有 `.md` 的 json |
+| `/Users/hcp4715/miniconda3/bin/python3.12 json2md.py --force` | 全部重渲染 |
 
 日常流程**不要**用 `--force`；仅在改了提取逻辑需要重跑时用，且跑完 `rm -f Wang_2016_JEPHPP.json`。
 
@@ -89,7 +91,7 @@ grep -n '^## \|^### ' REF/xxx.md | head  # 只看章节结构
 
 3. 行内转换复用 `inline(el, refmap)`：只需在 `a` 分支补你模板的引用链接规则
    （如 `#bibN` → `[n]`），`em/sup/strong/math` 等已通用；
-4. 跑 `python3 html2Json.py --force && python3 json2md.py --force`，按上面验收清单核对。
+4. 跑 `/Users/hcp4715/miniconda3/bin/python3.12 html2Json.py --force && /Users/hcp4715/miniconda3/bin/python3.12 json2md.py --force`，按上面验收清单核对。
 
 ## 已知边界（勿当新问题报告）
 

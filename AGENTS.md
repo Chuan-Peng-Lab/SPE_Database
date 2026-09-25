@@ -46,7 +46,7 @@ mode: primary
 - `README.md` — 人类读者入口：项目介绍、数据使用指引、版本 changelog。
 - `AGENTS.md`（本文件）— agent 干活规则 + 避坑经验；**不写状态性文字**（规模计数/待办/逐研究状态一律归 PROJ_STATE.md）。
 - `PROJ_STATE.md` — 会话状态快照：新会话先读它再开工；每 session 收尾更新一次（见 §会话收尾）。
-- `.opencode/skills/spe-database-curation/SKILL.md` — curation 规则正文归属（自足、可迁移他库）；任何数据整理/入库任务一律先加载 `skill(name="spe-database-curation")`。
+- `.agents/skills/spe-database-curation/SKILL.md` — curation 规则正文归属（自足、可迁移他库）；任何数据整理/入库任务一律先加载 `skill(name="spe-database-curation")`（跨工具技能根 `.agents/skills`，DSH/opencode 均自动加载）。
 - 引用方向：README ↔ AGENTS ↔ PROJ_STATE 相互引用并**统一指向技能**；每条规则正文只写一个归属文件，其余文件只放一行指针（含目标节）。
 - 其他重要文档（正文均在各自文件，此处只放指针）：`3_Reports/Table1_Issues_Solvability.md`（稿件 Table 1 差异逐项可解性判定，与 PROJ_STATE §3 双向关联）；`3_Reports/Verifying_original_results_issues.md`（四方核对发现的问题统一记录处）；`REF/README_html2md.md`（REF 全文 html→json→md 管线用法）；`For_COLLABORATORS.md`（给合作者的推进指南：待数据补齐路径、新研究入库 4 步、REF 不上 GitHub 需联系 hcp4715）。
 
@@ -54,7 +54,7 @@ mode: primary
 
 数据只向前流动：`原始公开数据 → 规范数据 → 稿件产出`；**稿件永不反向作为数据源**（稿件 v16 已废弃，其待收录条目信息已登记入 Dataset_inf.csv Note 列）。
 
-- **整理/入库任务**：原始数据放输入区 `1_Data/<Study>/<Study>_Raw/`（只读、gitignore、不参与校验）→ 加载 SKILL 走 10 步流程：扫描识别实验/被试/会话 → 生成独立清洗脚本 `<Study>_clean.R`（配方见 SKILL §工具与脚本；`Clean_Data.Rmd` 仅为历史参考）→ 产出五件套（`*_raw.csv` / `*_ExpN_Clean.csv` / `*_subj_info.csv` / `Codebook_*_Clean.xlsx` / paper + 实验 JSON）→ 更新 `Dataset_inf.csv`（字节保真）→ 入库收口时重渲染 Table 1 并做四方核对。
+- **整理/入库任务**：原始数据放输入区 `1_Data/<Folder_Name>/<Folder_Name>_Raw/`（只读、gitignore、不参与校验）→ 加载 SKILL 走 10 步流程：扫描识别实验/被试/会话 → 生成独立清洗脚本 `<Folder_Name>_clean.R`（配方见 SKILL §工具与脚本；`Clean_Data.Rmd` 仅为历史参考）→ 产出五件套（`*_raw.csv` / `*_ExpN_Clean.csv` / `*_subj_info.csv` / `Codebook_*_Clean.xlsx` / paper + 实验 JSON）→ 更新 `Dataset_inf.csv`（字节保真）→ 入库收口时重渲染 Table 1 并做四方核对。
 - **分析/出数任务**：直接用规范数据与 `3_Reports/` 代码，产出写 `3_Reports/Output/`；与稿件比对默认关闭（`--param compare_manu:true` 按版本触发），禁止以稿件/旧产物反推数据。
 - **两级校验（任何改动后必跑）**：结构级 `Rscript 2_Code/validate_json_metadata.R`（EXIT=0）+ 内容级 `Rscript 2_Code/validate_clean_csv.R`（0 ERROR）。
 - 历史遗留（manu_v16、Dataset_inf.xlsx、非标准命名变体等）不主动修改。
@@ -92,8 +92,8 @@ mode: primary
 ## 最小结构地图（细则正文归 SKILL/README/PROJ_STATE）
 
 - **What**：SPE (Self-Prioritization Effect) Database — 使用 self-matching task（Sui, He & Humphreys 2012）的研究的 curated trial-level 数据库（逐研究五件套 + `1_Data/Dataset_inf.csv` 主索引）；收录规模/状态见 PROJ_STATE.md。
-- 研究数据：`1_Data/<Author>_<Year>_<Suffix>/`（输入区 `<Study>_Raw/` + 五件套，见 §项目逻辑）。主索引 `Dataset_inf.csv`（格式约定见 §数据文件格式约定）：行 = `Folder_Name`+`Exp`+`subj_Group` 三元组，`Folder_Name` 为全项目关键 ID；`Paper_ID` deprecated 勿新建；旧版 `Dataset_inf.xlsx` 勿用；`Environmental_Info` = 刺激呈现软件而非 Lab/Online（后者由 exp JSON `Physical_Environment.Setting` 推导）——语义细则见 SKILL §主索引。
-- 工具：`2_Code/`（独立清洗脚本 `<Study>_clean.R` 为现行主路径 + 两级校验器；历史：`Clean_Data.Rmd`、交互式/Shiny 清洗器）。
+- 研究数据：`1_Data/<Folder_Name>/`（输入区 `<Folder_Name>_Raw/` + 五件套，见 §项目逻辑）。主索引 `Dataset_inf.csv`（格式约定见 §数据文件格式约定）：行 = `Folder_Name`+`Exp`+`subj_Group` 三元组，`Folder_Name` 为全项目关键 ID（= 研究/study 文件夹名，命名语法 `<Author>_<Year>_<Suffix>`）；`Paper_ID` deprecated 勿新建；旧版 `Dataset_inf.xlsx` 勿用；`Environmental_Info` = 刺激呈现软件而非 Lab/Online（后者由 exp JSON `Physical_Environment.Setting` 推导）——语义细则见 SKILL §主索引。
+- 工具：`2_Code/`（独立清洗脚本 `<Folder_Name>_clean.R` 为现行主路径 + 两级校验器；历史：`Clean_Data.Rmd`、交互式/Shiny 清洗器）。
 - 分析：`3_Reports/`（Process_Data / Subject_Table / Reports / Generate_Table1 / 1_Identity / 2_Mismatch / 3_Exploratory + `Output/`）。
 - 全文库：`REF/`（`<Folder_Name>.pdf/.html`；整目录 gitignore、不上 GitHub）。
 
@@ -101,7 +101,7 @@ mode: primary
 
 - 任何数据整理/入库先加载 SKILL，按其正文执行；AGENTS 不重复 SKILL 正文——**避免双源漂移**：本文件历史旧版模板曾把 Task 置于 Shape/Label 后与 v2 冲突，**严禁照抄本文件历史版本**。
 - 产出前自查：Clean 表头逐列对照 SKILL 固定列顺序模板 v2（Subject→[Group]→[Session]→Task→[Phase]→…→Matching→Shape→Shape-Identity×3→Label→Label-Identity×3→[extraIV1/2]→[CorrResponse]→[Response]→RT_ms→RT_sec→ACC→研究特有尾部）；合规样板 = `Bukowski_2021_ActaPsych_Exp1_Clean.csv`；清洗脚本内 stopifnot 断言列序；Codebook 行序与 Clean 列序一致。
-- Clean 命名语法 `<Author>_<Year>_<Suffix>_ExpN_Clean.csv` 及列/Identity 标准化规则按 SKILL。
+- Clean 命名语法 `<Folder_Name>_ExpN_Clean.csv`（`<Folder_Name>` = `<Author>_<Year>_<Suffix>`，见 SKILL §文件命名语法）及列/Identity 标准化规则按 SKILL。
 
 ## Known data-quality caveats（避坑：视为已知，勿重新"发现"）
 
@@ -113,5 +113,5 @@ mode: primary
 
 ## Repo layout（git 卫生，防误判）
 
-- Root-level `._*` files and `Contact*.xlsx` are gitignored；部分研究在仓库根的同名条目亦被 gitignore（如 `Smith_2024_Cortex/`、`Lee_2023_Cognition/`），实际跟踪路径只有 `1_Data/<Study>/...`——勿因根目录缺文件而误判缺失。
+- Root-level `._*` files and `Contact*.xlsx` are gitignored；部分研究在仓库根的同名条目亦被 gitignore（如 `Smith_2024_Cortex/`、`Lee_2023_Cognition/`），实际跟踪路径只有 `1_Data/<Folder_Name>/...`——勿因根目录缺文件而误判缺失。
 - 分支/工作区状态一律以 `git status` 为准，本文件不记录。

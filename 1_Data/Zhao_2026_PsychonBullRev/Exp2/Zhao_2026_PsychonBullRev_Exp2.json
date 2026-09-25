@@ -1,0 +1,44 @@
+{
+  "exp2": {
+    "schema_version": "2",
+    "Collected_date": "/",
+    "Physical_Environment": {
+      "Location": "Tsinghua University, Beijing, China (assumed from ethics approval and university recruitment; software to be confirmed)",
+      "Setting": "Laboratory",
+      "Equipment": {
+        "Presenting": "/",
+        "Monitor": "/",
+        "Software": "/"
+      },
+      "Viewing_distance": "/"
+    },
+    "Experimental_Design": {
+      "Conditions": "3 (identity: general self, friend, stranger) x 2 (trial type: matching, nonmatching), within-subjects; 60 trials per condition (shape identity x trial type)"
+    },
+    "Block_Structure": {
+      "Block_number": "6 blocks",
+      "Trial_number": "360 trials total per participant (60 per condition; randomized order across 6 blocks)",
+      "Practice_trials": "practice block with feedback until 6 consecutive correct responses (variable length); practice data not included in the shared files"
+    },
+    "Trial_Structure": {
+      "Fixation_duration": "500 ms (fixation cross on grey background)",
+      "Stimulus_duration": "100 ms (simultaneous shape-label pair)",
+      "SOA": "0 ms (simultaneous presentation; shape above, label below, 3.5 deg apart)",
+      "Stimulus_order": "Simultaneous: fixation cross, then shape (2.4 x 2.4 deg) above and label (approx. 4.4 x 2.4 deg) below",
+      "Response_deadline": "1100 ms (blank screen after stimulus during which response was made; 'Too Slow' feedback otherwise)",
+      "ITI": "not reported separately",
+      "Feedback_duration": "500 ms (Correct / Incorrect / Too Slow after each trial)"
+    },
+    "Stimulus_Properties": {
+      "Modality": "Visual",
+      "Fixation": "fixation cross on grey background (RGB 127, 127, 127)",
+      "Shape": "geometric shapes: circle, square, triangle (2.4 x 2.4 deg); identity binding counterbalanced across participants and not recorded in the shared files",
+      "Label": "identity words: general self, friend, stranger (on-screen language/wording to be confirmed with authors)",
+      "Colors": {
+        "Stimulus": "not reported",
+        "Background": "grey (RGB 127, 127, 127)"
+      }
+    },
+    "detail": "Experiment 2 of Zhao & Wang (2026, Psychon Bull Rev). Same procedure as Experiment 1 but identity labels were general self, friend, stranger (no true self), testing whether general self-prioritization emerges when the true self is absent. Response keys Z/M counterbalanced (not recorded; shared code response 1 = 'match' key, 0 = 'non-match' key). Data source: OSF https://osf.io/j2pxc/, file data/hddm_trial_data/exp2_hddm_trial_data.xlsx plus exp2_behavior_questionnaire.xlsx. Authors recruited 49 from a university, excluded 2 for below-chance accuracy, analysed 47 (29 female; Mage 23.21, SD 3.67); all 47 analysed participants present in the shared file (subject ids 1-48 minus id 14; id 49 unused). Shared trial file keeps only trials with a response and RT >= 200 ms (rows 16528 < 47 x 360 = 16920). Label identity recorded only on matching trials (equals shape identity by construction); 'missing' elsewhere. Questionnaires after the task (online): BTS, SCS, SEB. Ethics: Tsinghua University Ethics Committee THU-04-2025-1135. On-screen stimulus language/wording and presentation software to be confirmed with the authors."
+  }
+}

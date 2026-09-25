@@ -151,7 +151,7 @@
 **关键具体项**:
 - `Pt6E1`/`Pt6E2` (Vicovaro_2022_JEPHPP): 稿件 "Mixed (Lab + Online)"，JSON 含 "Online experiment" + "Dimly lit room"，qmd 判为 Online → **稿件对（Mixed）**，需人工确认
 - `Constable_2019_JEPHPP` (P5E1-4): JSON Setting 全为 `/`，无软件 → 需人工（稿件说 Lab Experiment）
-- `Kirk_2025_BritJPsy`/`Lee_2023_Cognition`/`Orellana-Corrales_2021_APP`/`Pan_2025_unpub`/`Smith_2024_Cortex`/`Sun_2026_DataExp`/`Svensson_2023_QJEP`: 无 JSON → 需人工
+- `Kirk_2025_BritJPsy`/`Lee_2023_Cognition`/`Orellana-Corrales_2021_APP`/`Smith_2024_Cortex`/`Sun_2026_DataExp`/`Svensson_2023_QJEP`: 无 JSON → 需人工（`Pan_2025_unpub` 已于 2026-09-25 补齐 JSON：Setting=Online、Software=jsPsych 7.3.1，**移出本清单**）
 
 ---
 

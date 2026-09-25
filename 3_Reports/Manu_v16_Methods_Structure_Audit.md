@@ -2,7 +2,7 @@
 
 > 审计日期：2026-09-02　|　性质：**只读审计**（§4 #7/#8 已于 2026-09-02 用户指示下修复，见行内标注）　|　依据：`3_Reports/Manu_v16_Methods.md`（32 行方法节）vs 全库实况
 > 核验手段：全库脚本扫描（47 curated 文件夹 / 131 JSON / 86 Clean〔审计时点〕）+ 现有两级校验器基线。脚本存于临时目录，未入库。
-> 相关规则出处：`.opencode/skills/spe-database-curation/SKILL.md`、`AGENTS.md`、`PROJ_STATE.md`（2026-09-02 精简版）。
+> 相关规则出处：`.agents/skills/spe-database-curation/SKILL.md`、`AGENTS.md`、`PROJ_STATE.md`（2026-09-02 精简版）。
 > **2026-09-02 修复后快照**：Clean 84 文件（Liang 三分片合并为 1）、Codebook 84、JSON 131（47 paper 级 + 84 exp）；两级校验 EXIT=0（clean 0 ERROR / 27 WARN）。
 
 ---
