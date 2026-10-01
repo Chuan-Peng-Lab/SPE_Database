@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # =============================================================================
-# split_clean_csv.py — 将单体过大的 *_Clean.csv 按「整被试」边界切分为分片
+# split_clean_csv.py — 将单体过大的 *_Clean.csv / *_raw.csv 按「整被试」边界切分为分片
 # -----------------------------------------------------------------------------
 # 规则正文：.agents/skills/spe-database-curation/SKILL.md
-#           §文件与文件夹规范「大文件拆分（单一 *_Clean.csv > 50 MB）」
+#           §文件与文件夹规范「大文件拆分（单一 *_Clean.csv 或 *_raw.csv > 50 MB）」
 #
 #   <Folder_Name>_Exp<N>_Clean.csv  →  <...>_Clean_part1.csv, <...>_Clean_part2.csv, ...
+#   <Folder_Name>_Exp<N>_raw.csv    →  <...>_raw_part1.csv,   <...>_raw_part2.csv,   ...
 #
 # 保证：
 #   1) 同一 Subject 的全部行落在同一分片（取数据中 Subject 的连续整段，保全全行序）；
@@ -121,8 +122,8 @@ def main():
     path = a.clean_csv
     if not os.path.isfile(path):
         fail(f"文件不存在: {path}")
-    if not os.path.basename(path).endswith("_Clean.csv"):
-        fail(f"只处理 *_Clean.csv（分片本身不接受再拆分）: {os.path.basename(path)}")
+    if not (os.path.basename(path).endswith("_Clean.csv") or os.path.basename(path).endswith("_raw.csv")):
+        fail(f"只处理 *_Clean.csv / *_raw.csv（分片本身不接受再拆分）: {os.path.basename(path)}")
 
     raw = open(path, "rb").read()
     size = len(raw)

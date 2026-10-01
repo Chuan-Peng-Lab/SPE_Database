@@ -43,7 +43,6 @@ clean_bases <- unique(clean_base)
 # ---------- 已知例外（历史遗留，修复后移出） ----------
 known <- c(
   "Constable_2020_ActaPsych_Exp1"    = "缺 Label/Shape 的 English/Standardized 四个 Identity 三级列（历史文件，待补）",
-  "Sun_2026_DataExp_Exp1"            = "nSubj 506 vs subj_info 334 行（全样本 vs 有效样本口径，已知）",
   "Zhang_2023_NeuroImage_Exp1"       = "nSubj 346 vs subj_info 347 行（差 1，待核）",
   "Perrykkad_2022_BMCPsych_Exp1"       = "nSubj 334 vs subj_info 288 行（Pt7E1 N 口径，待核）"
 )

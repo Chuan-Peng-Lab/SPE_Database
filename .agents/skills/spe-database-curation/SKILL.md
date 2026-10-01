@@ -85,8 +85,9 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 ```
 **通用收尾（迁移他库保留）**
 □ 五件套齐全且命名合规（raw/Clean/subj_info/Codebook/paper+exp JSON）
-□ Clean 文件 ≤ 50 MB；超限按 §文件与文件夹规范「大文件拆分」按被试边界分片
-  （分片共用 1 份 Codebook/1 份 exp JSON、不新增 Dataset_inf 行、两级校验须覆盖分片）
+□ Clean 与 raw 文件均 ≤ 50 MB；超限按 §文件与文件夹规范「大文件拆分」按被试边界分片
+  （Clean 分片共用 1 份 Codebook/1 份 exp JSON、不新增 Dataset_inf 行、两级校验须覆盖分片；
+  raw 分片共用 1 份 exp JSON、不新增 Dataset_inf 行、不参与校验）
 □ 两级校验：validate_json_metadata.R EXIT=0 + validate_clean_csv.R 0 ERROR
 □ Dataset_inf.csv 收口（字节保真：往返测试 → 写入 → diff 仅目标单元格 → ID 行序保持；
   纪律见 §主索引「写入纪律：CSV 字节保真编辑」）
@@ -158,8 +159,8 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
     unpublished data without a preprint server (e.g., `Sui_2014_unpub`,
     `Sui_2015_unpub`, `Pan_2025_unpub`).
 - **Tags**: `_raw` (unprocessed), `_subj_info` (participant level), `_Clean`
-  (minimally preprocessed), `_Clean_part<N>`（大文件分片，见「大文件拆分（单一
-  `*_Clean.csv` > 50 MB）」）, `Codebook_*_Clean.xlsx` for codebooks.
+  (minimally preprocessed), `_Clean_part<N>` / `_raw_part<N>`（大文件分片，见「大文件拆分（单一
+  `*_Clean.csv` / `*_raw.csv` > 50 MB）」）, `Codebook_*_Clean.xlsx` for codebooks.
 - **Canonical casing**: `Codebook_` (lowercase b), `_raw_` (lowercase);
   legacy `CodeBook_…`/`Raw/` 变体已统一/不再沿用 — do not propagate.
 - **Filenames must be pure ASCII** (no diacritics).
@@ -197,13 +198,15 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
   study root) — do not confuse the two: `*_Raw/` = downloaded originals (as-is),
   `*_raw.csv` = processed standard file.
 
-### 大文件拆分（单一 `*_Clean.csv` > 50 MB）
+### 大文件拆分（单一 `*_Clean.csv` 或 `*_raw.csv` > 50 MB）
 
-`*_Clean.csv` 写盘后若 **> 50 MB（十进制 10^6 B）**，拆分为多个分片，命名为
+`*_Clean.csv` 或 `*_raw.csv` 写盘后若 **> 50 MB（十进制 10^6 B）**，拆分为多个分片，命名为
 `<Folder_Name>_Exp<N>_Clean_part1.csv`、`<Folder_Name>_Exp<N>_Clean_part2.csv`…（canonical
-`_Clean`；`_part<N>` 紧接 `_Clean` 之后、序号从 1 起、升序；拆到**每片 ≤ 50 MB** 为止，
-必要时允许 3 片以上）。理由：GitHub 单文件硬上限 100 MB，50 MB 阈值留 2 倍余量；
-同时避免把一个大实验的 Clean 误当成两个数据集。
+`_Clean`）或 `<Folder_Name>_Exp<N>_raw_part1.csv`、`<Folder_Name>_Exp<N>_raw_part2.csv`…（canonical
+`_raw`）；`_part<N>` 紧接其后、序号从 1 起、升序；拆到**每片 ≤ 50 MB** 为止，
+必要时允许 3 片以上。理由：GitHub 单文件硬上限 100 MB，50 MB 阈值留 2 倍余量；
+同时避免把一个大实验的 Clean（或 raw）误当成两个数据集。raw 与 Clean 各自独立判定与分片，
+片数/边界不必一一对应。
 
 - **拆分单元 = 被试**：同一 `Subject` 的全部行必须落在同一分片（边界取数据中 Subject 的
   **连续整段**，保全全行序）；不重排、不过滤、不改任何单元格。
@@ -213,12 +216,17 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
   为各片合计）；`*_subj_info.csv` 1 份、exp JSON 1 份。
 - **Codebook 1 份**（`Codebook_<Folder_Name>_Exp<N>_Clean.xlsx`，不带 `_part` 后缀）——
   本规则是 §Codebook「一 Clean 一 Codebook」的**唯一例外**：各片列完全相同，共用同一 Codebook。
+- **`*_raw.csv` 分片额外约定**：raw 无 Codebook（Codebook 只对应 Clean），不涉「共用 Codebook」；
+  分片仍共用同一 exp JSON、不新增 `Dataset_inf.csv` 行；两个校验器**不扫描 `*_raw.csv`**
+  （只匹配 `_Clean` 系列），故 raw 分片不触发任何校验规则（也不受 E4 表头一致性检查约束——
+  但同一 raw 的各片表头仍应逐字节相同以保可还原）。
 - exp JSON `detail` 注明拆分原因、片数、各片被试数与行数。
 - **校验**：两个校验器均把 `_Clean_part<N>.csv` 纳入扫描，剥离 `_part<N>` 后按**逻辑数据集**
-  处理（E3/W2 用各片合计被试数比对；新增「各片表头必须一致」检查，不一致 → ERROR）。
-- **适用范围**：仅产物区 `*_Clean.csv`；输入区 `*_Raw/`、`Source/` 内的原始导出保持原样不拆。
+  处理（E3/W2 用各片合计被试数比对；新增「各片表头必须一致」检查，不一致 → ERROR）；
+  `*_raw_part<N>.csv` 不在校验范围。
+- **适用范围**：产物区 `*_Clean.csv` 与 `*_raw.csv`；输入区 `*_Raw/`、`Source/` 内的原始导出保持原样不拆。
 - **工具**：`python3 2_Code/split_clean_csv.py <路径>/<Folder_Name>_Exp<N>_Clean.csv --apply`
-  （按被试边界切分、写前逐字节校验可还原、原文件先备份；`--dry-run` 只报告拆分点）。
+  （同样接受 `*_raw.csv`；按被试边界切分、写前逐字节校验可还原、原文件先备份；`--dry-run` 只报告拆分点）。
 
 ## 主索引 Dataset_inf.csv
 
@@ -388,9 +396,12 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 - **任务与附加自变量命名（全库统一）**：
   - `Task` 列：**全库标准列**，区分"联结对象是否含自参照身份"的任务类型。默认值 `self-matching`
     （形状↔自我/他人联结，数据库核心）；其他受控值：`facialExpression-matching`（联结纯情绪面孔）、
-    `monetaryValue-matching`（联结金钱价值）、`self-pseudoWords`（形状↔伪词配对，Wozniak_2022）。
+    `monetaryValue-matching`（联结金钱价值）、`self-pseudoWords`（形状↔伪词配对，Wozniak_2022）、
+    `shape-matching`（形状↔形状名匹配的**无身份基线**任务，Sun_2026_DataExp Task1/Day-2 几何图形版）。
     多任务研究（如 Hobbs 三任务）按行填对应值；单任务研究填默认值。判定标准：
     **联结对象含自参照身份 → self-matching（任务内其他操纵归 extraIV）；不含 → 其他 Task 值**。
+    同一研究含多个任务时，用 `Session`/`Task` 两列共同区分（Sun_2026_DataExp：Session 2 + shape-matching、
+    Session 3 + self-matching，整合为同一 Clean 文件）。
   - `extraIV1`/`extraIV2`：self-matching 任务内的**额外操纵自变量**（第 3/4 自变量）统一命名
     （如 Blocktype→extraIV1、Expectancy→extraIV1、Domain→extraIV1 + Valence→extraIV2 等）。
     每研究的 extraIV 具体语义（值、操纵定义、论文文字对应）**必须登记在 Codebook 与 exp JSON detail**

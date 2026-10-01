@@ -18,7 +18,10 @@ jobs <- list(
   list(clean = "1_Data/Orellana-Corrales_2021_APP/Exp1/Orellana-Corrales_2021_APP_Exp1_Clean.csv",
        cb = "1_Data/Orellana-Corrales_2021_APP/Exp1/Codebook_Orellana-Corrales_2021_APP_Exp1_Clean.xlsx"),
   list(clean = "1_Data/Orellana-Corrales_2021_APP/Exp2/Orellana-Corrales_2021_APP_Exp2_Clean.csv",
-       cb = "1_Data/Orellana-Corrales_2021_APP/Exp2/Codebook_Orellana-Corrales_2021_APP_Exp2_Clean.xlsx")
+       cb = "1_Data/Orellana-Corrales_2021_APP/Exp2/Codebook_Orellana-Corrales_2021_APP_Exp2_Clean.xlsx"),
+  # Sun_2026_DataExp：Clean 已按被试边界分为 4 片，枚举用 /tmp 下的合并副本（分片共用 1 份 Codebook）
+  list(clean = "/tmp/sun_cb/clean_combined.csv",
+       cb = "1_Data/Sun_2026_DataExp/Codebook_Sun_2026_DataExp_Exp1_Clean.xlsx")
 )
 
 describe <- function(col) {
@@ -38,7 +41,21 @@ describe <- function(col) {
   if (col == "RT_ms") return("Reaction time for the response, measured in milliseconds")
   if (col == "RT_sec") return("Reaction time for the response, measured in seconds")
   if (col == "ACC") return("Accuracy of the participant's response")
+  if (col == "Session") return("Test session in which the trial was completed (same task across sessions is not a new experiment)")
+  if (col == "Task") return("Task type: whether the shape-label association includes a self-referential identity (self-matching) or not")
+  if (col == "Phase") return("Phase of the task the trial belongs to (practice vs formal, and task/sub-task variant)")
+  if (col == "extraIV1") return("Study-specific additional independent variable 1 (semantics documented in the experiment JSON detail)")
+  if (col == "extraIV2") return("Study-specific additional independent variable 2 (semantics documented in the experiment JSON detail)")
+  if (col == "CorrResponse") return("Correct response key for the trial as designed (missing if the source file does not provide it)")
+  if (col == "Run") return("Administration run of the same task for participants who completed it more than once (1 = first run)")
   return("NA")
+}
+
+# 可选：命令行给出子串时只处理匹配的 job（默认处理全部，行为不变）
+argv <- commandArgs(trailingOnly = TRUE)
+if (length(argv)) {
+  jobs <- Filter(function(j) any(vapply(argv, function(a) grepl(a, j$clean, fixed = TRUE), logical(1))), jobs)
+  cat("selected jobs:", length(jobs), "\n")
 }
 
 for (j in jobs) {
