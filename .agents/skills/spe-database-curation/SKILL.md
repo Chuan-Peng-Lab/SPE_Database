@@ -1,7 +1,8 @@
 ---
 name: spe-database-curation
-description: SPE Database curation conventions — 以 agent 工作流为中心：入库 10 步流程与入口判定、
-  人工决策点、文件命名语法、JSON 元数据 schema（paper + experiment v2 五组件）、Identity 三级标准化、
+description: SPE Database curation conventions — 以 agent 工作流为中心：领域术语基准（SPE / self-matching
+  task / SOA vs ISI / Modality / Identity 词表 / 最小预处理≠过滤 / 工作表述规范）、入库 10 步流程与起点判定、
+  人工决策点、文件命名语法、JSON 元数据 schema（paper + experiment v2 五个字段组）、Identity 三级标准化、
   ACC 统一编码、Codebook 编写规则、DOI/年份核验（Crossref）、Dataset_inf.csv 主索引规则、两级校验。
   原始数据解析先例（E-Prime/PsychoPy/MATLAB/作者产物）见附属文件 parsing-examples.md，工具细节见 tools.md。
   使用场景：在 1_Data/ 下新增或整理研究/实验文件夹、编写或编辑 *_raw/_Clean CSV、Codebook_*.xlsx、
@@ -18,10 +19,95 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则：roo
 三级标准化/ACC 编码/列序模板 v2/Codebook/主索引字段语义/缺失三态/校验规则不依赖仓库级文档，可迁移
 任何采用本布局的 SPE 风格数据库）。**仅本仓库适用的内容**（迁移他库时删除）：工具路径与命令注记
 （`2_Code/`、`1_Data/utils.R`、`read_dataset_inf.py`、`Rscript …validate_*.R`，细节在 tools.md）；
-仓库集成收尾注记（PROJ_STATE.md 登记、AGENTS/README 计数、exFAT 卫生——正文在 AGENTS.md）。
+仓库集成收尾注记（PROJ_STATE.md 登记、AGENTS/README 计数、外置盘文件清理——正文在 AGENTS.md）。
 
 **文件组成**：`SKILL.md`（本文件，工作流+核心规则+速查表，日常加载）；`parsing-examples.md`
 （原始数据解析与验证先例详细版，按格式分组，遇对应格式时按速查表读取）；`tools.md`（工具端点与用法，少数任务才读）。
+
+## 领域术语基准（domain terminology baseline — 落笔前先对齐）
+
+> 角色约定：使用本技能的 agent 以**心理学/认知科学/认知神经科学/神经科学领域的数据分析专家
+> （neuroinformatics / psychoinformatics）**身份工作（角色正文在仓库 `AGENTS.md` §0；迁移他库时自行定义）。
+> **领域术语定义唯一归属本节**——写字段值、Codebook、JSON、报告前先与此对齐，禁止自造术语或自由文本变体。
+
+本库收录**自我优先效应（self-prioritization effect, SPE）**研究：被试学习"形状 ↔ 身份标签"联结后完成
+**自我匹配任务（self-matching task, Sui et al., 2012）**，判断呈现的 shape–label 对是否与所学联结一致
+（matching vs mismatching/nonmatching）；SPE = 自我关联刺激相对他人关联刺激的 RT/ACC 优势。术语按下列用法
+（证据：本库 `REF/` 48 篇全文词频统计）：
+
+- **SPE 不与相邻概念混用**：`self-reference effect (SRE)` 是记忆效应、`self-other matching` 属模仿/动作观察
+  研究、`self-bias` 是 SPE 的同义异称（Sui & Humphreys 系列用语）。缩写首次出现写全称。
+- **任务名以 `self-matching task` 为准**（本库主术语，与 `Task` 列受控值、文件夹/文档表述一致）。其他用法仅在
+  首次出现时作同义注明：`shape–label matching task`（描述性全称）、`perceptual matching task`（文献同义）。
+  REF 全文词频：`shape-label matching` 334 次 / 26 篇、`perceptual matching task` 73 次 / 16 篇、`self-matching
+  task` 33 次 / 4 篇——**别名出现更多不改变本库主术语**，行文与产物一律以 `self-matching task` 起头。
+- **participant（被试）= person-level 单位，trial（试次）= 最小数据单位**；列名沿用 `Subject`（SPSS 惯例），
+  正文用 participant。
+- **SOA（stimulus onset asynchrony）= 前一刺激 onset → 后一刺激 onset**；**ISI（inter-stimulus interval）=
+  前一刺激 offset → 后一刺激 onset**。记录 offset→onset 的间隔**必须写 `ISI`，不得写进 `SOA`**；两刺激同时
+  呈现写 `0 ms (simultaneous)`。**ITI（inter-trial interval）= 本试次结束（反应/反馈）→ 下一试次开始**。
+- **`Stimulus_Properties.Modality` = 感觉通道**（`Visual` / `Auditory` / `Audiovisual`）；刺激类别（geometric
+  shape / face / voice / letter string）写 CSV `Stim_Type`，不塞进 `Modality`；**EEG/fMRI 是记录技术
+  （recording technique），不是 modality**（`"EEG, Visual"` 一类混合值是错的）；"几何图形 + 何种标签"等细节写 `detail`。
+- **`Stimulus_order` = 两刺激的起始关系**，取 `Simultaneous` / `Sequential`（"shape first / label first"、
+  各刺激时长等写 `detail`），不写整句自由文本。
+- **`Physical_Environment.Setting` = 施测环境**（受控词表见 §元数据 JSON §字段组）；"电屏蔽室""安静房间"
+  "被试自己的设备"属房间/设备信息，写 `Equipment`/`detail`，不是 Setting 取值。
+- **身份词表（`*_Standardized_Identity`）= 社会身份类别**（NonPerson / Self / Close / Acquaintance / Celebrity /
+  Stranger）；`NonPerson` 是本库自造名（REF 全文 `nonperson`/`non-person` 0 次；文献多用 non-social / neutral
+  shape，如 Möbel→furniture），**Codebook 必须给出原文别名**。该列只承载**身份或刺激类别**：已登记的非身份
+  刺激例外按原样保留（货币 `£9`/`£1`、内群体 `ingroup`，见 §数据标准化「非身份刺激特例」）；**情绪（happy/sad）、
+  效价、试次类型（filler/练习）、设计条件等不得写入该列**——它们属 `Task`/`Condition`/`extraIV`/Note。
+- **minimal preprocessing（最小预处理）≠ filtering/cleaning（清洗/过滤）**：`*_Clean.csv` 是**标准化
+  （harmonization）产物**——只重命名/重排/统一编码，不删试次、不删被试、不改数值；"清洗脚本"为历史称谓，
+  **不得据此过滤数据**。
+- **`Shape` 列 = 承载身份的刺激层（identity-bearing stimulus layer）**，不一定是几何图形（可为面孔/声音/
+  说话者/联结类型）；字段名沿用 `Shape`，语义以此定义为准，Codebook 逐研究写明。
+
+- **标准文件（standard files）= 每个研究应交付的 5 类规范产物**（旧称"五件套"，不再使用）：`*_raw.csv`
+  （标准化 trial 级原始值）、`*_ExpN_Clean.csv`（最小预处理产物）、`*_subj_info.csv`（被试级人口学）、
+  `Codebook_*.xlsx`（数据字典）、paper + experiment JSON（元数据）。多实验研究按实验各一套（各自对应
+  1 份 Codebook / exp JSON）；输入区 `*_Raw/` 内的下载原件**不算**标准文件。文档中首次出现须带这一解释
+  （或写明"标准文件（5 类规范产物）"并指向本条）。
+
+### 表述规范（工作用语 → 本领域标准表述）
+
+Agent 从软件开发/运维语境带入的行话**不进本库文档与产物**（文档、Codebook、JSON `detail`、报告、给合作者的说明
+一律用右列表述）：
+
+| 不用（跨领域行话） | 统一表述 | 指代 |
+|---|---|---|
+| 五件套 | 标准文件（定义见本节前文） | raw / Clean / subj_info / Codebook / paper+exp JSON 五类 |
+| 组件（"JSON 五组件"） | 字段组（五个字段组） | 元数据 schema 的分组 |
+| 落盘 / 写盘 | 写入 / 写出文件 | 把结果写入目标路径 |
+| 四方核对 | 多源交叉核验 | 论文 ↔ 作者分析代码 ↔ 库内数据 ↔ 原始导出 |
+| 收口 | 完成确认 | 入库/登记的最后一步核对 |
+| 白名单 | 例外清单 | `known_pending` / `known_unlisted` |
+| 入口 / 入口判定 | 起点 / 起点判定 | 按研究文件夹现状决定从第几步开始 |
+| 配方 | 参考脚本 | 历史脚本（`Clean_Data.Rmd`） |
+| 守卫 | 一致性检查 | 如用 `stopifnot()` 检查行数/被试数/列序 |
+| 断言（指代码内检查） | 一致性检查 | 中文统计/心理语境「断言」= 论断/命题，勿用于代码检查 |
+| 裸跑 | 直接输出 / 直接运行 | 不做截断地输出大 diff、长日志 |
+| 静默（重试/删除/清空） | 无提示地（重试）；擅自（删除） | — |
+| 漂移（双源漂移） | 不一致（双源不一致） | 同一规则两处正文 |
+| 回填 | 补录 | 补齐缺失文件/字段 |
+| 快照 | 现状摘要 / 现状汇总 | 项目状态盘点 |
+| 消解 | 已解决 | 问题状态 |
+| 冻结（记录/清单/项） | 登记暂缓（暂不改动） | 记录在案、当期不处置 |
+| 样张 | 合规示例 | 示范性文件 |
+| 剥离（后缀） | 去掉（后缀） | 如去掉 `_part<N>` |
+| 兜底 | 人工复核 | 由人核对，发现机器检查不到的问题 |
+| 硬编码 | 固定为（脚本内固定取值） | 未参数化、直接写在脚本里的取值 |
+| 主路径 | 标准流程 | 现行的标准做法 |
+| 触发式工作 | 条件触发的工作 | 由外部条件决定何时做 |
+| 落地（规则如何落地） | 应用（规则如何应用） | — |
+| 校验器 | 校验脚本 | 指 `2_Code/validate_*.R` |
+| 卫生（"exFAT 卫生""git 卫生"） | 文件清理 / 仓库整洁 | 计算领域隐喻，非数据管理表述 |
+
+**新增词条前先自证是领域用法**（教训：曾把「守卫」改成「断言」——两者都是软件测试用语，而中文统计/心理语境
+「断言」指论断/命题，属换汤不换药）：① 先查本库 `REF/` 全文与该概念在论文 Methods/数据字典中的实际表述
+（如任务名用词频统计，见本节首条）；② 再查统计/心理测量/数据管理的通行中文表述（如"一致性检查""校验"
+"复核"）；③ 两者都查不到依据时**保留原文并在 Codebook/`detail` 里定义**，不自行造词、也不用另一个领域的词顶替。
 
 ## 多语言与编码约定（多语言数据库的包容性）
 
@@ -37,23 +123,23 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 内容，无 BOM 则可能乱码；读取对 BOM/行尾透明（用封装或 `utf-8-sig`）。任何编辑必须字节保真
 （往返测试 → 写入 → diff 仅目标单元格），细则见 §主索引「写入纪律：CSV 字节保真编辑」。
 
-## 入库工作流（10 步 + 入口判定 + 四方核对 + 收尾检查清单）
+## 入库工作流（10 步 + 起点判定 + 多源交叉核验 + 收尾检查清单）
 
-### 入口判定：按论文文件夹现状选择起点
+### 起点判定：按论文文件夹现状选择起点
 
-加载本技能后**第一步**：查看目标论文的 `1_Data/<Folder_Name>/` 现状，按下表选入口，不要从头跑 10 步：
+加载本技能后**第一步**：查看目标论文的 `1_Data/<Folder_Name>/` 现状，按下表选起点，不要从头跑 10 步：
 
-| 文件夹现状 | 入口 | 对应原场景 |
+| 文件夹现状 | 起点 | 对应原场景 |
 |---|---|---|
-| 全新数据（输入区已有原始导出，无五件套） | 第 1 步全流程 | 场景 B（ingestion） |
+| 全新数据（输入区已有原始导出，无标准文件） | 第 1 步全流程 | 场景 B（ingestion） |
 | raw/Clean/subj_info 已齐、缺 JSON/Codebook | 第 5 步（元数据核心） | 场景 A（backfill） |
 | Clean 已齐、缺标准 `*_raw.csv` | 第 3 步清洗脚本，或按豁免原则判定（见下） | 阶段 4 |
-| 五件套已齐、仅需校验/收口 | 第 10 步 | — |
+| 标准文件已齐、仅需校验/完成确认 | 第 10 步 | — |
 | 已有文件夹但 CSV 无行（known_unlisted） | 先登记 Dataset_inf.csv（第 10 步前置），再按上表 | — |
 
 ### 统一流程（10 步）
 
-**数据产出（仅全新数据需要；其余入口跳过）**
+**数据产出（仅全新数据需要；其余起点跳过）**
 1. **建文件夹 + 输入区**：`1_Data/<Folder_Name>/<Folder_Name>_Raw/`（命名语法见「文件与文件夹规范」：印刷年、纯 ASCII、期刊/库缩写）。
 2. **扫描输入区**：识别 实验/被试/会话 结构；格式异常或多格式混存 → 暂停（决策点 #7）；先查「原始数据解析与验证先例」速查表定位格式条目。
 3. **清洗脚本**：`<Folder_Name>_clean.R`（对照标准列新写；规范见「工具与脚本」§独立清洗脚本）→ 产出 `*_raw.csv`（标准 trial 级）+ `*_ExpN_Clean.csv`；`*_subj_info.csv` 从 raw/输入区人口学生成。
@@ -61,42 +147,42 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 
 **元数据核心（场景 A/B 共用）**
 5. **[C] 字段（paper JSON）**：`Paper_name`/`Author`/`Year`/`Journal`/`DOI` 由 Crossref API 预填（`works/<DOI>`）；Journal 用 `container-title`；preprint 固定 `Journal: "Preprint"` 且 DOI 存裸格式；unpublished 无 DOI → 模板手工填；**DOI 本地优先**（先查 paper JSON / Dataset_inf.csv）；`Year` == 文件夹年份（见「DOI 与年份核验」）。
-6. **[P] 字段（论文内容）**：`Summary`/`Conclusion` + Methods 五组件细节从论文提取。**全文查找顺序（强制）**：① 查 `REF/`（`<Folder_Name>.pdf/.html`）→ ② 无则先向用户确认是否已有全文 → ③ 用户无才走 OA 渠道（unpaywall → eprints/PMC/出版社页面）→ ④ 实无全文：Europe PMC 摘要 + OSF README/预注册/补充材料 + 数据推导；仍缺字段留 `/` 并注明。下载到的全文落盘 `REF/`（`<Folder_Name>.pdf/.html` + `_supp.docx`/`_prereg.pdf`/`_OSF_README.docx`/`_PMC.xml`）。
+6. **[P] 字段（论文内容）**：`Summary`/`Conclusion` + Methods 五个字段组细节从论文提取。**全文查找顺序（强制）**：① 查 `REF/`（`<Folder_Name>.pdf/.html`）→ ② 无则先向用户确认是否已有全文 → ③ 用户无才走 OA 渠道（unpaywall → eprints/PMC/出版社页面）→ ④ 实无全文：Europe PMC 摘要 + OSF README/预注册/补充材料 + 数据推导；仍缺字段留 `/` 并注明。下载到的全文写入 `REF/`（`<Folder_Name>.pdf/.html` + `_supp.docx`/`_prereg.pdf`/`_OSF_README.docx`/`_PMC.xml`）。
    `[H]` `Country`/`City`/`Email` 需人工（可用 Dataset_inf.csv 现值）；`Extra_Var` 无则 `/`。
-7. **[D] 字段（experiment JSON）**：`Block_Structure.Trial_number` 从 Clean 行数÷被试数推算（与论文/CSV `numTrials` 交叉核对口径：per-block vs total；行数不整除时以论文值为准并注明）；`Stimulus_Properties.Modality` 从 CSV `Stim_Type` 映射；`Equipment.Software` 从 CSV `Environmental_Info`（空则查论文，未知 `/`）；`Setting` 受控词表（Laboratory/Online/组合，见「元数据 JSON」§五组件）。
-8. **草稿 + 人工确认**：草稿写 /tmp（paper JSON 11 字段 / exp JSON v2 五组件 + `detail` 注明字段来源分级与遗留）；列出全部 `[P]`/`[H]` 不确定项（任务身份、软件、N 口径、Email、年份、License 等）→ **用户确认前不落盘**。
+7. **[D] 字段（experiment JSON）**：`Block_Structure.Trial_number` 从 Clean 行数÷被试数推算（与论文/CSV `numTrials` 交叉核对口径：per-block vs total；行数不整除时以论文值为准并注明）；`Stimulus_Properties.Modality` 按**实际呈现通道**取 `Visual`/`Auditory`/`Audiovisual`（由 CSV `Stim_Type` 与 Label 侧通道共同判断，定义见 §领域术语基准，刺激细节写 `detail`）；`Equipment.Software` 从 CSV `Environmental_Info`（空则查论文，未知 `/`）；`Setting` 受控词表（Laboratory/Online/组合，见「元数据 JSON」§字段组）。
+8. **草稿 + 人工确认**：草稿写 /tmp（paper JSON 11 字段 / exp JSON v2 五个字段组 + `detail` 注明字段来源分级与遗留）；列出全部 `[P]`/`[H]` 不确定项（任务身份、软件、N 口径、Email、年份、License 等）→ **用户确认前不写入**。
 9. **Codebook**：按「Codebook 编写规则」生成（单 `Sheet1` 4 列，覆盖全部 Clean 列，行数==Clean 列数；枚举值取数据 unique 含 NA/timeout/None 等特殊值）。
 
 **收尾**
-10. **落盘 + 校验 + 同步（通用收尾）**：`cp` /tmp → 目标；更新 `Dataset_inf.csv`（每实验一行
+10. **写入 + 校验 + 同步（通用收尾）**：`cp` /tmp → 目标；更新 `Dataset_inf.csv`（每实验一行
     `Folder_Name`+`Exp`，UTF-8 **带 BOM** 字节保真——写入纪律见 §主索引「写入纪律：CSV 字节保真编辑」，
     不动 legacy `Dataset_inf.xlsx`）；`validate_json_metadata.R` EXIT=0 + `validate_clean_csv.R` 0 ERROR；
-    `known_pending`/`known_unlisted` 白名单同步。**本仓库集成注记（仅 SPE_Database 适用，迁移他库删除）**：
-    更新 PROJ_STATE.md（3 节类别行 + 5 节快照数字，见下方检查清单）；AGENTS/README 计数同步（如有）；
-    exFAT 卫生（git 前清理 `._*`、不提交 macOS cruft——正文见 AGENTS.md §会话约定，此处仅指针）。
+    `known_pending`/`known_unlisted` 例外清单同步。**本仓库集成注记（仅 SPE_Database 适用，迁移他库删除）**：
+    更新 PROJ_STATE.md（3 节类别行 + 5 节现状数字，见下方检查清单）；AGENTS/README 计数同步（如有）；
+    外置盘文件清理（git 前删除 `._*`、不提交 macOS 附带文件——正文见 AGENTS.md §会话约定，此处仅指针）。
 
-### 入库后四方核对（场景 B 收尾必做）
+### 入库后多源交叉核验（场景 B 收尾必做）
 
 论文全文 ↔ 作者分析代码（OSF dataPrep/SPSS 脚本）↔ 库内数据（CSV/JSON/Clean/raw）↔ OSF 原始导出，逐字段交叉 + **论文描述性统计核对**（论文报告的均值/正确率/方向，按作者脚本口径聚合）。**用户指示：只核对描述性统计，不复现统计检验/回归模型结果**——逐值/聚合数据一致性验证仍必做（方法见 parsing-examples.md §作者脚本逐值验证法）。发现的问题按「可自动确定（有全文/数据证据）→ 修改；需人工 → 记录于 `3_Reports/Verifying_original_results_issues.md`（Issue 编号）+ exp JSON detail/CSV Note」处置；**是否联系作者由项目负责人决定**（超库范围不主动执行）。
-**验证时机建议**：作者聚合逐值验证宜在**清洗脚本产出后、CSV 行收口前**完成——数据层证据（列解码、身份映射、ACC/RT 口径）先行确认，发现问题时只需改清洗脚本重跑，避免 CSV/JSON 已写死后再返工；论文方向性核对与 CSV 收口可同步进行。
+**验证时机建议**：作者聚合逐值验证宜在**清洗脚本产出后、CSV 行登记完成前**完成——数据层证据（列解码、身份映射、ACC/RT 口径）先行确认，发现问题时只需改清洗脚本重跑，避免 CSV/JSON 定稿后再返工；论文方向性核对与 CSV 完成确认可同步进行。
 
 ### 收尾检查清单（第 10 步，不含渲染）
 
 ```
 **通用收尾（迁移他库保留）**
-□ 五件套齐全且命名合规（raw/Clean/subj_info/Codebook/paper+exp JSON）
+□ 标准文件齐全且命名合规（raw/Clean/subj_info/Codebook/paper+exp JSON）
 □ Clean 与 raw 文件均 ≤ 50 MB；超限按 §文件与文件夹规范「大文件拆分」按被试边界分片
   （Clean 分片共用 1 份 Codebook/1 份 exp JSON、不新增 Dataset_inf 行、两级校验须覆盖分片；
   raw 分片共用 1 份 exp JSON、不新增 Dataset_inf 行、不参与校验）
 □ 两级校验：validate_json_metadata.R EXIT=0 + validate_clean_csv.R 0 ERROR
-□ Dataset_inf.csv 收口（字节保真：往返测试 → 写入 → diff 仅目标单元格 → ID 行序保持；
+□ Dataset_inf.csv 登记完成确认（字节保真：往返测试 → 写入 → diff 仅目标单元格 → ID 行序保持；
   纪律见 §主索引「写入纪律：CSV 字节保真编辑」）
-□ known_pending/known_unlisted 白名单同步
+□ known_pending/known_unlisted 例外清单同步
 
 **本仓库集成（仅 SPE_Database 适用，迁移他库删除）**
-□ PROJ_STATE.md 登记：3 节对应类别行更新 + 5 节现状快照数字同步（完成进度不追加——只入 git commit）
+□ PROJ_STATE.md 登记：3 节对应类别行更新 + 5 节现状汇总数字同步（完成进度不追加——只入 git commit）
 □ AGENTS/README 计数同步（如有）
-□ exFAT 卫生：git 前清理 ._*、不提交 macOS cruft（正文见 AGENTS.md §会话约定）
+□ 外置盘文件清理：git 前删除 `._*`、不提交 macOS 附带文件（正文见 AGENTS.md §会话约定）
 （Table 1 渲染不做：qmd 为动态 keep-by-folder 逻辑，新研究自动入表；仅在稿件版本更新时 --param compare_manu:true 渲染）
 ```
 
@@ -200,7 +286,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 
 ### 大文件拆分（单一 `*_Clean.csv` 或 `*_raw.csv` > 50 MB）
 
-`*_Clean.csv` 或 `*_raw.csv` 写盘后若 **> 50 MB（十进制 10^6 B）**，拆分为多个分片，命名为
+`*_Clean.csv` 或 `*_raw.csv` 写入后若 **> 50 MB（十进制 10^6 B）**，拆分为多个分片，命名为
 `<Folder_Name>_Exp<N>_Clean_part1.csv`、`<Folder_Name>_Exp<N>_Clean_part2.csv`…（canonical
 `_Clean`）或 `<Folder_Name>_Exp<N>_raw_part1.csv`、`<Folder_Name>_Exp<N>_raw_part2.csv`…（canonical
 `_raw`）；`_part<N>` 紧接其后、序号从 1 起、升序；拆到**每片 ≤ 50 MB** 为止，
@@ -217,11 +303,11 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 - **Codebook 1 份**（`Codebook_<Folder_Name>_Exp<N>_Clean.xlsx`，不带 `_part` 后缀）——
   本规则是 §Codebook「一 Clean 一 Codebook」的**唯一例外**：各片列完全相同，共用同一 Codebook。
 - **`*_raw.csv` 分片额外约定**：raw 无 Codebook（Codebook 只对应 Clean），不涉「共用 Codebook」；
-  分片仍共用同一 exp JSON、不新增 `Dataset_inf.csv` 行；两个校验器**不扫描 `*_raw.csv`**
+  分片仍共用同一 exp JSON、不新增 `Dataset_inf.csv` 行；两个校验脚本**不扫描 `*_raw.csv`**
   （只匹配 `_Clean` 系列），故 raw 分片不触发任何校验规则（也不受 E4 表头一致性检查约束——
   但同一 raw 的各片表头仍应逐字节相同以保可还原）。
 - exp JSON `detail` 注明拆分原因、片数、各片被试数与行数。
-- **校验**：两个校验器均把 `_Clean_part<N>.csv` 纳入扫描，剥离 `_part<N>` 后按**逻辑数据集**
+- **校验**：两个校验脚本均把 `_Clean_part<N>.csv` 纳入扫描，去掉 `_part<N>` 后缀后按**逻辑数据集**
   处理（E3/W2 用各片合计被试数比对；新增「各片表头必须一致」检查，不一致 → ERROR）；
   `*_raw_part<N>.csv` 不在校验范围。
 - **适用范围**：产物区 `*_Clean.csv` 与 `*_raw.csv`；输入区 `*_Raw/`、`Source/` 内的原始导出保持原样不拆。
@@ -237,14 +323,14 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
 - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
   - **N 口径**：`Sample_Size` **一律 = Clean 中被试总数**（数据口径）；招募/论文报告 N 与此不一致时记 Note（`Paper_N: X recruited, Y excluded; N in database` 式）。`Valid_Subj` = **作者对 summary-data 初步分析后保留的被试量**（= 论文分析样本）；因本库最小预处理不删除被试，通常 Valid = Sample；仅当作者剔除了**库内仍保留**的被试时 Valid < Sample（先例 Orellana-Corrales_2021_APP E1：Clean 34 / Valid 28）。`Drop_Subj` = Sample − Valid（库内被作者排除数，通常 0）；**未进库的招募排除不占 Drop，只进 Note**。pair 粒度研究按人数口径（Clean Subject=pair ID 时例外）+ Note 记 pair 粒度。
-- 设计：`Design`、`subj_Group`（被试分组列，**每 group 一行**：行的唯一性 = `Folder_Name` + `Exp` + `subj_Group` 三元组。组间设计研究按组拆分为多行（Exp 不变），每行 `subj_Group` 填**单个**原文组名（如 `LpSTS`，不用分号堆叠——该做法已废弃）；无组间设计保持单行填 `All`。展开后每行的 `Sample_Size`/`Valid_Subj`/`Male`/`Female` 填**组内值**（数据可拆按数据、否则按论文、论文无则 `/`），总体口径与组名映射记 Note；展开行的 `ID`/`Paper_ID`/`Paper` 无稿件对应时留空。**组间判定**：`Design` 列含 between-subjects/Group 标记是直接依据，但 Design 未标注不代表无组间——需以全文核对（案例：Xu_2022、Constable_2020 Switch Identity、Vicovaro E2 self-symmetry/asymmetry 均仅见于全文）；试次级/被试内变量不展开；在线研究（MTurk/Prolific 等）按平台被试主体标 Country（如 MTurk→United States）。`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
+- 设计：`Design`、`subj_Group`（被试分组列，**每 group 一行**：行的唯一性 = `Folder_Name` + `Exp` + `subj_Group` 三元组。组间设计研究按组拆分为多行（Exp 不变），每行 `subj_Group` 填**单个**原文组名（如 `LpSTS`，不用分号堆叠——该做法已废弃）；无组间设计保持单行填 `All`。展开后每行的 `Sample_Size`/`Valid_Subj`/`Male`/`Female` 填**组内值**（数据可拆按数据、否则按论文；论文亦无 → **留空 = 不确定**，CSV 禁用 `/`，三态见本节缺失标记），总体口径与组名映射记 Note；展开行的 `ID`/`Paper_ID`/`Paper` 无稿件对应时留空。**组间判定**：`Design` 列含 between-subjects/Group 标记是直接依据，但 Design 未标注不代表无组间——需以全文核对（案例：Xu_2022、Constable_2020 Switch Identity、Vicovaro E2 self-symmetry/asymmetry 均仅见于全文）；试次级/被试内变量不展开；在线研究（MTurk/Prolific 等）按平台被试主体标 Country（如 MTurk→United States）。`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
 - 流程：`Practice_Block`、`Practice_Trial`、`numBlocks`、`numTrials`、`Environmental_Info`（**刺激呈现软件**，非 Lab/Online 设置）
   - **numTrials 口径**：一律填**每被试总试次数（total）**，不填 per-block；应能与实验条件数整除出每条件试次数（如 8 条件×60=480）。多 session/多 run 设计（如 Qian E1 4 sessions×144）按全 session 合计。
   - **Session 语义**：`Session` = 完成一个通常意义上的完整心理学实验的一次参加（如 6 blocks、约 1 小时；完成后被试离开实验室或下线）。被试再次来实验室/上线完成另一个完整实验 = 下一个 session（如纵向研究 T2/T3）。同一参加内的重复任务段（如 fMRI 连续 5 个 run）**不叫 session**——用 `Block`（或 Run）列。案例：Atzeni_2026 T2/T3 = 两次独立上线 → Session 列 ✓；Zhang_2026 的 5 个 fMRI "session" 实为同一次扫描内 5 个 run → Clean 列名 Block（作者原列名 session 保留于 raw）。
   - **纵向/多时点研究**：同一任务多个测量时点（如 T2/T3）**不拆 Exp、不拆 subj_Group**——合并为单 Exp 行，Clean 加 `Session` 列区分时点；`Sample_Size` = 跨时点 unique 被试数（数据口径），各时点 N 与重叠记 Note；`numTrials` 填每时点试次数（文本式注明重复/部分 session）。Clean 列一律英文（作者变量名如 'condizione' 用英文对应名 Condition；raw 保留作者原名）。
   - **同批被试完成多个实验**：**确认同一批被试参加了同一论文/研究内的两个或以上实验**（判定依据：原始导出文件按被试对齐且被试号完全重叠、subj_info 人口学逐行一致、raw 结构同构）时——**合并为单个 Clean 数据文件**，实验/条件差异用列区分（如 `Task`、`Condition`、`Session`、`extraIV` 或研究特有列），Dataset_inf 不拆多 Exp 行、`Sample_Size` = 唯一被试数；合并前**必须核查各实验数据是否真实不同**（比较原始 trialMat/响应/刺激/奖励等字段；若逐行相同则是同数据重复/误拆分，若结构同构但 trial 内容不同才是真多实验）。仅当实验为**明确独立的被试间新招募**时才拆 Exp。案例：Sui_2015_unpub Exp1（无奖励）与 Exp2（rewardValues 1/4/16）同批 20 名被试、同刺激体系——**已合并**为单文件（Session→Phase、extraIV1=逐 trial 奖励值 0/1/4/16、保留 Block/Trial）；Liang_2022_HumBrainMap 为组间拆 Clean 先例（Clean 加 `Group` 列区分组，见列顺序模板 [Group]）。核查方法见 parsing-examples.md。
   - **Practice_Trial 口径** = 任务正式练习段试次数；**与正式试次结构相同（仅有或无反馈）的熟悉/练习段计入练习**（先例：Kirk_2025_BritJPsy familiarization 12 试次计入）；纯学习/问答式训练段**不属于练习**，不填入（Constable_2019 E4 的 50 次 "who does this stimulus represent" 训练先例）；同一研究练习数视条件而变时填 "21 or 41" 式文本（与 exp JSON 一致）。缺失/不适用用三态标记（见本节缺失标记规则）。
-- 状态：`Status`（**=1 判定标准**：最关键标准是**库内五件套（raw/Clean/subj_info/Codebook/paper+exp JSON）形成逻辑上完全一致、清晰可追溯的结构**——各层级互相印证、缺口已解释（豁免/占位/排除均有依据）；与原论文表述是否完全一致是**次要指标**，不一致不阻塞 Status=1，而是记录于 `3_Reports/Verifying_original_results_issues.md`（Issue 编号）及 exp JSON detail/CSV Note（先例：Zhang_2023_NeuroImage，Issue 5）；raw 豁免的研究不影响标记）、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
+- 状态：`Status`（**=1 判定标准**：最关键标准是**库内标准文件（raw/Clean/subj_info/Codebook/paper+exp JSON）形成逻辑上完全一致、清晰可追溯的结构**——各层级互相印证、缺口已解释（豁免/占位/排除均有依据）；与原论文表述是否完全一致是**次要指标**，不一致不阻塞 Status=1，而是记录于 `3_Reports/Verifying_original_results_issues.md`（Issue 编号）及 exp JSON detail/CSV Note（先例：Zhang_2023_NeuroImage，Issue 5）；raw 豁免的研究不影响标记）、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
 - **缺失标记（全库统一三态）**：元数据单元格遇缺失只允许三种表达——① `missing`：**明确无法获得**该信息（如匿名化移除不可恢复、论文未报告且无法补）；② 空白：**不确定**该信息是否存在/有无（默认态，不确定就不要写）；③ `NA`：**明确没有该信息/不适用**（not applicable，如 unpublished 无 DOI、研究明确无练习段）。`/` **仅限 JSON 字段**的未知约定，Dataset_inf.csv 不用 `/`。判定示例：练习计数因匿名化不可恢复→`missing`；练习有无未披露→空白；任务结构明确无练习→`NA`。改标前先查 exp JSON detail/论文/数据，禁止凭值猜测。
 - 同论文多实验行共享的字段（作者/邮箱/年/期刊/DOI 等）只填一次，其余行留空或同步传播均可——以组内非空值一致为准。
 - Legacy: `1_Data/Dataset_inf.xlsx` is an OUTDATED earlier layout (different
@@ -275,14 +361,14 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 1. **引号风格为 QUOTE_MINIMAL**（仅含逗号/特殊字符的字段加引号）——勿凭 `head` 拆分输出臆断为
    全字段引号；改前先做往返测试（读入原样写出，diff 应为 0）确认格式可复现。
 2. **原文件末行无换行符**，csv.writer 默认每行加行尾——**往返测试与写入都必须先把 writer 自动
-   追加的末尾 `\r\n` 截掉（`out = out[:-2]`）再比较/落盘**：直接比较必然 False，那是格式预期差异
+   追加的末尾 `\r\n` 截掉（`out = out[:-2]`）再比较/写入**：直接比较必然 False，那是格式预期差异
    而非内容差异；先截断，截断后仍 False 的部分才是需要查的真差异（教训：Hobbs 入库编辑时
    `roundtrip equal: False`——测试环节就要先截断，不要等 diff 失败再定位）。
 3. **读字段一律用 `header.index('列名')` 定位索引再取值**，禁止假设 `r[0]`/`r[1]` 的列顺序
    （教训：加 `subj_Group` 列时 `r[0]` 误当 Folder_Name（实为 ID 列）致 74 行组名全失配填 All——
    值合法、validator 不报错，靠抽查非默认值行数才暴露）。
 4. **改后三重验证**：diff 仅目标列变化 + 非目标列 0 差异 + 抽查非默认值行数符合预期（"值合法但
-   内容错"validator 检测不到，靠人工核对兜底）。
+   内容错"validator 检测不到，靠人工复核发现）。
 5. **非主索引 CSV（`*_subj_info.csv` 等）格式各异**：subj_info 可能是 UTF-8 无 BOM + LF 行尾，
    与 Dataset_inf 的 BOM+CRLF 不同（教训：往返测试连败 2 次才发现）——编辑前先 `xxd`/`head -c`
    检测 BOM 与行尾，按原格式写回（含末行无换行），往返测试按检测结果放宽末尾行尾。
@@ -314,7 +400,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 
 ### Experiment-level JSON（`<Folder_Name>_Exp<N>.json`）— v2 hierarchical schema
 
-Top-level key MUST match the filename suffix (`exp1` ↔ `_Exp1`). Five components
+Top-level key MUST match the filename suffix (`exp1` ↔ `_Exp1`). Five field groups
 follow the task-standardization framework:
 
 ```json
@@ -332,7 +418,7 @@ follow the task-standardization framework:
       "Block_number": "…", "Trial_number": "…", "Practice_trials": "…"
     },
     "Trial_Structure": {
-      "Fixation_duration": "…", "Stimulus_duration": "…", "SOA": "…",
+      "Fixation_duration": "…", "Stimulus_duration": "…", "SOA": "…", "ISI": "…",
       "Stimulus_order": "…", "Response_deadline": "…", "ITI": "…", "Feedback_duration": "…"
     },
     "Stimulus_Properties": {
@@ -344,11 +430,11 @@ follow the task-standardization framework:
 }
 ```
 
-Allowed exp-level keys: the five components + `schema_version`, `Collected_date`, `detail`.
+Allowed exp-level keys: the five field groups + `schema_version`, `Collected_date`, `detail`.
 Values are human-readable strings with units (e.g., `"500 ms"`, `"3.8° × 3.8°"`);
 use `"/"` for unknown. All existing experiment JSONs are v2 — new files must be v2 as well.
 
-### 五组件任务框架（Boundary rules for ambiguous keys）
+### 实验元数据字段组（五组）边界规则（Boundary rules for ambiguous keys）
 
 - **Physical_Environment** — where/how the task was delivered (hardware, room, distance).
   `Setting` must use a controlled vocabulary: `Laboratory`, `Online`, or a combined
@@ -362,8 +448,10 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   the "per condition:" breakdown of `Trial_number` when present, else `"/"`.
   Full factorial design lives in `Dataset_inf.csv` (`Design`, `Stim_Type` columns).
 - **Block_Structure** — blocks and trial composition within blocks.
-- **Trial_Structure** — within-trial timing (fixation, stimulus, SOA, response window, ITI).
-  `Shape-label interval` maps to `SOA`; `Stimulus_order` (simultaneous vs sequential) lives here.
+- **Trial_Structure** — within-trial timing (fixation, stimulus, SOA/ISI, response window,
+  ITI). `Shape-label interval` 按参照点择键：onset→onset 写 `SOA`、offset→onset 写 `ISI`
+  （定义见 §领域术语基准；`SOA`/`ISI` 可并存，无则 `"/"`），**不得把 offset→onset 的间隔写进 `SOA`**；
+  `Stimulus_order`（`Simultaneous`/`Sequential`）lives here.
 - **Stimulus_Properties** — what the stimuli are (modality, sizes, colors).
   `Modality` belongs here, not in Physical_Environment.
 
@@ -392,7 +480,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
     命中；Hu_2023 原为跨 Session 重复——Session 列曾被旧清洗丢弃，重入库已保留 Session 并按其
     分组排序解决，校验键 (Subject, Session, Block, Trial) 唯一）。
     独立脚本模式（Wozniak_2018/Hu_2020 同款）：Rmd 段删除留指针注释、`<Folder_Name>_clean.R` 从 Rmd 原代码复制
-    仅改问题处、守卫按有效被试断言（无效被试已知重复不参与唯一性断言）。
+    仅改问题处、一致性检查按有效被试进行（无效被试已知重复，不参与唯一性检查）。
 - **任务与附加自变量命名（全库统一）**：
   - `Task` 列：**全库标准列**，区分"联结对象是否含自参照身份"的任务类型。默认值 `self-matching`
     （形状↔自我/他人联结，数据库核心）；其他受控值：`facialExpression-matching`（联结纯情绪面孔）、
@@ -417,7 +505,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
     ① 模板 v2 是**唯一合法列序**，所有新建/重排的 `*_Clean.csv` 必须**逐列对齐模板的相对顺序**
     （模板中带 `[ ]` 的可选列不存在时跳过，但**已存在列的相对先后不得改变**）；产出后把表头与
     模板逐列对照自查——**模板 v2 本身即规范**；合规样例 = `Bukowski_2021_ActaPsych_Exp1_Clean.csv`
-    （该文件为本库样张，非规范本身，他库以模板文字为准）。
+    （该文件为本库合规示例，非规范本身，他库以模板文字为准）。
     ② 关键易错点（曾经踩坑，必须逐条核对）：
       - `Task` 紧跟 `Subject/[Group]/[Session]` 之后，**不得**放到 Shape/Label 后；
       - `Phase`/`Condition` 位于 `Task` 之后、`Block` 之前，**不得**前置到 `Task` 前；
@@ -425,7 +513,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
         **不得**提前到列首（即使它是核心操纵变量）；
       - `Shape` 在前、`Label` 在后，各带自己的 Identity×3（Shape-Identity×3 紧跟 Shape、
         Label-Identity×3 紧跟 Label），**不得**把 Shape/Label 两个 Identity 块堆叠在最后。
-    ③ 校验手段：Clean 表头与模板 v2 逐列比对（写清洗脚本后 `stopifnot` 断言列名顺序 == 模板
+    ③ 校验手段：Clean 表头与模板 v2 逐列比对（写清洗脚本后用 `stopifnot()` 检查列名顺序 == 模板
     子序列）；任何列的新增/改名/重排同时更新 Codebook 行序与 exp JSON detail。历史遗留的
     legacy 列序文件需在重清洗时一并纠正，**不得**以"历史文件如此"为新文件放错列开脱。
 - **Identity columns — 3 levels per identity-bearing stimulus column**
@@ -494,11 +582,13 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   无 `Response` 列的文件只能依据原码语义映射或留待 raw 追补；⑥ Codebook 的 `Variable_value`
   同步列出码义。特殊码涉及的文件（重编码前逐研究确认）：Constable 系列 ACC=3、Dalmaso ACC=2、
    Hu_2020 ACC=-1/2、Sui_2015 ACC=3/4、Vicovaro/Xu/Zhang/Sun/Hu_2023 ACC=NA。
-- **Matching 列取值全库统一（2026-09-04 定案）**：`Matching` = 呈现的 Shape-Label 对与已学联结一致；`Nonmatching` = 不一致（重组合）。**严格二值**：空白/NA 一律视为非规范值（不允许缺失标记），`validate_clean_csv.R` W5 报错且不列出错值。清洗脚本把作者原始词（match/unmatch、matching/mismatching、Matched/Mismatched、Yes/No 等）映射为规范取值；raw 保留作者原词。Codebook `Variable_value` 同步列出。已知例外：`Zhang_2023_NeuroImage_Exp1` 全 NA 占位行（subject 62，源数据空行、历史保留，已记 CSV Note）→ 报 W5 WARN，待合作者核查数据后再处置，勿静默删除/改写。
+- **Matching 列取值全库统一（2026-09-04 定案）**：`Matching` = 呈现的 Shape-Label 对与已学联结一致；`Nonmatching` = 不一致（重组合）。**严格二值**：空白/NA 一律视为非规范值（不允许缺失标记），`validate_clean_csv.R` W5 报错且不列出错值。清洗脚本把作者原始词（match/unmatch、matching/mismatching、Matched/Mismatched、Yes/No 等）映射为规范取值；raw 保留作者原词。Codebook `Variable_value` 同步列出。已知例外：`Zhang_2023_NeuroImage_Exp1` 全 NA 占位行（subject 62，源数据空行、历史保留，已记 CSV Note）→ 报 W5 WARN，待合作者核查数据后再处置，勿擅自删除/改写。
 - **Minimal preprocessing, NO filtering**: cleaning only renames/reorganizes variables
-  and standardizes Identity; it keeps ALL trials, participants and values. Invalid
-  values stay in the file (e.g., `ACC = -1` no response, `2` wrong key; `RT_ms`
-  outliers). Practice trials, if retained, are flagged (e.g., a `Phase` column)
+  and standardizes Identity; it keeps ALL trials, participants and values. Special
+  values stay in the file under the unified ACC coding of this section (e.g., no
+  response = `NA`, out-of-range key = `-2`; `RT_ms` outliers kept; author raw codes
+  such as `-1`/`2`/`3`/`4` live in raw only and are mapped before writing Clean).
+  Practice trials, if retained, are flagged (e.g., a `Phase` column)
   rather than dropped. Such codes are documented in the codebook, not removed;
   full preprocessing (filtering, outlier removal, accuracy coding) is the user's
   responsibility.
@@ -528,7 +618,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
      hand-edit xlsx XML).
   5. Verify every Clean.csv column has exactly one codebook row.
 - **现成模板**：`2_Code/make_codebooks.R`——R openxlsx 实现（单 Sheet1 4 列、
-  枚举值取数据 unique 含特殊码），改 `jobs` 列表即可复用。空白基线扫描可用
+  枚举值取数据 unique 含特殊码），改 `jobs` 列表即可套用。空白基线扫描可用
   `2_Code/analyze_csv_blanks.py`。
 
 ## DOI 与年份核验（添加/更新论文时必做）
@@ -551,42 +641,42 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 | E-Prime 合并导出 `.xlsx` | 语义重复列（Label/Label2）；Group 字段可能非设计/临床分组；日期三类混杂 | §E-Prime |
 | `.edat2`/`.emrg*` | 二进制私有格式（E-Merge 导出库内见 `.emrg`/`.emrg2`/`.emrg3`），无可解析工具——用户 E-DataAid 转 txt | §E-Prime |
 | PsychoPy 导出 | 无响应 `keys` = 字符串 "None"；Builder 宽格式 csv；RT 单位（秒或已×1000） | §PsychoPy |
-| MATLAB/Psychtoolbox `.dat` | 空格分隔；列定义权威 = 实验脚本 fprintf 格式串；练习试次可能不落盘 | §MATLAB |
+| MATLAB/Psychtoolbox `.dat` | 空格分隔；列定义权威 = 实验脚本 fprintf 格式串；练习试次可能不写入 | §MATLAB |
 | 作者聚合 `.xlsx` | 外链公式读缓存值；"ER" 列实为正确率；编号体系不对称；文件名 vs 行内编号 | §作者共享产物特征 |
 | 作者共享文件特征 | 文件级预清洗（试次数低）；按 ACC/条件排序（Block 重建）；round 边界 | §作者共享产物特征 |
 | 作者脚本逐值验证 | 先对齐编号体系再全量对比；脚本实现口径 vs 论文文字可能不一致 | §作者脚本逐值验证法 |
 
 ## 工具与脚本（细节见 tools.md）
 
-- **主路径（agent 自动化入库标准方式）**：独立清洗脚本 `<Folder_Name>_clean.R`（与 `1_Data/utils.R`
-  同库，`source()` 引用）→ 产出标准五件套。`2_Code/Clean_Data.Rmd` 已降级为**历史配方参考**
+- **标准流程（agent 自动化入库的标准方式）**：独立清洗脚本 `<Folder_Name>_clean.R`（与 `1_Data/utils.R`
+  同库，`source()` 引用）→ 产出标准文件。`2_Code/Clean_Data.Rmd` 已降级为**历史脚本参考**
   （含旧文件夹名注释，不改）；`SPE_Interactive_Clean_V3.R` / `SPE_Shiny_App_V4.2.R`
   为人工备用（控制台/网页交互）。
 - **独立清洗脚本规范**：
   - 内嵌脚本依赖的辅助函数（如 read.mat），不依赖 Rmd 上下文；开头注释写明来源与修改点。
   - 路径用脚本所在目录的相对路径；脚本内做工作目录自适应（Rscript 的 --file= 参数）。
-  - 输出 *_Clean.csv 带一致性守卫（如 stopifnot 行数/被试数）；行尾 CRLF/LF 差异直接无视。
+  - 输出 *_Clean.csv 带一致性检查（如用 `stopifnot()` 检查行数/被试数）；行尾 CRLF/LF 差异直接无视。
   - 排除已确认的问题被试（如测试运行）时，在脚本注释中写明证据与依据；修改数据文件后同步
     更新同目录 subj_info、Dataset_inf.csv（字节保真）与 codebook。
 - **Subject 编号与数据对齐规则（Vicovaro_2022_JEPHPP Exp2 教训）**：
   1. **编号只承载唯一性，条件信息由数据列承载**：Subject 编号不编码 block/条件。raw participant_id
      重复（多段/跨 block 共用同一 ID）时，统一按段号加后缀 `_1`/`_2`…，不引入条件后缀分支。
   2. **重复 ID 判定看"该 ID 总段数 > 1"，而非当前段号**：凡 participant_id 名下段数 > 1 →
-     **所有段**都加段号后缀（不能只给后段加）；守卫 `stopifnot(length(unique(Subject)) == 预期被试数)`。
+     **所有段**都加段号后缀（不能只给后段加）；一致性检查：`stopifnot(length(unique(Subject)) == 预期被试数)`。
   3. **subj_info 与 Clean 的 Subject 对齐用键，不用行序**：构建期保留临时映射列，人口学按映射键
      对齐；**禁止依赖文件行序**。写出 Clean 前删除临时列。
-  4. **构建期中间映射内嵌脚本，不落盘独立文件**：研究文件夹只允许标准产物 + `<Folder_Name>_clean.R`，
+  4. **构建期中间映射内嵌脚本，不写入独立文件**：研究文件夹只允许标准产物 + `<Folder_Name>_clean.R`，
      不产生 subject_map 等中间 CSV。
 - **辅助工具**（`repo_fetch.py` OSF/PsychArchives 下载、`scan_raw.py` raw 扫描；端点与用法见 tools.md）。
 
-## 校验与卫生
+## 校验与文件操作
 
 1. After any metadata change run:
    `Rscript 2_Code/validate_json_metadata.R` (checks naming, year drift, exp-key match,
    v2 component completeness; exits non-zero on violations).
 2. After any clean-data change run the **content-level checker**:
    `Rscript 2_Code/validate_clean_csv.R` — for every `*_Clean.csv` outside the raw
-   input zone（`_Clean_part<N>.csv` 分片剥离 `_part<N>` 后按**同一逻辑数据集**校验：
+   input zone（`_Clean_part<N>.csv` 分片去掉 `_part<N>` 后缀后按**同一逻辑数据集**校验：
    各片合计被试数用于 E3/W2，各片表头必须一致，见 §文件与文件夹规范「大文件拆分」）:
    E1 missing `Subject` column; E2 incomplete Identity triple
    (`X_Origin_Identity` without `X_English_Identity`/`X_Standardized_Identity`);
@@ -601,7 +691,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
    `known_pending` 相反）——用于**条目从 CSV 移除**的情形（数据不可得/撤回 → 删 CSV
    行、输入区文件夹保留并加入 `known_unlisted` 豁免；重入时移除并注释更新；库内 deferred
    条目见 PROJ_STATE.md）。处理原则：删除 CSV 行前先确认（用户决策），输入区文件不删除。
-4. **Validator blind spots**（校验器只校验存在的文件，以下缺失不会被发现，需人工核对）：
+4. **Validator blind spots**（校验脚本只校验存在的文件，以下缺失不会被发现，需人工核对）：
    缺 paper 级 JSON、缺 codebook、CSV 中重复的 `(Folder_Name, Exp)` 组合。
 5. One-time schema migrations live in `2_Code/migrate_exp_json_to_v2.py`
    (v1 flat `table` → v2 hierarchical); re-run only if legacy files reappear.
@@ -621,7 +711,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 4. **删除谨慎**：删除前先 `git check-ignore <路径>` / `git ls-files` 确认是否被跟踪——不被跟踪的
    文件 `rm` 即永久丢失；批量删除前先列出「将被删除清单」并向用户确认保留策略；非明确垃圾的删除
    先 `mv` 到 `_trash_<日期>/` 暂存，用户确认后再物理删除；删除后立即汇报删了什么（文件数+类别）。
-5. **工具路径核查**：工具若含绝对路径，先确认它读的就是当前文件——校验器/扫描脚本可能硬编码已
+5. **工具路径核查**：工具若含绝对路径，先确认它读的就是当前文件——校验脚本/扫描脚本可能固定使用已
    迁移的旧路径，运行时读到旧副本且输出"恰好与预期一致"会掩盖错误。改数据前 `grep` 工具源码确认
    数据源路径；改后重跑若输出异常，先怀疑工具路径而非数据本身。
 6. **编辑锚点**：编辑文档追加条目时用将被保留的现有文本作锚点，oldString 不要误取整条历史记录；

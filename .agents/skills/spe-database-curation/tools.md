@@ -4,27 +4,27 @@
 
 ## 清洗工具三套并行实现（逻辑一致）
 
-- `2_Code/Clean_Data.Rmd` — 逐论文手工管线（**历史权威/配方参考**）；按论文逐个清洗，含旧文件夹名注释（历史记录，不改）。**已降级**：agent 自动化入库不再以它为主路径，其逐研究段逐步提取为独立脚本/配置；仅作为独立清洗脚本的配方参考。
+- `2_Code/Clean_Data.Rmd` — 逐论文手工管线（**历史脚本参考**）；按论文逐个清洗，含旧文件夹名注释（历史记录，不改）。**已降级**：agent 自动化入库不再以它为标准流程，其逐研究段逐步提取为独立脚本/配置；仅作为独立清洗脚本的编写参考。
 - `2_Code/SPE_Interactive_Clean_V3.R` — 控制台交互清洗（单个/批量 `*_raw.csv`，变量映射 + Identity 标准化）。人工备用。
 - `2_Code/SPE_Shiny_App_V4.2.R` — Shiny 网页版（交互界面、批量处理、ZIP 下载）。人工备用。
 - 三者产出相同的标准化列（`Subject/Shape/Label/Matching/ACC/RT_ms` + 三级 Identity）与 `*_ExpN_Clean.csv` 命名；**清洗 = 最小预处理，不过滤**（见主文件「数据标准化」）。
 
-## 独立清洗脚本（`<Study>_clean.R` — 主路径）
+## 独立清洗脚本（`<Study>_clean.R` — 标准流程）
 
 从 Clean_Data.Rmd 提取独立清洗脚本的规范（2026-08 起先例：`Sui_2015_unpub_clean.R`）：
 
 - 内嵌脚本依赖的辅助函数（如 read.mat），不依赖 Rmd 上下文；开头注释写明来源行号与相对原版的修改点。
 - 路径用脚本所在目录的相对路径，并修正 Rmd 中的失效路径（旧文件夹名）；脚本内做工作目录自适应（Rscript 的 `--file=` 参数）。
-- 输出 `*_Clean.csv` 带一致性守卫（如 stopifnot 行数/被试数）；行尾 CRLF/LF 差异直接无视，不做转换。
+- 输出 `*_Clean.csv` 带一致性检查（如用 `stopifnot()` 检查行数/被试数）；行尾 CRLF/LF 差异直接无视，不做转换。
 - 排除已确认的问题被试（如测试运行）时，在脚本注释中写明证据（内部编号/默认人口学/按键反转等）与依据条目（PROJ_STATE.md 已知问题）。
 - 修改数据文件后同步更新同目录 subj_info、Dataset_inf.csv（字节保真——纪律见 SKILL.md §主索引「写入纪律：CSV 字节保真编辑」）与 codebook；Clean_Data.Rmd 对应段如需同步修改，diff 应只含目标改动。
 
 ### Subject 编号与数据对齐规则（2026-08 阶段 3 沉淀，Vicovaro_2022_JEPHPP Exp2 教训）
 
 1. **编号只承载唯一性，条件信息由数据列承载**：Subject 编号不编码 block/条件（Symmetry/Matching 等由 Clean 数据列表达）。raw participant_id 重复（多段/跨 block 共用同一 ID）时，统一按段号加后缀 `_1`/`_2`…，不引入条件后缀分支（如不写 `_selfS`/`_selfA`）；条件归属查数据列即可。
-2. **重复 ID 判定看"该 ID 总段数 > 1"，而非当前段号**：凡 participant_id 名下段数 > 1 → **所有段**都加段号后缀（不能只给后段加，否则第一段不唯一）；守卫 `stopifnot(length(unique(Subject)) == 预期被试数)`。
+2. **重复 ID 判定看"该 ID 总段数 > 1"，而非当前段号**：凡 participant_id 名下段数 > 1 → **所有段**都加段号后缀（不能只给后段加，否则第一段不唯一）；一致性检查：`stopifnot(length(unique(Subject)) == 预期被试数)`。
 3. **subj_info 与 Clean 的 Subject 对齐用键，不用行序**：构建期保留临时映射列（如 `Subject_raw = participant_id|block|seg_no`），subj_info 人口学按映射键对齐；**禁止依赖文件行序**（行序脆弱，键稳定）。写出 Clean 前删除临时列。
-4. **构建期中间映射内嵌脚本，不落盘独立文件**：Subject↔原始 ID 映射由脚本内存对象生成，明细写入脚本注释；研究文件夹只允许标准产物（raw/Clean/subj_info/Codebook/JSON + `<Study>_clean.R`），不产生 subject_map 等中间 CSV。
+4. **构建期中间映射内嵌脚本，不写入独立文件**：Subject↔原始 ID 映射在脚本内部生成（不写成独立文件），明细写入脚本注释；研究文件夹只允许标准产物（raw/Clean/subj_info/Codebook/JSON + `<Study>_clean.R`），不产生 subject_map 等中间 CSV。
 
 ### 通用函数与独立脚本同库
 
@@ -55,12 +55,12 @@
 
 ### 其他工具
 
-- `2_Code/make_codebooks.R` — Codebook 模板生成（单 Sheet1 4 列、枚举值取数据 unique 含特殊码），改 `jobs` 列表复用。
+- `2_Code/make_codebooks.R` — Codebook 模板生成（单 Sheet1 4 列、枚举值取数据 unique 含特殊码），改 `jobs` 列表套用。
 - `2_Code/analyze_csv_blanks.py` — 重扫 Dataset_inf.csv 空白基线。
-- `2_Code/validate_json_metadata.R` / `validate_clean_csv.R` — 两级校验器（规则见主文件「校验与卫生」）。
-- `2_Code/split_clean_csv.py` — 大文件分片：> 50 MB 的 `*_Clean.csv` 按被试边界拆为 `_Clean_part<N>.csv`（默认 dry-run 只报告方案；`--apply` 先备份原件再写盘，并逐字节校验「分片拼接 == 原件数据行」）。两个校验器已支持分片（各片合计被试数用于 E3/W2，新增 E4 分片表头一致性；规则见主文件 §文件与文件夹规范「大文件拆分」）。
+- `2_Code/validate_json_metadata.R` / `validate_clean_csv.R` — 两级校验脚本（规则见主文件「校验与文件操作」）。
+- `2_Code/split_clean_csv.py` — 大文件分片：> 50 MB 的 `*_Clean.csv` 按被试边界拆为 `_Clean_part<N>.csv`（默认 dry-run 只报告方案；`--apply` 先备份原件再写入，并逐字节校验「分片拼接 == 原件数据行」）。两个校验脚本已支持分片（各片合计被试数用于 E3/W2，新增 E4 分片表头一致性；规则见主文件 §文件与文件夹规范「大文件拆分」）。
 - `2_Code/migrate_exp_json_to_v2.py` — v1 flat `table` → v2 hierarchical 一次性迁移；仅当旧文件重现时重跑。
-- 各研究核对脚本目录（四方核对固化）：`2_Code/qjep_verify/`（Issue 1）、`2_Code/orellana2020_verify/`（Issue 2）、`2_Code/wozniak2020_verify/`（Issue 4）、`2_Code/hobbs_verify/`（Table 2 全量复现，最后一例）、`2_Code/mcivor_verify/`（d′ 描述性核对）。
+- 各研究核对脚本目录（多源交叉核验固化）：`2_Code/qjep_verify/`（Issue 1）、`2_Code/orellana2020_verify/`（Issue 2）、`2_Code/wozniak2020_verify/`（Issue 4）、`2_Code/hobbs_verify/`（Table 2 全量复现，最后一例）、`2_Code/mcivor_verify/`（d′ 描述性核对）。
 
 ## REF 全文转换管线（`REF/`）
 
