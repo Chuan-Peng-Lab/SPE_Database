@@ -24,6 +24,7 @@
       "Stimulus_order": "Simultaneously",
       "SOA": "0 ms",
       "Fixation_duration": "500 ms",
+      "Blank": "200-250 ms and beep",
       "Stimulus_duration": "100 ms",
       "Response_deadline": "1000 ms",
       "ITI": "/",
