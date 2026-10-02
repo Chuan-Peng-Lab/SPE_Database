@@ -21,7 +21,7 @@
       "Trial_number": "84 trials per block"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Label first",
+      "Stimulus_order": "Sequential",
       "SOA": "1500ms",
       "Fixation_duration": "800ms",
       "Stimulus_duration": "Face: 200ms; Label: until response (max 3000ms)",
@@ -39,6 +39,6 @@
         "Background": "Black"
       }
     },
-    "detail": "Shape column = face stimulus file (shape1/2/3.jpg, E-Prime internal names; actual faces from Chicago Face Database: WF-209/211/233 female, WM-003/004/029 male; specific face ID per trial not recoverable from raw). Shape_Subtype = gender of the face stimulus (paper variable Face_Gender; experiment had same-gender vs opposite-gender face parts). Task = self-matching with facial stimuli. Practice trials: 24 per subject per CSV Practice_Trial (2026-09-02 synced from CSV; practice rows with PracticeMode == Yes were excluded from raw/Clean during cleaning, so the count is not independently verifiable from retained data)."
+    "detail": "Shape column = face stimulus file (shape1/2/3.jpg, E-Prime internal names; actual faces from Chicago Face Database: WF-209/211/233 female, WM-003/004/029 male; specific face ID per trial not recoverable from raw). Shape_Subtype = gender of the face stimulus (paper variable Face_Gender; experiment had same-gender vs opposite-gender face parts). Task = self-matching with facial stimuli. Practice trials: 24 per subject per CSV Practice_Trial (2026-09-02 synced from CSV; practice rows with PracticeMode == Yes were excluded from raw/Clean during cleaning, so the count is not independently verifiable from retained data). Stimulus_order set to \"Sequential\" 2026-10 (was: \"Label first\")."
   }
 }

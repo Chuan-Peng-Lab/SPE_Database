@@ -25,13 +25,13 @@
       "Stimulus_duration": "/",
       "SOA": "/",
       "ISI": "Familiarization: 500 ms; Test: 0 ms (voice offset to label onset)",
-      "Stimulus_order": "Familiarization: label first; Test: voice first",
+      "Stimulus_order": "Sequential",
       "Response_deadline": "/",
       "ITI": "/",
       "Feedback_duration": "/"
     },
     "Stimulus_Properties": {
-      "Modality": "Auditory (voice) and visual (label)",
+      "Modality": "Audiovisual",
       "Fixation": "/",
       "Shape": "Not applicable (voice task)",
       "Label": "/",
@@ -40,6 +40,6 @@
         "Background": "White"
       }
     },
-    "detail": "Shape = speaker identity (S1/S2/S3; identity association was to the speaker, 3 male Scottish-accented speakers). Shape_Subtype = specific audio file (two tokens per speaker). Accent (Scottish) is an experiment-level feature recorded here (column removed from Clean). Task = voice-label matching (self-matching). 2026-10: the interval previously stored under SOA was offset-to-onset and has been moved to ISI; SOA is left \"/\" (not back-computed from stimulus duration + ISI)."
+    "detail": "Shape = speaker identity (S1/S2/S3; identity association was to the speaker, 3 male Scottish-accented speakers). Shape_Subtype = specific audio file (two tokens per speaker). Accent (Scottish) is an experiment-level feature recorded here (column removed from Clean). Task = voice-label matching (self-matching). 2026-10: the interval previously stored under SOA was offset-to-onset and has been moved to ISI; SOA is left \"/\" (not back-computed from stimulus duration + ISI). Modality set to \"Audiovisual\" 2026-10 (was: \"Auditory (voice) and visual (label)\"; recording technique/stimulus details belong in detail). Stimulus_order set to \"Sequential\" 2026-10 (was: \"Familiarization: label first; Test: voice first\")."
   }
 }

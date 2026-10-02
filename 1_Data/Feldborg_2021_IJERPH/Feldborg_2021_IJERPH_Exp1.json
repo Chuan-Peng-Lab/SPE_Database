@@ -21,7 +21,7 @@
       "Trial_number": "320"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "Until response or 1500 ms deadline",
@@ -39,6 +39,6 @@
         "Background": "Grey"
       }
     },
-    "detail": "Data note (2026-09): GAD-7 scores available in raw (GADtrial items 1-7, 0-3 each); sum stored in subj_info GAD_total (subject 18139 missing items 6-7 -> NA). Participants are NOT split into anxious/non-anxious groups in Dataset_inf (subj_Group = All, user decision: GAD-7 is a questionnaire score without clinical diagnosis; groups in the paper are based on GAD-7 <5 / >=5, 42 per group, paper N = 84 vs data N = 102). Raw Inquisit 'group' column (1/2) has no correspondence to any paper factor. subj_Group in Dataset_inf = label set: self-friend (n=53) vs self-stranger (n=49), derived from the Label column (each participant saw either friend or stranger labels, no overlap); paper recruited 84 (half/half). GAD-7 not used for grouping (questionnaire score only). extraIV1 = emotion condition of the shape (happy/line/neutral/sad). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
+    "detail": "Data note (2026-09): GAD-7 scores available in raw (GADtrial items 1-7, 0-3 each); sum stored in subj_info GAD_total (subject 18139 missing items 6-7 -> NA). Participants are NOT split into anxious/non-anxious groups in Dataset_inf (subj_Group = All, user decision: GAD-7 is a questionnaire score without clinical diagnosis; groups in the paper are based on GAD-7 <5 / >=5, 42 per group, paper N = 84 vs data N = 102). Raw Inquisit 'group' column (1/2) has no correspondence to any paper factor. subj_Group in Dataset_inf = label set: self-friend (n=53) vs self-stranger (n=49), derived from the Label column (each participant saw either friend or stranger labels, no overlap); paper recruited 84 (half/half). GAD-7 not used for grouping (questionnaire score only). extraIV1 = emotion condition of the shape (happy/line/neutral/sad). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

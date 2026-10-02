@@ -21,7 +21,7 @@
       "Trial_number": "360 trials (6 blocks × 60 trials)"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Shape first",
+      "Stimulus_order": "Sequential",
       "SOA": "200 ms",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "Shape: 100 ms; Label: 100 ms",
@@ -39,6 +39,6 @@
         "Background": "Dark gray"
       }
     },
-    "detail": ""
+    "detail": "Stimulus_order set to \"Sequential\" 2026-10 (was: \"Shape first\")."
   }
 }

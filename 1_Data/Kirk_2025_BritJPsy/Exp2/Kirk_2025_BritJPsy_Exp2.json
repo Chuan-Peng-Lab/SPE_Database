@@ -25,13 +25,13 @@
       "Stimulus_duration": "/",
       "SOA": "/",
       "ISI": "Familiarization: 500 ms; Test: 0 ms (voice offset to label onset)",
-      "Stimulus_order": "Familiarization: label first; Test: voice first",
+      "Stimulus_order": "Sequential",
       "Response_deadline": "/",
       "ITI": "/",
       "Feedback_duration": "/"
     },
     "Stimulus_Properties": {
-      "Modality": "Auditory (voice) and visual (label)",
+      "Modality": "Audiovisual",
       "Fixation": "/",
       "Shape": "Not applicable (voice task)",
       "Label": "/",
@@ -40,6 +40,6 @@
         "Background": "White"
       }
     },
-    "detail": "Shape = speaker identity (Own = participant own voice, derived from soundfile prefix matching OriginalGorillaID; M5/M10 = external English-accented speakers from Payne et al.). Shape_Subtype = specific audio file. Own-voice assignment to identity was between-subjects (participant_assignment in raw). Accent (English) is an experiment-level feature recorded here (column removed from Clean). Task = voice-label matching (self-matching). 2026-10: the interval previously stored under SOA was offset-to-onset and has been moved to ISI; SOA is left \"/\" (not back-computed from stimulus duration + ISI)."
+    "detail": "Shape = speaker identity (Own = participant own voice, derived from soundfile prefix matching OriginalGorillaID; M5/M10 = external English-accented speakers from Payne et al.). Shape_Subtype = specific audio file. Own-voice assignment to identity was between-subjects (participant_assignment in raw). Accent (English) is an experiment-level feature recorded here (column removed from Clean). Task = voice-label matching (self-matching). 2026-10: the interval previously stored under SOA was offset-to-onset and has been moved to ISI; SOA is left \"/\" (not back-computed from stimulus duration + ISI). Modality set to \"Audiovisual\" 2026-10 (was: \"Auditory (voice) and visual (label)\"; recording technique/stimulus details belong in detail). Stimulus_order set to \"Sequential\" 2026-10 (was: \"Familiarization: label first; Test: voice first\")."
   }
 }

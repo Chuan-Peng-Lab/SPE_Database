@@ -21,7 +21,7 @@
       "Trial_number": "144"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "100 ms",
@@ -39,6 +39,6 @@
         "Background": "White"
       }
     },
-    "detail": ""
+    "detail": "Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

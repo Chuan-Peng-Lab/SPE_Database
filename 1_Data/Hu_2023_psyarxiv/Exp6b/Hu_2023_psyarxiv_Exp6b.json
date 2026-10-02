@@ -21,7 +21,7 @@
       "Practice_trials": "until >=60% accuracy"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Sequentially",
+      "Stimulus_order": "Sequential",
       "SOA": "/",
       "Fixation_duration": "/",
       "Stimulus_duration": "/",
@@ -30,7 +30,7 @@
       "Feedback_duration": "/"
     },
     "Stimulus_Properties": {
-      "Modality": "Visual perceptual matching task (EEG recorded day 2)",
+      "Modality": "Visual",
       "Fixation": "0.8° x 0.8°",
       "Shape": "3.7° x 3.7°",
       "Label": "3.6° x 1.6°",
@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": "ERP study (explicit self-referencing, sequential presentation). Two days: day 1 = practice/behavioral run (Session 1), day 2 = EEG recording (Session 2/3; raw d2 file Session field kept verbatim - subject 6205/6223 day-2 data labeled Session 3, 6 subjects have extra Session-3 runs). Paper analyzes day-1 behavior only (Table 1 N=23 (22)); DB includes d1+d2 per user decision. extraIV1 = SHAPE-side moral valence (from Shape text; author codes from label-side morality column). Label = label .bmp file name; label identity = raw identity column (1:1 with file name). No-response -> ACC=NA/RT_ms=NA. One fully-empty artifact row (subject 6205 session 2) dropped from Clean (kept in raw)."
+    "detail": "ERP study (explicit self-referencing, sequential presentation). Two days: day 1 = practice/behavioral run (Session 1), day 2 = EEG recording (Session 2/3; raw d2 file Session field kept verbatim - subject 6205/6223 day-2 data labeled Session 3, 6 subjects have extra Session-3 runs). Paper analyzes day-1 behavior only (Table 1 N=23 (22)); DB includes d1+d2 per user decision. extraIV1 = SHAPE-side moral valence (from Shape text; author codes from label-side morality column). Label = label .bmp file name; label identity = raw identity column (1:1 with file name). No-response -> ACC=NA/RT_ms=NA. One fully-empty artifact row (subject 6205 session 2) dropped from Clean (kept in raw). Modality set to \"Visual\" 2026-10 (was: \"Visual perceptual matching task (EEG recorded day 2)\"; recording technique/stimulus details belong in detail). Stimulus_order set to \"Sequential\" 2026-10 (was: \"Sequentially\")."
   }
 }

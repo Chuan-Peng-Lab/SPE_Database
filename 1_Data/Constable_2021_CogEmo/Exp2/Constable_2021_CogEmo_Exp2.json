@@ -21,7 +21,7 @@
       "Trial_number": "192 trials total"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "233 ms",
@@ -39,6 +39,6 @@
         "Background": "Grey (169 cd/m²)"
       }
     },
-    "detail": "extraIV1 = luminance intensity (Strong/Weak). Shape = stimulus category associated with shape identity (Positive = light squares, Negative = dark squares; shape actually = luminance square). Stimuli_Type column removed (info merged into Shape + identity). Task = self-matching."
+    "detail": "extraIV1 = luminance intensity (Strong/Weak). Shape = stimulus category associated with shape identity (Positive = light squares, Negative = dark squares; shape actually = luminance square). Stimuli_Type column removed (info merged into Shape + identity). Task = self-matching. Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

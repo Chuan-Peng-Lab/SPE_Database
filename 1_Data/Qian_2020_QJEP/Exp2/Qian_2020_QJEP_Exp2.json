@@ -21,7 +21,7 @@
       "Trial_number": "200"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms",
       "Fixation_duration": "500 ms",
       "Blank": "200-250 ms and beep",
@@ -40,6 +40,6 @@
         "Background": "Grey"
       }
     },
-    "detail": "extraIV1 = alerting cue (Alter cue vs No cue). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals). Auditory component = 100 ms alerting beep (task-irrelevant warning cue), presented within the 200-250 ms blank after the 500 ms fixation on half of the trials; trial timeline: fixation 500 ms -> blank 200-250 ms (beep on half of the trials) -> shape-label pair 100 ms -> response window 1000 ms (source: REF/Qian_2020_QJEP_DS.md, Exp2 Method and Figure 1). Modality set to \"Audiovisual\" 2026-10 (was \"Visual and Auditory\")."
+    "detail": "extraIV1 = alerting cue (Alter cue vs No cue). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals). Auditory component = 100 ms alerting beep (task-irrelevant warning cue), presented within the 200-250 ms blank after the 500 ms fixation on half of the trials; trial timeline: fixation 500 ms -> blank 200-250 ms (beep on half of the trials) -> shape-label pair 100 ms -> response window 1000 ms (source: REF/Qian_2020_QJEP_DS.md, Exp2 Method and Figure 1). Modality set to \"Audiovisual\" 2026-10 (was \"Visual and Auditory\"). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

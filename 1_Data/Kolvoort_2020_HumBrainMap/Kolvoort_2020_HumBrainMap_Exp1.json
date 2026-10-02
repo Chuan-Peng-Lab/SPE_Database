@@ -21,7 +21,7 @@
       "Trial_number": "100 trials per block"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Shape first (in delay conditions)",
+      "Stimulus_order": "Sequential",
       "SOA": "0 ms, 40 ms, 120 ms, 700 ms",
       "Fixation_duration": "Duration of delay intervals (40, 120, 700 ms)",
       "Stimulus_duration": "100 ms (for both shape and label)",
@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": "Data note (2026-08 P8): provided data has 11051 trials / 31 subjects = 203-380 trials per subject (expected 400 = 4 blocks x 100; incomplete sessions kept as-is per minimal-preprocessing rule)."
+    "detail": "Data note (2026-08 P8): provided data has 11051 trials / 31 subjects = 203-380 trials per subject (expected 400 = 4 blocks x 100; incomplete sessions kept as-is per minimal-preprocessing rule). Stimulus_order set to \"Sequential\" 2026-10 (was: \"Shape first (in delay conditions)\")."
   }
 }
