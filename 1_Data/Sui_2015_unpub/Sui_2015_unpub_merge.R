@@ -13,8 +13,9 @@
 # 1/4/16 = 奖励条件中 Self/Friend/Stranger 关联面值，由 Reward×500 还原）；
 # Reward（仅 raw）= 逐 trial TpercentReward 原值（Exp1 全 0；Exp2 ∈
 # {0.002, 0.008, 0.032} 对应 rewardValues 1/4/16）；StartTime/EndTime（仅 raw）
-# = 会话级 startInst/endfeedB 原值（秒）。ACC 保留作者码 1/0/3/4（3=超时
-# RT>=1000ms、4=无反应 RT=0，Codebook 已注明）。
+# = 会话级 startInst/endfeedB 原值（秒）。raw 保留作者码 1/0/3/4（3=超时
+# RT>=1000ms、4=无反应 RT=0）；Clean 按全库统一 ACC 编码转写 3→-4（超时
+# 按键）、4→NA（无反应），Codebook 已同步注明。
 # 来源逻辑：基于原 `Sui_2015_unpub_clean.R`（其 read.mat/write_raw_csv 辅助
 # 函数思路）+ 2026-09-02 合并调查结论重写。行序 Block-major。
 # 运行方式：Rscript Sui_2015_unpub_merge.R；依赖 R.matlab（无 dplyr/tidyr 依赖）。
@@ -102,7 +103,8 @@ cln <- data.frame(
   Response = raw$Response,
   RT_ms   = raw$RT_ms,
   RT_sec  = round(raw$RT_ms / 1000, 3),
-  ACC     = raw$ACC,
+  # Clean 的 ACC 按全库统一编码转写：作者码 3（超时按键）→ -4，4（无反应）→ NA
+  ACC     = ifelse(raw$ACC == 3, -4, ifelse(raw$ACC == 4, NA_real_, raw$ACC)),
   stringsAsFactors = FALSE
 )
 # 列序按 SKILL 模板 v2：Subject → [Group] → [Session] → Task → [Phase] → Block → Trial
@@ -121,13 +123,14 @@ key_ok <- nrow(cln) == length(unique(paste(cln$Subject, cln$Phase,
                                            cln$extraIV1, cln$Block, cln$Trial)))
 stopifnot(key_ok)
 stopifnot(all(cln$extraIV1 %in% c(0, 1, 4, 16)))
-stopifnot(all(cln$ACC %in% c(0, 1, 3, 4)))
+stopifnot(all(cln$ACC %in% c(-4, 0, 1) | is.na(cln$ACC)))     # 全库六码表子集
+stopifnot(sum(cln$ACC == -4, na.rm = TRUE) == 213, sum(is.na(cln$ACC)) == 6)  # 原码 3/4 的行数
 stopifnot(all(cln$Block %in% 1:4), all(cln$Trial %in% 1:60))
 
 write.table(raw, file.path(STUDY_DIR, "Sui_2015_unpub_Exp1_raw.csv"),
             sep = ",", row.names = FALSE, quote = TRUE, na = "", qmethod = "double")
 write.table(cln, file.path(STUDY_DIR, "Sui_2015_unpub_Exp1_Clean.csv"),
-            sep = ",", row.names = FALSE, quote = TRUE, na = "", qmethod = "double")
+            sep = ",", row.names = FALSE, quote = TRUE, na = "NA", qmethod = "double")
 
 # subj_info：20 人人口学；Exp_id 统一。Gender/Age/Handedness 与原入库
 # subj_info 口径一致（Gender 含 fm=subject17 原样保留；Handedness 用 /
