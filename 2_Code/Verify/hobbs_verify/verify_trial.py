@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================================
-# 2_Code/hobbs_verify/verify_trial.py — Hobbs_2023_PsychMed 入库四方核对
+# 2_Code/hobbs_verify/verify_trial.py — Hobbs_2023_PsychMed 入库多源交叉核验
 # ----------------------------------------------------------------------------
 # 目的（2026-08-30 阶段 5 入库，Hobbs_2023_PsychMed）：
 #   1) trial 级逐值对比：库内 Hobbs_2023_PsychMed_Exp1_raw.csv vs 作者

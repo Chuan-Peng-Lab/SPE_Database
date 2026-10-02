@@ -67,6 +67,15 @@ find_year <- function(x) {
 violations <- character(0)
 report <- function(fmt, ...) violations <<- c(violations, sprintf(fmt, ...))
 
+# Controlled-vocabulary drift -> WARN only (does not fail the build; 2026-10)
+vocab_warn  <- character(0)
+vocab_known <- character(0)
+warn_vocab <- function(fmt, ...) vocab_warn <<- c(vocab_warn, sprintf(fmt, ...))
+known_vocab <- function(fmt, ...) vocab_known <<- c(vocab_known, sprintf(fmt, ...))
+# 豁免：Hu_YQ_2026_ChinaSciData 结构重构待执行（见 3_Reports/Hu_YQ_2026_Issues.md H1-H14），
+# 其 exp JSON 的受控词表偏差随重构一并修正，修正后删除本豁免。
+VOCAB_KNOWN <- c("Hu_YQ_2026_ChinaSciData")
+
 # --- collect JSON files (skip AppleDouble sidecars) ----------------------------
 json_files <- list.files(data_dir, pattern = "\\.json$",
                          recursive = TRUE, full.names = TRUE)
@@ -149,6 +158,25 @@ for (f in sort(json_files)) {
     extra <- setdiff(names(eo), allowed)
     if (length(extra))
       report("EXP UNKNOWN KEY: %s (%s)", rel, paste(extra, collapse = ", "))
+
+    # ---- controlled vocabularies (WARN) ------------------------------------
+    vocab <- list(
+      list(key = c("Physical_Environment", "Setting"),
+           ok  = c("Laboratory", "Online", "Laboratory + Online", "/")),
+      list(key = c("Stimulus_Properties", "Modality"),
+           ok  = c("Visual", "Auditory", "Audiovisual", "/")),
+      list(key = c("Trial_Structure", "Stimulus_order"),
+           ok  = c("Simultaneous", "Sequential", "/"))
+    )
+    for (v in vocab) {
+      val <- eo[[v$key[1]]][[v$key[2]]]
+      if (!is.null(val) && !(as.character(val) %in% v$ok)) {
+        msg <- sprintf("%s: %s = \"%s\" (allowed: %s)", rel, paste(v$key, collapse = "."),
+                       as.character(val), paste(v$ok, collapse = " / "))
+        if (any(vapply(VOCAB_KNOWN, grepl, logical(1), x = rel, fixed = TRUE)))
+          known_vocab("%s", msg) else warn_vocab("%s", msg)
+      }
+    }
   }
 }
 
@@ -248,6 +276,16 @@ if (length(missing_exp_json)) {
 }
 
 # --- report -------------------------------------------------------------------
+if (length(vocab_known)) {
+  cat(sprintf("  [KNOWN] %d controlled-vocabulary deviation(s) in deferred/known studies (exempted):\n",
+              length(vocab_known)))
+  for (w in vocab_known) cat("         ", w, "\n", sep = "")
+}
+if (length(vocab_warn)) {
+  cat(sprintf("  [WARN] %d controlled-vocabulary deviation(s) (Setting / Modality / Stimulus_order):\n",
+              length(vocab_warn)))
+  for (w in vocab_warn) cat("         ", w, "\n", sep = "")
+}
 cat(sprintf("Validated %d JSON files under %s\n", length(json_files), data_dir))
 if (file.exists(dataset_inf))
   cat(sprintf("Cross-checked %d study folder(s) against %s\n",

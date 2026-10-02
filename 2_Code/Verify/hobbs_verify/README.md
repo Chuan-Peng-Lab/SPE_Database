@@ -1,4 +1,4 @@
-# hobbs_verify — Hobbs_2023_PsychMed 入库四方核对脚本（2026-08-30）
+# hobbs_verify — Hobbs_2023_PsychMed 入库多源交叉核验脚本（2026-08-30）
 
 Hobbs, Sui, Munafò, Kessler & Button (2023), Psychological Medicine,
 DOI 10.1017/s0033291721003597，Associative Learning Task 入库时的核对工具。

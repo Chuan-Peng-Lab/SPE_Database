@@ -580,8 +580,16 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   必须逐研究确认原特殊码语义（Codebook/raw/清洗段/论文，E-Prime 惯例 3=no response 等），
   不得凭值猜测；⑤ 有 `Response` 实际按键列的文件可用「应按键 vs 实际键」验证或重建 ACC；
   无 `Response` 列的文件只能依据原码语义映射或留待 raw 追补；⑥ Codebook 的 `Variable_value`
-  同步列出码义。特殊码涉及的文件（重编码前逐研究确认）：Constable 系列 ACC=3、Dalmaso ACC=2、
-   Hu_2020 ACC=-1/2、Sui_2015 ACC=3/4、Vicovaro/Xu/Zhang/Sun/Hu_2023 ACC=NA。
+  同步列出码义。
+  **无反应必须写字面量 `NA`**（不是空字段）：`data.table::fwrite()` 需 `na = "NA"`、`write.table()`
+  也需 `na = "NA"`——默认写空字段，下游无法区分"无反应"与"缺数据"（先例 Lee_2026：Clean 的 1417 处
+  空字段已回填字面量 `NA`）。`validate_clean_csv.R` 的 W3 按**原文本**判空（R 会把字面量 `NA` 解析成
+  `NA`，不能据此判空），ACC 值域已收紧为 `1`/`0`/`NA`/`-2`/`-3`/`-4`。
+  **特殊码历史清单**（2026-10 全库实测：Clean 的 ACC 值域仅 `1`/`0`/`NA`/`-2`/`-4`；历史登记的
+  Constable 系列 `3`、Dalmaso `2`、Hu_2020 `-1/2`、Vicovaro/Xu/Zhang/Sun/Hu_2023 `NA` 均已不在 Clean
+  中出现，原码语义见各研究 Codebook/raw）。本轮实存转码先例 = **Sui_2015_unpub**：作者 Codebook
+  `3 = timeout (RT>=1000 ms)` → `-4`（超时按键，213 行）、`4 = no response (RT=0)` → `NA`（6 行），
+  已同步 `Sui_2015_unpub_merge.R`（转码 + `stopifnot` 行数守卫 + `na = "NA"`）与 Codebook。
 - **Matching 列取值全库统一（2026-09-04 定案）**：`Matching` = 呈现的 Shape-Label 对与已学联结一致；`Nonmatching` = 不一致（重组合）。**严格二值**：空白/NA 一律视为非规范值（不允许缺失标记），`validate_clean_csv.R` W5 报错且不列出错值。清洗脚本把作者原始词（match/unmatch、matching/mismatching、Matched/Mismatched、Yes/No 等）映射为规范取值；raw 保留作者原词。Codebook `Variable_value` 同步列出。已知例外：`Zhang_2023_NeuroImage_Exp1` 全 NA 占位行（subject 62，源数据空行、历史保留，已记 CSV Note）→ 报 W5 WARN，待合作者核查数据后再处置，勿擅自删除/改写。
 - **Minimal preprocessing, NO filtering**: cleaning only renames/reorganizes variables
   and standardizes Identity; it keeps ALL trials, participants and values. Special
