@@ -72,7 +72,7 @@ Agent 在本仓库的角色 = **心理学 / 认知科学 / 认知神经科学 / 
 
 - 大文件（>10 MB，见 caveats）**绝不整读入上下文**：用 `head` 看表头、Python 流式/按列提取；优先 `grep`/`glob` 定位；读写批量；验证输出截断（head/wc -l），禁止直接输出大 diff 或长 R 输出。
 - **不要重复"发现"已知问题**：caveats 与 PROJ_STATE.md 已记录的当事实引用；对前序 agent 已核实事实做轻量抽查即可，不完整重验。
-- `Generate_Table1.qmd` 渲染耗时数分钟：仅当输入（文件夹/Dataset_inf.csv/qmd）变化时才重渲染；日常校验用秒级 `validate_json_metadata.R`。
+- Table 1 现由 `3_Reports/Generate_Table1_v2.R` 生成（`Rscript 3_Reports/Generate_Table1_v2.R` → `3_Reports/Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto），耗时数分钟：仅当 `1_Data/` 文件夹或 `Dataset_inf.csv` 变化时才重跑；日常校验用秒级 `validate_json_metadata.R`。
 - 编辑 `Dataset_inf.csv` 须字节保真（格式与往返测试见 §数据文件格式约定；细则见 SKILL §主索引「写入纪律」）。
 - 同一文件多处修改合并一次写入/提交；长任务（渲染、批量改名、大批量网络查询）放后台任务，并行推进只读步骤。
 - **CRLF/LF 差异直接无视**（git text=auto 会归一化，diff 只显内容差异；处理 CRLF 文件注意 grep/awk 行为即可）；数值等价（浮点容差内）即视为一致，不追末位显示差异。
@@ -114,11 +114,11 @@ Agent 在本仓库的角色 = **心理学 / 认知科学 / 认知神经科学 / 
 
 ## Known data-quality caveats（避坑：视为已知，勿重新"发现"）
 
-1. **稿件 Table 1 与数据存在已知出入**（Exp 编号错抄如 P5E1–P5E3 全标 Exp4、N 口径差异、Trials 措辞、Study 归属等）——登记于 `3_Reports/Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md`，逐项可解性见 `Table1_Issues_Solvability.md`，`Generate_Table1.qmd` 输出 `table1_problems.txt`；勿再当新发现报告。
+1. **稿件 Table 1 与数据存在已知出入**（Exp 编号错抄如 P5E1–P5E3 全标 Exp4、N 口径差异、Trials 措辞、Study 归属等）——登记于 `3_Reports/Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md`，逐项可解性见 `Table1_Issues_Solvability.md`（qmd 时代产物 `Output/table1_problems.txt` 仍可查；现行出表工具 = `Generate_Table1_v2.R`）；勿再当新发现报告。
 2. **清洗 = 最小预处理，不过滤**：ACC 等特殊值有意保留并记录于 Codebook；Clean 的 ACC 目标编码 = SKILL §数据标准化「ACC 统一编码」（`1`/`0`/`NA`/`-2`/`-3`/`-4`，无反应一律 `NA`），**勿在文档中沿用旧码 `-1`/`2` 作示例**（那是作者原始码，仅存于 raw；未统一的遗留码在 SKILL 同节登记）；使用者须按自己分析目标预处理。
 3. **缺失代码引用**：`2_Code/README_Auto_Clean.md` 引用的 `SPE_Auto_Clean.R`/`Test_Auto_Clean.R` 不存在，勿寻找。
 4. **大文件（>10 MB）勿整读**：`Sun_2026_DataExp_Exp1_Clean_part1/2.csv`（各 ~37.5 MB；原 75 MB 单文件于 2026-09-25 按被试边界分片）、`Hu_YQ_2026_ChinaSciData_Exp2_Clean_part1/2.csv`（31.4 / 28.5 MB，同上）、`Processed_Data_Filtered.csv` 60 MB、`Haciahmet_2023_Psychophysiol_Exp1_raw.csv` 42 MB、`Share_Data.RData` 31 MB。分片规则与读写口径见 SKILL.md §文件与文件夹规范「大文件拆分」（分片共用 1 份 Codebook/JSON、不新增主索引行）。
-5. **Table 1 渲染命令（RStudio 自带 quarto）**：`/Applications/RStudio.app/Contents/Resources/app/quarto/bin/quarto render Generate_Table1.qmd`——注意是 `app/quarto/bin/`，不是 `app/bin/quarto/`（流程 `1_Data → Dataset_inf.csv → Table 1`，ID 列 = Folder_Name，比对口径"Not specified"=missing、CC0=CC0 1.0 Universal；操作细节 PROJ_STATE §5）。
+5. **Table 1 现行工具 = `3_Reports/Generate_Table1_v2.R`**（2026-10 用户定案）：`Rscript 3_Reports/Generate_Table1_v2.R` → `Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto。旧 `Generate_Table1.qmd` **已失效**（`Paper_ID` 列移除后无法渲染），不要再走 qmd/quarto 流程（历史命令见 git）。流程仍为 `1_Data → Dataset_inf.csv → Table 1`，ID 列 = Folder_Name，比对口径"Not specified"=missing、CC0=CC0 1.0 Universal；`Exp_Implement` 由 exp JSON `Setting` 正则推断（与 qmd 同逻辑）；操作细节 PROJ_STATE §5。
 
 ## Repo layout（仓库整洁，防误判）
 

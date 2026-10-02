@@ -19,7 +19,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - `For_COLLABORATORS.md` — **合作者推进指南**（正文归属本文件）：待合作者推进的 3 项（Sun 补原始导出 / Hu_YQ 修结构与补来源 / Scheller 补匹配任务数据）补齐路径 + 未来新研究入库 4 步 + REF/ 不上 GitHub 的版本同步提醒
 - `2_Code/validate_json_metadata.R` — 结构级校验脚本；`2_Code/validate_clean_csv.R` — 内容级校验脚本（2026-09-25 起均支持 `_Clean_part<N>.csv` 分片：按逻辑数据集聚合 E3/W2、新增 E4 表头一致性）
 - `2_Code/split_clean_csv.py` — 大文件分片工具（> 50 MB 的 `*_Clean.csv` 按被试边界切分；默认 dry-run，`--apply` 备份原件后写入并逐字节校验可还原；规则正文见 SKILL §文件与文件夹规范「大文件拆分」）
-- `3_Reports/Generate_Table1.qmd` + `Output/table1_problems.txt` — Table 1 再生成与比对
+- `3_Reports/Generate_Table1_v2.R`（**现行 Table 1 工具**，`Rscript` 出 `Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto）+ `Output/table1_problems.txt`（qmd 时代产物，仍可查）— Table 1 再生成与比对；旧 `Generate_Table1.qmd` 已失效（`Paper_ID` 列移除后无法渲染）
 - `3_Reports/Table1_Issues_Solvability.md` — Table 1 问题逐项可解性判定（与本文档 §3 双向关联）
 - `3_Reports/Verifying_original_results_issues.md` — **作者原始结果验证问题统一记录处**（Issue 1–8，与本文档 §3 类别三关联）
 - `3_Reports/Hu_YQ_2026_Issues.md` — **Hu_YQ_2026_ChinaSciData 待合作者处理的问题清单**（H1–H14：实验层级与任务命名、原始数据来源缺口、Year/License 等待确认项；与本文档 §3 类别二新增行关联）
@@ -70,7 +70,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 |---|---|---|---|
 | Scheller_2026_elife | deferred（CSV 行已移除） | OSF 仅 TOJ trial 数据、匹配任务数据从未上传；用户指示不下载 OSF | 作者提供匹配数据后重入（known_unlisted 豁免保留） |
 
-入库流程：用户将原始数据放入输入区后，加载 `spe-database-curation` 技能走 10 步流程；**入库后必做多源交叉核验**（论文-代码-数据-原始数据 + 描述性统计核对）；验收：标准文件齐全、命名合规、CSV 行更新、两级校验 EXIT=0、Generate_Table1.qmd 重渲染 RENDER_EXIT=0。
+入库流程：用户将原始数据放入输入区后，加载 `spe-database-curation` 技能走 10 步流程；**入库后必做多源交叉核验**（论文-代码-数据-原始数据 + 描述性统计核对）；验收：标准文件齐全、命名合规、CSV 行更新、两级校验 EXIT=0、`Rscript 3_Reports/Generate_Table1_v2.R` 重跑成功。
 
 ### CSV 遗留空白
 
@@ -118,7 +118,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ### F. 状态与流程治理
 16. **校验链路**：元数据改动必跑 validate_json_metadata.R；数据改动加跑 validate_clean_csv.R。
-17. **稿件 v16 已废弃**：Table 1 以 Generate_Table1.qmd 输出为准；与稿件自动比对仅在稿件版本更新时手动启用。
+17. **稿件 v16 已废弃**：Table 1 以 `3_Reports/Generate_Table1_v2.R` 输出为准（2026-10 定案；旧 qmd 已失效，历史报告不改）；与稿件自动比对仅在稿件版本更新时手动启用。
 18. **Status=1 判定标准**：**最关键标准 = 库内标准文件形成逻辑上完全一致、清晰可追溯的结构**（各层级互相印证、缺口已解释）；与原论文表述是否一致是次要指标——不一致不阻塞 Status=1，记录于 Verifying_original_results_issues.md（Issue 编号）+ exp JSON detail/CSV Note。
 19. **Task/extraIV 命名规范**：`Task` 列区分联结任务类型（默认 `self-matching`；纯情绪面孔/金钱/伪词等用受控值）；任务内额外操纵自变量统一命名 `extraIV1`/`extraIV2`（语义入 Codebook+exp JSON detail）；列顺序统一模板（Subject→[Group]→[Session]→Task→[Phase]→[Condition]→Block→Trial→[Practice]→Matching→Shape→[ShapeLoc]→[Shape_Subtype]→Shape-Identity×3→Label→Label-Identity×3→[extraIV1/2]→[CorrResponse]→[Response]→RT_ms→RT_sec→ACC→研究特有尾部）。
 
@@ -137,7 +137,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **校验基线**（2026-09-25 实测）：
   - 结构级：`validate_json_metadata.R` EXIT=0（**142 JSON / 51 文件夹** ↔ CSV 交叉一致；known_pending 0 个；known_unlisted 1 个 = Scheller_2026_elife；分片与主文件按同一数据集只检查一次）
   - 内容级：`validate_clean_csv.R` **0 ERROR / 29 WARN**（files=96 datasets=92；分片按各片合计计被试数，并检查各片表头一致性 E4；WARN 均为已知类：组间拆行的 Sample/Valid 口径差异〔含 Lee_2026×3、Hu_YQ×6、Sun_2026_DataExp（nSubj 589 vs Valid_Subj 503 口径）〕、ACC 值域 NA、Zhang_2023_NeuroImage_Exp1 与 Hu_YQ Exp1 各 1 条 W5）
-  - Table 1 渲染：未重渲染（qmd 动态 keep-by-folder，新研究自动入表；仅稿件版本更新时触发）
+  - Table 1：未重跑（`Generate_Table1_v2.R` 依 `1_Data/` 实际存在的文件夹动态生成，新研究自动入表；仅稿件版本更新时触发）
   - git：分支 `main`（工作区状态以 git status 为准）
 
 ## 6. 散落未解决问题（自历史记录提取，不属于上述四类表）

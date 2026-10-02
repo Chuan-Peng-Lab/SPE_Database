@@ -440,7 +440,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   `Setting` must use a controlled vocabulary: `Laboratory`, `Online`, or a combined
   value (e.g., `Laboratory + Online`); use `"/"` only when truly unknown. Do NOT
   invent free-text variants (e.g., "quiet room", "chamber", "remote"): the manuscript
-  Table 1 pipeline (`Generate_Table1.qmd`) infers `Exp_Implement` by regex-matching
+  Table 1 pipeline (`Generate_Table1_v2.R`) infers `Exp_Implement` by regex-matching
   `Setting`, so non-standard wording silently degrades to NA.
   **Setting = Online 时**：`Physical_Environment.Location` 与 Dataset_inf.csv / paper JSON 的
   `City` 可不填（在线被试可分布于任何地点，位置无意义）——JSON `Location` 填 `/`，Dataset_inf.csv `City` 填 `NA`（不适用，案例 Kirk/Perrykkad）或留空，无需追查。

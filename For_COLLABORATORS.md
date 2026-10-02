@@ -50,7 +50,7 @@
 
 agent 将自动执行：扫描输入区识别实验/被试/会话 → 生成独立清洗脚本 `<Folder_Name>_clean.R` → 产出标准文件（`*_raw.csv` / `*_ExpN_Clean.csv` / `*_subj_info.csv` / `Codebook_*_Clean.xlsx` / paper + 实验 JSON）→ `Dataset_inf.csv` 登记新行 → 两级校验（结构级 `validate_json_metadata.R` EXIT=0；内容级 `validate_clean_csv.R` 0 ERROR）→ **多源交叉核验**（论文-代码-数据-原始数据 + 描述性统计）。
 
-> 注：Table 1 为动态 keep-by-folder，新研究**自动纳入**，入库时**无需**单独渲染（旧 `Generate_Table1.qmd` 已失效；如需出表用 `Generate_Table1_v2.R`）。
+> 注：Table 1 由 `3_Reports/Generate_Table1_v2.R` 依 `1_Data/` 下实际存在的文件夹动态生成，新研究**自动纳入**，入库时**无需**单独渲染（旧 `Generate_Table1.qmd` 已失效：`Paper_ID` 列移除后无法渲染）。
 
 **完成标准**（可直接让 agent 汇报确认）：标准文件齐全、命名合规、两级校验通过、CSV 行已登记。
 
