@@ -1,11 +1,4 @@
----
-title: "Bootstrap Analysis of SPE Under Mismatch Conditions (v3)"
-author: "SPE Database Analysis"
-date: "`r Sys.Date()`"
-output: html_document
----
-
-```{r setup, include=FALSE}
+## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 resolve_root <- function() {
   if (requireNamespace("knitr", quietly = TRUE)) {
@@ -23,14 +16,14 @@ resolve_root <- function() {
 }
 setwd(resolve_root())
 cat("工作目录:", getwd(), "\n")
-```
 
-```{r packages}
+
+## ----packages-----------------------------------------------------------------
 library(data.table)
 library(dplyr)
-```
 
-```{r paths}
+
+## ----paths--------------------------------------------------------------------
 raw_data_dir <- "../1_Data"
 pic_dir      <- "Output/Pic"
 data_out_dir <- "Output/data"
@@ -39,9 +32,9 @@ dir.create(data_out_dir, showWarnings = FALSE, recursive = TRUE)
 
 source("analysis_config.R")
 cat(sprintf("\n>>> PRACTICE_POLICY = %s\n", PRACTICE_POLICY))
-```
 
-```{r constants}
+
+## ----constants----------------------------------------------------------------
 N_BOOTSTRAP  <- 500
 MIN_SAMPLE_N <- 10
 STEP_N       <- 10
@@ -57,9 +50,9 @@ LABEL_COLOR  <- "#A23B72"
 VLINE_SHAPE  <- "#1a5c7a"
 VLINE_LABEL  <- "#7a2a52"
 set.seed(BOOT_SEED)
-```
 
-```{r process-data}
+
+## ----process-data-------------------------------------------------------------
 # ===========================================================================
 # 1. 读取（分片自动合并 + Hu_YQ 规则）→ 失配试次 → 个体级 Cohen's d
 # ===========================================================================
@@ -114,9 +107,9 @@ calc_subject_cohens_d <- function(df, measure = "RT", min_trials = 2) {
   if (length(results) == 0) return(data.frame())
   do.call(rbind, results)
 }
-```
 
-```{r filter-functions}
+
+## ----filter-functions---------------------------------------------------------
 # ---------------------------------------------------------------------------
 # 保守法：仅当同一被试的规范身份 >= 3 类（含 Self 与 Stranger）才纳入。
 # v3：只数 6 类规范身份；奖赏（£1/£3/£9）、情绪（Happy/Neutral/...）、
@@ -169,9 +162,9 @@ bootstrap_analysis <- function(v, n_bootstrap = 500, min_n = 10, step = 10, max_
                CI_upper = quantile(bm, 0.975, na.rm = TRUE), stringsAsFactors = FALSE)
   }))
 }
-```
 
-```{r run-analysis}
+
+## ----run-analysis-------------------------------------------------------------
 run_full_analysis <- function(data, approach = "Conservative", n_boot = 500) {
   fn <- if (approach == "Conservative") process_conservative else process_liberal
   aligned <- list(); maxr <- list()
@@ -216,9 +209,9 @@ save_boot_csv(acc_cons, paste0("bootstrap_acc_conservative_aligned_v6", SUFFIX, 
 save_boot_csv(rt_lib,   paste0("bootstrap_rt_liberal_max_v6",           SUFFIX, ".csv"))
 save_boot_csv(acc_lib,  paste0("bootstrap_acc_liberal_max_v6",          SUFFIX, ".csv"))
 cat("\n中间数据已保存\n")
-```
 
-```{r load-processed-data}
+
+## ----load-processed-data------------------------------------------------------
 read_boot_csv <- function(filename) {
   fpath <- file.path(data_out_dir, filename)
   if (!file.exists(fpath)) return(data.frame())
@@ -228,9 +221,9 @@ rt_cons  <- read_boot_csv(paste0("bootstrap_rt_conservative_aligned_v6",  SUFFIX
 acc_cons <- read_boot_csv(paste0("bootstrap_acc_conservative_aligned_v6", SUFFIX, ".csv"))
 rt_lib   <- read_boot_csv(paste0("bootstrap_rt_liberal_max_v6",           SUFFIX, ".csv"))
 acc_lib  <- read_boot_csv(paste0("bootstrap_acc_liberal_max_v6",          SUFFIX, ".csv"))
-```
 
-```{r helpers}
+
+## ----helpers------------------------------------------------------------------
 find_ci_exclusion_n <- function(subset_df) {
   if (nrow(subset_df) == 0) return(list(n = NULL, above = FALSE))
   a <- subset_df[subset_df$CI_lower > 0, ]; b <- subset_df[subset_df$CI_upper < 0, ]
@@ -259,9 +252,9 @@ draw_identity_trajectory <- function(subset_df, color, vline_color, cex_n = 0.85
     }
   }
 }
-```
 
-```{r panel-function}
+
+## ----panel-function-----------------------------------------------------------
 draw_bootstrap_panel <- function(data, panel_label, measure, approach,
                                  cex_axis = 1.0, cex_lab = 1.0, cex_main = 1.1) {
   if (nrow(data) == 0) { plot.new(); text(0.5, 0.5, "No Data", cex = 1.5); return() }
@@ -285,9 +278,9 @@ draw_bootstrap_panel <- function(data, panel_label, measure, approach,
          text.col = c(SHAPE_COLOR, LABEL_COLOR), text.font = 2, cex = 0.9,
          bty = "n", inset = c(0.02, 0.02))
 }
-```
 
-```{r combined-figure}
+
+## ----combined-figure----------------------------------------------------------
 combined_path <- file.path(pic_dir, paste0("combined_figures_v6", SUFFIX, ".png"))
 png(combined_path, width = 15, height = 11, units = "in", res = 300)
 par(family = "serif"); par(oma = c(0.4, 0.4, 2.0, 0.4))
@@ -300,9 +293,9 @@ mtext("Bootstrap Estimation of the Self-Prioritization Effect Under Mismatch Con
       side = 3, line = 1.0, outer = TRUE, font = 2, cex = 1.05, family = "serif")
 dev.off()
 cat("\n组合图已保存:", combined_path, "\n")
-```
 
-```{r summary}
+
+## ----summary------------------------------------------------------------------
 print_summary <- function(data, approach, measure) {
   if (nrow(data) == 0) return(invisible(NULL))
   cat(sprintf("\n--- %s %s ---\n", approach, measure))
@@ -341,4 +334,4 @@ mm_summary <- rbind(
 write.csv(mm_summary, file.path(data_out_dir, paste0("mismatch_bootstrap_summary", SUFFIX, ".csv")),
           row.names = FALSE, fileEncoding = "UTF-8")
 print(mm_summary, row.names = FALSE)
-```
+

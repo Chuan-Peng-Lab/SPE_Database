@@ -1,11 +1,4 @@
----
-title: "Figure 3: Ridge Distributions and Pairwise Forest Plots (v3)"
-author: "SPE Database Analysis"
-date: "`r Sys.Date()`"
-output: html_document
----
-
-```{r setup, include=FALSE}
+## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 resolve_root <- function() {
   if (requireNamespace("knitr", quietly = TRUE)) {
@@ -23,15 +16,15 @@ resolve_root <- function() {
 }
 setwd(resolve_root())
 cat("工作目录:", getwd(), "\n")
-```
 
-```{r packages}
+
+## ----packages-----------------------------------------------------------------
 library(data.table)
 library(lme4)
 library(MASS)
-```
 
-```{r paths}
+
+## ----paths--------------------------------------------------------------------
 # 研究数据 / 输出目录（相对 3_Reports/）
 raw_data_dir <- "../1_Data"
 pic_dir      <- "Output/Pic"
@@ -42,9 +35,9 @@ dir.create(data_out_dir, showWarnings = FALSE, recursive = TRUE)
 # 共用数据装配层（分片合并、Hu_YQ 规则、practice 策略、规范身份判定）
 source("analysis_config.R")
 cat(sprintf("\n>>> PRACTICE_POLICY = %s\n", PRACTICE_POLICY))
-```
 
-```{r constants}
+
+## ----constants----------------------------------------------------------------
 # ===========================================================================
 # 全局常量
 # ===========================================================================
@@ -70,9 +63,9 @@ RT_MAX_MS       <- 10000
 VALID_ACC       <- c(0, 1)
 # 输出后缀：practice=exclude 为正式版本；keep 作为敏感性分析并存
 SUFFIX          <- if (PRACTICE_POLICY == "keep") "_keepPractice" else ""
-```
 
-```{r compute-subject-cohens-d}
+
+## ----compute-subject-cohens-d-------------------------------------------------
 # ===========================================================================
 # 1. 读取（分片自动合并 + Hu_YQ 结构规则）→ subject-level Cohen's d
 # ===========================================================================
@@ -147,9 +140,9 @@ for (id in IDENTITY_ORDER) {
   cat(sprintf("   %-13s datasets=%3d  subjects=%5d\n",
               id, uniqueN(sub$Source), uniqueN(sub$SubjKey)))
 }
-```
 
-```{r fit-mixed-model}
+
+## ----fit-mixed-model----------------------------------------------------------
 # ===========================================================================
 # 2. 混合模型 + 参数化 Bootstrap
 # ===========================================================================
@@ -237,16 +230,16 @@ identity_summary_df <- rbind(
 write.csv(identity_summary_df, file.path(data_out_dir, paste0("identity_baseline_summary", SUFFIX, ".csv")),
           row.names = FALSE, fileEncoding = "UTF-8")
 print(identity_summary_df, row.names = FALSE)
-```
 
-```{r load-processed-data}
+
+## ----load-processed-data------------------------------------------------------
 rt_dist  <- read.csv(file.path(data_out_dir, paste0("use_example_ridge_distribution_RT_11", SUFFIX, ".csv")), stringsAsFactors = FALSE)
 acc_dist <- read.csv(file.path(data_out_dir, paste0("use_example_ridge_distribution_ACC_11", SUFFIX, ".csv")), stringsAsFactors = FALSE)
 rt_pairwise  <- read.csv(file.path(data_out_dir, paste0("use_example_pairwise_differences_RT_11", SUFFIX, ".csv")), stringsAsFactors = FALSE)
 acc_pairwise <- read.csv(file.path(data_out_dir, paste0("use_example_pairwise_differences_ACC_11", SUFFIX, ".csv")), stringsAsFactors = FALSE)
-```
 
-```{r ridge-core-function}
+
+## ----ridge-core-function------------------------------------------------------
 calc_scipy_equiv_bw <- function(x) 0.32 * length(x)^(-0.2) * sd(x)
 
 draw_ridge_with_box <- function(dist_data, xlim, xlabel, title = NULL,
@@ -309,9 +302,9 @@ draw_ridge_with_box <- function(dist_data, xlim, xlabel, title = NULL,
   if (!is.null(title)) title(main = title, font.main = 2, cex.main = cex_main)
   box(bty = "l")
 }
-```
 
-```{r forest-core-function}
+
+## ----forest-core-function-----------------------------------------------------
 draw_pairwise_forest <- function(pairwise_df, title = NULL,
                                  xlabel = "Difference in Cohen's d",
                                  cex_axis = 0.80, cex_lab = 1.05, cex_main = 1.10) {
@@ -346,9 +339,9 @@ draw_pairwise_forest <- function(pairwise_df, title = NULL,
          pch = 21, pt.bg = c("#2E7D32", "#9E9E9E"), col = "white",
          pt.lwd = 0.6, pt.cex = 1.0, xjust = 1, yjust = 0, cex = 0.75, bty = "n")
 }
-```
 
-```{r combined-figure}
+
+## ----combined-figure----------------------------------------------------------
 combined_path <- file.path(pic_dir, paste0("p_ridges_pairwise_combined_11", SUFFIX, ".png"))
 png(combined_path, width = 20, height = 22, units = "in", res = FIG_DPI)
 par(family = "serif"); par(oma = c(0.4, 0.4, 0.5, 0.4))
@@ -372,9 +365,9 @@ draw_pairwise_forest(acc_pairwise, title = "D.  ACC: Pairwise Differences",
   xlabel = "Difference in Cohen's d (\u0394 = d_A \u2212 d_B)")
 dev.off()
 cat("\n组合图已保存:", combined_path, "\n")
-```
 
-```{r summary-table}
+
+## ----summary-table------------------------------------------------------------
 cat("\n========== RT 成对比较 ==========\n")
 rt_display <- rt_pairwise[, c("Identity_A", "Identity_B", "diff_mean", "ci95_lower", "ci95_upper", "p_value_bootstrap", "significant")]
 for (cc in c("diff_mean", "ci95_lower", "ci95_upper")) rt_display[[cc]] <- round(rt_display[[cc]], 4)
@@ -386,4 +379,4 @@ acc_display <- acc_pairwise[, c("Identity_A", "Identity_B", "diff_mean", "ci95_l
 for (cc in c("diff_mean", "ci95_lower", "ci95_upper")) acc_display[[cc]] <- round(acc_display[[cc]], 4)
 print(acc_display, row.names = FALSE)
 cat(sprintf("\nACC: %d/10 显著\n", sum(acc_pairwise$significant)))
-```
+

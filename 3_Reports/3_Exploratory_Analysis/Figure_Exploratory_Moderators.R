@@ -1,11 +1,4 @@
----
-title: "Exploratory Moderator Analysis - Spearman Bootstrap (APA figures, v3)"
-author: "SPE Database Analysis"
-date: "`r Sys.Date()`"
-output: html_document
----
-
-```{r setup, include=FALSE}
+## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 resolve_root <- function() {
@@ -25,15 +18,15 @@ resolve_root <- function() {
 }
 setwd(resolve_root())
 cat("工作目录:", getwd(), "\n")
-```
 
-```{r packages}
+
+## ----packages-----------------------------------------------------------------
 library(dplyr)
 library(ggplot2)
 library(patchwork)
-```
 
-```{r paths}
+
+## ----paths--------------------------------------------------------------------
 # ===========================================================================
 # 路径设置（相对于 3_Reports/ 项目根目录）
 # ===========================================================================
@@ -46,9 +39,9 @@ data_out_dir <- "Output/data"
 
 dir.create(pic_dir,      showWarnings = FALSE, recursive = TRUE)
 dir.create(data_out_dir, showWarnings = FALSE, recursive = TRUE)
-```
 
-```{r load-data}
+
+## ----load-data----------------------------------------------------------------
 # ===========================================================================
 # 1. 加载预计算的 visualization 数据（v12 pipeline）
 # ===========================================================================
@@ -74,9 +67,9 @@ cat("\n敏感性分析（trial number 去掉最大 3 个数据集）:\n")
 print(sensitivity)
 cat("\n被排除的数据集:\n")
 print(excluded)
-```
 
-```{r constants}
+
+## ----constants----------------------------------------------------------------
 # ===========================================================================
 # 2. 绘图常量（APA 黑白/灰度）
 # ===========================================================================
@@ -105,9 +98,9 @@ apa_theme <- theme_classic(base_size = 15, base_family = "serif") +
     plot.margin = margin(8, 8, 8, 8),
     panel.grid = element_blank()
   )
-```
 
-```{r panel-function}
+
+## ----panel-function-----------------------------------------------------------
 # ===========================================================================
 # 3. 单面板绘图函数（黑白/灰度）
 # ===========================================================================
@@ -137,9 +130,9 @@ draw_panel_ggplot <- function(raw_df, measure, is_duration, title) {
          y = MEASURE_LABELS[[measure]]) +
     apa_theme
 }
-```
 
-```{r build-panels}
+
+## ----build-panels-------------------------------------------------------------
 # ===========================================================================
 # 4. 构建四个面板
 # ===========================================================================
@@ -161,9 +154,9 @@ panels <- lapply(specs, function(s) {
   draw_panel_ggplot(raw, s$meas, s$dur, PANEL_TITLES[[key]])
 })
 names(panels) <- sapply(specs, function(s) paste0(s$mod, "_", s$meas))
-```
 
-```{r combined-figure}
+
+## ----combined-figure----------------------------------------------------------
 # ===========================================================================
 # 5. 2×2 组合图
 # ===========================================================================
@@ -175,9 +168,9 @@ combined <- (panels[["stimulus_duration_ms_first_RT_ms"]] |
 combined_path <- file.path(pic_dir, "Figure_Exploratory_Moderators_Main.png")
 ggsave(combined_path, combined, width = 12, height = 8, dpi = 300)
 cat("\n组合图已保存:", combined_path, "\n")
-```
 
-```{r individual-figures}
+
+## ----individual-figures-------------------------------------------------------
 # ===========================================================================
 # 6. 四张单面板图
 # ===========================================================================
@@ -193,9 +186,9 @@ for (s in indiv_specs) {
   ggsave(file.path(pic_dir, s$name), panels[[key]], width = 6, height = 4.5, dpi = 300)
   cat("已保存:", s$name, "\n")
 }
-```
 
-```{r captions}
+
+## ----captions-----------------------------------------------------------------
 # ===========================================================================
 # 7. 图注（统计量移出图内，供正文图注使用）
 # ===========================================================================
@@ -229,4 +222,4 @@ sens_out <- sensitivity %>%
 write.csv(sens_out, file.path(data_out_dir, "exploratory_sensitivity.csv"),
           row.names = FALSE)
 cat("敏感性分析已保存: Output/data/exploratory_sensitivity.csv\n")
-```
+
