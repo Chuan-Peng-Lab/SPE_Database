@@ -44,7 +44,9 @@ clean_bases <- unique(clean_base)
 known <- c(
   "Constable_2020_ActaPsych_Exp1"    = "缺 Label/Shape 的 English/Standardized 四个 Identity 三级列（历史文件，待补）",
   "Zhang_2023_NeuroImage_Exp1"       = "nSubj 346 vs subj_info 347 行（差 1，待核）",
-  "Perrykkad_2022_BMCPsych_Exp1"       = "nSubj 334 vs subj_info 288 行（Pt7E1 N 口径，待核）"
+  "Perrykkad_2022_BMCPsych_Exp1"       = "nSubj 334 vs subj_info 288 行（Pt7E1 N 口径，待核）",
+  "Wu_2026_Chinaxiv_Exp1"            = "Matching 列为 NA 的 choice-task 与 staircase 试次（该任务无匹配维度，已核，2026-10-06）",
+  "Wu_2026_Chinaxiv_Exp2"            = "Matching 列为 NA 的 choice-task 与 staircase 试次（该任务无匹配维度，已核，2026-10-06）"
 )
 is_known <- function(base, rule) {
   if (!base %in% names(known)) return(FALSE)
@@ -187,13 +189,18 @@ for (base in clean_bases) {
     }
   }
   # ---- W5 Matching 值域（2026-09-04 严格规范：仅允许 Matching/Nonmatching；
-  #      空白/NA 亦视为非规范值 → 报错，不列出错值） ----
+  #      空白/NA 亦视为非规范值 → 报错，不列出错值。
+  #      2026-10-06：与 W4 同款支持 known 登记（任务本身无匹配维度时的 NA，如 Wu_2026_Chinaxiv） ----
   if ("Matching" %in% hdr) {
     vals <- unique(dt[["Matching"]])
     bad  <- vals[is.na(vals) | !vals %in% c("Matching", "Nonmatching")]
     if (length(bad)) {
-      cat(sprintf("[WARN] %s: Matching 列含非规范取值（仅允许 Matching/Nonmatching）\n", base))
-      n_warn <- n_warn + 1
+      if (is_known(base, "Matching"))
+        cat(sprintf("[KNOWN] %s: W5 Matching 列含 Nonmatching 以外的取值（登记豁免）\n", base))
+      else {
+        cat(sprintf("[WARN] %s: Matching 列含非规范取值（仅允许 Matching/Nonmatching）\n", base))
+        n_warn <- n_warn + 1
+      }
     }
   }
   # ---- W4 非标准命名 ----

@@ -1,0 +1,13 @@
+{
+  "Paper_name": "The influence of self-relevance on the self-prioritization effect in perceptual decision-making: the moderating role of task relevance",
+  "Summary": "Two preregistered behavioural experiments tested whether a self-relevance association acquired with a random-dot kinematogram (RDK) automatically facilitates perceptual decision-making. Participants first learned an association between one sensory feature of the RDK (overall motion direction or dominant colour) and an identity (self vs other) and then completed a matching task (judge whether the presented feature-label pair agrees with the learned association), followed by a choice task (judge the overall motion direction or the dominant colour of the dots; no matching judgement). Experiment 1 (N = 141; motion group n = 70, colour group n = 71; 4 difficulty levels) found a robust self-prioritization effect (SPE) in the matching task but no SPE in the choice task. Experiment 2 (N = 60; within-subject 2 association x 2 difficulty x 2 task relevance) replicated the matching-task SPE and again found no SPE in the choice task, irrespective of whether the identity-associated feature was task-relevant or task-irrelevant. Hierarchical drift-diffusion modelling (HDDM, dockerHDDM) of the choice task indicated no drift-rate difference between self- and other-associated stimuli. Trial-level data, codebooks and experiment-level metadata are provided for both experiments.",
+  "Year": "2026",
+  "Author": "Siyu Wu; Chuan-Peng Hu",
+  "Journal": "Preprint",
+  "Country": "China",
+  "City": "Nanjing",
+  "Extra_Var": "difficulty, task relevance",
+  "Email": "hcp4715@hotmail.com",
+  "DOI": "10.12074/202606.00118",
+  "Conclusion": "Self-relevance acquired online during the experiment did not automatically facilitate perceptual decision-making: a stable SPE emerged only when self-relevance fully overlapped with the task goal (the matching task), whereas in the choice task no SPE was observed whether or not the identity-associated feature was the target feature. The results indicate that the SPE is a task-dependent product of strategic processing rather than an automatic perceptual benefit."
+}

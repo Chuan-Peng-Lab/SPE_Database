@@ -5,6 +5,13 @@
 > 实测、两份 AsPredicted 预注册、§2 的用户决策。
 >
 > **冲突问题汇总入口 = §10（本研究独立编号 Issue 1–8）**；**Codebook 编写计划与信息缺口 = §5.1**。
+>
+> **执行状态（2026-10-06）：已全部入库。** 产物 = `Exp1/`、`Exp2/` 各 5 类标准文件（Clean 109,040 / 38,544 行，
+> raw 14.0 / 36.1 MB 与 5.0 / 13.5 MB，均 < 50 MB 无需分片）+ `Wu_2026_Chinaxiv.json` + `Wu_2026_Chinaxiv_clean.R`；
+> 主索引 3 行（`Wu_2026_Chinaxiv_Exp1_motion/colour`、`_Exp2_All`）；两级校验 `validate_json_metadata.R` EXIT=0、
+> `validate_clean_csv.R` 0 ERROR / 29 WARN（W5 两条已按决策 15 登记豁免）；Table 1 已重跑（116 行 / 51 studies）。
+> 入库后交叉核验（§4.3 + Exp1 detail 末段）：Exp1 匹配 SPE 复算 +80.4（全试次）/ +96.3（仅正确试次）vs 稿件 +79.49 ms，
+> 不匹配 +18.4 vs +16.52，辨别 ≈0；Exp2 采纳 raw 口径（不匹配 −46.8 vs 稿件 −50.53）。
 
 ## 0. 研究概况与来源
 

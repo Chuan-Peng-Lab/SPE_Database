@@ -485,7 +485,10 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   - `Task` 列：**全库标准列**，区分"联结对象是否含自参照身份"的任务类型。默认值 `self-matching`
     （形状↔自我/他人联结，数据库核心）；其他受控值：`facialExpression-matching`（联结纯情绪面孔）、
     `monetaryValue-matching`（联结金钱价值）、`self-pseudoWords`（形状↔伪词配对，Wozniak_2022）、
-    `shape-matching`（形状↔形状名匹配的**无身份基线**任务，Sun_2026_DataExp Task1/Day-2 几何图形版）。
+    `shape-matching`（形状↔形状名匹配的**无身份基线**任务，Sun_2026_DataExp Task1/Day-2 几何图形版）、
+    `choice-task`（**二择一知觉辨别**任务：判断刺激的感觉特征本身、无匹配判断——如随机点阵的运动方向/
+    主色辨别，Wu_2026_Chinaxiv 的辨别任务；此类任务仍可由 `Shape`/`Label` 的 Identity 三层承载联结身份，
+    组内其他操纵归 extraIV）。
     多任务研究（如 Hobbs 三任务）按行填对应值；单任务研究填默认值。判定标准：
     **联结对象含自参照身份 → self-matching（任务内其他操纵归 extraIV）；不含 → 其他 Task 值**。
     同一研究含多个任务时，用 `Session`/`Task` 两列共同区分（Sun_2026_DataExp：Session 2 + shape-matching、
