@@ -5,7 +5,7 @@
 
 ## 0. 背景与分工
 
-- **现状**：主索引 `1_Data/Dataset_inf.csv` 现有 **113 行 / 50 unique Folder_Name**（50 个研究已入库；`Scheller_2026_elife` 为唯一 deferred，仅保留输入区）。仍待处理 **3 项**：**Hu_YQ_2026_ChinaSciData（已入库，但实验层级/来源待修——见 `3_Reports/Hu_YQ_2026_Issues.md`）**；Scheller_2026_elife（deferred 未入库，匹配任务数据从未上传）；Zhao_2026_PsychonBullRev（已入库，Status 待论文作者确认后完成确认）。前 2 项见 §2（可由合作者放数据推进）；Zhao 由论文作者回复驱动，**无需合作者提供材料**。（`Sun_2026_DataExp` 已于 2026-10-01 用库内已有输入区完成两任务整合重建〔Task1 = SMT_1/Session 2 + Task2 = SMT_2/Session 3，按两任务**交集**保留 589 被试 / 1,040,880 行；新增 `*_raw.csv`，Clean/subj_info 重建，raw 与 Clean 各按被试边界分 4 片〕，Status=1，不再是待办；`Pan_2025_unpub` 已于 2026-09-25 完成确认。）
+- **现状**：主索引 `1_Data/Dataset_inf.csv` 现有 **116 行 / 51 unique Folder_Name**（51 个研究已入库；`Scheller_2026_elife` 为唯一 deferred，仅保留输入区）。仍待处理 **4 项**：**Hu_YQ_2026_ChinaSciData（已入库，但实验层级/来源待修——见 `3_Reports/Hu_YQ_2026_Issues.md`）**；Scheller_2026_elife（deferred 未入库，匹配任务数据从未上传）；**Wu_2026_Chinaxiv**（2026-10-06 入库，Exp2 作者共享清洗产物与库内 raw 不可对应——见 `3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md` §10 的 Wu Issue 2）；Zhao_2026_PsychonBullRev（已入库，Status 待论文作者确认后完成确认）。**前 3 项见 §2**（可由合作者/作者放数据或澄清推进；Wu 是否联系作者由项目负责人决定）；Zhao 由论文作者回复驱动，**无需合作者提供材料**。（`Sun_2026_DataExp` 已于 2026-10-01 用库内已有输入区完成两任务整合重建〔Task1 = SMT_1/Session 2 + Task2 = SMT_2/Session 3，按两任务**交集**保留 589 被试 / 1,040,880 行；新增 `*_raw.csv`，Clean/subj_info 重建，raw 与 Clean 各按被试边界分 4 片〕，Status=1，不再是待办；`Pan_2025_unpub` 已于 2026-09-25 完成确认。）
 - **分工**：合作者**只负责提供原始材料**（原始数据导出 + 论文全文 + 人口学/说明文件）；识别实验/被试结构、写清洗脚本、生成标准文件（standard files：raw / Clean / subj_info / Codebook / paper+exp JSON 五类，定义见 SKILL §领域术语基准）、登记 CSV、两级校验、多源交叉核验等全部由 **agent** 完成。
 - **如何调用 agent**：在仓库根目录启动 AI 编程 agent，把 §2 / §3 的指令模板发给它即可。技能放在跨工具约定的 `.agents/skills/spe-database-curation/`，**opencode 与 DSH 会自动加载** `spe-database-curation` 技能；**若使用其他 agent（Claude Code / Cursor / Copilot / ChatGPT 等），或它没有自动加载技能，请先让它完整阅读 `.agents/skills/spe-database-curation/SKILL.md` 再动手**——该技能是入库规范的唯一正文来源，不读它 agent 无法按本库规范工作。
 - **没有本地仓库 / 不使用 agent？** 本指南的「放哪里」是**本地路径**（输入区被 git 忽略、无法 push）。若你没有仓库检出、或不使用 AI agent：请把原始数据 + 论文全文 + 说明文件经共享渠道（OSF / 邮件 / 网盘）发给维护者 **hcp4715**，由他放入仓库并驱动 agent 完成入库。
@@ -24,12 +24,15 @@
 | **只有聚合数据？** | 若只有汇总表（如 xlsx），也放进去并在给 agent 的指令中注明来源；agent 会判断能否使用 |
 | **放好之后** | 不需要做任何清洗，把 §2 的指令模板发给 agent 即可 |
 
-## 2. 待合作者推进的研究（2 个：修复结构 / 重入）
+## 2. 待合作者推进的研究（3 个：修复结构 / 重入 / 数据版本澄清）
 
 | 研究 | 现状缺口 | 数据放到哪里 | 放好后发给 agent 的指令（可复制） |
 |---|---|---|---|
 | **Hu_YQ_2026_ChinaSciData**（中国科学数据 数据论文；原 Hu_2023_SDB） | 已入库（3 个 Exp 文件夹 / 6 行），但**实验层级与事实不符**：北京 2015 的一个实验（含两个任务）被拆成 Exp1+Exp2、开封数据编为 Exp3，导致 36 名北京被试被计数两次（应为 2 实验 / 4 行）；且**无输入区原始数据**、清洗脚本数据源 `clean/` 已不存在 → 不可重跑 | ① 原始导出放入 `1_Data/Hu_YQ_2026_ChinaSciData/Hu_YQ_2026_ChinaSciData_Raw/`（北京 2015 每被试导出或 `Data_for_Exp1/2.csv`、开封 2023 导出、实验程序、Codebook）；② 按 `3_Reports/Hu_YQ_2026_Issues.md`（H1–H14）回复事实与口径 | 「Hu_YQ_2026_ChinaSciData 原始数据已放入 `..._Raw/`，并已按 `3_Reports/Hu_YQ_2026_Issues.md` 回复 H1–H14；请据此重构（北京两任务合并为 Exp1、开封改编号为 Exp2、主索引 6→4 行）、重建 Codebook/JSON、跑两级校验并做多源交叉核验。」 |
 | **Scheller_2026_elife**（eLife；DOI 10.7554/eLife.100932） | OSF 只有 TOJ 任务 trial 数据；**self-matching 任务（其他用法：shape–label matching task）**的逐被试 trial 数据从未上传（论文分析所用 Raw Data/*.csv）。CSV 行已移除、输入区保留 | `1_Data/Scheller_2026_elife/Scheller_2026_elife_raw/`（已存在，内含 OSF 的 "Data and Analysis Scripts"；匹配数据建议放单独子文件夹如 `Matching_task_data/`，勿动已有 TOJ 内容） | 「Scheller_2026_elife 匹配任务数据已放入 `1_Data/Scheller_2026_elife/Scheller_2026_elife_raw/`，请重入本条目：先在 Dataset_inf.csv 登记两行（移除 known_unlisted 豁免），再走入库流程 + 多源交叉核验 + 两级校验。」 |
+| **Wu_2026_Chinaxiv**（ChinaXiv 预印本；DOI 10.12074/202606.00118） | 已入库（2 个 Exp 文件夹 / 3 行）且库内标准文件自洽；但作者共享的 Exp2 清洗产物（`SPE_Rand_Dots/3_Data/exp2/CleanData/`）与库内 raw 导出**不可对应**（三版本；仅约半数行可追溯 raw），且稿件 Exp2 的匹配试次数（256）与 RT 剔除窗口（3000 ms）与 raw/预注册（192；4000 ms）不一致 | 若决定澄清：请作者提供**稿件分析实际所用的数据文件**（`BHM_Analysis.Rmd` 声明的输入）或确认以 raw 导出为准 | 「Wu_2026_Chinaxiv Exp2 数据版本已确认（作者提供稿件分析所用文件 / 确认以 raw 导出为准），请更新 `Wu_2026_Chinaxiv_Exp2.json` detail、主索引 Note 与 `3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md` §10 的 Wu Issue 2」 |
+
+> 备注：Wu_2026_Chinaxiv 的 Wu Issue 1–8 已登记于 `3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md` §10 与两份 exp JSON `detail`，不阻塞入库与 Status=1；**是否联系作者由项目负责人决定**（超库范围不主动执行）。
 
 ## 3. 未来新研究入库（4 步，其余交给 agent）
 

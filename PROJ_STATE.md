@@ -16,7 +16,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - `.agents/skills/spe-database-curation/SKILL.md` — 通用 curation 技能（自足独立；**领域术语基准 +「表述规范」工作用语对照表**、命名语法、JSON schema、Codebook 规范、DOI/年份核验）
 
 ### 2.1 其他重要文档
-- `For_COLLABORATORS.md` — **合作者推进指南**（正文归属本文件）：待合作者推进的 3 项（Sun 补原始导出 / Hu_YQ 修结构与补来源 / Scheller 补匹配任务数据）补齐路径 + 未来新研究入库 4 步 + REF/ 不上 GitHub 的版本同步提醒
+- `For_COLLABORATORS.md` — **合作者推进指南**（正文归属本文件）：待合作者推进的 3 项（Hu_YQ 修结构与补来源 / Scheller 补匹配任务数据 / Wu_2026_Chinaxiv Exp2 数据版本澄清，末项待项目负责人决定是否联系作者）补齐路径 + 未来新研究入库 4 步 + REF/ 不上 GitHub 的版本同步提醒
 - `2_Code/validate_json_metadata.R` — 结构级校验脚本（2026-10 起新增 `Setting`/`Modality`/`Stimulus_order` 受控词表检查，WARN 级；Hu_YQ 偏差挂 KNOWN 豁免）；`2_Code/validate_clean_csv.R` — 内容级校验脚本（2026-09-25 起支持 `_Clean_part<N>.csv` 分片：按逻辑数据集聚合 E3/W2、新增 E4 表头一致性；2026-10 起 ACC 值域收紧为 `1`/`0`/`NA`/`-2`/`-3`/`-4`，并按原文本检查空字段；**2026-10-06 起 W5（Matching 值域）与 W4 同款支持 `known` 登记豁免**——用于「任务本身无匹配维度 → 该列为 NA」的研究，已登记 `Wu_2026_Chinaxiv_Exp1/Exp2`）
 - `2_Code/split_clean_csv.py` — 大文件分片工具（> 50 MB 的 `*_Clean.csv` 按被试边界切分；默认 dry-run，`--apply` 备份原件后写入并逐字节校验可还原；规则正文见 SKILL §文件与文件夹规范「大文件拆分」）
 - `3_Reports/Generate_Table1_v2.R`（**现行 Table 1 工具**，`Rscript` 出 `Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto）+ `Output/table1_problems.txt`（qmd 时代产物，仍可查）— Table 1 再生成与比对；旧 `Generate_Table1.qmd` 已失效（`Paper_ID` 列移除后无法渲染）
@@ -33,7 +33,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ### 类别一：已入库、无问题（39 篇）
 
-全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库多源交叉核验 + 描述性统计核对），无推进动作、无问题。（39 = 50 curated 减去类别二/三涉及的 11 篇去重研究；2026-09-25 起 `Hu_YQ_2026_ChinaSciData` 计入类别二。）
+全部已做全量交叉核对（阶段 2 全文核查 + 阶段 3.1 21 研究 + 入库多源交叉核验 + 描述性统计核对），无推进动作、无问题。（39 = 51 curated 减去类别二/三涉及的 12 篇去重研究；2026-09-25 起 `Hu_YQ_2026_ChinaSciData` 计入类别二。）
 2026-09-25 自类别二迁入：`Pan_2025_unpub`（用新补原始材料重清洗后完成确认，Status=1；未发表数据无全文核查/多源交叉核验环节，数据许可由项目负责人确认为 `CC BY 4.0`）。
 2026-10-01 自类别二迁入：`Sun_2026_DataExp`（两任务整合重建标准文件：Task1 = SMT_1/Session 2、Task2 = SMT_2/Session 3，**按两任务交集保留 589 被试 / 1,040,880 行**〔本数据特例，不写入 SKILL；见 `removed_subjects_log.md` §8〕；新增 `*_raw.csv` 与 `subj_info` 重建，raw 与 Clean 各按被试边界分 4 片；两级校验 0 ERROR，Sun 的 E3 KNOWN 豁免已移除；发表状态与 DOI 待补见 §4 决策 22；`Design` 列文案由项目负责人撰写）。
 
@@ -145,7 +145,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 6. 散落未解决问题（自历史记录提取，不属于上述四类表）
 - **Dalmaso E2 Label 列 = missing**（2026-09-01 记录）：意大利语原文无一手资料，待 OSF 原始数据补充后填实（现状核实：14400 行全为 `missing` 占位）。
-- **16 个 Clean 文件缺 `Shape`/`Label` 可读值列**（2026-09-25 核实；非回归、无删列历史）：92 个 in-scope 逻辑数据集中 16 个（10 研究）——11 个两个可读值列皆无、自创建起仅存 Identity 三级（`Qian_2020_QJEP` E1/E2、`Schaefer_2019_JCogPsych` E2/E3、`Sui_2014_APP` E1–E4、`Sui_2023_ConsciousCog`、`Svensson_2023_QJEP`、`Orellana-Corrales_2021_APP` E2）；4 个缺 `Label`（`Liang_2022_HumBrainMap` E1、`Navon_2021_psyarxiv` E2、`Vicovaro_2022_JEPHPP` E1/E2）；1 个缺 `Shape`（`Smith_2024_Cortex` E1）。逐提交表头回溯（`git log --follow`）：Label 在 16 个中的 15 个从未出现过（唯 Smith 自始即有），Shape 在 16 个中的 12 个从未出现过（Liang/Navon 自始即有，`Vicovaro_2022_JEPHPP` E1/E2 于 2025-10-20 `6254f09` 补入）；各文件创建时点跨 2024-04-09 ~ 2025-10-31（原始入库批次，早于可读化标准）。2026-08-30 可读化标准（README）后的三波列标准化（`af3be8e`/`d0fbaa5`/`e588bcc`）只改列名与列序、未补录这两列；`validate_clean_csv.R` W1 报 27 条（Label 15 + Shape 12）。处置待定：需逐研究刺激-身份绑定证据（Vicovaro 式恢复）或按 SKILL「无法确认原刺激时填 `missing`」落列。
+- **16 个 Clean 文件缺 `Shape`/`Label` 可读值列**（2026-09-25 核实；非回归、无删列历史）：94 个 in-scope 逻辑数据集中 16 个（10 研究）——11 个两个可读值列皆无、自创建起仅存 Identity 三级（`Qian_2020_QJEP` E1/E2、`Schaefer_2019_JCogPsych` E2/E3、`Sui_2014_APP` E1–E4、`Sui_2023_ConsciousCog`、`Svensson_2023_QJEP`、`Orellana-Corrales_2021_APP` E2）；4 个缺 `Label`（`Liang_2022_HumBrainMap` E1、`Navon_2021_psyarxiv` E2、`Vicovaro_2022_JEPHPP` E1/E2）；1 个缺 `Shape`（`Smith_2024_Cortex` E1）。逐提交表头回溯（`git log --follow`）：Label 在 16 个中的 15 个从未出现过（唯 Smith 自始即有），Shape 在 16 个中的 12 个从未出现过（Liang/Navon 自始即有，`Vicovaro_2022_JEPHPP` E1/E2 于 2025-10-20 `6254f09` 补入）；各文件创建时点跨 2024-04-09 ~ 2025-10-31（原始入库批次，早于可读化标准）。2026-08-30 可读化标准（README）后的三波列标准化（`af3be8e`/`d0fbaa5`/`e588bcc`）只改列名与列序、未补录这两列；`validate_clean_csv.R` W1 报 27 条（Label 15 + Shape 12）。处置待定：需逐研究刺激-身份绑定证据（Vicovaro 式恢复）或按 SKILL「无法确认原刺激时填 `missing`」落列。
 - **例外清单豁免**：known_pending 0 + known_unlisted 1（Scheller_2026_elife）。
 - **Hu_YQ_2026_ChinaSciData 结构重构待执行**（见 §3 类别二新增行 + `3_Reports/Hu_YQ_2026_Issues.md` H1–H14）：北京两任务合并后的单文件约 88.8 MB，须按分片规则重新拆分；重构完成前该条目的被试数（98）不可用于任何汇总。
 - **Hu_YQ_2026_ChinaSciData 库内术语/编码问题清单**（2026-10-02 扫描核实；**按用户指示本轮不动其文件**，随 H1–H14 结构重构一并修正）：
