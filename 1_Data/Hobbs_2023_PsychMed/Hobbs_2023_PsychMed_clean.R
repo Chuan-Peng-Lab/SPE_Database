@@ -132,29 +132,46 @@ for (i in seq_along(hashes)) {
 shape_geo <- mapply(function(cls, i) assign_shape[[i]][[as.character(cls)]],
                     ft$Shape, subj_no, USE.NAMES = FALSE)
 
-# ---- 标签映射（可读值 + Identity 三级；2026-08-30 用户决策） ----
+# ---- 标签/形状映射（2026-10-08 修订：Label 侧按「实际呈现的刺激」编码） ----
+# 依据：论文 Methods（Self: names of the self/a friend/a stranger；Emotion: happy/
+# neutral/sad faces；Reward: £9/£3/£1）＋作者 cleaning 脚本 Associative_cleaning.R
+# （self 任务 Label 因含可识别姓名被作者删除：Label[Task == "Self"] <- NA）。
+# 规则：
+#   Valence/Reward —— 呈现刺激记录在 raw Label（lbl_raw），Label 及其三级 Identity 随之；
+#   Self          —— 呈现的是被试提供的名字（已匿名化）→ Label/Label_Origin/
+#                     Label_English 用占位值 `subj_name`；Label_Standardized 在可推处
+#                     （Matching 试次，呈现名必为该形状所关联的人）填该身份，非匹配
+#                     试次无法判定 → `missing`。
+#   Shape 三级 —— Origin/English = 形状承载的身份（raw Shape 列原值 = 所属条件），
+#                     Standardized = 6 类词表/例外值；几何形状名只出现在 Shape 列。
 label_eng <- c(Self = "self", Friend = "friend", Stranger = "stranger",
                Happy = "happy", Sad = "sad", Neutral = "neutral",
                HighReward = "£9", MediumReward = "£3", LowReward = "£1")
 label_std <- c(Self = "Self", Friend = "Close", Stranger = "Stranger",
                Happy = "NonPerson", Sad = "NonPerson", Neutral = "NonPerson",
                HighReward = "£9", MediumReward = "£3", LowReward = "£1")
-# Reward 的 raw Label 数字 → 标签类（9/3/1 ↔ High/Medium/LowReward）
-reward_num_class <- c("9" = "HighReward", "3" = "MediumReward", "1" = "LowReward")
+# Reward 的 raw Label 数字 → 条件类（9/3/1 ↔ High/Medium/LowReward；含导出浮点残留）
+reward_num_class <- c("9" = "HighReward", "3" = "MediumReward", "1" = "LowReward",
+                      "9.0" = "HighReward", "3.0" = "MediumReward", "1.0" = "LowReward")
 
-cls <- as.character(ft$Shape)                    # 标签类（raw Shape 列原值）
+cls <- as.character(ft$Shape)                    # 形状所属条件（raw Shape 列原值）
 task <- as.character(ft$Task)
-lbl_raw <- as.character(ft$Label)                # raw Label 列原值（字符）
-# Label 可读值：Self 任务 = 类别名（名字被匿名化）；Valence = 情绪词小写；
-# Reward = £ 值
-lbl_readable <- ifelse(task == "Self", label_eng[cls],
-                ifelse(task == "Valence", label_eng[cls],
-                       label_eng[cls]))
-# Label_Origin：Self "/"（原文不可得）；Valence = 原值；Reward = 数字原值
-lbl_origin <- ifelse(task == "Self", "/", lbl_raw)
-# Label_English / Label_Standardized（按标签类）
-lbl_english <- unname(label_eng[cls])
-lbl_std <- unname(label_std[cls])
+lbl_raw <- as.character(ft$Label)                # raw Label 列原值（= 呈现刺激；Self 为 NA）
+matching_tmp <- ifelse(ft$CorrectAnswer == "Yes", "Matching", "Nonmatching")  # 与下方 matching 同口径
+
+# 呈现刺激所属的条件类（Valence = 呈现情绪；Reward = 呈现金额；Self = NA）
+lbl_cls <- ifelse(task == "Valence", lbl_raw,
+           ifelse(task == "Reward", unname(reward_num_class[lbl_raw]), NA_character_))
+lbl_readable <- ifelse(task == "Self", "subj_name", unname(label_eng[lbl_cls]))
+lbl_origin   <- ifelse(task == "Self", "subj_name", lbl_raw)
+lbl_english  <- ifelse(task == "Self", "subj_name", unname(label_eng[lbl_cls]))
+lbl_std      <- ifelse(task == "Self",
+                       ifelse(matching_tmp == "Matching", unname(label_std[cls]), "missing"),
+                       unname(label_std[lbl_cls]))
+# Shape 侧身份：Origin = raw Shape 列原值（所属条件名）；English = 与 Label 侧同一套
+# 可读值（self/friend/stranger；happy/sad/neutral；£9/£3/£1），保证两侧同词表
+shape_origin  <- cls
+shape_english <- unname(label_eng[cls])
 
 # ---- Matching / 键 / ACC / RT ----
 matching <- ifelse(ft$CorrectAnswer == "Yes", "Matching", "Nonmatching")
@@ -204,8 +221,7 @@ raw_out <- data.frame(
   Block        = block,
   Shape        = shape_geo,          # 几何形状名（由分配列恢复）
   ShapeCode    = cls,                # 标签类（raw Shape 列原值）
-  Label        = lbl_readable,       # 标签可读值（self/friend/stranger,
-                                     #   happy/sad/neutral, £9/£3/£1）
+  Label        = lbl_readable,       # 呈现标签（subj_name / happy·sad·neutral / £9·£3·£1）
   LabelCode    = lbl_raw,            # raw Label 列原值（Self: NA; Valence:
                                      #   Happy/...; Reward: 9/3/1）
   Matching     = matching,
@@ -218,36 +234,62 @@ raw_out <- data.frame(
 stopifnot(nrow(raw_out) == 51840)
 
 # ---- 构建 Clean（可读值 + Identity 三级） ----
+# Task 标准受控值（提交版 Clean 表头/取值；raw 保留作者原值 Self/Valence/Reward）
+task_clean <- unname(c(Self = "self-matching",
+                       Valence = "facialExpression-matching",
+                       Reward = "monetaryValue-matching")[task])
+stopifnot(!any(is.na(task_clean)))
+# 列序 = SKILL 模板 v2（2026-10-08 重排）：Task 紧随 Subject、Matching 先于 Shape、
+# Shape/Label 各自的三级 Identity 紧跟其主列
 clean_out <- data.frame(
   Subject = subj_no,
-  Trial   = trial,
-  Task    = task,
+  Task    = task_clean,
   Block   = block,
-  Shape   = shape_geo,
-  Label   = lbl_readable,
+  Trial   = trial,
   Matching = matching,
-  ACC      = acc,
-  RT_ms    = rt_ms,
-  Response = resp,
+  Shape   = shape_geo,
+  Shape_Origin_Identity        = shape_origin,
+  Shape_English_Identity       = shape_english,
+  Shape_Standardized_Identity  = unname(label_std[cls]),
+  Label   = lbl_readable,
   Label_Origin_Identity        = lbl_origin,
   Label_English_Identity       = lbl_english,
   Label_Standardized_Identity  = lbl_std,
-  Shape_Origin_Identity        = shape_geo,
-  Shape_English_Identity       = shape_geo,
-  Shape_Standardized_Identity  = unname(label_std[cls]),
+  Response = resp,
+  RT_ms    = rt_ms,
+  ACC      = acc,
   stringsAsFactors = FALSE
 )
+# 一致性检查：列名与顺序 == 工作区 Hobbs_2023_PsychMed_Exp1_Clean.csv 表头（模板 v2）
+stopifnot(identical(names(clean_out),
+  c("Subject", "Task", "Block", "Trial", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity",
+    "Shape_Standardized_Identity", "Label", "Label_Origin_Identity",
+    "Label_English_Identity", "Label_Standardized_Identity",
+    "Response", "RT_ms", "ACC")))
 stopifnot(nrow(clean_out) == 51840)
 # Clean 校验：Identity 三级完整、Std 值域合法
 stopifnot(all(clean_out$Label_Standardized_Identity %in%
-                c("Self", "Close", "Stranger", "NonPerson", "£9", "£3", "£1")),
-          all(clean_out$Shape_Standardized_Identity ==
-                clean_out$Label_Standardized_Identity))
+                c("Self", "Close", "Stranger", "NonPerson", "£9", "£3", "£1", "missing")),
+          all(clean_out$Shape_Standardized_Identity %in%
+                c("Self", "Close", "Stranger", "NonPerson", "£9", "£3", "£1")))
+# 一致性（2026-10-08）：非 self 任务 Matching ⇔ 形状身份 == 标签身份；
+# self 任务仅 Matching 试次可判呈现名身份（= 形状身份），非匹配试次无法判定
+.nonself <- clean_out$Task != "self-matching"
+# 用 English 层判定（Emotion 的 Std 层统一为 NonPerson，不具区分度）
+stopifnot(all((clean_out$Matching[.nonself] == "Matching") ==
+                (clean_out$Shape_English_Identity[.nonself] ==
+                   clean_out$Label_English_Identity[.nonself])))
+.self_match <- clean_out$Task == "self-matching" & clean_out$Matching == "Matching"
+.self_non   <- clean_out$Task == "self-matching" & clean_out$Matching == "Nonmatching"
+stopifnot(all(clean_out$Label_Standardized_Identity[.self_match] ==
+                clean_out$Shape_Standardized_Identity[.self_match]),
+          all(clean_out$Label_Standardized_Identity[.self_non] == "missing"))
 # SPE 方向抽查（self 匹配最快，与论文 S1/S2 一致）
-sp <- clean_out[clean_out$Task == "Self" & clean_out$Matching == "Matching", ]
-sp_rt <- tapply(sp$RT_ms, sp$Label, mean, na.rm = TRUE)
+sp <- clean_out[clean_out$Task == "self-matching" & clean_out$Matching == "Matching", ]
+sp_rt <- tapply(sp$RT_ms, sp$Shape_Standardized_Identity, mean, na.rm = TRUE)   # self 任务按形状身份分组（Label 侧已无身份可分组）
 cat("Self 条件匹配 RT (ms):", paste(names(sp_rt), round(sp_rt), collapse = " / "), "\n")
-stopifnot(names(which.min(sp_rt)) == "self")     # self 最快
+stopifnot(names(which.min(sp_rt)) == "Self")     # self 最快（形状身份 Self）
 
 # ============================================================================
 # subj_info（人口学自作者聚合文件可读值；Handedness/Country/First_Language 无）

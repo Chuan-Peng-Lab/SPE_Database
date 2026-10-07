@@ -270,28 +270,48 @@ write.csv(.raw, file.path(.study_dir, "Mcivor_2021_EJN_Exp1_raw.csv"),
           row.names = FALSE)
 cat("  raw:", nrow(.raw), "rows x", ncol(.raw), "cols\n")
 
-# ---- 产出 2：Clean（标准列 + Group/Phase/Block/Emotion/Response） ----
+# ---- 产出 2：Clean（标准列序 v2，2026-09-01 列标准化后为准） ----
+# CorrResponse（库内标准列 = 该试次正确按键）：正式试次取 ITI2.CRESP
+# （'s'/'k'）；训练试次库内记 NA（作者正确键记于 ITI.CRESP，不进 Clean）；
+# 作者未记录 CRESP 的 264 行（'{F4}'，全部落在 subject 7815）同样 NA。
+.cresp <- dat[["ITI2.CRESP"]]
+dat$CorrResponse <- ifelse(.test & .cresp %in% c("s", "k"),
+                           .cresp, NA_character_)
+.cre_ok <- !is.na(dat$CorrResponse)
+stopifnot(sum(is.na(dat$CorrResponse)) == 744,          # 480 训练 + 264 '{F4}'
+          all(dat$CorrResponse[!.test] == "NA" | is.na(dat$CorrResponse[!.test])),
+          all(dat$CorrResponse[.cre_ok] == dat$Correctanswer[.cre_ok]))
+
 .cl <- data.frame(
   Subject = dat$Subject,
   Group = dat$clinical_group,
+  Task = rep("self-matching", nrow(dat)),          # 全库 Task 受控值
   Phase = dat$Phase,
   Block = dat$Block,
   Trial = dat$Trial,
-  Emotion = dat$Emotion,
-  Shape = dat$Shape,
-  Label = dat$Label,
   Matching = dat$Matching,
-  ACC = dat$ACC,
-  RT_ms = dat$RT_ms,
-  RT_sec = dat$RT_sec,
-  Response = dat$Response,
-  Label_Origin_Identity = dat$Label_Origin_Identity,
-  Label_English_Identity = dat$Label_English_Identity,
-  Label_Standardized_Identity = dat$Label_Standardized_Identity,
+  Shape = dat$Shape,
   Shape_Origin_Identity = dat$Shape_Origin_Identity,
   Shape_English_Identity = dat$Shape_English_Identity,
   Shape_Standardized_Identity = dat$Shape_Standardized_Identity,
+  Label = dat$Label,
+  Label_Origin_Identity = dat$Label_Origin_Identity,
+  Label_English_Identity = dat$Label_English_Identity,
+  Label_Standardized_Identity = dat$Label_Standardized_Identity,
+  extraIV1 = dat$Emotion,                          # 情绪上下文（原 Emotion 列）
+  CorrResponse = dat$CorrResponse,
+  Response = dat$Response,
+  RT_ms = dat$RT_ms,
+  RT_sec = dat$RT_sec,
+  ACC = dat$ACC,
   stringsAsFactors = FALSE)
+# 一致性检查：列名与顺序 == 提交版 Mcivor_2021_EJN_Exp1_Clean.csv 表头
+stopifnot(identical(names(.cl),
+  c("Subject", "Group", "Task", "Phase", "Block", "Trial", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity",
+    "Shape_Standardized_Identity", "Label", "Label_Origin_Identity",
+    "Label_English_Identity", "Label_Standardized_Identity", "extraIV1",
+    "CorrResponse", "Response", "RT_ms", "RT_sec", "ACC")))
 write_clean_csv(.cl, file.path(.study_dir,
                                "Mcivor_2021_EJN_Exp1_Clean.csv"))
 stopifnot(nrow(.cl) == nrow(.raw), length(unique(.cl$Subject)) == 40)
@@ -324,6 +344,14 @@ stopifnot(all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", .sd)))
   Othershape = .s0$Othershape,
   stringsAsFactors = FALSE)
 .subj <- cbind(.subj, .s0[, .mini_names, drop = FALSE])
+# 作者问卷的缺失标记 'N/A' → 库内统一缺失标记 '/'（三态：'/' = 未记录/不可得；
+# 提交版 subj_info 中为 8 格 MINI_* 列）
+.mini_na <- sum(vapply(.subj[, .mini_names],
+                       function(x) sum(x == "N/A", na.rm = TRUE), integer(1)))
+stopifnot(.mini_na == 8)
+for (.cc in .mini_names) .subj[[.cc]][.subj[[.cc]] == "N/A"] <- "/"
+stopifnot(!any(vapply(.subj[, .mini_names],
+                      function(x) any(x == "N/A", na.rm = TRUE), logical(1))))
 .subj <- .subj[order(as.numeric(.subj$Subject_ID)), ]
 stopifnot(nrow(.subj) == 40,
           sum(.subj$Gender == "Male") == 8,
