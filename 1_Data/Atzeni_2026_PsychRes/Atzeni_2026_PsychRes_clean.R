@@ -114,23 +114,32 @@ write.csv(.raw, file.path(.study_dir, "Atzeni_2026_PsychRes_Exp1_raw.csv"),
           row.names = FALSE)
 cat("  raw:", nrow(.raw), "rows\n")
 
-# ---- 产出 2：Clean（标准列 + Session/Condition） ----
+# ---- 产出 2：Clean（标准列 + Session/Condition；列序 = SKILL 模板 v2） ----
 .cl <- data.frame(
   Subject = dat$Subject,
   Session = dat$Session,
+  Task = "self-matching",                          # 全库标准列（任务类型）
   Condition = dat$condizione,
   Trial = dat$Trial,
-  Shape = sub("images/", "", dat$shape),           # square/triangle
-  Label = dat$label,                               # TU/SCONOSCIUTO
   Matching = dat$Matching,
-  Label_Origin_Identity = dat$Label_Origin_Identity,
-  Label_English_Identity = dat$Label_English_Identity,
-  Label_Standardized_Identity = dat$Label_Standardized_Identity,
+  Shape = sub("images/", "", dat$shape),           # square/triangle
   Shape_Origin_Identity = dat$Shape_Origin_Identity,
   Shape_English_Identity = dat$Shape_English_Identity,
   Shape_Standardized_Identity = dat$Shape_Standardized_Identity,
+  Label = dat$label,                               # TU/SCONOSCIUTO
+  Label_Origin_Identity = dat$Label_Origin_Identity,
+  Label_English_Identity = dat$Label_English_Identity,
+  Label_Standardized_Identity = dat$Label_Standardized_Identity,
   RT_ms = dat$RT_ms, RT_sec = dat$RT_sec, ACC = dat$ACC,
   stringsAsFactors = FALSE)
+# ---- 一致性检查：表头须与库内 *_Clean.csv 完全一致（名称 + 顺序，模板 v2） ----
+stopifnot(identical(names(.cl),
+  c("Subject", "Session", "Task", "Condition", "Trial", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity",
+    "Shape_Standardized_Identity", "Label", "Label_Origin_Identity",
+    "Label_English_Identity", "Label_Standardized_Identity",
+    "RT_ms", "RT_sec", "ACC")))
+
 write_clean_csv(.cl, file.path(.study_dir, "Atzeni_2026_PsychRes_Exp1_Clean.csv"))
 stopifnot(nrow(.cl) == nrow(.raw), length(unique(.cl$Subject)) == 140)
 cat("  Clean:", nrow(.cl), "rows /", length(unique(.cl$Subject)),

@@ -38,6 +38,14 @@
 # 清洗 = 最小预处理：不过滤、不补缺；仅列标准化 + 身份三级列。
 # 描述性统计核对（内嵌守卫）：论文 Appendix B/C 的 mean-of-subject-means
 #   （RT 均值 (SD) 与正确率 (SD)）全部逐位复现（±2 ms / ±1 pp 容差）。
+#
+# 2026-10 列序对齐（SKILL 模板 v2；目标 = 当前工作区 *_Clean.csv 表头）：
+#   全库标准列 Task（本任务恒为 "self-matching"）紧随 Subject；原 Blocktype
+#   （mixed/blocked，论文 Presentation）列名 extraIV1；Shape 与其三级 Identity、
+#   Label 与其三级 Identity 各自成块。已核对：extraIV1 取值 = raw blocktype
+#   逐行一致（E1/E2 各 0 处不同）。本脚本按模板 v2 列序写出：
+#   E1 Subject, Task, Matching, Shape×4, Label×4, extraIV1, RT_ms, RT_sec, ACC；
+#   E2 在 Task 后多 Trial 列。
 # ============================================================================
 
 # ---- 引导块：定位脚本目录与项目根，加载 utils.R ----
@@ -150,17 +158,18 @@ cat("guard (Exp2) OK: trialnum within-block index 1-60 for all subjects\n")
   cl <- data.frame(
     Subject = d$subject,
     stringsAsFactors = FALSE)
-  if (with_trial) cl$Trial <- d$trialnum
-  cl$Shape <- d$shape                       # 身份词原样（几何形状未记录）
-  cl$Label <- d$label
-  cl$Blocktype <- d$blocktype               # mixed / blocked（论文 Presentation）
+  cl$Task <- rep("self-matching", nrow(d))  # 全库标准列（模板 v2：紧随 Subject）
+  if (with_trial) cl$Trial <- d$trialnum    # E2：block 内序号（模板 v2：Task 之后、Matching 之前）
   cl$Matching <- ifelse(d$type == "match", "Matching", "Nonmatching")
-  cl$Label_Origin_Identity <- d$label
-  cl$Label_English_Identity <- d$label
-  cl$Label_Standardized_Identity <- .std[d$label]
+  cl$Shape <- d$shape                       # 身份词原样（几何形状未记录）
   cl$Shape_Origin_Identity <- d$shape
   cl$Shape_English_Identity <- d$shape
   cl$Shape_Standardized_Identity <- .std[d$shape]
+  cl$Label <- d$label
+  cl$Label_Origin_Identity <- d$label
+  cl$Label_English_Identity <- d$label
+  cl$Label_Standardized_Identity <- .std[d$label]
+  cl$extraIV1 <- d$blocktype                # 原 Blocktype（mixed / blocked，论文 Presentation）
   cl$RT_ms <- as.integer(d$latency)
   cl$RT_sec <- cl$RT_ms / 1000
   cl$ACC <- as.integer(d$correct)
@@ -169,6 +178,20 @@ cat("guard (Exp2) OK: trialnum within-block index 1-60 for all subjects\n")
 }
 .cl1 <- .make_clean(.f1, "1", with_trial = FALSE)
 .cl2 <- .make_clean(.f2, "2", with_trial = TRUE)
+
+# ---- 列名/列序一致性检查（SKILL 模板 v2；顺序不符立即停止）----
+stopifnot(identical(
+  names(.cl1),
+  c("Subject", "Task", "Matching",
+    "Shape", "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+    "extraIV1", "RT_ms", "RT_sec", "ACC")))
+stopifnot(identical(
+  names(.cl2),
+  c("Subject", "Task", "Trial", "Matching",
+    "Shape", "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+    "extraIV1", "RT_ms", "RT_sec", "ACC")))
 
 # ---- 行序：按作者文件行序（subject 出现序）----
 .f1 <- .f1[order(.f1$subject, seq_len(nrow(.f1))), ]
@@ -218,9 +241,9 @@ cat("  subj_info: E1 30 rows / E2 25 rows (demographics '/', not recorded)\n")
 for (.e in list(list(d = .cl1, lab = "E1"), list(d = .cl2, lab = "E2"))) {
   .d <- .e$d
   .m <- function(shape, bt, mt) mean(.d$RT_ms[.d$Shape_Standardized_Identity == shape &
-                                               .d$Blocktype == bt & .d$Matching == mt], na.rm = TRUE)
+                                               .d$extraIV1 == bt & .d$Matching == mt], na.rm = TRUE)
   .a <- function(shape, bt, mt) 100 * mean(.d$ACC[.d$Shape_Standardized_Identity == shape &
-                                                  .d$Blocktype == bt & .d$Matching == mt] == 1)
+                                                  .d$extraIV1 == bt & .d$Matching == mt] == 1)
   cat(sprintf(paste0("%s matching-trial direction: mixed self %.0f < friend %.0f < stranger %.0f ms; ",
                      "blocked self %.0f < friend %.0f < stranger %.0f ms; ",
                      "accuracy mixed %.0f/%.0f/%.0f, blocked %.0f/%.0f/%.0f\n"),

@@ -122,14 +122,26 @@ df <- read.csv(RAW_PATH) %>%
     RT_ms = as.numeric(RT_ms),
     RT_sec = as.numeric(RT_sec),
     ACC = as.numeric(ACC),
+    Task = "self-matching",
   ) %>%
-  dplyr::select(
-    Subject, Group, Session, Matching, Shape, Label,
-    Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
+  dplyr::select(          # 列序 = SKILL 模板 v2
+    Subject, Group, Session, Task, Matching, Shape,
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
+    Label, Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
     RT_ms, RT_sec, ACC
   ) %>%
   dplyr::arrange(Subject)
+
+# ---- 一致性检查：表头须与库内 *_Clean.csv 完全一致（名称 + 顺序，模板 v2） ----
+stopifnot(identical(
+  names(df),
+  c("Subject", "Group", "Session", "Task", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity",
+    "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity",
+    "Label_Standardized_Identity",
+    "RT_ms", "RT_sec", "ACC")
+))
 
 write_clean_csv(df, OUT_PATH)
 
@@ -145,9 +157,9 @@ cat("ACC 分布:\n")
 print(table(df$ACC))
 
 required_cols <- c(
-  "Subject", "Group", "Session", "Matching", "Shape", "Label",
-  "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+  "Subject", "Group", "Session", "Task", "Matching", "Shape",
   "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+  "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
   "RT_ms", "RT_sec", "ACC"
 )
 stopifnot(
@@ -157,4 +169,4 @@ stopifnot(
   as.numeric(table(df$Matching)["Matching"]) == 5760,
   as.numeric(table(df$Matching)["Nonmatching"]) == 11520
 )
-cat("\n校验通过：17280 行 / 24 被试 / 15 列 / Matching 5760+11520。\n")
+cat("\n校验通过：17280 行 / 24 被试 / 16 列 / Matching 5760+11520。\n")

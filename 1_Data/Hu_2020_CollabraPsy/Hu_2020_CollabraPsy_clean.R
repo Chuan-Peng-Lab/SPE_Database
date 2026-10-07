@@ -96,10 +96,11 @@ df <- read.csv(
   ) %>%
   dplyr::ungroup() %>%
   dplyr::select(
-    Subject, Block, Trial, Matching,
+    # 列序 = SKILL 模板 v2（2026-10-08 重排）：Task 紧随 Subject
+    Subject, Task, Block, Trial, Matching,
     Shape, Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
     Label, Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
-    Task, extraIV1, Response, RT_ms, RT_sec, ACC
+    extraIV1, Response, RT_ms, RT_sec, ACC
     ) %>%
   dplyr::arrange(
     Subject, Block, Trial

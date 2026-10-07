@@ -139,10 +139,24 @@ finalize <- function(d, block_size, label_map, neutral_shapes = integer(0)) {
   d$Shape_Standardized_Identity <- ifelse(shp_eng == "You", "Self",
                                     ifelse(shp_eng == "Friend", "Close",
                                     ifelse(shp_eng == "Stranger", "Stranger", "NonPerson")))
-  d[, c("Subject", "Trial", "Block", "Shape", "Label", "Matching", "ACC", "RT_ms",
-        "Response", "Label_Origin_Identity", "Label_English_Identity",
-        "Label_Standardized_Identity", "Shape_Origin_Identity",
-        "Shape_English_Identity", "Shape_Standardized_Identity")]
+  d$Task <- "self-matching"           # 全库 Task 受控值（两实验同一匹配任务）
+  # 列序 = SKILL 模板 v2：Task 紧随 Subject；Block/Trial、Matching、Shape 块、
+  # Label 块、Response、RT_ms、ACC（Shape/Label 各带自己的三级 Identity）
+  out <- d[, c("Subject", "Task", "Block", "Trial", "Matching",
+               "Shape", "Shape_Origin_Identity", "Shape_English_Identity",
+               "Shape_Standardized_Identity",
+               "Label", "Label_Origin_Identity", "Label_English_Identity",
+               "Label_Standardized_Identity",
+               "Response", "RT_ms", "ACC")]
+  # 一致性检查：列名与顺序 == 工作区 Zhang_2024_PsychJ_Exp<N>_Clean.csv 表头
+  stopifnot(identical(names(out),
+    c("Subject", "Task", "Block", "Trial", "Matching",
+      "Shape", "Shape_Origin_Identity", "Shape_English_Identity",
+      "Shape_Standardized_Identity",
+      "Label", "Label_Origin_Identity", "Label_English_Identity",
+      "Label_Standardized_Identity",
+      "Response", "RT_ms", "ACC")))
+  out
 }
 
 # ============================================================================

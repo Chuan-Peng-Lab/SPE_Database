@@ -150,6 +150,7 @@ dat$RT_ms <- ifelse(dat$Resp == "x", NA_integer_,
 dat$RT_sec <- dat$RT_ms / 1000
 dat$Label_Origin_Identity <- dat$LabelName          # 实际标签文字（原样）
 dat$Shape_Origin_Identity <- dat$ShapeCode          # 作者 REAL 码（原样）
+dat$Task <- "self-matching"                         # 全库标准列（任务类型）
 
 # ---- 每实验产出 ----
 .exp_subs <- tapply(dat$Subject, dat$Exp, function(x) unique(x))
@@ -177,20 +178,31 @@ for (.e in names(.exp_names)) {
                                             "_raw.csv")),
             row.names = FALSE)
 
-  # ---- Clean：标准列 ----
-  .cl <- .d[, c("Subject", "Block", "Trial", "ShapeFile", "LabelName",
-                "Matching",
-                "Label_Origin_Identity", "Label_English_Identity",
-                "Label_Standardized_Identity",
+  # ---- Clean：标准列（列序 = SKILL 模板 v2） ----
+  .cl <- .d[, c("Subject", "Task", "Block", "Trial", "Matching", "ShapeFile",
                 "Shape_Origin_Identity", "Shape_English_Identity",
                 "Shape_Standardized_Identity",
+                "LabelName",
+                "Label_Origin_Identity", "Label_English_Identity",
+                "Label_Standardized_Identity",
                 "RT_ms", "RT_sec", "ACC")]
-  names(.cl) <- c("Subject", "Block", "Trial", "Shape", "Label", "Matching",
-                  "Label_Origin_Identity", "Label_English_Identity",
-                  "Label_Standardized_Identity",
+  names(.cl) <- c("Subject", "Task", "Block", "Trial", "Matching", "Shape",
                   "Shape_Origin_Identity", "Shape_English_Identity",
                   "Shape_Standardized_Identity",
+                  "Label",
+                  "Label_Origin_Identity", "Label_English_Identity",
+                  "Label_Standardized_Identity",
                   "RT_ms", "RT_sec", "ACC")
+  # ---- 一致性检查：表头须与库内 *_Clean.csv 完全一致（名称 + 顺序，模板 v2） ----
+  stopifnot(identical(names(.cl),
+    c("Subject", "Task", "Block", "Trial", "Matching", "Shape",
+      "Shape_Origin_Identity", "Shape_English_Identity",
+      "Shape_Standardized_Identity",
+      "Label",
+      "Label_Origin_Identity", "Label_English_Identity",
+      "Label_Standardized_Identity",
+      "RT_ms", "RT_sec", "ACC")))
+
   write_clean_csv(.cl, file.path(.outdir, paste0("Wozniak_2020_PLOS_",
                                                  .exp_names[[.e]], "_Clean.csv")))
   stopifnot(nrow(.cl) == 6480, length(unique(.cl$Subject)) == 24)

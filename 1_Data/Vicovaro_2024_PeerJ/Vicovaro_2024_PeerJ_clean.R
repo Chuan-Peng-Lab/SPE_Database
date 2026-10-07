@@ -107,9 +107,20 @@ add_identity <- function(d) {
   d$Shape_Origin_Identity <- d$ShapeIdentity          # 原始身份值（数据原样）
   d$Shape_English_Identity <- ifelse(d$ShapeIdentity == "you", "You", "Stranger")
   d$Shape_Standardized_Identity <- ifelse(d$ShapeIdentity == "you", "Self", "Stranger")
-  d[, c("Subject", "Trial", "Block", "Shape", "Label", "Matching", "ACC", "RT_ms",
-        "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
-        "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity")]
+  d$Task <- "self-matching"                       # 全库标准列（提交的 Clean 表头）
+  # 列序 = SKILL 模板 v2（2026-10-08 重排）：Task 紧随 Subject、Matching 先于 Shape、
+  # Shape/Label 各自的三级 Identity 紧跟其主列
+  out <- d[, c("Subject", "Task", "Block", "Trial", "Matching", "Shape",
+               "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+               "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+               "RT_ms", "ACC")]
+  # 一致性检查：列名与列序须与工作区 <Study>_Exp<N>_Clean.csv 表头一致（模板 v2）
+  stopifnot(identical(names(out), c(
+    "Subject", "Task", "Block", "Trial", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+    "RT_ms", "ACC")))
+  out
 }
 
 # ============================================================================

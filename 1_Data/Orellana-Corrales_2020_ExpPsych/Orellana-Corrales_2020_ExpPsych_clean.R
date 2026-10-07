@@ -251,27 +251,38 @@ verify_identity <- function(raw, sid, label = "") {
   stopifnot(ok1, ok2)
 }
 
-# Clean 标准列 + Identity 三级（与 Clean_Data.Rmd 2021_EP 段一致）
+# Clean 标准列 + Identity 三级（列名/列序以提交的 Exp1/2/3 _Clean.csv 表头为准；
+# Task 为全库标准列（常量），CorrResponse = 正确反应键 raw$Cresp）
 make_clean <- function(raw, sid) {
-  data.frame(
+  clean <- data.frame(
     Subject = raw$Subject,
+    Task = "self-matching",
     Block = raw$Block,
     Trial = raw$Trial,
-    Shape = raw$Shape,
-    Label = raw$Label,
     Matching = raw$Matching,
-    Label_Origin_Identity = raw$Label,
-    Label_English_Identity = ifelse(raw$Label == "Ich", "Self", "Stranger"),
-    Label_Standardized_Identity = ifelse(raw$Label == "Ich", "Self", "Stranger"),
+    Shape = raw$Shape,
     Shape_Origin_Identity = sid,
     Shape_English_Identity = ifelse(sid == "Ich", "Self", "Stranger"),
     Shape_Standardized_Identity = ifelse(sid == "Ich", "Self", "Stranger"),
+    Label = raw$Label,
+    Label_Origin_Identity = raw$Label,
+    Label_English_Identity = ifelse(raw$Label == "Ich", "Self", "Stranger"),
+    Label_Standardized_Identity = ifelse(raw$Label == "Ich", "Self", "Stranger"),
+    CorrResponse = raw$Cresp,
     Response = raw$Resp,
     RT_ms = raw$RT_ms,
     RT_sec = raw$RT_ms / 1000,
     ACC = raw$ACC,
     stringsAsFactors = FALSE
   )
+  # 一致性检查：列名与列序须与提交的 <Study>_Exp<N>_Clean.csv 表头完全一致
+  stopifnot(identical(names(clean), c(
+    "Subject", "Task", "Block", "Trial", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity",
+    "Label_Standardized_Identity", "CorrResponse", "Response",
+    "RT_ms", "RT_sec", "ACC")))
+  clean
 }
 
 # subj_info 标准格式（与 Orellana-Corrales_2021_APP 一致；缺项填 /）
