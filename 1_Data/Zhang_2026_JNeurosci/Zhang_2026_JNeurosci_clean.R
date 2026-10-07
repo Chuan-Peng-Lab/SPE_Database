@@ -31,6 +31,14 @@
 # Self→Self, Friend→Close, Stranger→Stranger。数据无几何形状信息
 # （形状-身份绑定 counterbalanced 且未记录）→ Clean Shape/Label 列 =
 # 身份词原样（数据唯一可得的刺激信息）。
+#
+# 人口学（2026-10-08 更新）：aging_behavioral.csv 无人口学列，逐被试 Age/Gender
+# 由用户提供的 Zhang_2026_JNeurosci_Raw/Updated-Zhang_2026_JNeurosci_Exp1_subj_info.csv
+# 按 Subject_ID 合并（91 人全含；该文件为 CR 行尾，读入前归一化）。组水平与论文
+# 及 Dataset_inf.csv Note 一致：OA 59 人（32F/27M，71.31 ± 6.90 岁，58-84）、
+# YA 32 人（18F/14M，23.22 ± 2.59 岁，19-29）。Age/Gender 以字符型写出，保持
+# 本文件原有的加引号格式（此前两列为 "/"）；Gender 由源文件的 F/M 统一展开为
+# Female/Male（用户 2026-10-08 决定，全库统一口径）。
 # ============================================================================
 
 # ---- 引导块：定位脚本目录与项目根，加载 utils.R ----
@@ -49,6 +57,18 @@ stopifnot(file.exists(.inp))
 # ---- 读入 ----
 dat <- read.csv(.inp, stringsAsFactors = FALSE, na.strings = c("", "NA"))
 cat("rows:", nrow(dat), "\n")
+
+# ---- 读入人口学（用户 2026-10-08 更新；文件为 CR 行尾，先归一化为 LF） ----
+.demo_p <- file.path(.study_dir, "Zhang_2026_JNeurosci_Raw",
+                     "Updated-Zhang_2026_JNeurosci_Exp1_subj_info.csv")
+stopifnot(file.exists(.demo_p))
+.demo_txt <- paste(readLines(.demo_p, warn = FALSE), collapse = "\n")
+.demo <- read.csv(text = .demo_txt, stringsAsFactors = FALSE,
+                  na.strings = c("", "NA"))
+stopifnot(nrow(.demo) == 91, !anyDuplicated(.demo$Subject_ID),
+          all(c("Subject_ID", "Group", "Age", "Gender", "Blocks") %in% names(.demo)),
+          !anyNA(.demo$Age), !anyNA(.demo$Gender))
+cat("demographics:", nrow(.demo), "rows (age", min(.demo$Age), "-", max(.demo$Age), ")\n")
 
 # ---- 守卫 1：被试/组结构 ----
 stopifnot(length(unique(dat$subj_idx)) == 91)
@@ -105,25 +125,34 @@ write.csv(.raw, file.path(.study_dir, "Zhang_2026_JNeurosci_Exp1_raw.csv"),
           row.names = FALSE)
 cat("  raw:", nrow(.raw), "rows\n")
 
-# ---- 产出 2：Clean（标准列 + Group/Block） ----
+# ---- 产出 2：Clean（标准列 + Group/Block；列序 = SKILL 模板 v2） ----
 .cl <- data.frame(
   Subject = dat$Subject,
   Group = dat$group,
+  Task = rep("self-matching", nrow(dat)),         # 全库标准列（联结对象含自参照身份）；
+                                                  # 模板 v2：紧随 Subject/[Group]
   Block = dat$session,          # 作者列名 session（1-5）= 同一次扫描内 fMRI run；
                                 # 按库内约定（SKILL §列说明）Session = 一次完整实验参加，
                                 # 同一参加内的重复任务段用 Block——故 Clean 列名 Block
   Trial = dat$Trial,
-  Shape = dat$shape,                              # 身份词原样（数据无几何信息）
-  Label = dat$label,
   Matching = dat$Matching,
-  Label_Origin_Identity = dat$Label_Origin_Identity,
-  Label_English_Identity = dat$Label_English_Identity,
-  Label_Standardized_Identity = dat$Label_Standardized_Identity,
+  Shape = dat$shape,                              # 身份词原样（数据无几何信息）
   Shape_Origin_Identity = dat$Shape_Origin_Identity,
   Shape_English_Identity = dat$Shape_English_Identity,
   Shape_Standardized_Identity = dat$Shape_Standardized_Identity,
+  Label = dat$label,
+  Label_Origin_Identity = dat$Label_Origin_Identity,
+  Label_English_Identity = dat$Label_English_Identity,
+  Label_Standardized_Identity = dat$Label_Standardized_Identity,
   RT_ms = dat$RT_ms, RT_sec = dat$RT_sec, ACC = dat$ACC,
   stringsAsFactors = FALSE)
+# 列名/列序一致性检查（SKILL 模板 v2；顺序不符立即停止）
+stopifnot(identical(
+  names(.cl),
+  c("Subject", "Group", "Task", "Block", "Trial", "Matching",
+    "Shape", "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+    "RT_ms", "RT_sec", "ACC")))
 write_clean_csv(.cl, file.path(.study_dir, "Zhang_2026_JNeurosci_Exp1_Clean.csv"))
 stopifnot(nrow(.cl) == nrow(.raw),
           length(unique(.cl$Subject)) == 91)
@@ -132,19 +161,34 @@ cat("  Clean:", nrow(.cl), "rows /", length(unique(.cl$Subject)),
     round(mean(.cl$RT_ms[.cl$Group == "OA" & .cl$Shape_Standardized_Identity == "Self" &
                          .cl$Matching == "Matching"], na.rm = TRUE), 1), "ms\n")
 
-# ---- 产出 3：subj_info（91 行；人口学数据无，仅组别与 block 数） ----
+# ---- 产出 3：subj_info（91 行；Age/Gender 按 Subject_ID 取自用户更新文件） ----
 .s0 <- dat[!duplicated(dat$Subject), ]
 .nsess <- tapply(dat$session, dat$Subject, function(x) length(unique(x)))
+.gmap <- c(F = "Female", M = "Male")                     # 统一 Gender 取值
+.m <- match(.s0$Subject, as.character(.demo$Subject_ID))
+stopifnot(!anyNA(.m))                                    # 91 人全部对齐
+stopifnot(all(.demo$Group[.m] == .s0$group))             # 组别与数据一致
 .subj <- data.frame(
   Subject_ID = .s0$Subject,
   Exp_id = rep("Zhang_2026_JNeurosci_Exp1", nrow(.s0)),
   Group = .s0$group,
-  Age = rep("/", nrow(.s0)),
-  Gender = rep("/", nrow(.s0)),
+  Age = as.character(.demo$Age[.m]),                     # 字符型：保持原有加引号格式
+  Gender = .gmap[as.character(.demo$Gender[.m])],        # F/M → Female/Male（用户 2026-10-08 决定全库统一展开）
   Blocks = as.integer(.nsess[.s0$Subject]),
   stringsAsFactors = FALSE)
 .subj <- .subj[order(.subj$Subject_ID), ]
 stopifnot(nrow(.subj) == 91, sum(.subj$Group == "OA") == 59, sum(.subj$Group == "YA") == 32)
+# 组水平核对（与论文/Dataset_inf.csv Note 一致）
+.age <- as.numeric(.subj$Age)
+stopifnot(!anyNA(.subj$Gender),                          # 源文件取值全部可映射
+          sum(.subj$Gender == "Female" & .subj$Group == "OA") == 32,
+          sum(.subj$Gender == "Female" & .subj$Group == "YA") == 18,
+          abs(mean(.age[.subj$Group == "OA"]) - 71.31) < 0.01,
+          abs(mean(.age[.subj$Group == "YA"]) - 23.22) < 0.01,
+          min(.age[.subj$Group == "OA"]) == 58, max(.age[.subj$Group == "OA"]) == 84,
+          min(.age[.subj$Group == "YA"]) == 19, max(.age[.subj$Group == "YA"]) == 29)
+cat("  demographics check OK: OA 32F/27M, mean", round(mean(.age[.subj$Group == "OA"]), 2),
+    "| YA 18F/14M, mean", round(mean(.age[.subj$Group == "YA"]), 2), "\n")
 write_clean_csv(.subj, file.path(.study_dir, "Zhang_2026_JNeurosci_Exp1_subj_info.csv"))
 cat("  subj_info:", nrow(.subj), "rows; OA", sum(.subj$Group == "OA"),
     "/ YA", sum(.subj$Group == "YA"), "\n")

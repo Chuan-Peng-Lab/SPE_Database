@@ -176,15 +176,18 @@ orig_map <- c(i_m = "Ich", f_m = "Möbel", i_n = "Ich", f_n = "Möbel")
 eng_map  <- c(Ich = "self", Möbel = "furniture")
 std_map  <- c(self = "Self", furniture = "NonPerson")
 
+# 列序 = SKILL 模板 v2（2026-10-08 重排）：Task 紧随 Subject、Matching 先于 Shape、
+# Shape/Label 各自的三级 Identity 紧跟其主列
 clean <- data.frame(
   Subject = raw_all$Subject,
+  Task = "self-matching",                             # 全库标准列（Clean 表头）
   Trial = raw_all$Trial,
-  Shape = raw_all$Shape,
-  Label = raw_all$Label,
   Matching = raw_all$Matching,
+  Shape = raw_all$Shape,
   Shape_Origin_Identity = unname(orig_map[raw_all$bed]),
   Shape_English_Identity = unname(eng_map[orig_map[raw_all$bed]]),
   Shape_Standardized_Identity = unname(std_map[eng_map[orig_map[raw_all$bed]]]),
+  Label = raw_all$Label,
   Label_Origin_Identity = raw_all$Label,
   Label_English_Identity = unname(eng_map[raw_all$Label]),
   Label_Standardized_Identity = unname(std_map[eng_map[raw_all$Label]]),
@@ -193,6 +196,12 @@ clean <- data.frame(
   ACC = ifelse(keys_all, raw_all$ACC, NA_integer_),   # 无反应 -> NA（P21）
   stringsAsFactors = FALSE
 )
+# 一致性检查：列名与列序须与工作区 Orellana-Corrales_2023_QJEP_Exp1_Clean.csv 表头一致（模板 v2）
+stopifnot(identical(names(clean), c(
+  "Subject", "Task", "Trial", "Matching", "Shape",
+  "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+  "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+  "RT_ms", "RT_sec", "ACC")))
 stopifnot(all(clean$Shape_Standardized_Identity %in% c("Self", "NonPerson")))
 stopifnot(all(clean$Label_Standardized_Identity %in% c("Self", "NonPerson")))
 cat("   Clean 行数:", nrow(clean), "| 无反应(ACC=NA)行:", sum(is.na(clean$ACC)), "\n")
@@ -201,7 +210,7 @@ cat("   Clean 行数:", nrow(clean), "| 无反应(ACC=NA)行:", sum(is.na(clean$
 # 5. subj_info（136 名；年龄 = 2020−出生年，作者 3-Syntax.sps 同口径）
 # ============================================================================
 cat("== 生成 subj_info ...\n")
-sex_map  <- c(Weiblich = "female", Männlich = "male")
+sex_map  <- c(Weiblich = "Female", Männlich = "Male")   # 2026-10-08 用户决定：全库统一 Female/Male
 hand_map <- c(links = "left", rechts = "right", beides = "both")
 grp_map  <- c(words = "familiar (words)", shapes = "new (shapes)")
 # 出生年解析：被试自由输入，含德语日期格式（dd.mm.yyyy）；5 位手误（如

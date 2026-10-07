@@ -555,6 +555,13 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   文字（you/friend/stranger 等），不用数字编码（对下游使用者费解）。数据原始编码保留在 raw
   `<Stim>Code` 列（ShapeCode/LabelCode）与 Identity 三级列的 `*_Origin_Identity` 层；
   Matching 等逻辑用编码计算、写出前映射为可读值（先例 Zhang_2024_PsychJ_clean.R）。
+- **标签为被试提供的名字、且原始数据已匿名化时用占位值 `subj_name`（2026-10-08 定案）**：
+  若某任务的标签刺激是**被试自己/朋友/陌生人的 first name**（如 Hobbs_2023_PsychMed 的 self 任务；作者在匿名化时
+  删除了该列），则 `Label` 与 `Label_Origin_Identity`/`Label_English_Identity` 一律写占位值 `subj_name`
+  （比 `missing` 保留了「该试次呈现的是被试提供的名字」这一信息，也便于与「确无标签刺激」区分）；
+  `Label_Standardized_Identity` 在**可推处**填身份（如 Matching 试次上呈现名必为该形状所关联的人 → 等于该形状身份）、
+  不可推处（如非匹配试次，只知不是形状身份）填 `missing`。先例：Hobbs_2023_PsychMed self 任务（论文 Methods 明写
+  Self 条件用 first names；作者 cleaning 脚本 `associative_df$Label[Task == "Self"] <- NA`）。
 - **刺激-身份绑定恢复（Vicovaro 先例）**：作者导出可能只记录身份而丢弃几何
   形状、且绑定 counterbalanced——从作者实验代码/逐被试配置恢复（Vicovaro OrdineP#.xlsx 的
   identificazione 行）；无法恢复全部时暂停问用户，规律外推须 Codebook/JSON/CSV Note 三处
@@ -603,6 +610,12 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   rather than dropped. Such codes are documented in the codebook, not removed;
   full preprocessing (filtering, outlier removal, accuracy coding) is the user's
   responsibility.
+
+### `*_subj_info.csv` 列值口径（2026-10-08 定案）
+
+- `Gender` 全库统一为 `Female` / `Male`——不用 `F`/`M`/`f`/`m`，也不用小写全称（`female`/`male`）；作者原始的非二元类别按原值保留（如 `Other`、`A-different-gender`）。
+- 作者原始值语义不明时（如 `fm`）**原样保留**，并在清洗脚本注释中说明，不擅自拆分或推断。
+- 人口学缺失写 `/`（注意与 Clean 的 ACC 编码区分：Clean 的无反应写 `NA`，subj_info 的缺失写 `/`）。
 
 ## Codebook 编写规则
 

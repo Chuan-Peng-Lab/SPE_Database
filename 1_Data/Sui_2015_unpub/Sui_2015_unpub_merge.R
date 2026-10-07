@@ -1,6 +1,9 @@
 # ============================================================================
 # Sui_2015_unpub — 独立清洗脚本（合并版 2026-09-02）
 # ----------------------------------------------------------------------------
+# 【历史步骤 2026-10-08】本脚本为 2026-09-02 合并步骤的记录；其逻辑已并入现行的
+# `Sui_2015_unpub_clean.R`（标准脚本名）。日常重跑请使用 `_clean.R`；本文件仅作
+# 合并步骤的历史留存（内容与并入前一致，仍可运行且产出相同）。
 # 背景（2026-09-02 治理定案）：该 unpublished 数据原拆为 Exp1/Exp2 两个文件夹，
 # 经原始 .mat 调查确认两"实验"实为**同一批 20 名被试、同一次到访内连续完成
 # 的两个任务条件**：经典 self-matching（无奖励）+ reward 变体（rewardValues
@@ -135,6 +138,9 @@ write.table(cln, file.path(STUDY_DIR, "Sui_2015_unpub_Exp1_Clean.csv"),
 # subj_info：20 人人口学；Exp_id 统一。Gender/Age/Handedness 与原入库
 # subj_info 口径一致（Gender 含 fm=subject17 原样保留；Handedness 用 /
 # 占位——原入库未提取 han，保持一致不引入新改动）
+# 2026-10-08（用户决定）：Gender 由 f/m 统一展开为 Female/Male；fm 为 subject 17
+# 的作者原值、无法判为 f 或 m，原样保留。
+sex_map <- c(f = "Female", m = "Male")
 si_rows <- list()
 for (s in 1:20) {
   f <- file.path(SRC, sprintf("PractExperiment_1_Subject_%d_Ses_1_.mat", s))
@@ -143,7 +149,8 @@ for (s in 1:20) {
     Subject_ID = as.numeric(m$num),
     Exp_id     = "Sui_2015_unpub_Exp1",
     Age        = as.numeric(m$age),
-    Gender     = as.character(m$sex),
+    Gender     = { .s <- as.character(m$sex)
+                   if (.s %in% names(sex_map)) sex_map[[.s]] else .s },
     Handedness = "/",
     Ethnicity = "/", Employment_Status = "/", Country = "/",
     First_Language = "/", Education = "/",
@@ -153,7 +160,7 @@ for (s in 1:20) {
 si <- do.call(rbind, si_rows)
 si <- si[order(as.numeric(si$Subject_ID)), ]
 rownames(si) <- NULL
-stopifnot(nrow(si) == 20)
+stopifnot(nrow(si) == 20, all(si$Gender %in% c("Female", "Male", "fm")))
 # 全列转字符 + write.table 全引号（与库内 subj_info QUOTE_ALL 风格一致）
 si[] <- lapply(si, as.character)
 write.table(si, file.path(STUDY_DIR, "Sui_2015_unpub_Exp1_subj_info.csv"),
