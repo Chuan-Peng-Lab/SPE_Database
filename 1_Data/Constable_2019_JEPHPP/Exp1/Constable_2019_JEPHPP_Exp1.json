@@ -21,7 +21,7 @@
       "Trial_number": "96 trials per block (288 total)"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms (simultaneous presentation)",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "233 ms",
@@ -39,6 +39,6 @@
         "Background": "Black"
       }
     },
-    "detail": "Shape = geometric shape presented in the trial (recovered from raw per-participant binding SelfShape/WeShape/TheyShape/AloneShape; identity in Shape_Origin_Identity). ShapeLoc = shape above/below fixation (counterbalanced). Task = self-matching (we-prioritization)."
+    "detail": "Shape = geometric shape presented in the trial (recovered from raw per-participant binding SelfShape/WeShape/TheyShape/AloneShape; identity in Shape_Origin_Identity). ShapeLoc = shape above/below fixation (counterbalanced). Task = self-matching (we-prioritization). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

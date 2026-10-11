@@ -4,7 +4,7 @@
     "Collected_date": "/",
     "Physical_Environment": {
       "Location": "Ghent University (implied by ethical committee approval)",
-      "Setting": "Electrically shielded chamber (for EEG recording)",
+      "Setting": "Laboratory",
       "Equipment": {
         "Presenting": "/",
         "Monitor": "/",
@@ -21,7 +21,7 @@
       "Trial_number": "360 trials total (60 trials per block)"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms (simultaneous presentation)",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "Practice: 1000 ms; Test: 200 ms",
@@ -39,6 +39,6 @@
         "Background": "Light gray"
       }
     },
-    "detail": ""
+    "detail": "Setting normalized to \"Laboratory\" 2026-10 (was: \"Electrically shielded chamber (for EEG recording)\"). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

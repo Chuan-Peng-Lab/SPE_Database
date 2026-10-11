@@ -21,7 +21,7 @@
       "Trial_number": "360 trials (180 per block)"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms",
       "Fixation_duration": "400 ms",
       "Stimulus_duration": "200 ms",
@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": "extraIV1 = self-association block relative to participant race (Same-race/Diff-race; E2 participants all White/Italian, so raw condition White = Same-race, Asian = Diff-race). Shape column = actual face stimulus file. Label column = missing: labels were presented in Italian per paper and the original stimulus text is not recorded in any primary source (raw has no label column; only face-identity mapping self_other); to be filled when the OSF raw data becomes available. Task column added 2026-09 (default self-matching)."
+    "detail": "extraIV1 = self-association block relative to participant race (Same-race/Diff-race; E2 participants all White/Italian, so raw condition White = Same-race, Asian = Diff-race). Shape column = actual face stimulus file. Label column = missing: labels were presented in Italian per paper and the original stimulus text is not recorded in any primary source (raw has no label column; only face-identity mapping self_other); to be filled when the OSF raw data becomes available. Task column added 2026-09 (default self-matching). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

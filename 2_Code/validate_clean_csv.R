@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # ============================================================
-# validate_clean_csv.R — Clean.csv 内容级校验器（2026-08 新增）
+# validate_clean_csv.R — Clean.csv 内容级校验脚本（2026-08 新增；2026-10 收紧 ACC 值域）
 # ------------------------------------------------------------
 # 用途：在 validate_json_metadata.R（结构级）之外，对每个
 #   *_Clean.csv 做内容级检查：
@@ -43,9 +43,10 @@ clean_bases <- unique(clean_base)
 # ---------- 已知例外（历史遗留，修复后移出） ----------
 known <- c(
   "Constable_2020_ActaPsych_Exp1"    = "缺 Label/Shape 的 English/Standardized 四个 Identity 三级列（历史文件，待补）",
-  "Sun_2026_DataExp_Exp1"            = "nSubj 506 vs subj_info 334 行（全样本 vs 有效样本口径，已知）",
   "Zhang_2023_NeuroImage_Exp1"       = "nSubj 346 vs subj_info 347 行（差 1，待核）",
-  "Perrykkad_2022_BMCPsych_Exp1"       = "nSubj 334 vs subj_info 288 行（Pt7E1 N 口径，待核）"
+  "Perrykkad_2022_BMCPsych_Exp1"       = "nSubj 334 vs subj_info 288 行（Pt7E1 N 口径，待核）",
+  "Wu_2026_Chinaxiv_Exp1"            = "Matching 列为 NA 的 choice-task 与 staircase 试次（该任务无匹配维度，已核，2026-10-06）",
+  "Wu_2026_Chinaxiv_Exp2"            = "Matching 列为 NA 的 choice-task 与 staircase 试次（该任务无匹配维度，已核，2026-10-06）"
 )
 is_known <- function(base, rule) {
   if (!base %in% names(known)) return(FALSE)
@@ -72,7 +73,8 @@ alt_cols <- list(
 )
 # ACC 合法值域：含 ACC 统一编码（方案 A，2026-08）的负码 -2/-3/-4 及历史旧码（-1 无反应、2/3/4 旧特殊码）
 # 2026-09-02 同步：方案 A 执行时未更新本词表，Hu_2020 正确编码 -2（范围外按键）曾被误报 W3
-ACC_OK <- c(-4, -3, -2, -1, 0, 1, 2, 3, 4)
+ACC_OK <- c(-4, -3, -2, 0, 1)   # 全库六码表（2026-10 收紧；无反应用字面量 NA）
+ACC_NA_LITERAL <- "NA"
 
 find_subj_info <- function(cf, base) {
   dirs <- unique(c(dirname(cf), dirname(dirname(cf))))
@@ -165,23 +167,40 @@ for (base in clean_bases) {
         cat(sprintf("[WARN] %s: nSubj %d vs CSV Sample_Size %s（口径差异，已知类）\n", base, n_subj, ss))
     }
   }
-  # ---- W3 ACC 值域 ----
+  # ---- W3 ACC 值域（2026-10 收紧为全库六码表；字面量 NA 合法，空字段报 WARN） ----
   if ("ACC" %in% hdr) {
+    ## 空字段须按原文本判定：fread 默认把字面量 NA 也解析成 NA，无法区分
+    has_blank <- any(vapply(parts, function(p) {
+      v <- tryCatch(as.character(fread(p, select = "ACC", na.strings = character(0))[[1]]),
+                    error = function(e) character(0))
+      any(!nzchar(v))
+    }, logical(1)))
+    if (has_blank) {
+      cat(sprintf("[WARN] %s: ACC 含空字段（无反应须写字面量 NA）\n", base))
+      n_warn <- n_warn + 1
+    }
     vals <- unique(dt[["ACC"]])
-    vals <- vals[!is.na(vals) & !grepl("^\\s*$", as.character(vals))]
+    vals <- vals[!is.na(vals)]                    # 字面量 NA 解析为 NA，属合法取值
     numv <- suppressWarnings(as.numeric(as.character(vals)))
-    odd <- vals[is.na(numv) | !numv %in% ACC_OK]
-    if (length(odd))
+    odd  <- vals[!(as.character(vals) %in% ACC_NA_LITERAL) & (is.na(numv) | !numv %in% ACC_OK)]
+    if (length(odd)) {
       cat(sprintf("[WARN] %s: ACC 值域外值: %s\n", base, paste(head(as.character(odd), 8), collapse = ",")))
+      n_warn <- n_warn + 1
+    }
   }
   # ---- W5 Matching 值域（2026-09-04 严格规范：仅允许 Matching/Nonmatching；
-  #      空白/NA 亦视为非规范值 → 报错，不列出错值） ----
+  #      空白/NA 亦视为非规范值 → 报错，不列出错值。
+  #      2026-10-06：与 W4 同款支持 known 登记（任务本身无匹配维度时的 NA，如 Wu_2026_Chinaxiv） ----
   if ("Matching" %in% hdr) {
     vals <- unique(dt[["Matching"]])
     bad  <- vals[is.na(vals) | !vals %in% c("Matching", "Nonmatching")]
     if (length(bad)) {
-      cat(sprintf("[WARN] %s: Matching 列含非规范取值（仅允许 Matching/Nonmatching）\n", base))
-      n_warn <- n_warn + 1
+      if (is_known(base, "Matching"))
+        cat(sprintf("[KNOWN] %s: W5 Matching 列含 Nonmatching 以外的取值（登记豁免）\n", base))
+      else {
+        cat(sprintf("[WARN] %s: Matching 列含非规范取值（仅允许 Matching/Nonmatching）\n", base))
+        n_warn <- n_warn + 1
+      }
     }
   }
   # ---- W4 非标准命名 ----

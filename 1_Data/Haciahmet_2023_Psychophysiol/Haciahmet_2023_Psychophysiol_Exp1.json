@@ -21,7 +21,7 @@
       "Trial_number": "240 total trials (120 matching, 120 non-matching; 60 self, 60 stranger each)"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously (Shape above, label below)",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms (simultaneous presentation)",
       "Fixation_duration": "Minimum 1.5 s (maximum until eye tracker confirmed fixation)",
       "Stimulus_duration": "100 ms",
@@ -39,6 +39,6 @@
         "Background": "Black"
       }
     },
-    "detail": ""
+    "detail": "Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously (Shape above, label below)\")."
   }
 }

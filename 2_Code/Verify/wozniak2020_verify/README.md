@@ -1,6 +1,6 @@
-# wozniak2020_verify — Wozniak_2020_PLOS 四方核对脚本
+# wozniak2020_verify — Wozniak_2020_PLOS 多源交叉核验脚本
 
-2026-08-31 阶段 5 入库四方核对（论文 ↔ 作者脚本/xlsx ↔ 库内数据 ↔ .dat 原始
+2026-08-31 阶段 5 入库多源交叉核验（论文 ↔ 作者脚本/xlsx ↔ 库内数据 ↔ .dat 原始
 导出）。发现记录于 `3_Reports/Verifying_original_results_issues.md`（Issue 4）。
 
 ## 文件

@@ -1,8 +1,8 @@
 # SPE Database
 
-This project was inspired by [the Confidence Database](https://doi.org/10.1038/s41562-019-0813-1). We aimed at curating a database that include trial-level data and other meta-data from as many empirical studies that used self-matching task from [Sui, He, &amp; Humphreys (2012)](http://www.ncbi.nlm.nih.gov/pubmed/22963229). `<!-- OSF, preprint, and publication links will be directly added to this paragraph -->`
+This project was inspired by [the Confidence Database](https://doi.org/10.1038/s41562-019-0813-1). We aimed at curating a database that include trial-level data and other meta-data from as many empirical studies that used the self-matching task (also referred to as the shape–label matching task or the perceptual matching task) from [Sui, He, &amp; Humphreys (2012)](http://www.ncbi.nlm.nih.gov/pubmed/22963229), which measures the self-prioritization effect (SPE). `<!-- OSF, preprint, and publication links will be directly added to this paragraph -->`
 
-Currently, the SPE database includes trial-level data from **51 studies** (**50 curated on disk + 1 deferred entry**) / **113 rows** per the master index `1_Data/Dataset_inf.csv` (see `PROJ_STATE.md`). <!-- Earlier published counts (44 papers / 70 datasets / 3603 participants) refer to the manuscript and have not been re-verified against the CSV -->. Each dataset includes information on reaction times (RTs), accuracy (ACC), and other information reported in papers. Participants in these included studies come from diverse cultural backgrounds and age range, facilitating cross-study comparisons and meta-analytic investigations.
+Currently, the SPE database includes trial-level data from **52 studies** (**51 curated on disk + 1 deferred entry**) / **116 rows** per the master index `1_Data/Dataset_inf.csv` (see `PROJ_STATE.md`). <!-- Earlier published counts (44 papers / 70 datasets / 3603 participants) refer to the manuscript and have not been re-verified against the CSV -->. Each dataset includes information on reaction times (RTs), accuracy (ACC), and other information reported in papers. Participants in these included studies come from diverse cultural backgrounds and age range, facilitating cross-study comparisons and meta-analytic investigations.
 
 The SPE Database is continuously updated as new studies and datasets become available. We welcome contributions from researchers who wish to share their data and help expand this resource. If you are interested in contributing or collaborating, please feel free to reach out!
 
@@ -10,9 +10,9 @@ This project is in parallel with an on-going preregistered meta-analysis leading
 
 ## Data & metadata
 
-- **Master index**: `1_Data/Dataset_inf.csv` (UTF-8 with BOM) — one row per experiment-sample, keyed by `Folder_Name` (the project-wide **study ID** = the study folder name) + `Exp` + `subj_Group`. Key columns: `FirstAuthor`, `Year` (official print year), `Journal`, `DOI` (paper DOI), `Country`/`City`, `Stim_Type`, `Stim_language`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`, `Repo_Link` (data repository link). Current inventory: **50 curated studies on disk + 1 deferred (Scheller_2026_elife)** (authoritative counts live in the CSV); `Hu_YQ_2026_ChinaSciData` is ingested but under structural repair — see `3_Reports/Hu_YQ_2026_Issues.md`.
+- **Master index**: `1_Data/Dataset_inf.csv` (UTF-8 with BOM) — one row per experiment-sample, keyed by `Folder_Name` (the project-wide **study ID** = the study folder name) + `Exp` + `subj_Group`. Key columns: `FirstAuthor`, `Year` (official print year), `Journal`, `DOI` (paper DOI), `Country`/`City`, `Stim_Type`, `Stim_language`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`, `Repo_Link` (data repository link). Current inventory: **51 curated studies on disk + 1 deferred (Scheller_2026_elife)** (authoritative counts live in the CSV); `Hu_YQ_2026_ChinaSciData` is ingested but under structural repair — see `3_Reports/Hu_YQ_2026_Issues.md`.
 - **Data readability** (since 2026-08-30): `Shape`/`Label` columns hold actual stimulus values (shape names / label words); original numeric codes are kept in the raw `ShapeCode`/`LabelCode` columns and the Clean `*_Origin_Identity` columns.
-- **Cleaned data**: `*_ExpN_Clean.csv` uses standardized columns `Subject`, `Shape`, `Label`, `Matching`, `ACC`, `RT_ms`, plus 3-level Identity columns (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger). Cleaning is minimal preprocessing — invalid values (e.g., `ACC = -1`) are kept and documented in the codebook; users preprocess per their own analysis goals. Clean files larger than 50 MB are split at whole-subject boundaries into `_Clean_part<N>.csv` (identical header; one shared codebook and experiment JSON; reassemble with `rbind`; rule in SKILL.md §文件与文件夹规范「大文件拆分」).
+- **Cleaned data**: `*_ExpN_Clean.csv` uses standardized columns `Subject`, `Shape`, `Label`, `Matching`, `ACC`, `RT_ms`, plus 3-level Identity columns (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger). Cleaning is minimal preprocessing (harmonization) — special values are kept under the database-wide ACC coding (e.g., no response = `NA`, out-of-range key = `-2`) and documented in the codebook; users preprocess per their own analysis goals. Clean files larger than 50 MB are split at whole-subject boundaries into `_Clean_part<N>.csv` (identical header; one shared codebook and experiment JSON; reassemble with `rbind`; rule in SKILL.md §文件与文件夹规范「大文件拆分」).
 - **Per-study metadata**: paper-level `<Folder_Name>.json` + experiment-level `<Folder_Name>_Exp<N>.json` (v2 schema) + `Codebook_<Folder_Name>_Exp<N>_Clean.xlsx`.
 - **Contributing / adding data**: follow the curation conventions in `.agents/skills/spe-database-curation/SKILL.md` (folder naming, JSON schemas, codebook rules, DOI/year verification workflow) — load it via `skill(name="spe-database-curation")` for any data-curation task.
 - **For agents**: repository conventions and efficiency rules live in `AGENTS.md`; project state lives in `PROJ_STATE.md` (see also the Document map in AGENTS.md).
@@ -20,13 +20,9 @@ This project is in parallel with an on-going preregistered meta-analysis leading
 
 ## Leading Team
 
-- Zhenxin Cai (School of Psychology, Nanjing Normal University,email:[czx@nnu.edu.cn](czx@nnu.edu.cn))
-- Wang Qihui(School of Psychology, Nanjing Normal University)
-- Xinru Sun (School of Psychology, Nanjing Normal University)
-- Wanke Pan (School of Psychology, Nanjing Normal University)
-- Mengzheng Hu (School of Psychology, Nanjing Normal University)
-- Zheng Liu (Division of Applied Psychology, School of Humanities and Social Science, CUHK-Shenzhen)
-- Jie Sui ([School of Psychology, University of Aberdeen](https://www.abdn.ac.uk/people/jie.sui))
+- Cai, Zhenxin (School of Psychology, Nanjing Normal University, email:[czx@nnu.edu.cn](czx@nnu.edu.cn))
+- Wang, Fei (Department of Psychological and Cognitive Sciences, Tsinghua University, email: wf3126@mail.tsinghua.edu.cn)
+- Sui, Jie ([School of Psychology, University of Aberdeen](https://www.abdn.ac.uk/people/jie.sui))
 - **Hu Chuan-Peng** (**Corresponding author**, School of Psychology, Nanjing Normal University, email: [hcp4715@hotmail.com](hcp4715@hotmail.com))
 
 ### Data contributors
@@ -58,8 +54,8 @@ Confirmed contributors
 - Haciahmet, Céline (University of Trier)
 - Hung, Kalai (Tsinghua University)
 - Kolvoort, Ivar (Department of Psychology, Programme Group Psychological Methods, University of Amsterdam)
-- Liang, Qiongdan (Tsinghua University)
-- Liu, Tuo (Goethe University Frankfurt)
+- Liang, Qiongdan (Department of Psychological and Cognitive Sciences, Tsinghua University)
+- Liu, Tuo (Department of Educational Psychology, Goethe University Frankfurt)
 - Makovski, Tal (Department of Psychology, Tel-Hai Academic College)
 - Martínez-Pérez, Víctor (University of Castilla-La Mancha Albacete Campus, Faculty of Medicine (UCLM - Albacete))
 - Navon, Mayan (Department of Education and Psychology, the Open University of Israel)
@@ -70,10 +66,14 @@ Confirmed contributors
 - Qian, Haoyue (School of Physics and Shanghai Key Laboratory of Magnetic Resonance, East China Normal University; Department of Psychology, Shanghai Normal University)
 - Schäfer, Sarah (University of Trier)
 - Vicovaro, Michele (Department of General Psychology, University of Padova)
-- Wang, Fei (Tsinghua University)
 - Wiersema, Jan R. (Department of Experimental Clinical and Health Psychology, Ghent University)
 - Wozniak, Mateusz (Social Cognition in Human-Robot Interaction Group, Italian Institute of Technology; Social Mind Center, Department of Cognitive Science, Central European University; Cognition and Philosophy Lab, Department of Philosophy, Monash University; Institute of Psychology, Jagiellonian University)
 - Zhang, Yongfa (Tsinghua University)
+- Wanke Pan (School of Psychology, Nanjing Normal University)
+- Xinru Sun (School of Psychology, Nanjing Normal University)
+- Siyu Wu (School of Psychology, Nanjing Normal University)
+- Mengzheng Hu (School of Psychology, Nanjing Normal University)
+- Zheng Liu (Division of Applied Psychology, School of Humanities and Social Science, CUHK-Shenzhen)
 
 ## Data Version
 
@@ -134,6 +134,10 @@ Confirmed contributors
 ---
 
 ### Unreleased
+
+**Added**
+
+* **[New study: Wu_2026_Chinaxiv]**: Two preregistered experiments on self-prioritization in perceptual decision-making (random-dot kinematogram; matching task followed by a choice task), 141 participants (motion/colour groups) + 60 participants, 3 rows in the master index; full standard files, codebooks and JSON metadata (2026-10-06).
 
 **Planned**
 

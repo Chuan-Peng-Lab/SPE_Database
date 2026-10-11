@@ -141,6 +141,7 @@ cat("guard OK: Exp1 3370 rows / 20 subjects; matching logic 0 mismatch; RT>=200\
 .e1$Shape_Standardized_Identity <- .id_std[.e1$`Shape Association`]
 .e1$Shape <- .e1$`Shape Association`                  # 无几何形状信息 → 身份词
 .e1$Label <- .e1$`Target Label`
+.e1$Task <- "self-matching"
 .e1$RT_sec <- .e1$RT_ms / 1000
 
 # 方向核对（论文 Fig.1/2：matching self 最快最准；nonmatching friend 更快）
@@ -157,11 +158,21 @@ dir.create(.exp1_dir, showWarnings = FALSE)
                  "Shape Association", "Target Accuracy", "Reponse Time")]
 write.csv(.raw1, file.path(.exp1_dir, "Svensson_2022_PsychRes_Exp1_raw.csv"),
           row.names = FALSE)
-.cl1 <- .e1[, c("Subject", "Shape", "Label", "Matching",
-                "Label_Origin_Identity", "Label_English_Identity",
-                "Label_Standardized_Identity", "Shape_Origin_Identity",
-                "Shape_English_Identity", "Shape_Standardized_Identity",
-                "RT_ms", "RT_sec", "ACC")]
+.cl1 <- .e1[, c("Subject", "Task", "Matching", "Shape",
+                "Shape_Origin_Identity", "Shape_English_Identity",
+                "Shape_Standardized_Identity",
+                "Label", "Label_Origin_Identity", "Label_English_Identity",
+                "Label_Standardized_Identity",
+                "RT_ms", "RT_sec", "ACC")]      # 列序 = SKILL 模板 v2
+# ---- 一致性检查：表头须与库内 *_Clean.csv 完全一致（名称 + 顺序，模板 v2） ----
+stopifnot(identical(names(.cl1),
+  c("Subject", "Task", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity",
+    "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity",
+    "Label_Standardized_Identity",
+    "RT_ms", "RT_sec", "ACC")))
+
 write_clean_csv(.cl1, file.path(.exp1_dir,
                                 "Svensson_2022_PsychRes_Exp1_Clean.csv"))
 .sj1 <- data.frame(Subject_ID = sort(unique(.e1$Subject)),
@@ -227,6 +238,7 @@ cat("guard OK: Exp2 8335 rows / 24 subjects; 2 blocks each; 75/25 balance\n")
 .e2$Label_English_Identity <- .id_english[.e2$Label_derived]
 .e2$Label_Standardized_Identity <- .id_std[.e2$Label_derived]
 .e2$Label <- .e2$Label_derived
+.e2$Task <- "self-matching"
 .e2$RT_sec <- .e2$RT_ms / 1000
 
 # 方向核对（论文 Fig.3/4：实际高频身份更快更准，self 效应更大）
@@ -267,11 +279,21 @@ dir.create(.exp2_dir, showWarnings = FALSE)
                  "Shape Association", "Target Accuracy", "Response Time")]
 write.csv(.raw2, file.path(.exp2_dir, "Svensson_2022_PsychRes_Exp2_raw.csv"),
           row.names = FALSE)
-.cl2 <- .e2[, c("Subject", "Block", "Expectancy", "Shape", "Label", "Matching",
-                "Label_Origin_Identity", "Label_English_Identity",
-                "Label_Standardized_Identity", "Shape_Origin_Identity",
-                "Shape_English_Identity", "Shape_Standardized_Identity",
-                "RT_ms", "RT_sec", "ACC")]
+.cl2 <- .e2[, c("Subject", "Task", "Block", "Matching", "Shape",
+                "Shape_Origin_Identity", "Shape_English_Identity",
+                "Shape_Standardized_Identity",
+                "Label", "Label_Origin_Identity", "Label_English_Identity",
+                "Label_Standardized_Identity",
+                "Expectancy", "RT_ms", "RT_sec", "ACC")]   # 列序 = 模板 v2
+names(.cl2)[names(.cl2) == "Expectancy"] <- "extraIV1"   # 标准命名
+# ---- 一致性检查：表头须与库内 *_Clean.csv 完全一致（名称 + 顺序，模板 v2） ----
+stopifnot(identical(names(.cl2),
+  c("Subject", "Task", "Block", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity",
+    "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity",
+    "Label_Standardized_Identity",
+    "extraIV1", "RT_ms", "RT_sec", "ACC")))
 write_clean_csv(.cl2, file.path(.exp2_dir,
                                 "Svensson_2022_PsychRes_Exp2_Clean.csv"))
 .sj2 <- data.frame(Subject_ID = sort(unique(.e2$Subject)),
@@ -351,6 +373,7 @@ cat("guard OK: Exp3 8786 rows / 25 subjects; 2 blocks each; dis-confirmatory 25/
 .e3$Label_English_Identity <- .id_english[.e3$Label_derived]
 .e3$Label_Standardized_Identity <- .id_std[.e3$Label_derived]
 .e3$Label <- .e3$Label_derived
+.e3$Task <- "self-matching"
 .e3$RT_sec <- .e3$RT_ms / 1000
 
 # 方向核对（论文 Fig.5/6：实际高频身份更快，self 效应更大）
@@ -377,11 +400,21 @@ dir.create(.exp3_dir, showWarnings = FALSE)
                  "Shape Association", "Target Accuracy", "Response Time")]
 write.csv(.raw3, file.path(.exp3_dir, "Svensson_2022_PsychRes_Exp3_raw.csv"),
           row.names = FALSE)
-.cl3 <- .e3[, c("Subject", "Block", "Trial", "Expectancy", "Shape", "Label",
-                "Matching", "Label_Origin_Identity", "Label_English_Identity",
-                "Label_Standardized_Identity", "Shape_Origin_Identity",
-                "Shape_English_Identity", "Shape_Standardized_Identity",
-                "RT_ms", "RT_sec", "ACC")]
+.cl3 <- .e3[, c("Subject", "Task", "Block", "Trial", "Matching", "Shape",
+                "Shape_Origin_Identity", "Shape_English_Identity",
+                "Shape_Standardized_Identity",
+                "Label", "Label_Origin_Identity", "Label_English_Identity",
+                "Label_Standardized_Identity",
+                "Expectancy", "RT_ms", "RT_sec", "ACC")]   # 列序 = 模板 v2
+names(.cl3)[names(.cl3) == "Expectancy"] <- "extraIV1"   # 标准命名
+# ---- 一致性检查：表头须与库内 *_Clean.csv 完全一致（名称 + 顺序，模板 v2） ----
+stopifnot(identical(names(.cl3),
+  c("Subject", "Task", "Block", "Trial", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity",
+    "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity",
+    "Label_Standardized_Identity",
+    "extraIV1", "RT_ms", "RT_sec", "ACC")))
 write_clean_csv(.cl3, file.path(.exp3_dir,
                                 "Svensson_2022_PsychRes_Exp3_Clean.csv"))
 .sj3 <- data.frame(Subject_ID = sort(unique(.e3$Subject)),

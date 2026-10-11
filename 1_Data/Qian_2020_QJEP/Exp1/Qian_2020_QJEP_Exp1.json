@@ -21,7 +21,7 @@
       "Trial_number": "144"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "100 ms",
@@ -39,6 +39,6 @@
         "Background": "Grey"
       }
     },
-    "detail": "extraIV1 = mood induction condition (happiness/anxiety/serenity/depression); Condition column = session number S1-S4. Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
+    "detail": "extraIV1 = mood induction condition (happiness/anxiety/serenity/depression); Condition column = session number S1-S4. Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

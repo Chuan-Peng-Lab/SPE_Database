@@ -21,7 +21,7 @@
       "Trial_number": "360 trials (180 per block)"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms",
       "Fixation_duration": "400 ms",
       "Stimulus_duration": "200 ms",
@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": "extraIV1 = self-association block relative to participant race (Same-race/Diff-race; E1 participants all Japanese/Asian, so raw condition Asian = Same-race, White = Diff-race). Shape column = actual face stimulus file (asian/* = Asian, white/* = White, _f/_m = gender). Label = You/Other (paper wording; presented in Japanese; raw internal code Self/Other kept in Label_Origin_Identity). Task column added 2026-09 (default self-matching)."
+    "detail": "extraIV1 = self-association block relative to participant race (Same-race/Diff-race; E1 participants all Japanese/Asian, so raw condition Asian = Same-race, White = Diff-race). Shape column = actual face stimulus file (asian/* = Asian, white/* = White, _f/_m = gender). Label = You/Other (paper wording; presented in Japanese; raw internal code Self/Other kept in Label_Origin_Identity). Task column added 2026-09 (default self-matching). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

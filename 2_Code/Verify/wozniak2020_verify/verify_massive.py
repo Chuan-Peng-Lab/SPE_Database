@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""wozniak2020_verify/verify_massive.py — Wozniak_2020_PLOS 四方核对（步骤 1）
+"""wozniak2020_verify/verify_massive.py — Wozniak_2020_PLOS 多源交叉核验（步骤 1）
 
 复刻作者 MATLAB 聚合脚本（DATA/Massive_SelfBoost_Avg1subject_MAD_full.m +
 SelfBoost_Avg1subject_MAD_full.m）的每被试条件均值，与作者 xlsx 聚合文件

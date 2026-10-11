@@ -1,6 +1,9 @@
 # ============================================================================
 # Sui_2015_unpub — 独立清洗脚本（合并版 2026-09-02）
 # ----------------------------------------------------------------------------
+# 【历史步骤 2026-10-08】本脚本为 2026-09-02 合并步骤的记录；其逻辑已并入现行的
+# `Sui_2015_unpub_clean.R`（标准脚本名）。日常重跑请使用 `_clean.R`；本文件仅作
+# 合并步骤的历史留存（内容与并入前一致，仍可运行且产出相同）。
 # 背景（2026-09-02 治理定案）：该 unpublished 数据原拆为 Exp1/Exp2 两个文件夹，
 # 经原始 .mat 调查确认两"实验"实为**同一批 20 名被试、同一次到访内连续完成
 # 的两个任务条件**：经典 self-matching（无奖励）+ reward 变体（rewardValues
@@ -13,8 +16,9 @@
 # 1/4/16 = 奖励条件中 Self/Friend/Stranger 关联面值，由 Reward×500 还原）；
 # Reward（仅 raw）= 逐 trial TpercentReward 原值（Exp1 全 0；Exp2 ∈
 # {0.002, 0.008, 0.032} 对应 rewardValues 1/4/16）；StartTime/EndTime（仅 raw）
-# = 会话级 startInst/endfeedB 原值（秒）。ACC 保留作者码 1/0/3/4（3=超时
-# RT>=1000ms、4=无反应 RT=0，Codebook 已注明）。
+# = 会话级 startInst/endfeedB 原值（秒）。raw 保留作者码 1/0/3/4（3=超时
+# RT>=1000ms、4=无反应 RT=0）；Clean 按全库统一 ACC 编码转写 3→-4（超时
+# 按键）、4→NA（无反应），Codebook 已同步注明。
 # 来源逻辑：基于原 `Sui_2015_unpub_clean.R`（其 read.mat/write_raw_csv 辅助
 # 函数思路）+ 2026-09-02 合并调查结论重写。行序 Block-major。
 # 运行方式：Rscript Sui_2015_unpub_merge.R；依赖 R.matlab（无 dplyr/tidyr 依赖）。
@@ -102,7 +106,8 @@ cln <- data.frame(
   Response = raw$Response,
   RT_ms   = raw$RT_ms,
   RT_sec  = round(raw$RT_ms / 1000, 3),
-  ACC     = raw$ACC,
+  # Clean 的 ACC 按全库统一编码转写：作者码 3（超时按键）→ -4，4（无反应）→ NA
+  ACC     = ifelse(raw$ACC == 3, -4, ifelse(raw$ACC == 4, NA_real_, raw$ACC)),
   stringsAsFactors = FALSE
 )
 # 列序按 SKILL 模板 v2：Subject → [Group] → [Session] → Task → [Phase] → Block → Trial
@@ -121,17 +126,21 @@ key_ok <- nrow(cln) == length(unique(paste(cln$Subject, cln$Phase,
                                            cln$extraIV1, cln$Block, cln$Trial)))
 stopifnot(key_ok)
 stopifnot(all(cln$extraIV1 %in% c(0, 1, 4, 16)))
-stopifnot(all(cln$ACC %in% c(0, 1, 3, 4)))
+stopifnot(all(cln$ACC %in% c(-4, 0, 1) | is.na(cln$ACC)))     # 全库六码表子集
+stopifnot(sum(cln$ACC == -4, na.rm = TRUE) == 213, sum(is.na(cln$ACC)) == 6)  # 原码 3/4 的行数
 stopifnot(all(cln$Block %in% 1:4), all(cln$Trial %in% 1:60))
 
 write.table(raw, file.path(STUDY_DIR, "Sui_2015_unpub_Exp1_raw.csv"),
             sep = ",", row.names = FALSE, quote = TRUE, na = "", qmethod = "double")
 write.table(cln, file.path(STUDY_DIR, "Sui_2015_unpub_Exp1_Clean.csv"),
-            sep = ",", row.names = FALSE, quote = TRUE, na = "", qmethod = "double")
+            sep = ",", row.names = FALSE, quote = TRUE, na = "NA", qmethod = "double")
 
 # subj_info：20 人人口学；Exp_id 统一。Gender/Age/Handedness 与原入库
 # subj_info 口径一致（Gender 含 fm=subject17 原样保留；Handedness 用 /
 # 占位——原入库未提取 han，保持一致不引入新改动）
+# 2026-10-08（用户决定）：Gender 由 f/m 统一展开为 Female/Male；fm 为 subject 17
+# 的作者原值、无法判为 f 或 m，原样保留。
+sex_map <- c(f = "Female", m = "Male")
 si_rows <- list()
 for (s in 1:20) {
   f <- file.path(SRC, sprintf("PractExperiment_1_Subject_%d_Ses_1_.mat", s))
@@ -140,7 +149,8 @@ for (s in 1:20) {
     Subject_ID = as.numeric(m$num),
     Exp_id     = "Sui_2015_unpub_Exp1",
     Age        = as.numeric(m$age),
-    Gender     = as.character(m$sex),
+    Gender     = { .s <- as.character(m$sex)
+                   if (.s %in% names(sex_map)) sex_map[[.s]] else .s },
     Handedness = "/",
     Ethnicity = "/", Employment_Status = "/", Country = "/",
     First_Language = "/", Education = "/",
@@ -150,7 +160,7 @@ for (s in 1:20) {
 si <- do.call(rbind, si_rows)
 si <- si[order(as.numeric(si$Subject_ID)), ]
 rownames(si) <- NULL
-stopifnot(nrow(si) == 20)
+stopifnot(nrow(si) == 20, all(si$Gender %in% c("Female", "Male", "fm")))
 # 全列转字符 + write.table 全引号（与库内 subj_info QUOTE_ALL 风格一致）
 si[] <- lapply(si, as.character)
 write.table(si, file.path(STUDY_DIR, "Sui_2015_unpub_Exp1_subj_info.csv"),

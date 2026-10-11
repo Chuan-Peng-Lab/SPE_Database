@@ -213,7 +213,8 @@ for (sp in exp_specs) {
 
   out_dir <- file.path(workdir, paste0("Exp", sp$code))
   dir.create(out_dir, showWarnings = FALSE)
-  fwrite(clean, file.path(out_dir, sprintf("Lee_2026_BritJPsy_Exp%s_Clean.csv", sp$code)))
+  ## Clean 的无反应一律写字面量 NA（全库统一惯例；fwrite 默认写空字段）
+  fwrite(clean, file.path(out_dir, sprintf("Lee_2026_BritJPsy_Exp%s_Clean.csv", sp$code)), na = "NA")
   fwrite(si,    file.path(out_dir, sprintf("Lee_2026_BritJPsy_Exp%s_subj_info.csv", sp$code)))
   ## raw：标准 trial 级（留存被试的原始 SAT 行，原始列名保留）
   raw <- copy(subj_sat)
@@ -231,7 +232,7 @@ si2 <- make_subj_info(subj_sat2, "2")
 stopifnot(length(unique(clean2$Subject)) == nrow(si2))
 out_dir2 <- file.path(workdir, "Exp2")
 dir.create(out_dir2, showWarnings = FALSE)
-fwrite(clean2, file.path(out_dir2, "Lee_2026_BritJPsy_Exp2_Clean.csv"))
+fwrite(clean2, file.path(out_dir2, "Lee_2026_BritJPsy_Exp2_Clean.csv"), na = "NA")
 fwrite(si2,    file.path(out_dir2, "Lee_2026_BritJPsy_Exp2_subj_info.csv"))
 raw2 <- copy(subj_sat2)
 setorderv(raw2, c("subject", "nblock", "TrialID"))

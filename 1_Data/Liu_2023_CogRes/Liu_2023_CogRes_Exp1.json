@@ -21,7 +21,7 @@
       "Trial_number": "64 trials total"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Face first, then label",
+      "Stimulus_order": "Sequential",
       "SOA": "1000 ms",
       "Fixation_duration": "400 ms",
       "Stimulus_duration": "Face: 800 ms; Label: until response",
@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": "Shape column = face model identity (8 models, 4 female f15/f18/f27/f4 + 4 male m33/m34/m35/m38, Wilhelm et al. 2014), counterbalanced across self/stranger labels (4 models per label). Task = self-matching with facial stimuli (face-label matching)."
+    "detail": "Shape column = face model identity (8 models, 4 female f15/f18/f27/f4 + 4 male m33/m34/m35/m38, Wilhelm et al. 2014), counterbalanced across self/stranger labels (4 models per label). Task = self-matching with facial stimuli (face-label matching). Stimulus_order set to \"Sequential\" 2026-10 (was: \"Face first, then label\")."
   }
 }

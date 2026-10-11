@@ -21,7 +21,7 @@
       "Practice_trials": "until >=60% accuracy"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "/",
       "Fixation_duration": "/",
       "Stimulus_duration": "/",
@@ -30,7 +30,7 @@
       "Feedback_duration": "/"
     },
     "Stimulus_Properties": {
-      "Modality": "Visual perceptual matching task",
+      "Modality": "Visual",
       "Fixation": "0.8° x 0.8°",
       "Shape": "3.7° x 3.7°",
       "Label": "3.6° x 1.6°",
@@ -39,6 +39,6 @@
         "Background": "/"
       }
     },
-    "detail": "Implicit self-binding (self x good character). Matching = shape<->self/other label (YesNoResp). Shape = geometry file (SqrG.bmp etc. = square/circle with moral word rendered inside); extraIV1 = the moral word inside the shape (Good/Normal/Bad, Normal=Neutral). Shape identity = learned association (raw Shape column Self/Other); Label = 自己/他人. Subject re-coded +4100 per author (raw 1-32). Table 1 N=32 (29): 3 low-accuracy excluded."
+    "detail": "Implicit self-binding (self x good character). Matching = shape<->self/other label (YesNoResp). Shape = geometry file (SqrG.bmp etc. = square/circle with moral word rendered inside); extraIV1 = the moral word inside the shape (Good/Normal/Bad, Normal=Neutral). Shape identity = learned association (raw Shape column Self/Other); Label = 自己/他人. Subject re-coded +4100 per author (raw 1-32). Table 1 N=32 (29): 3 low-accuracy excluded. Modality set to \"Visual\" 2026-10 (was: \"Visual perceptual matching task\"). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

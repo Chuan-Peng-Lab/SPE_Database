@@ -13,8 +13,11 @@
 #   3. 输出带 stopifnot 一致性守卫（行数/被试数/列名集合）。
 # 清洗逻辑要点（最小预处理、不过滤）：
 #   - Exp1：无过滤；列映射 + 值映射；14400 行 / 30 被试（participant_id 1-30）。
-#     列序：Subject, Response, Symmetry, Shape, Matching, 三级 Shape Identity,
-#           RT_ms, RT_sec, ACC。
+#     列序（2026-10 按 SKILL 模板 v2）：Subject, Task, Matching, Shape,
+#           三级 Shape Identity, extraIV1, Response, RT_ms, RT_sec, ACC
+#           （Task 恒为 "self-matching"；原 Symmetry 列 = 第 3 自变量
+#           Symmetry/Asymmetry，改名 extraIV1；已核对 extraIV1 与逐行 Symmetry
+#           取值 0 处不同）。
 #   - Exp2（2026-08 阶段 3 重建，替代原 filter(block=="selfS") 只留 48 人
 #     的旧逻辑）：raw 24960 行 = 104 人 × 240 试次（selfS 52 人 + selfA 52 人，
 #     论文被试间设计）。participant_id 编码混乱——95 个唯一 ID 中含 8 个
@@ -24,8 +27,8 @@
 #     block) 分组、每 240 行切分为 1 个 Subject（480 行块拆为 2 人、AB99 拆
 #     为 2 人、空 ID 块单独 1 人）→ 104 个 Subject；纳入 selfS+selfA 全部
 #     数据（Asymmetry 块不再丢弃）；段内重复行保留（最小预处理，不去重）。
-#     列序：Subject, Symmetry, Shape, Matching, 三级 Shape Identity,
-#           Response, RT_ms, RT_sec, ACC。
+#     列序（同 Exp1，2026-10 按 SKILL 模板 v2）：Subject, Task, Matching, Shape,
+#           三级 Shape Identity, extraIV1, Response, RT_ms, RT_sec, ACC。
 #   - 公共映射：block selfS->Symmetry / selfA->Asymmetry；
 #     shape self-related->Self / stranger-related->Stranger（三级一致）；
 #     match yes->Matching / no->Nonmatching；respCorr 1->1 / 0->0 /
@@ -74,7 +77,7 @@ df_e1 <- read.csv(file.path(STUDY, "Exp1", "Vicovaro_2022_JEPHPP_Exp1_raw.csv"))
     ACC = respCorr,
   ) %>%
   dplyr::mutate(
-    Symmetry = case_when(
+    extraIV1 = case_when(          # 原 Symmetry 列（第 3 自变量）；committed 列名 = extraIV1
       Symmetry == "selfS" ~ "Symmetry",
       Symmetry == "selfA" ~ "Asymmetry"
     ),
@@ -97,6 +100,7 @@ df_e1 <- read.csv(file.path(STUDY, "Exp1", "Vicovaro_2022_JEPHPP_Exp1_raw.csv"))
   ) %>%
   dplyr::mutate(
     Subject = as.numeric(Subject),
+    Task = "self-matching",       # 全库标准列（d0fbaa5 后 committed 列）
     Matching = factor(
       Matching, levels = c("Matching", "Nonmatching")
     ),
@@ -105,11 +109,18 @@ df_e1 <- read.csv(file.path(STUDY, "Exp1", "Vicovaro_2022_JEPHPP_Exp1_raw.csv"))
     ACC = as.numeric(ACC),
   ) %>%
   dplyr::select(
-    Subject, Response, Symmetry, Shape, Matching,
+    Subject, Task, Matching, Shape,
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
-    RT_ms, RT_sec, ACC
+    extraIV1, Response, RT_ms, RT_sec, ACC
   ) %>%
   dplyr::arrange(Subject)
+
+# 列名/列序一致性检查（SKILL 模板 v2；顺序不符立即停止）
+stopifnot(identical(
+  names(df_e1),
+  c("Subject", "Task", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "extraIV1", "Response", "RT_ms", "RT_sec", "ACC")))
 
 write_clean_csv(df_e1, file.path(OUT_DIR, "Exp1", "Vicovaro_2022_JEPHPP_Exp1_Clean.csv"))
 
@@ -167,7 +178,7 @@ df_e2 <- temp %>%
   dplyr::left_join(Subject_ID %>% dplyr::select(-participant_id, -block, -seg_no),
                    by = "Subject_raw") %>%
   dplyr::mutate(
-    Symmetry = dplyr::case_when(
+    extraIV1 = dplyr::case_when(   # 原 Symmetry 列（第 3 自变量）；committed 列名 = extraIV1
       block == "selfS" ~ "Symmetry",
       block == "selfA" ~ "Asymmetry"
     ),
@@ -195,6 +206,7 @@ df_e2 <- temp %>%
   dplyr::mutate(
     Subject = as.character(Subject),   # 保留原始 ID（字符串，如 "CR99"、"LS99_1"）
     Shape = Shape_Origin_Identity,
+    Task = "self-matching",            # 全库标准列（d0fbaa5 后 committed 列）
     Matching = factor(
       Matching, levels = c("Matching", "Nonmatching")
     ),
@@ -203,13 +215,20 @@ df_e2 <- temp %>%
     ACC = as.numeric(ACC),
   ) %>%
   dplyr::select(
-    Subject_raw, Subject, Symmetry, Shape, Matching,
+    Subject_raw, Subject, Task, Matching, Shape,
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
-    Response, RT_ms, RT_sec, ACC
+    extraIV1, Response, RT_ms, RT_sec, ACC
   ) %>%
   dplyr::arrange(Subject) %>%
   # 写出前删除临时列 Subject_raw（仅用于构建期对齐 subj_info，非最终列）
   dplyr::select(-Subject_raw)
+
+# 列名/列序一致性检查（SKILL 模板 v2；顺序不符立即停止）
+stopifnot(identical(
+  names(df_e2),
+  c("Subject", "Task", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "extraIV1", "Response", "RT_ms", "RT_sec", "ACC")))
 
 rm(Subject_ID, temp)
 
@@ -224,28 +243,28 @@ print(table(df_e1$ACC, useNA = "ifany"))
 cat("Exp2: rows =", nrow(df_e2), "| subjects =", length(unique(df_e2$Subject)), "\n")
 cat("Exp2 rows per subject dist:\n")
 print(table(table(df_e2$Subject)))
-cat("Exp2 Symmetry dist:\n")
-print(table(df_e2$Symmetry))
+cat("Exp2 extraIV1 (原 Symmetry) dist:\n")
+print(table(df_e2$extraIV1))
 
 stopifnot(
   nrow(df_e1) == 14400,
   length(unique(df_e1$Subject)) == 30,
   identical(
     names(df_e1),
-    c("Subject", "Response", "Symmetry", "Shape", "Matching",
+    c("Subject", "Task", "Matching", "Shape",
       "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
-      "RT_ms", "RT_sec", "ACC")
+      "extraIV1", "Response", "RT_ms", "RT_sec", "ACC")
   ),
   nrow(df_e2) == 24960,
   length(unique(df_e2$Subject)) == 104,
   identical(
     names(df_e2),
-    c("Subject", "Symmetry", "Shape", "Matching",
+    c("Subject", "Task", "Matching", "Shape",
       "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
-      "Response", "RT_ms", "RT_sec", "ACC")
+      "extraIV1", "Response", "RT_ms", "RT_sec", "ACC")
   ),
-  all(df_e2$Symmetry %in% c("Symmetry", "Asymmetry")),
-  sum(df_e2$Symmetry == "Symmetry") == 12480,
-  sum(df_e2$Symmetry == "Asymmetry") == 12480
+  all(df_e2$extraIV1 %in% c("Symmetry", "Asymmetry")),
+  sum(df_e2$extraIV1 == "Symmetry") == 12480,
+  sum(df_e2$extraIV1 == "Asymmetry") == 12480
 )
 cat("\n校验通过：Exp1 14400 行/30 被试；Exp2 24960 行/104 被试（selfS 12480 + selfA 12480）。\n")

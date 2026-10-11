@@ -59,9 +59,12 @@ rm(.args, .fa, .script_dir, .ut)
 STUDY_DIR <- file.path(spe_root(), "1_Data", "Orellana-Corrales_2021_APP")
 stopifnot(dir.exists(STUDY_DIR))
 
-EXP1_IN  <- file.path(STUDY_DIR, "Orellana-Corrales_2021_APP",
+# 输入区实际路径为 <Folder_Name>_raw/（历史小写变体）；2026-10-08 修正原先
+# 误写成嵌套同名的路径（STUDY_DIR/<Folder_Name>/...，该目录不存在，脚本此前
+# 在 dir.exists() 处即中止）。
+EXP1_IN  <- file.path(STUDY_DIR, "Orellana-Corrales_2021_APP_raw",
                       "Exp1_g7wrc-osfstorage-archive", "raw_data")
-EXP2_IN  <- file.path(STUDY_DIR, "Orellana-Corrales_2021_APP",
+EXP2_IN  <- file.path(STUDY_DIR, "Orellana-Corrales_2021_APP_raw",
                       "EXP2_4cwrv-osfstorage-archive", "Exp2_rawData")
 stopifnot(dir.exists(EXP1_IN), dir.exists(EXP2_IN))
 
@@ -144,7 +147,132 @@ stopifnot(all(table(raw2$Subject)[as.character(2:34)] == 128))
 stopifnot(table(raw2$Subject)[["1"]] == 68)
 
 # ============================================================================
-# 与现有 Clean 交叉验证（逐值，按 Subject+Trial 对齐）
+# 生成 Clean（Exp1/Exp2；2026-10-08 补录，此前 Clean 仅由历史 Clean_Data.Rmd 产出）
+# ----------------------------------------------------------------------------
+# Exp1（几何形状版，2 身份 Self/Stranger）：
+#   Shape 三级 Identity = **该形状在本被试身上学到的身份**：直接读作者 E-Prime 原始 txt 的
+#   学习阶段帧（targLocation + 同侧 shape），并以「由 raw 的 Matching 结构反推」作交叉检查
+#   （两者必须逐行一致，2026-10-08 起）。
+#   2026-10-08 修正（用户确认）：库内 Clean 此前把该列**按形状文件名写死**
+#   （Kreis.png→Fremder、Dreieck.png→Ich），而形状↔身份绑定是逐被试反平衡的
+#   （本数据 17:17）→ 34 名被试中 17 名的该列与真实绑定相反，并造成「Matching
+#   试次的形状身份 ≠ 标签身份」的内部矛盾。现按 raw 修正，并加一致性检查。
+#   **独立佐证（2026-10-08 复核）**：作者 E-Prime 原始 txt（targetTasks[AB]-*.txt）的学习
+#   阶段帧记录 targLocation（目标标签 fremder/ich）与同侧 shape，据此推出的绑定 = 作者测试帧
+#   match 标志推出的绑定 = 本脚本修正后的 Shape_Origin_Identity，三者对全部 34 名被试 ×
+#   2 个形状（68/68）一致；反平衡逐被试发生（A/B 文件族内亦不同），故「按文件名写死」确为历史错误。
+# Exp2（伪词版）：库内 Clean 不含形状/伪词列（Nonword 未收录；Shape/Label 可读值
+#   缺失为已知项），且**不含被试 1**（源数据仅 68 试次、不完整，仅保留在 raw）。
+# ============================================================================
+.lab_map <- c(Fremder = "Stranger", Ich = "Self")
+# ---- 形状→身份绑定：直读作者学习阶段帧（2026-10-08 改；原为从 Matching 反推） ----
+# 学习阶段帧（pair*/labelproc*/shape*）直接记录被教配对：targLocation = 目标标签
+# （fremder/ich），目标标签同侧的 shape 即该被试学到的配对 → (Subject, Shape) → 身份。
+# 这是 raw 中对绑定最直接的记录（SKILL：Origin 层 = verbatim as in the raw data）。
+parse_association <- function(path) {
+  lines <- read_eprime_txt(path)
+  subj <- suppressWarnings(as.integer(parse_header(lines)[["Subject"]]))
+  bind <- list(); cur <- list(); inframe <- FALSE
+  for (ln in lines) {
+    s <- trimws(ln)
+    if (s == "*** LogFrame Start ***") { cur <- list(); inframe <- TRUE; next }
+    if (s == "*** LogFrame End ***") {
+      inframe <- FALSE
+      tl <- tolower(if (is.null(cur[["targLocation"]])) "" else cur[["targLocation"]])
+      if (tl %in% c("fremder", "ich") && !is.null(cur[["labelLeft"]])) {
+        ident <- if (tl == "fremder") "Fremder" else "Ich"
+        shp <- if (identical(tolower(cur[["labelLeft"]]), tl)) cur[["shapeLeft"]] else cur[["shapeRight"]]
+        if (!is.null(shp) && nzchar(shp)) bind[[shp]] <- unique(c(bind[[shp]], ident))
+      }
+      next
+    }
+    if (inframe && grepl(":", s, fixed = TRUE)) {
+      cur[[trimws(sub(":.*$", "", s))]] <- trimws(sub("^[^:]*:", "", s))
+    }
+  }
+  list(Subject = subj, bind = bind)
+}
+.assoc <- lapply(exp1_files, parse_association)
+.learn_bind <- lapply(.assoc, function(x) {          # 每形状绑定必须唯一
+  b <- x$bind
+  stopifnot(length(b) == 2, all(lengths(b) == 1))
+  lapply(b, function(v) v[[1]])
+})
+names(.learn_bind) <- vapply(.assoc, function(x) as.character(x$Subject), character(1))
+stopifnot(length(.learn_bind) == 34,
+          setequal(names(.learn_bind), unique(as.character(raw1$Subject))))
+.shape_origin <- vapply(seq_len(nrow(raw1)), function(i)
+  .learn_bind[[as.character(raw1$Subject[i])]][[raw1$Shape[i]]], character(1))
+stopifnot(!anyNA(.shape_origin))            # 每被试每形状都能从学习帧读到绑定
+# ---- 交叉检查：学习帧绑定 必须等于「由 Matching 试次反推」的绑定 ----
+.shape_pair <- unique(raw1[raw1$Matching == "Matching", c("Subject", "Shape", "Label")])
+stopifnot(!anyDuplicated(paste(.shape_pair$Subject, .shape_pair$Shape)))   # 每被试每形状唯一
+.shape_match <- unname(setNames(.shape_pair$Label,
+                                paste(.shape_pair$Subject, .shape_pair$Shape))[
+                       paste(raw1$Subject, raw1$Shape)])
+stopifnot(identical(.shape_origin, .shape_match))
+
+clean1 <- data.frame(
+  Subject = as.character(raw1$Subject),
+  Task = "self-matching",
+  Trial = as.integer(raw1$Trial),
+  Matching = raw1$Matching,
+  Shape = raw1$Shape,
+  Shape_Origin_Identity = .shape_origin,
+  Shape_English_Identity = unname(.lab_map[.shape_origin]),
+  Shape_Standardized_Identity = unname(.lab_map[.shape_origin]),
+  Label = raw1$Label,
+  Label_Origin_Identity = raw1$Label,
+  Label_English_Identity = unname(.lab_map[raw1$Label]),
+  Label_Standardized_Identity = unname(.lab_map[raw1$Label]),
+  RT_ms = as.integer(raw1$RT_ms),
+  RT_sec = as.numeric(raw1$RT_ms) / 1000,
+  ACC = as.integer(raw1$ACC),
+  stringsAsFactors = FALSE
+)
+clean1 <- clean1[order(as.integer(clean1$Subject), clean1$Trial), ]
+rownames(clean1) <- NULL
+stopifnot(nrow(clean1) == 34 * 128,
+          !anyNA(clean1$Shape_Origin_Identity), !anyNA(clean1$Label_English_Identity),
+          identical(names(clean1), c("Subject", "Task", "Trial", "Matching", "Shape",
+            "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+            "Label", "Label_Origin_Identity", "Label_English_Identity",
+            "Label_Standardized_Identity", "RT_ms", "RT_sec", "ACC")))
+# 一致性检查：Matching ⟺ 形状身份 == 标签身份（2026-10-08 修正后应 100% 成立）
+stopifnot(all((clean1$Matching == "Matching") ==
+              (clean1$Shape_Standardized_Identity == clean1$Label_Standardized_Identity)))
+
+raw2_kept <- raw2[as.character(raw2$Subject) != "1", ]   # 被试 1 数据不完整，仅存 raw
+clean2 <- data.frame(
+  Subject = as.character(raw2_kept$Subject),
+  Task = "self-matching",
+  Trial = as.integer(raw2_kept$Trial),
+  Matching = raw2_kept$Matching,
+  Label_Origin_Identity = raw2_kept$Label,
+  Label_English_Identity = unname(.lab_map[raw2_kept$Label]),
+  Label_Standardized_Identity = unname(.lab_map[raw2_kept$Label]),
+  RT_ms = as.integer(raw2_kept$RT_ms),
+  RT_sec = as.numeric(raw2_kept$RT_ms) / 1000,
+  ACC = as.integer(raw2_kept$ACC),
+  stringsAsFactors = FALSE
+)
+clean2 <- clean2[order(as.integer(clean2$Subject), clean2$Trial), ]
+rownames(clean2) <- NULL
+stopifnot(nrow(clean2) == 33 * 128,
+          !anyNA(clean2$Label_English_Identity),
+          identical(names(clean2), c("Subject", "Task", "Trial", "Matching",
+            "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+            "RT_ms", "RT_sec", "ACC")))
+
+out_clean1 <- file.path(STUDY_DIR, "Exp1", "Orellana-Corrales_2021_APP_Exp1_Clean.csv")
+out_clean2 <- file.path(STUDY_DIR, "Exp2", "Orellana-Corrales_2021_APP_Exp2_Clean.csv")
+stopifnot(!file.exists(out_clean1), !file.exists(out_clean2))   # 入库产物：目标不存在
+write_clean_csv(clean1, out_clean1)
+write_clean_csv(clean2, out_clean2)
+cat("== Clean：Exp1", nrow(clean1), "行 / Exp2", nrow(clean2), "行（被试试次不完整者仅存 raw）\n")
+
+# ============================================================================
+# 与 Clean 交叉验证（逐值，按 Subject+Trial 对齐）
 # ============================================================================
 read_clean <- function(p) {
   read.csv(p, stringsAsFactors = FALSE, check.names = FALSE, fileEncoding = "UTF-8-BOM")

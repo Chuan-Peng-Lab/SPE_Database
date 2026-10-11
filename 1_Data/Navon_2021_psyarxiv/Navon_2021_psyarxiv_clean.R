@@ -16,9 +16,19 @@
 #      输出 NA——2026-08 已修复为 Label == "Father" ~ "Close"（证据见
 #      PROJ_STATE.md 自动化试点新发现）。
 #   4. 清洗逻辑本身（过滤 MMProc、列重命名、三级 Identity、Matching、
-#      排序、类型）与原 Rmd 完全一致：仅最小预处理，不过滤任何 trial/值。
+#      排序、类型）与原 Rmd 一致：仅最小预处理，不过滤任何 trial/值。
 #      E-Prime 原始导出中刺激标签已是英文（Self/Friend/Stranger/Father），
 #      无 Hebrew 原文，故 Label_Origin_Identity == Label_English_Identity。
+#   5. 2026-09 列对齐（以 committed Clean 为准；d0fbaa5 "updated columns of clean
+#      data"）：四实验 committed 表头新增两列全库标准列——Task（恒为
+#      "self-matching"，位于 Subject 之后、Matching 之前）与 CorrResponse
+#      （位于 Response 之前）；Matching 提到 Shape 之前，Shape/Label 各自的三级
+#      Identity 紧邻其主列。CorrResponse = raw Target.CRESP（E-Prime 正确反应键）。
+#   6. 2026-10-08 CorrResponse 修正（用户确认）：原 committed CSV 的该列是
+#      「按 raw 文件行序整列粘贴到排序后的 Clean」，与所在试次不对应（实测
+#      44-49% 的行违反 ACC == (Response == CorrResponse)）。本脚本改为在
+#      arrange(Subject) 之前把 CRESP 赋给行（与试次同行），并同步修正 4 个
+#      committed Clean 的该列取值（其余列不变）。
 # 运行方式：Rscript /tmp/navon_clean.R（工作目录自适应，可从任意 cwd 运行）
 # 依赖包：dplyr
 # ============================================================================
@@ -52,9 +62,12 @@ stopifnot(dir.exists(study_dir))
 # "Self", "Friend", "Stranger" → "Self", "Close", "Stranger"（无 trial 混乱）
 # 列映射：Shape=Stimulus, Label=Word, Response=Target.RESP, RT=Target.RT, ACC=Target.ACC
 # ============================================================================
-df_e1 <- read.csv(
+.raw_e1 <- read.csv(
   file.path(study_dir, "Exp1", "Navon_2021_psyarxiv_Exp1_raw.csv")
-) %>%
+)
+# CorrResponse = raw Target.CRESP（MMProc 行），与试次同行（见文件头「2026-10-08 修正」）
+.cresp_e1 <- .raw_e1$Target.CRESP[which(.raw_e1$Procedure.SubTrial. == "MMProc")]
+df_e1 <- .raw_e1 %>%
   dplyr::filter(
     Procedure.SubTrial. == "MMProc"
   ) %>%
@@ -88,6 +101,7 @@ df_e1 <- read.csv(
     ACC = as.numeric(ACC)
   ) %>%
   dplyr::mutate(
+    Task = "self-matching",     # 全库标准列（d0fbaa5 后 committed 列）
     Matching = factor(Matching, levels = c("Matching", "Nonmatching")),
     RT_ms = as.numeric(RT_ms),
     RT_sec = as.numeric(RT_sec),
@@ -104,13 +118,22 @@ df_e1 <- read.csv(
       Label == "Stranger" ~ "Stranger"
     )
   ) %>%
+  dplyr::mutate(CorrResponse = .cresp_e1) %>%   # raw Target.CRESP，与所在试次同行（2026-10-08 修正）
+  dplyr::arrange(Subject) %>%
   dplyr::select(
-    Subject, Shape, Label, Matching,
-    Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
+    Subject, Task, Matching, Shape,
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
-    Response, RT_ms, RT_sec, ACC
-  ) %>%
-  dplyr::arrange(Subject)
+    Label, Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
+    CorrResponse, Response, RT_ms, RT_sec, ACC
+  )
+
+# 列名/列序一致性检查（committed Exp1 表头；顺序不符立即停止）
+stopifnot(identical(
+  names(df_e1),
+  c("Subject", "Task", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+    "CorrResponse", "Response", "RT_ms", "RT_sec", "ACC")))
 
 dir.create(file.path(out_dir, "Exp1"), recursive = TRUE, showWarnings = FALSE)
 write_clean_csv(df_e1, file.path(out_dir, "Exp1", "Navon_2021_psyarxiv_Exp1_Clean.csv"))
@@ -120,9 +143,12 @@ write_clean_csv(df_e1, file.path(out_dir, "Exp1", "Navon_2021_psyarxiv_Exp1_Clea
 # 仅作形状联想，刺激为形状，故 Matching 由 BlockType + Shape 与所属形状判定）
 # "Father", "Close", "Stranger" → "Close", "Close", "Stranger"
 # ============================================================================
-df_e2 <- read.csv(
+.raw_e2 <- read.csv(
   file.path(study_dir, "Exp2", "Navon_2021_psyarxiv_Exp2_raw.csv")
-) %>%
+)
+# CorrResponse = raw Target.CRESP（MMProc 行），与试次同行（见文件头「2026-10-08 修正」）
+.cresp_e2 <- .raw_e2$Target.CRESP[which(.raw_e2$Procedure.SubTrial. == "MMProc")]
+df_e2 <- .raw_e2 %>%
   dplyr::filter(
     Procedure.SubTrial. == "MMProc"
   ) %>%
@@ -155,6 +181,7 @@ df_e2 <- read.csv(
     ACC = as.numeric(ACC)
   ) %>%
   dplyr::mutate(
+    Task = "self-matching",     # 全库标准列（d0fbaa5 后 committed 列）
     RT_ms = as.numeric(RT_ms),
     RT_sec = as.numeric(RT_sec),
     ACC = as.numeric(ACC),
@@ -165,12 +192,20 @@ df_e2 <- read.csv(
       Shape_English_Identity == "Stranger" ~ "Stranger"
     )
   ) %>%
+  dplyr::mutate(CorrResponse = .cresp_e2) %>%   # raw Target.CRESP，与所在试次同行（2026-10-08 修正）
+  dplyr::arrange(Subject) %>%
   dplyr::select(
-    Subject, Shape, Matching,
+    Subject, Task, Matching, Shape,
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
-    Response, RT_ms, RT_sec, ACC
-  ) %>%
-  dplyr::arrange(Subject)
+    CorrResponse, Response, RT_ms, RT_sec, ACC
+  )
+
+# 列名/列序一致性检查（committed Exp2 表头；顺序不符立即停止）
+stopifnot(identical(
+  names(df_e2),
+  c("Subject", "Task", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "CorrResponse", "Response", "RT_ms", "RT_sec", "ACC")))
 
 dir.create(file.path(out_dir, "Exp2"), recursive = TRUE, showWarnings = FALSE)
 write_clean_csv(df_e2, file.path(out_dir, "Exp2", "Navon_2021_psyarxiv_Exp2_Clean.csv"))
@@ -182,9 +217,12 @@ write_clean_csv(df_e2, file.path(out_dir, "Exp2", "Navon_2021_psyarxiv_Exp2_Clea
 # 注意：Label_Standardized_Identity 的 case_when 2026-08 已由 "Friend" 修正为
 # "Father"（原 Rmd 写 Friend，Exp3 词表为 Self/Father/Stranger，Father 行曾为 NA）。
 # ============================================================================
-df_e3 <- read.csv(
+.raw_e3 <- read.csv(
   file.path(study_dir, "Exp3", "Navon_2021_psyarxiv_Exp3_raw.csv")
-) %>%
+)
+# CorrResponse = raw Target.CRESP（MMProc 行），与试次同行（见文件头「2026-10-08 修正」）
+.cresp_e3 <- .raw_e3$Target.CRESP[which(.raw_e3$Procedure.SubTrial. == "MMProc")]
+df_e3 <- .raw_e3 %>%
   dplyr::filter(
     Procedure.SubTrial. == "MMProc"
   ) %>%
@@ -219,6 +257,7 @@ df_e3 <- read.csv(
     ACC = as.numeric(ACC)
   ) %>%
   dplyr::mutate(
+    Task = "self-matching",     # 全库标准列（d0fbaa5 后 committed 列）
     Matching = factor(Matching, levels = c("Matching", "Nonmatching")),
     RT_ms = as.numeric(RT_ms),
     RT_sec = as.numeric(RT_sec),
@@ -235,13 +274,22 @@ df_e3 <- read.csv(
       Label == "Stranger" ~ "Stranger"
     )
   ) %>%
+  dplyr::mutate(CorrResponse = .cresp_e3) %>%   # raw Target.CRESP，与所在试次同行（2026-10-08 修正）
+  dplyr::arrange(Subject) %>%
   dplyr::select(
-    Subject, Block, Trial, Shape, Label, Matching,
-    Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
+    Subject, Task, Block, Trial, Matching, Shape,
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
-    Response, RT_ms, RT_sec, ACC
-  ) %>%
-  dplyr::arrange(Subject)
+    Label, Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
+    CorrResponse, Response, RT_ms, RT_sec, ACC
+  )
+
+# 列名/列序一致性检查（committed Exp3 表头；顺序不符立即停止）
+stopifnot(identical(
+  names(df_e3),
+  c("Subject", "Task", "Block", "Trial", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+    "CorrResponse", "Response", "RT_ms", "RT_sec", "ACC")))
 
 dir.create(file.path(out_dir, "Exp3"), recursive = TRUE, showWarnings = FALSE)
 write_clean_csv(df_e3, file.path(out_dir, "Exp3", "Navon_2021_psyarxiv_Exp3_Clean.csv"))
@@ -250,9 +298,12 @@ write_clean_csv(df_e3, file.path(out_dir, "Exp3", "Navon_2021_psyarxiv_Exp3_Clea
 # Experiment 4（Identity = 3）
 # "Self", "Friend", "Stranger" → "Self", "Close", "Stranger"（无 trial 混乱）
 # ============================================================================
-df_e4 <- read.csv(
+.raw_e4 <- read.csv(
   file.path(study_dir, "Exp4", "Navon_2021_psyarxiv_Exp4_raw.csv")
-) %>%
+)
+# CorrResponse = raw Target.CRESP（MMProc 行），与试次同行（见文件头「2026-10-08 修正」）
+.cresp_e4 <- .raw_e4$Target.CRESP[which(.raw_e4$Procedure.SubTrial. == "MMProc")]
+df_e4 <- .raw_e4 %>%
   dplyr::filter(
     Procedure.SubTrial. == "MMProc"
   ) %>%
@@ -285,6 +336,7 @@ df_e4 <- read.csv(
     ACC = as.numeric(ACC)
   ) %>%
   dplyr::mutate(
+    Task = "self-matching",     # 全库标准列（d0fbaa5 后 committed 列）
     Matching = factor(Matching, levels = c("Matching", "Nonmatching")),
     RT_ms = as.numeric(RT_ms),
     RT_sec = as.numeric(RT_sec),
@@ -301,13 +353,22 @@ df_e4 <- read.csv(
       Label == "Stranger" ~ "Stranger"
     )
   ) %>%
+  dplyr::mutate(CorrResponse = .cresp_e4) %>%   # raw Target.CRESP，与所在试次同行（2026-10-08 修正）
+  dplyr::arrange(Subject) %>%
   dplyr::select(
-    Subject, Shape, Label, Matching,
-    Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
+    Subject, Task, Matching, Shape,
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
-    Response, RT_ms, RT_sec, ACC
-  ) %>%
-  dplyr::arrange(Subject)
+    Label, Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
+    CorrResponse, Response, RT_ms, RT_sec, ACC
+  )
+
+# 列名/列序一致性检查（committed Exp4 表头；顺序不符立即停止）
+stopifnot(identical(
+  names(df_e4),
+  c("Subject", "Task", "Matching", "Shape",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+    "CorrResponse", "Response", "RT_ms", "RT_sec", "ACC")))
 
 dir.create(file.path(out_dir, "Exp4"), recursive = TRUE, showWarnings = FALSE)
 write_clean_csv(df_e4, file.path(out_dir, "Exp4", "Navon_2021_psyarxiv_Exp4_Clean.csv"))

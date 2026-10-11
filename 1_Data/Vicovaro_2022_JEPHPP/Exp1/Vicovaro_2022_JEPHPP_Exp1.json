@@ -21,7 +21,7 @@
       "Trial_number": "240 trials per block"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "100 ms",
@@ -39,6 +39,6 @@
         "Background": "Grey"
       }
     },
-    "detail": "extraIV1 = symmetry of the random-dot stimulus (asymmetric vs symmetric). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals)."
+    "detail": "extraIV1 = symmetry of the random-dot stimulus (asymmetric vs symmetric). Task column added 2026-09 (default self-matching); study-specific extraIV columns renamed to extraIV1/extraIV2 (semantics above); redundant/derived columns removed (raw keeps originals). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

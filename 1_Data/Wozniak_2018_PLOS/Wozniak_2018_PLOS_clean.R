@@ -107,8 +107,9 @@ df1 <- read.csv(
     RT_sec = as.numeric(RT_sec),
     ACC = as.numeric(ACC),
   ) %>%
+  dplyr::mutate(Task = "self-matching") %>%   # 全库标准列（SKILL 模板 v2）
   dplyr::select(
-    Subject, Block, Trial, Matching,
+    Subject, Task, Block, Trial, Matching,
     Shape, Shape_Subtype = Face_Gender,
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
     Label, Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
@@ -117,6 +118,11 @@ df1 <- read.csv(
   dplyr::arrange(
     Subject, Block, Trial
   )
+stopifnot(identical(names(df1),                     # 表头一致性检查（模板 v2 相对列序）
+  c("Subject", "Task", "Block", "Trial", "Matching", "Shape", "Shape_Subtype",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+    "Response", "RT_ms", "RT_sec", "ACC")))
 
 # ---- E1 守卫 ----
 stopifnot(
@@ -219,8 +225,9 @@ df2 <- read.csv(
     RT_sec = as.numeric(RT_sec),
     ACC = as.numeric(ACC),
   ) %>%
+  dplyr::mutate(Task = "self-matching") %>%   # 全库标准列（SKILL 模板 v2）
   dplyr::select(
-    Subject, Block, Trial, Matching,
+    Subject, Task, Block, Trial, Matching,
     Shape, Shape_Subtype = Face_Gender,
     Shape_Origin_Identity, Shape_English_Identity, Shape_Standardized_Identity,
     Label, Label_Origin_Identity, Label_English_Identity, Label_Standardized_Identity,
@@ -229,6 +236,11 @@ df2 <- read.csv(
   dplyr::arrange(
     Subject, Block, Trial,
   )
+stopifnot(identical(names(df2),                     # 表头一致性检查（模板 v2 相对列序）
+  c("Subject", "Task", "Block", "Trial", "Matching", "Shape", "Shape_Subtype",
+    "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+    "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+    "RT_ms", "RT_sec", "ACC")))
 
 # ---- E2 守卫 ----
 stopifnot(

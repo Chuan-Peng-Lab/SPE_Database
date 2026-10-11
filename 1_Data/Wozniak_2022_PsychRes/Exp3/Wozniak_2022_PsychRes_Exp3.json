@@ -4,7 +4,7 @@
     "Collected_date": "/",
     "Physical_Environment": {
       "Location": "/",
-      "Setting": "Laboratory setting",
+      "Setting": "Laboratory",
       "Equipment": {
         "Presenting": "21.5-inch Apple iMac computer",
         "Monitor": "/",
@@ -21,7 +21,7 @@
       "Trial_number": "120 trials per block (360 total)"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms (simultaneous presentation)",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "100 ms",
@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": "Experiment 3 (WordsSelfPairing): two tasks. (1) standard self-matching as Exp1. (2) self-pseudoWords task (SelfPriorExp_WordsSelfPairing): pseudo-words paired with identities 'Nenu pairs with You' (word-identity pairing); 360 trials. Label recovery and Clean merge as Exp1."
+    "detail": "Experiment 3 (WordsSelfPairing): two tasks. (1) standard self-matching as Exp1. (2) self-pseudoWords task (SelfPriorExp_WordsSelfPairing): pseudo-words paired with identities 'Nenu pairs with You' (word-identity pairing); 360 trials. Label recovery and Clean merge as Exp1. Setting normalized to \"Laboratory\" 2026-10 (was: \"Laboratory setting\"). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }

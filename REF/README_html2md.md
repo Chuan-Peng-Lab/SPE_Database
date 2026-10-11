@@ -10,6 +10,25 @@
 双栏自动检测；**跳过已有 md 的 PDF**，html 版优先）。注意 PDF 版 md 是"可用但非完美"：
 双栏排版（APA 期刊）可能有行级交错，标题层级为启发式近似；单栏 PDF（psyarxiv/SAGE）质量优秀。
 
+**docx → md（Word 稿件，无 html/pdf 版时）**：用 pandoc 直接转换，不另写脚本——
+
+```bash
+pandoc REF/<Folder_Name>.docx -t markdown-header_attributes --wrap=none \
+  --extract-media=/tmp/<name>_media -o /tmp/<name>.md
+```
+
+- `-t markdown-header_attributes`：去掉 Word 标题样式残留的属性块（`{#引言 .一级标题}`）；标题层级
+  直接对应 Word 的大纲级别（一级标题→`#`）。
+- 表格保留为 pandoc 网格表（合并单元格内容不丢，可 grep）；`-t gfm` 会把合并单元格表转成裸 HTML
+  表，不便于全文检索，故不用 gfm。
+- 转换后把**被引用的**图片复制到 `REF/<Folder_Name>_files/` 并把链接改为相对路径；Word 常为同一张
+  图同时存 SVG 与 PNG 两份，未被正文引用的 PNG 不必复制。
+- 补 YAML frontmatter（title / authors / affiliations / journal / published_date / url），与 html 版
+  md 的 frontmatter 对齐（docx 无 DOI 时留 `url`）。
+
+首例：`Wu_2026_Chinaxiv.docx` → `Wu_2026_Chinaxiv.md`（2026-10-06，96 KB + `_files/` 14 图）；
+`Sun_2026_DataExp.md` 为早期 pandoc 产物（无 frontmatter、未提取图片）。
+
 已适配模板：**Springer**（`c-article-body`）、**Elsevier 新旧版**（`div#body`）、**Wiley**
 （`article-section__content`）、**eLife**（`captioned-asset` + `reference__authors_list`，
 2026-08-28 新增：元数据取 `dc.*` meta、图取 IIIF 大图链接、跳过 assessment/下载链接/版权等 UI 区块）、

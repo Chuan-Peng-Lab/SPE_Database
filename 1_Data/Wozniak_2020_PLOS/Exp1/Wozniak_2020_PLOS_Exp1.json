@@ -24,7 +24,7 @@
       "Fixation_duration": "400 ms",
       "Stimulus_duration": "Label: 200 ms; Face: until response (max 2000 ms)",
       "SOA": "1200 ms (label onset to face onset; 1 s delay between label offset and face onset)",
-      "Stimulus_order": "Label (cue) first, then face (target)",
+      "Stimulus_order": "Sequential",
       "Response_deadline": "2000 ms",
       "ITI": "600 ms",
       "Feedback_duration": "400 ms"
@@ -39,6 +39,6 @@
         "Background": "Grey"
       }
     },
-    "detail": "Experiment 1: arbitrary self-association of a stranger's face with the label 'You' (no real face used). 24 participants analyzed (all completed; 17 Asian-face and 7 White-face versions, matched to participant ethnicity; 12 female/12 male; age 18-41, M=21.9, SD=4.39; 3 left-handed, 1 ambidextrous). Sequential match-non-match task: label presented for 200 ms, 1 s delay, face until response; match/mismatch response keys 'z' and 'm' counterbalanced across participants (Hand column in raw data: 1 = z match key, 2 = m match key); no response within 2000 ms recorded as key 'x'. Learning phase: three label-face pairings shown for 20 s each. Identity coding (author internal codes You/Neutral/AntiYou, decoded per-subject from raw columns 17-19 and per-experiment semantics): You = Self (self-associated face), Neutral/AntiYou = Stranger. Data: 24 subjects x 270 test trials = 6480 rows; practice trials (24) not written to .dat files. Source: OSF 2q9w7, DATA/SelfBoostExp_1xxx.dat. ACC: 1 correct / 0 incorrect / NA no response (key 'x'); RT_ms in ms, NA for no-response (raw keeps the pseudo-value ~2000 ms). Raw data columns documented in the clean script header; note 3 files (1010/2008/2011) have line-level SubNum differing from filename (author renamed files; filename is the subject ID, see Issue 4 in Verifying_original_results_issues.md)."
+    "detail": "Experiment 1: arbitrary self-association of a stranger's face with the label 'You' (no real face used). 24 participants analyzed (all completed; 17 Asian-face and 7 White-face versions, matched to participant ethnicity; 12 female/12 male; age 18-41, M=21.9, SD=4.39; 3 left-handed, 1 ambidextrous). Sequential match-non-match task: label presented for 200 ms, 1 s delay, face until response; match/mismatch response keys 'z' and 'm' counterbalanced across participants (Hand column in raw data: 1 = z match key, 2 = m match key); no response within 2000 ms recorded as key 'x'. Learning phase: three label-face pairings shown for 20 s each. Identity coding (author internal codes You/Neutral/AntiYou, decoded per-subject from raw columns 17-19 and per-experiment semantics): You = Self (self-associated face), Neutral/AntiYou = Stranger. Data: 24 subjects x 270 test trials = 6480 rows; practice trials (24) not written to .dat files. Source: OSF 2q9w7, DATA/SelfBoostExp_1xxx.dat. ACC: 1 correct / 0 incorrect / NA no response (key 'x'); RT_ms in ms, NA for no-response (raw keeps the pseudo-value ~2000 ms). Raw data columns documented in the clean script header; note 3 files (1010/2008/2011) have line-level SubNum differing from filename (author renamed files; filename is the subject ID, see Issue 4 in Verifying_original_results_issues.md). Stimulus_order set to \"Sequential\" 2026-10 (was: \"Label (cue) first, then face (target)\")."
   }
 }

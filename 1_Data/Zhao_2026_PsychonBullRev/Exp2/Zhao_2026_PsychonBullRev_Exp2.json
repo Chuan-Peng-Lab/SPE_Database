@@ -24,7 +24,7 @@
       "Fixation_duration": "500 ms (fixation cross on grey background)",
       "Stimulus_duration": "100 ms (simultaneous shape-label pair)",
       "SOA": "0 ms (simultaneous presentation; shape above, label below, 3.5 deg apart)",
-      "Stimulus_order": "Simultaneous: fixation cross, then shape (2.4 x 2.4 deg) above and label (approx. 4.4 x 2.4 deg) below",
+      "Stimulus_order": "Simultaneous",
       "Response_deadline": "1100 ms (blank screen after stimulus during which response was made; 'Too Slow' feedback otherwise)",
       "ITI": "not reported separately",
       "Feedback_duration": "500 ms (Correct / Incorrect / Too Slow after each trial)"
@@ -39,6 +39,6 @@
         "Background": "grey (RGB 127, 127, 127)"
       }
     },
-    "detail": "Experiment 2 of Zhao & Wang (2026, Psychon Bull Rev). Same procedure as Experiment 1 but identity labels were general self, friend, stranger (no true self), testing whether general self-prioritization emerges when the true self is absent. Response keys Z/M counterbalanced (not recorded; shared code response 1 = 'match' key, 0 = 'non-match' key). Data source: OSF https://osf.io/j2pxc/, file data/hddm_trial_data/exp2_hddm_trial_data.xlsx plus exp2_behavior_questionnaire.xlsx. Authors recruited 49 from a university, excluded 2 for below-chance accuracy, analysed 47 (29 female; Mage 23.21, SD 3.67); all 47 analysed participants present in the shared file (subject ids 1-48 minus id 14; id 49 unused). Shared trial file keeps only trials with a response and RT >= 200 ms (rows 16528 < 47 x 360 = 16920). Label identity recorded only on matching trials (equals shape identity by construction); 'missing' elsewhere. Questionnaires after the task (online): BTS, SCS, SEB. Ethics: Tsinghua University Ethics Committee THU-04-2025-1135. On-screen stimulus language/wording and presentation software to be confirmed with the authors."
+    "detail": "Experiment 2 of Zhao & Wang (2026, Psychon Bull Rev). Same procedure as Experiment 1 but identity labels were general self, friend, stranger (no true self), testing whether general self-prioritization emerges when the true self is absent. Response keys Z/M counterbalanced (not recorded; shared code response 1 = 'match' key, 0 = 'non-match' key). Data source: OSF https://osf.io/j2pxc/, file data/hddm_trial_data/exp2_hddm_trial_data.xlsx plus exp2_behavior_questionnaire.xlsx. Authors recruited 49 from a university, excluded 2 for below-chance accuracy, analysed 47 (29 female; Mage 23.21, SD 3.67); all 47 analysed participants present in the shared file (subject ids 1-48 minus id 14; id 49 unused). Shared trial file keeps only trials with a response and RT >= 200 ms (rows 16528 < 47 x 360 = 16920). Label identity recorded only on matching trials (equals shape identity by construction); 'missing' elsewhere. Questionnaires after the task (online): BTS, SCS, SEB. Ethics: Tsinghua University Ethics Committee THU-04-2025-1135. On-screen stimulus language/wording and presentation software to be confirmed with the authors. Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneous: fixation cross, then shape (2.4 x 2.4 deg) above and label (approx. 4.4 x 2.4 deg) below\")."
   }
 }

@@ -4,7 +4,7 @@
     "Collected_date": "/",
     "Physical_Environment": {
       "Location": "Department of Psychology, School of Social Sciences, Tsinghua University, Beijing, China",
-      "Setting": "Laboratory setting",
+      "Setting": "Laboratory",
       "Equipment": {
         "Presenting": "PC",
         "Monitor": "17-inch monitor (1,024 × 768 at 60 Hz)",
@@ -21,7 +21,7 @@
       "Trial_number": "60 trials per block (360 trials per phase; 720 total trials per participant across pre and post phases)"
     },
     "Trial_Structure": {
-      "Stimulus_order": "Simultaneously",
+      "Stimulus_order": "Simultaneous",
       "SOA": "0 ms (simultaneous presentation)",
       "Fixation_duration": "500 ms",
       "Stimulus_duration": "100 ms",
@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": "Between-subject TMS design (DLPFC/LpSTS/sham). Clean data merged 2026-09-02 from three historical per-group shard files (Exp1.1/1.2/1.3, one per TMS group) into a single Exp1_Clean.csv with a Group column; the redundant Session column (identical to Phase) was dropped. Phase = test stage (pre = day 1 before cTBS, post = after cTBS); numTrials (Dataset_inf) = 720 total across both phases."
+    "detail": "Between-subject TMS design (DLPFC/LpSTS/sham). Clean data merged 2026-09-02 from three historical per-group shard files (Exp1.1/1.2/1.3, one per TMS group) into a single Exp1_Clean.csv with a Group column; the redundant Session column (identical to Phase) was dropped. Phase = test stage (pre = day 1 before cTBS, post = after cTBS); numTrials (Dataset_inf) = 720 total across both phases. Setting normalized to \"Laboratory\" 2026-10 (was: \"Laboratory setting\"). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
   }
 }
