@@ -1,44 +1,44 @@
 {
   "exp2": {
     "schema_version": "2",
-    "Collected_date": "2015-10-21 to 2015-12-02",
+    "Collected_date": "2023-09-25 to 2023-12-19",
     "Physical_Environment": {
-      "Location": "Tsinghua University, Department of Psychology, Beijing, China (laboratory rooms; participants tested individually in dimly lit room)",
+      "Location": "Henan University, School of Psychology, Kaifeng, China",
       "Setting": "Laboratory",
       "Equipment": {
         "Presenting": "/",
-        "Monitor": "1024 × 768, 100 Hz",
-        "Software": "E-Prime 2.0"
+        "Monitor": "1024 x 768, 85 Hz",
+        "Software": "PsychoPy"
       },
-      "Viewing_distance": "/"
+      "Viewing_distance": "~57 cm"
     },
     "Experimental_Design": {
-      "Conditions": "2 (matching: matching, nonmatching) × 3 (identity: self, friend, stranger) × 4 (emotion: control, neutral, happy, sad) × 6 (block) × 2 (group: control, subclinical depression), mixed design; group between-subjects, matching/identity/emotion/block within-subjects"
+      "Conditions": "2 (group: matching-first / nonmatching-first, between) x 9 (phase: baseline, training 1-7, post-test, within) x matching (matching / nonmatching, within) x identity (self / other, within), plus filler trials (no identity)"
     },
     "Block_Structure": {
-      "Block_number": "6 formal blocks; practice trials present",
-      "Trial_number": "36 trials per TrialList cycle ; multiple cycles per block",
-      "Practice_trials": "Present"
+      "Block_number": "formal: 2 blocks; practice: 2 blocks (320-trial version) or 4 blocks (240-trial version)",
+      "Trial_number": "320-version: formal 2 x 160 = 320 trials, practice 2 x 24 = 48 trials; 240-version: formal 2 x 120 = 240 trials, practice 4 x 30 = 120 trials",
+      "Practice_trials": "48 (320-version) / 120 (240-version)"
     },
     "Trial_Structure": {
       "Fixation_duration": "/",
-      "Stimulus_duration": "/",
+      "Stimulus_duration": "100 ms",
       "SOA": "/",
-      "Stimulus_order": "simultaneous (shape with emotion expression and label displayed together)",
-      "Response_deadline": "/",
-      "ITI": "1000 ms",
-      "Feedback_duration": "/"
+      "Stimulus_order": "simultaneous (shape and label displayed together)",
+      "Response_deadline": "1200 ms",
+      "ITI": "1200 ms",
+      "Feedback_duration": "500 ms (practice only; formal has no feedback)"
     },
     "Stimulus_Properties": {
-      "Modality": "Visual (circular shapes with emotional expressions + Chinese labels)",
+      "Modality": "Visual (geometric shapes + Chinese person labels)",
       "Fixation": "/",
-      "Shape": "Three base circle types (c, hc, vc) × 4 emotions (control, happy, neutral, sad) = 12 shape-emotion combinations: c.bmp, c_eh.bmp, c_en.bmp, c_es.bmp, hc.bmp, hc_eh.bmp, hc_en.bmp, hc_es.bmp, vc.bmp, vc_eh.bmp, vc_en.bmp, vc_es.bmp",
-      "Label": "自己 (self), 朋友 (friend), 生人 (stranger)",
+      "Shape": "Square, Circle; shape-label correspondence counterbalanced across participants by ID parity (even: self-circle/other-square; odd: self-square/other-circle)",
+      "Label": "Self, Other (自我, 他人); Filler: 白栽, 地入 (pseudo-words referencing self/other in character structure)",
       "Colors": {
         "Stimulus": "/",
         "Background": "/"
       }
     },
-    "detail": "Experiment 2 (Task2) of Hu et al. (2015). Same 36 participants as Exp1 (30 control low BDI, 6 subclinical depression high BDI; 3 excluded: 6008, 6015, 6031). IRB approved by Tsinghua University Psychology Department. E-Prime 2.0, 1024×768, 100 Hz, dimly lit room. Mixed design: 2 (matching/nonmatching) × 3 (identity: self, friend, stranger) × 4 (emotion: control, neutral, happy, sad) × 6 (blocks) × 2 (group: control/depression). Participants learn to associate three distinct circle types (c, hc, vc) with self, friend, stranger; each circle type appears with 4 emotional expressions. 6 sessions (Session 1-6 per codebook), 6 formal blocks (BlockList.Sample 1-6). Each block contains multiple TrialList cycles of 36 trials (TrialList.Cycle sequences: 2-6, 8-12, 14-18, 20-24, 26-30, 32-36). Practice trials have BlockList.Sample=NA. ITI 1000 ms, Target.OnsetDelay 10 ms. Stimuli: 12 circle-emotion images (3 identities × 4 emotions). Labels: 自己(self), 朋友(friend), 生人(stranger) with English translations self, friend, stranger. Selfpic and Stranger picture assignments (c, hc, vc) counterbalanced per participant. Response keys: m, n (Target.CRESP, Target.RESP). Data collected Oct-Dec 2015. Standardized to SPE Database schema v2 on 2026-09-25: per-participant files merged into a single trial-level CSV; column order aligned to the v2 template; Matching canonicalized to Matching/Nonmatching; identity columns canonicalized (Self/Close/Stranger); a between-subjects Group column added; study-specific columns moved to the tail. Source: clean/ (read-only). 2026-09-25: the Clean CSV exceeded 50 MB and was split at whole-subject boundaries (SKILL.md 'large-file split' rule) into Hu_YQ_2026_ChinaSciData_Exp2_Clean_part1.csv (19 subjects, 167,681 rows, 31.4 MB, subjects 6001-6019) and Hu_YQ_2026_ChinaSciData_Exp2_Clean_part2.csv (17 subjects, 151,632 rows, 28.5 MB, subjects 6020-6036); both parts share this JSON, the single subj_info and the single codebook, and rbind(part1, part2) restores the original file byte-for-byte."
+    "detail": "Experiment 2 of a dual-process evidence-accumulation model of the self-prioritization effect, adapted from Sui et al. (2012). 26 participants: matching-first group 14 (11001-11011, 21001-21003), nonmatching-first group 12 (12001-12010, 22001-22002); group determined by the 2nd ID digit. Software is PsychoPy (not E-Prime). Two program versions exist: 17 sessions used the 240-trial legacy version (11 in baseline + 6 in training2/4/5), the rest the 320-trial version; stimuli, timing, keys, and shape-label mapping are identical across versions. Group and TrialType columns added during merge; Matching column has 3 values: Matching (= match), Nonmatching (= mismatch), and filler (a meaningful no-identity trial type, kept as-is rather than coded NA; the raw PsychoPy code 'fill' was renamed to 'filler' in Clean). 26 participants x 9 sessions (baseline + training1-7 + formal) = 234 theoretical sessions; 18 sessions missing across 15 participants. Fully missing (both main and practice files absent; 13): 11001-training4, 11005-training4, 11007-training4, 11009-training5, 11011-training4, 11011-training7, 12001-baseline, 12003-training4, 12004-training4, 12008-training6, 12009-training3, 21003-training2, 21003-training4. Partially missing (practice file present but main file absent; 5): 11002-training2, 12002-training7, 12007-training3, 12007-training6, 22001-training4. training4 is the most commonly missing session (8 = 7 fully + 1 partially). Known data issues: baseline/11001 contains files whose ID column is mislabeled 11003 (belongs to 11001); the raw CSV resolves this by using the folder name as ID; baseline/12001 is a copy of 12002 (12001 own baseline missing); training3/11006 block 2 keys reversed (accuracy 0.925 after swapping o/p); training1/22002 keys reversed (corrected by fit_error.m); training3 and training4 of 12010 are the same session. Demographic bug (per original author): the program stored the ID first digit in the 'Gender' column, so the raw table's Gender column (values 1/2) is actually the ID first digit, not real gender; this Gender column is kept only in the raw CSV and dropped from the Clean CSV (it is not real demographic data); subj_info Gender is therefore NA. No standardized *_raw.csv produced yet; raw per-session PsychoPy exports are in Exp2/Raw/. Consolidated into study Hu_YQ_2026_ChinaSciData (Exp2) on 2026-10-04. Session column = phase (baseline; training1-7; formal, where formal = the post-test); Phase column = practice/main, per phase. Both taken from the merged raw file Hu_YQ_2026_ChinaSciData_Exp2_raw.csv (built from Exp2/Raw/sub-*/ per-session PsychoPy exports). "
   }
 }

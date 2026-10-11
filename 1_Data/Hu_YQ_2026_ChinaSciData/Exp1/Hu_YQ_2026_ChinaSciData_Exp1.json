@@ -1,44 +1,44 @@
 {
   "exp1": {
     "schema_version": "2",
-    "Collected_date": "2015-10-21 to 2015-12-02 ",
+    "Collected_date": "2015-10-21 to 2015-12-05",
     "Physical_Environment": {
-      "Location": "Tsinghua University, Department of Psychology, Beijing, China (laboratory rooms; participants tested individually in dimly lit room)",
+      "Location": "Tsinghua University, Beijing, China",
       "Setting": "Laboratory",
       "Equipment": {
         "Presenting": "/",
-        "Monitor": "1024 × 768, 100 Hz",
+        "Monitor": "1024 x 768 px, 100 Hz",
         "Software": "E-Prime 2.0"
       },
       "Viewing_distance": "/"
     },
     "Experimental_Design": {
-      "Conditions": "2 (matching: matching, nonmatching) × 3 (association type: self-other, high reward-low reward, happy-sad) × 6 (block) × 2 (group: control, subclinical depression), mixed design; group between-subjects, matching/association/block within-subjects"
+      "Conditions": "self-matching (self vs other); reward (high vs low reward); emotion (happy vs neutral face); self-friend-stranger-matching (self/friend/stranger identity x emotion)"
     },
     "Block_Structure": {
-      "Block_number": "6 formal blocks (BlockList.Sample 1-2 per session, 7 sessions total per codebook); practice trials present (SubTrial=1)",
-      "Trial_number": "/",
-      "Practice_trials": "Present"
+      "Block_number": "self-matching/reward/emotion: 2 blocks each (3 interleaved sub-tasks x 2 = 6); self-friend-stranger-matching: 6 blocks",
+      "Trial_number": "96 per block (matching: 3 sub-tasks x 2 blocks); 240 per block (self-matching: 6 blocks)",
+      "Practice_trials": "/"
     },
     "Trial_Structure": {
       "Fixation_duration": "/",
       "Stimulus_duration": "/",
       "SOA": "/",
-      "Stimulus_order": "simultaneous (shape and label displayed together)",
+      "Stimulus_order": "/",
       "Response_deadline": "/",
       "ITI": "1000 ms",
       "Feedback_duration": "/"
     },
     "Stimulus_Properties": {
-      "Modality": "Visual (geometric shapes + Chinese labels)",
+      "Modality": "visual",
       "Fixation": "/",
-      "Shape": "Circle (C.bmp), Diamond (D.bmp), Trapezoid (Tra.bmp), Pentagon (P.bmp), Square (S.bmp), Triangle (T.bmp)",
-      "Label": "你 (you/self), 生人 (stranger/other), 高兴 (happy), 中性 (neutral), ￥1 (low reward), ￥16 (high reward)",
+      "Shape": "Matching task: 6 geometric shapes — C.bmp=Circle (圆形), D.bmp=Diamond (菱形), S.bmp=Square (正方形), P.bmp=Pentagon (五边形), T.bmp=Triangle (三角形), Tra.bmp=Trapezoid (梯形). Self-matching task: 3 shapes × 4 emotional expressions — c=perfect circle (正圆), hc=horizontal ellipse (横椭圆), vc=vertical ellipse (竖椭圆); emotion suffix: (none)=control, _eh=happy (高兴), _en=neutral (中性), _es=sad (悲伤).",
+      "Label": "Chinese words: 你 (self), 生人 (stranger/other), 高兴 (happy), 中性 (neutral), ￥1 (low reward), ￥16 (high reward) for matching task; 自己 (self), 朋友 (friend), 生人 (stranger) for self-matching task.",
       "Colors": {
         "Stimulus": "/",
         "Background": "/"
       }
     },
-    "detail": "Experiment 1 (Task1) of Hu et al. (2015). 36 Tsinghua University students (right-handed, normal/corrected vision); 30 low BDI (<10, control group), 6 high BDI (>20, subclinical depression group). 3 control participants excluded (6008, 6015, 6031) for invalid trials/technical issues. Final: 27 control, 6 depression. IRB approved by Tsinghua University Psychology Department. E-Prime 2.0, 1024×768, 100 Hz, dimly lit room. Mixed design: 2 (matching/nonmatching) × 3 (association: self-other, high-low reward, happy-sad) × 6 (blocks) × 2 (group: control/depression). Three association types learned: self-other (self/other shapes), reward (high/low reward shapes), emotion (happy/sad shapes). 7 sessions (Session 1-7 per codebook), each with practice (SubTrial=1) and formal blocks (SubTrial=2-3). BlockList.Sample 1-2 merged across tasks. ITI 1000 ms. Stimuli: 6 geometric shapes (Circle, Diamond, Trapezoid, Pentagon, Square, Triangle) paired with Chinese labels. Shape identities: self, other, happy, neutral, low reward (1), high reward (16). Label identities: 你(self), 生人(other), 高兴(happy), 中性(neutral), ￥1(low reward), ￥16(high reward). Standardized identities: Self, Stranger, Happy, Neutral, Low_reward, High_reward. Response keys: 1, 2 (YesNoResp: Yes/No). Data collected Oct-Dec 2015. Standardized to SPE Database schema v2 on 2026-09-25: per-participant files merged into a single trial-level CSV; column order aligned to the v2 template; Matching canonicalized to Matching/Nonmatching; identity columns canonicalized (Self/Close/Stranger); a between-subjects Group column added; study-specific columns moved to the tail. Source: clean/ (read-only)."
+    "detail": "Two tasks merged into one experiment: matching (Hu 2015, 3 interleaved associations: self/emotion/reward) and self-matching (Hu 2015, self-friend-stranger × emotion). Session (1-7) = lab visit / training time point (7 = subject 6031 only). Task column: matching / self-matching. Phase = practice / main. Block = global block number 1-6 (matching: 3 sub-tasks × 2 blocks renumbered — self-1=1, self-2=2, emotion-1=3, emotion-2=4, reward-1=5, reward-2=6; self-matching: 6 blocks); NA = practice. Trial = trial order within block (1-96 matching; 1-240 self-matching); NA = practice. Matching = Matching/Nonmatching (for self-matching, derived from Shape_Standardized_Identity == Label_Standardized_Identity). Shape = stimulus image filename (geometric shape for matching; circle/ellipse + emotion for self-matching; see Stimulus_Properties.Shape for the code mapping). Identity three-level columns (Shape/Label Origin/English/Standardized) follow the 6-category vocabulary (Self/Close/Stranger/NonPerson/Acquaintance/Celebrity); non-identity stimuli (happy/neutral, ￥1/￥16) kept as-is. extraIV1 = valence (positive: self/happy/high-reward; neutral: other/neutral/low-reward; NA in self-matching). extraIV2 = emotion (control/happy/neutral/sad; NA in matching). ACC: 1=correct, 0=wrong key, NA=no response. Known data issues: subject 6008 session 6 incomplete (self-matching block 3 has 113 trials instead of 240, blocks 4-6 missing); subject 6015 session 6 has one all-blank placeholder row (kept blank). Raw source: Exp1/Raw/Data_for_Exp1.csv and Data_for_Exp2.csv (GB18030 E-Prime merged exports); original per-subject-session E-Prime logs in Task1_rawdata / Task2_rawdata. 36 participants, 3 excluded from final analysis (6008, 6015, 6031) but retained per minimal-preprocessing convention. Consolidated into study Hu_YQ_2026_ChinaSciData (Exp1) on 2026-10-04. Clean CSV is 51.7 MB (> 50 MB), split at whole-subject boundaries into Hu_YQ_2026_ChinaSciData_Exp1_Clean_part1.csv (subjects 6001-6019, 235749 rows) and _part2.csv (subjects 6020-6036, 214280 rows); rows sorted by Subject then Task/Session/Phase/Block/Trial; the two parts share one Codebook and this experiment JSON. Standardized raw: Hu_YQ_2026_ChinaSciData_Exp1_raw.csv (35 columns = union of Data_for_Exp1 + Data_for_Exp2 + Task). subj_info: Hu_YQ_2026_ChinaSciData_Exp1_subj_info.csv (12 columns: Subject_ID, Exp_id, Age, Gender, Handedness, Ethnicity, Employment_Status, Country, First_Language, Education, BDI_Score, BAI_Score; Age is manually maintained per original-author confirmation, Gender/Handedness from E-Prime header, BDI/BAI from Info_participants.xlsx)."
   }
 }

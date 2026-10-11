@@ -1,284 +1,538 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# Hu_YQ_2026_ChinaSciData_clean.R
-# -----------------------------------------------------------------------------
-# Merge the de-identified per-participant Clean CSVs under clean/ into the
-# standard SPE-Database single-CSV-per-experiment layout (v2 column template),
-# and emit the subj_info CSVs, codebooks, and paper/experiment JSONs
-# (the five-piece set, except *_raw.csv which is exempted — no standard raw
-# trial-level export is available).
+# Hu_YQ_2026_ChinaSciData_clean.R  (rewritten 2026-10-08)
 #
-# Source (read-only):
-#   clean/Hu_2015_unpub/Exp1/Hu_2015_unpub_Exp1_<ID>_Clean.csv          (36)
-#   clean/Hu_2015_unpub/Exp2/Hu_2015_unpub_Exp2_<ID>_Clean.csv          (36)
-#   clean/Zhou_2023_unpub_Exp1/cleaned/Zhou_2023_unpub_Exp1_<ID>_Clean.csv (26)
-# Target: this study folder (Exp1/Exp2/Exp3).
+# Reproduces Hu_YQ_2026_ChinaSciData_Exp1_Clean.csv (21 columns, template v2).
 #
-# Experiment numbering:  Exp1 = Hu 2015 Task1 (classic association),
-#   Exp2 = Hu 2015 Task2 (emotion association), Exp3 = Zhou 2023 Exp1.
-# subj_Group split:      Hu -> control (BDI<10) / depression (BDI>=21);
-#                        Zhou -> matching-first (Group=1) / nonmatching-first (Group=2).
-# Converted from the earlier Python implementation on 2026-09-25.
+# Data sources:
+#   Exp1/Raw/Data_for_Exp1.csv + Data_for_Exp2.csv  (GB18030 E-Prime merged exports)
+#   Raw E-Prime logs (UTF-16 .txt): Task1_rawdata/ + Task2_rawdata/
+#     (Task1 = Pro_3AssoMatch_*.txt, matching task;
+#      Task2 = AssoMatc_depre_hcp_*.txt, self-matching task)
+#
+# Why the raw E-Prime logs are needed: the GB18030 CSVs dropped the per-trial
+# block/trial counters (TrialList*.Sample) and the Chinese shape identity
+# (Shape) / stimulus filename (Stimulus, Target). These are recovered from the
+# logs and aligned to the CSV rows by a greedy tuple match.
+#
+# Pipeline (matches the current Clean exactly):
+#   1. Read the two GB18030 CSVs (pure character, empty preserved).
+#   2. Parse raw E-Prime logs -> per-trial block / trial / shape / shapeE / stimulus.
+#   3. Align each CSV row to its E-Prime trial frame (greedy tuple match).
+#   4. Build the merged 21-column table; write *_Exp1_Clean.csv (UTF-8 + BOM).
+#   5. Write Codebook_*_Exp1_Clean.xlsx (single Sheet1, 4 columns).
 # =============================================================================
 suppressMessages({
   library(data.table)
+  library(readr)
   library(openxlsx)
-  library(jsonlite)
 })
 
-# --- resolve paths (self-contained; do not rely on cwd) --------------------
-args <- commandArgs(FALSE)
-fl   <- sub("^--file=", "", args[grep("^--file=", args)])
+# ---- paths (self-contained; raw E-Prime path configurable) -----------------
+args <- commandArgs(trailingOnly = FALSE)
+fl <- sub("^--file=", "", args[grep("^--file=", args)])
 if (!length(fl)) fl <- "Hu_YQ_2026_ChinaSciData_clean.R"
-study_dir <- normalizePath(dirname(fl))
-repo      <- normalizePath(file.path(study_dir, "..", ".."))
-src       <- file.path(repo, "clean")
-study     <- "Hu_YQ_2026_ChinaSciData"
+study_dir    <- normalizePath(dirname(fl))
+raw_csv_dir  <- file.path(study_dir, "Exp1", "Raw")
+out_dir      <- file.path(study_dir, "Exp1")
 
-# --- helpers ----------------------------------------------------------------
-read_merged <- function(pattern) {
-  files <- sort(Sys.glob(pattern))
-  stopifnot(length(files) > 0)
-  rbindlist(lapply(files, fread, encoding = "UTF-8", na.strings = c("", "NA")),
-            fill = TRUE)
-}
-write_csv <- function(dt, path) fwrite(dt, path, na = "NA", quote = "auto", sep = ",")
-
-# --- between-subjects group maps -------------------------------------------
-hu_subj <- fread(file.path(src, "Hu_2015_unpub", "Hu_2015_unpub_subj_info.csv"),
-                 encoding = "UTF-8")
-hu_group <- ifelse(as.integer(hu_subj$BDI_Score) >= 21, "depression", "control")
-names(hu_group) <- as.character(hu_subj$Subject_ID)
-
-zhou_subj <- fread(file.path(src, "Zhou_2023_unpub_Exp1",
-                             "Zhou_2023_unpub_Exp1_subj_info.csv"),
-                   encoding = "UTF-8")
-zhou_group <- ifelse(zhou_subj$Group == 1, "matching-first", "nonmatching-first")
-names(zhou_group) <- as.character(zhou_subj$Subject_ID)
+# Raw E-Prime logs live OUTSIDE the study folder (temporary workspace). Point
+# these at wherever Task1_rawdata/ and Task2_rawdata/ actually are.
+eprime1_dir <- "/Users/ack/Desktop/tmp/tpm-Training_effect_of_SPE_from_2_experiments/Data_sent_to_Jie/Task1_rawdata"
+eprime2_dir <- "/Users/ack/Desktop/tmp/tpm-Training_effect_of_SPE_from_2_experiments/Data_sent_to_Jie/Task2_rawdata"
 
 # =============================================================================
-# Experiment 1 — Hu 2015 Task1 (self-matching / reward / emotion associations)
+# Helpers
 # =============================================================================
-e1 <- read_merged(file.path(src, "Hu_2015_unpub", "Exp1",
-                            "Hu_2015_unpub_Exp1_*_Clean.csv"))
-match1 <- c(Matched = "Matching", Mismatched = "Nonmatching")
-e1[, `:=`(
-  Group      = hu_group[as.character(Subject)],
-  Phase      = fifelse(SubTrial == 1, "practice", "main"),
-  Block      = BlockList.Sample,
-  Matching   = match1[Matching],
-  CorrResponse = CorrectAnswer
-)]
-e1_cols <- c("Subject", "Group", "Session", "Task", "Phase", "Block", "Matching",
-             "Shape", "Shape_Origin_Identity", "Shape_English_Identity",
-             "Shape_Standardized_Identity", "Label", "Label_Origin_Identity",
-             "Label_English_Identity", "Label_Standardized_Identity",
-             "CorrResponse", "Response", "RT_ms", "ACC", "Clock.StartTimeOfDay")
-e1 <- e1[, ..e1_cols]
-write_csv(e1, file.path(study_dir, "Exp1", paste0(study, "_Exp1_Clean.csv")))
+`%||%` <- function(a, b) if (is.null(a) || length(a) == 0L || is.na(a)) b else a
 
-# =============================================================================
-# Experiment 2 — Hu 2015 Task2 (self/friend/stranger identity x emotion)
-# =============================================================================
-e2 <- read_merged(file.path(src, "Hu_2015_unpub", "Exp2",
-                            "Hu_2015_unpub_Exp2_*_Clean.csv"))
-shape_eng    <- c(self = "Self",     friend = "Friend",   stranger = "Stranger")
-shape_std    <- c(self = "Self",     friend = "Close",    stranger = "Stranger")
-label_origin <- c(self = "自己",      friend = "朋友",     stranger = "生人")
-label_eng    <- c(self = "Self",     friend = "Friend",   stranger = "Stranger")
-label_std    <- c(self = "Self",     friend = "Close",    stranger = "Stranger")
-e2[, `:=`(
-  Group      = hu_group[as.character(Subject)],
-  Phase      = fifelse(is.na(BlockList.Sample), "practice", "main"),
-  Block      = BlockList.Sample,
-  Trial      = TrialList,
-  Shape_Origin_Identity       = Shape_Origin_Identity,
-  Shape_English_Identity      = shape_eng[Shape_Origin_Identity],
-  Shape_Standardized_Identity = shape_std[Shape_Origin_Identity],
-  Label_Origin_Identity       = label_origin[Label_Origin_Identity],
-  Label_English_Identity      = label_eng[Label_Origin_Identity],
-  Label_Standardized_Identity = label_std[Label_Origin_Identity],
-  Emotion    = fifelse(Emotion == "neutal", "neutral", Emotion),
-  CorrResponse = CorrectAnswer
-)]
-e2_cols <- c("Subject", "Group", "Session", "Task", "Phase", "Block", "Trial",
-             "Matching", "Shape", "Shape_Origin_Identity", "Shape_English_Identity",
-             "Shape_Standardized_Identity", "Label", "Label_Origin_Identity",
-             "Label_English_Identity", "Label_Standardized_Identity",
-             "CorrResponse", "Response", "RT_ms", "ACC",
-             "Selfpic", "Friendpic", "Strangerpic", "Emotion",
-             "TrialList.Cycle", "Clock.StartTimeOfDay")
-e2 <- e2[, ..e2_cols]
-write_csv(e2, file.path(study_dir, "Exp2", paste0(study, "_Exp2_Clean.csv")))
-
-# =============================================================================
-# Experiment 3 — Zhou 2023 Exp1 (matching-verification training task)
-# =============================================================================
-e3 <- read_merged(file.path(src, "Zhou_2023_unpub_Exp1", "cleaned",
-                            "Zhou_2023_unpub_Exp1_*_Clean.csv"))
-match3 <- c(match = "Matching", mismatch = "Nonmatching", fill = "Nonmatching")
-e3[, `:=`(
-  Group      = zhou_group[as.character(Subject)],
-  Task       = "self-matching",
-  Phase      = Session,          # 9 training stages -> Phase
-  Practice   = phase,            # practice/main -> Practice
-  Matching   = match3[TrialType],
-  CorrResponse = CorrectAnswer,
-  RT_ms      = round(as.numeric(RT_ms))
-)]
-e3_cols <- c("Subject", "Group", "Task", "Phase", "Practice", "Matching",
-             "Shape", "Shape_Origin_Identity", "Shape_English_Identity",
-             "Shape_Standardized_Identity", "Label", "Label_Origin_Identity",
-             "Label_English_Identity", "Label_Standardized_Identity",
-             "CorrResponse", "Response", "RT_ms", "ACC")
-e3 <- e3[, ..e3_cols]
-write_csv(e3, file.path(study_dir, "Exp3", paste0(study, "_Exp3_Clean.csv")))
-
-# =============================================================================
-# subj_info CSVs
-# =============================================================================
-hu_si <- data.table(
-  Subject_ID = as.character(hu_subj$Subject_ID),
-  Age        = hu_subj$Age,
-  Gender     = hu_subj$Gender,
-  Handedness = hu_subj$Handedness,
-  BDI_Score  = hu_subj$BDI_Score,
-  BAI_Score  = hu_subj$BAI_Score,
-  Group      = hu_group[as.character(hu_subj$Subject_ID)]
-)[order(Subject_ID)]
-for (exp in c("Exp1", "Exp2")) {
-  write_csv(hu_si, file.path(study_dir, exp, paste0(study, "_", exp, "_subj_info.csv")))
+# Read a GB18030 CSV as a pure-character data.table ("" preserved, no NA coercion)
+read_gb18030 <- function(path) {
+  as.data.table(readr::read_csv(
+    path, col_types = readr::cols(.default = readr::col_character()),
+    na = character(0), locale = readr::locale(encoding = "GB18030")))
 }
 
-zhou_si <- data.table(
-  Subject_ID = as.character(zhou_subj$Subject_ID),
-  Gender     = zhou_subj$Gender,
-  Group      = zhou_group[as.character(zhou_subj$Subject_ID)]
-)[order(Subject_ID)]
-write_csv(zhou_si, file.path(study_dir, "Exp3", paste0(study, "_Exp3_subj_info.csv")))
-
-# =============================================================================
-# Codebooks (openxlsx)
-# =============================================================================
-DESC <- c(
-  Subject = "Participant ID",
-  Group = "Between-subjects group",
-  Session = "Session number (one complete experimental participation)",
-  Task = "Association/task type (whether the association involves a self-referential identity)",
-  Phase = "Trial phase",
-  Practice = "Practice vs main trial",
-  Block = "Block number (NA for practice trials)",
-  Trial = "Trial number within block / list cycle",
-  Matching = "Whether the presented shape-label pair matches the learned association",
-  Shape = "Presented shape stimulus",
-  Shape_Origin_Identity = "Identity of the shape in its original form",
-  Shape_English_Identity = "English translation of the shape identity",
-  Shape_Standardized_Identity = "Canonical standardized identity of the shape (6-category vocabulary)",
-  Label = "Presented label stimulus",
-  Label_Origin_Identity = "Identity of the label in its original form",
-  Label_English_Identity = "English translation of the label identity",
-  Label_Standardized_Identity = "Canonical standardized identity of the label (6-category vocabulary)",
-  CorrResponse = "Correct response key",
-  Response = "Participant's response key (NA = no response)",
-  RT_ms = "Reaction time in milliseconds (NA = no response)",
-  ACC = "Accuracy: 1 = correct, 0 = incorrect (wrong key), NA = no response",
-  Clock.StartTimeOfDay = "Trial start time of day (MM/DD/YY HH:MM)",
-  Selfpic = "Circle image assigned to the self identity (counterbalanced)",
-  Friendpic = "Circle image assigned to the friend identity (counterbalanced)",
-  Strangerpic = "Circle image assigned to the stranger identity (counterbalanced)",
-  Emotion = "Emotional expression of the shape stimulus",
-  TrialList.Cycle = "E-Prime list cycle number"
-)
-VAL <- list(ACC = "1 (correct); 0 (incorrect); NA (no response)",
-            RT_ms = "milliseconds (NA = no response)",
-            Matching = "Matching; Nonmatching")
-NUM_COLS <- c("Subject", "Session", "Block", "Trial", "RT_ms", "TrialList.Cycle")
-
-make_codebook <- function(exp) {
-  cf <- file.path(study_dir, exp, paste0(study, "_", exp, "_Clean.csv"))
-  dt <- fread(cf, encoding = "UTF-8", na.strings = c("", "NA"))
-  cols <- names(dt)
-  out <- rbindlist(lapply(cols, function(col) {
-    x <- dt[[col]]
-    if (!is.null(VAL[[col]])) {
-      vstr <- VAL[[col]]
-    } else if (col %in% NUM_COLS) {
-      x <- x[!is.na(x)]
-      vstr <- if (length(x) && is.numeric(x)) {
-        sprintf("%g - %g", min(x), max(x))
-      } else "Number"
-    } else {
-      u <- unique(x[!is.na(x)])
-      u <- as.character(u)
-      u <- c(sort(setdiff(u, "NA")), if (any(is.na(x))) "NA" else NULL)
-      vstr <- paste(head(u, 40), collapse = "; ")
+# Parse an E-Prime UTF-16 .txt export into header + logframe list
+parse_eprime <- function(path) {
+  lines <- readr::read_lines(path, locale = readr::locale(encoding = "UTF-16"))
+  hdr <- list(); frames <- list(); cur <- NULL; in_hdr <- FALSE
+  for (ln in lines) {
+    if (grepl("\\*\\*\\* Header Start \\*\\*\\*", ln)) { in_hdr <- TRUE; next }
+    if (grepl("\\*\\*\\* Header End \\*\\*\\*", ln))   { in_hdr <- FALSE; next }
+    if (in_hdr && grepl(":", ln)) {
+      kv <- strsplit(ln, ":", fixed = TRUE)[[1L]]
+      hdr[[trimws(kv[1L])]] <- trimws(paste(kv[-1L], collapse = ":")); next
     }
-    data.table(Variable_name = col,
-               Variable_description = ifelse(col %in% names(DESC), DESC[[col]], "NA"),
-               Variable_value = vstr,
-               Variable_category = ifelse(col %in% NUM_COLS, "Numerical", "Categorical"))
-  }))
-  wb <- createWorkbook(); addWorksheet(wb, "Sheet1")
-  writeDataTable(wb, "Sheet1", out)
-  saveWorkbook(wb, file.path(study_dir, exp,
-                             paste0("Codebook_", study, "_", exp, "_Clean.xlsx")),
-               overwrite = TRUE)
-  message("codebook -> ", exp, " (", nrow(out), " vars)")
+    if (grepl("\\*\\*\\* LogFrame Start \\*\\*\\*", ln)) { cur <- list(); next }
+    if (grepl("\\*\\*\\* LogFrame End \\*\\*\\*", ln)) {
+      if (!is.null(cur)) { frames[[length(frames) + 1L]] <- cur }; cur <- NULL; next
+    }
+    if (!is.null(cur) && grepl(":", ln)) {
+      kv <- strsplit(ln, ":", fixed = TRUE)[[1L]]
+      cur[[trimws(kv[1L])]] <- trimws(paste(kv[-1L], collapse = ":"))
+    }
+  }
+  list(hdr = hdr, frames = frames)
 }
-for (exp in c("Exp1", "Exp2", "Exp3")) make_codebook(exp)
 
-# =============================================================================
-# Experiment JSONs (re-key the source v2 JSONs; append a standardization note)
-# =============================================================================
-NOTE <- paste0(
-  "Standardized to SPE Database schema v2 on 2026-09-25: per-participant ",
-  "files merged into a single trial-level CSV; column order aligned to the v2 ",
-  "template; Matching canonicalized to Matching/Nonmatching; identity columns ",
-  "canonicalized (Self/Close/Stranger); a between-subjects Group column added; ",
-  "study-specific columns moved to the tail. Source: clean/ (read-only).")
-
-exp_json_src <- list(
-  Exp1 = file.path(src, "Hu_2015_unpub", "Exp1", "Hu_2015_unpub_Exp1.json"),
-  Exp2 = file.path(src, "Hu_2015_unpub", "Exp2", "Hu_2015_unpub_Exp2.json"),
-  Exp3 = file.path(src, "Zhou_2023_unpub_Exp1", "Zhou_2023_unpub_Exp1.json"))
-new_key <- c(Exp1 = "exp1", Exp2 = "exp2", Exp3 = "exp3")
-for (exp in c("Exp1", "Exp2", "Exp3")) {
-  s <- fromJSON(exp_json_src[[exp]], simplifyVector = FALSE)
-  inner <- s[[1]]
-  inner$detail <- trimws(paste(inner$detail, NOTE))
-  obj <- setNames(list(inner), new_key[[exp]])
-  writeLines(toJSON(obj, auto_unbox = TRUE, pretty = TRUE),
-             file.path(study_dir, exp, paste0(study, "_", exp, ".json")))
+# Greedy sequential tuple alignment: csv_key and ep_key are lists of character
+# vectors (tuples), both in chronological order. Returns an integer index into
+# ep_key for each csv row (0 = no match, e.g. an all-blank placeholder row).
+greedy_align <- function(csv_key, ep_key) {
+  n_csv <- length(csv_key); n_ep <- length(ep_key)
+  res <- integer(n_csv); ep_ptr <- 1L
+  for (i in seq_len(n_csv)) {
+    tup <- csv_key[[i]]
+    if (all(tup == "")) { res[i] <- 0L; next }
+    while (ep_ptr <= n_ep && !identical(tup, ep_key[[ep_ptr]])) ep_ptr <- ep_ptr + 1L
+    if (ep_ptr <= n_ep) { res[i] <- ep_ptr; ep_ptr <- ep_ptr + 1L } else res[i] <- 0L
+  }
+  res
 }
 
 # =============================================================================
-# Paper JSON
+# Read the two GB18030 CSVs
 # =============================================================================
-paper <- list(
-  Paper_name = "Data for Training Effect of Self Prioritization",
-  Summary = paste0(
-    "Cleaned, de-identified, minimally preprocessed trial-level behavioral ",
-    "data of two self-prioritization training-effect experiments: Experiment 1 ",
-    "and Experiment 2 of Hu et al. (2015, unpublished; Tsinghua University, ",
-    "Beijing) and Experiment 1 of Zhou et al. (2023, unpublished; Henan ",
-    "University, Kaifeng). Participants learned shape-label associations and ",
-    "judged whether each presented shape-label pair matched the learned ",
-    "association. Data follow the SPE Database schema (v2)."),
-  Year = "2026",
-  Author = "Chuanpeng Hu; Kaiping Peng; Jie Sui",
-  Journal = "/",
-  Country = "China",
-  City = "Beijing",
-  Extra_Var = "/",
-  Email = "/",
-  DOI = "10.57760/sciencedb.08117",
-  Conclusion = paste0(
-    "The dataset bundles three experiments: Hu 2015 Exp1 (self-matching / ",
-    "reward / emotion associations), Hu 2015 Exp2 (self/friend/stranger ",
-    "identities x emotion), and Zhou 2023 Exp1 (matching-verification ",
-    "training, matching-first vs nonmatching-first groups). See the ",
-    "experiment JSONs for full design details."))
-writeLines(toJSON(paper, auto_unbox = TRUE, pretty = TRUE),
-           file.path(study_dir, paste0(study, ".json")))
+d1 <- read_gb18030(file.path(raw_csv_dir, "Data_for_Exp1.csv"))
+d2 <- read_gb18030(file.path(raw_csv_dir, "Data_for_Exp2.csv"))
 
-message("DONE: five-piece set regenerated under ", study_dir)
+# --- Exp1 raw: merge Data_for_Exp1 + Data_for_Exp2 (union of columns + Task) ---
+raw1 <- rbindlist(list(
+  copy(d1)[, Task := "matching"],
+  copy(d2)[, Task := "self-matching"]
+), use.names = TRUE, fill = TRUE)
+for (j in names(raw1)) set(raw1, which(is.na(raw1[[j]])), j, "")
+RAW1_COLS <- c("Subject", "Task", setdiff(union(names(d1), names(d2)), "Subject"))
+raw1 <- raw1[, ..RAW1_COLS]
+fwrite(raw1, file.path(study_dir, "Exp1", "Hu_YQ_2026_ChinaSciData_Exp1_raw.csv"), quote = "auto", bom = TRUE, na = "")
+message("Wrote Exp1 raw (", nrow(raw1), " rows)")
+
+# =============================================================================
+# Parse raw E-Prime logs
+# =============================================================================
+T1_PROCS <- c("PracTrialProcS", "TrialProcS", "PracTrialProcE", "TrialProcE",
+              "PracTrialProc", "TrialProc")
+T2_PROCS <- c("TrialProc", "PracTrialProc")
+
+# --- Exp1 (Task1): each trial frame -> Subject/Session/Procedure/sample/shape/shapeE/stimulus/match/label/ca
+ep1_list <- list()
+for (p in list.files(eprime1_dir, pattern = "\\.txt$", full.names = TRUE)) {
+  parsed <- parse_eprime(p)
+  subj <- parsed$hdr[["Subject"]]; sess <- parsed$hdr[["Session"]]
+  for (fr in parsed$frames) {
+    proc <- fr[["Procedure"]]
+    if (is.null(proc) || !proc %in% T1_PROCS) next
+    ep1_list[[length(ep1_list) + 1L]] <- list(
+      Subject = subj, Session = sess, Procedure = proc,
+      Sample = fr[["TrialListS.Sample"]] %||% fr[["TrialListE.Sample"]] %||%
+               fr[["TrialList.Sample"]] %||% fr[["PracTrialListS.Sample"]] %||%
+               fr[["PracTrialListE.Sample"]] %||% fr[["PracTrialList.Sample"]] %||% "",
+      Shape  = fr[["Shape"]] %||% "", ShapeE = fr[["ShapeE"]] %||% "",
+      Stimulus = fr[["Stimulus"]] %||% "",
+      Match  = fr[["Match"]] %||% "", Label = fr[["Label"]] %||% "",
+      CA     = fr[["CorrectAnswer"]] %||% "")
+  }
+}
+
+# --- Exp2 (Task2): track block via BlockProc (block-END markers); trial frames only
+ep2_list <- list()
+for (p in list.files(eprime2_dir, pattern = "\\.txt$", full.names = TRUE)) {
+  parsed <- parse_eprime(p)
+  subj <- parsed$hdr[["Subject"]]; sess <- parsed$hdr[["Session"]]
+  cur_blk <- 1L
+  for (fr in parsed$frames) {
+    proc <- fr[["Procedure"]]
+    if (is.null(proc)) next
+    if (proc == "BlockProc") { cur_blk <- cur_blk + 1L; next }   # block-END marker
+    if (!proc %in% T2_PROCS) next
+    ep2_list[[length(ep2_list) + 1L]] <- list(
+      Subject = subj, Session = sess, Procedure = proc,
+      Block = if (proc == "PracTrialProc") "" else as.character(cur_blk),
+      Sample = fr[["TrialList.Sample"]] %||% "",
+      Shape  = fr[["Shape"]] %||% "", Words = fr[["Words"]] %||% "",
+      Emotion = fr[["Emotion"]] %||% "", CA = fr[["CorrectAnswer"]] %||% "",
+      Target = fr[["Target"]] %||% "", RESP = fr[["Target.RESP"]] %||% "",
+      RT = fr[["Target.RT"]] %||% "")
+  }
+}
+
+# =============================================================================
+# Identity / valence / emotion mapping tables
+# =============================================================================
+# Exp1: ShapeE -> (Origin, English, Standardized)
+exp1_identity <- data.table(
+  ShapeE = c("self", "other", "happy", "neutral", "1", "16"),
+  Origin = c("你", "生人", "高兴", "中性", "￥1", "￥16"),
+  English = c("self", "other", "happy", "neutral", "1", "16"),
+  Std = c("Self", "Stranger", "happy", "neutral", "￥1", "￥16"))
+exp1_valence <- c(self = "positive", other = "neutral", happy = "positive",
+                  neutral = "neutral", "1" = "neutral", "16" = "positive")
+
+# Exp2: Shape field (Self/Friend/Stranger) -> (Origin, English, Standardized)
+exp2_identity <- data.table(
+  Shape = c("Self", "Friend", "Stranger"),
+  Origin = c("自己", "朋友", "生人"),
+  English = c("self", "friend", "stranger"),
+  Std = c("Self", "Close", "Stranger"))
+
+# =============================================================================
+# Exp1 (matching): align + build
+# =============================================================================
+# CSV row key + payload
+d1_key <- lapply(seq_len(nrow(d1)), function(i)
+  c(d1$Match[i], d1$ShapeE[i], d1$Label[i], d1$CorrectAnswer[i]))
+# E-Prime frame key
+ep1_key <- lapply(ep1_list, function(fr) c(fr$Match, fr$ShapeE, fr$Label, fr$CA))
+
+# group alignment by (Subject, Session)
+d1[, rn := .I]
+d1_key_split <- split(seq_len(nrow(d1)), list(d1$Subject, d1$Session), drop = TRUE)
+ep1_split <- split(seq_along(ep1_list),
+                   list(sapply(ep1_list, `[[`, "Subject"), sapply(ep1_list, `[[`, "Session")),
+                   drop = TRUE)
+
+align1 <- integer(nrow(d1))
+for (grp in names(d1_key_split)) {
+  di <- d1_key_split[[grp]]; ei <- ep1_split[[grp]]
+  if (is.null(ei)) next
+  a <- greedy_align(d1_key[di], ep1_key[ei])
+  align1[di] <- ifelse(a > 0L, ei[a], 0L)
+}
+
+# helper: pick the single non-empty value among several columns
+pick <- function(...) {
+  vals <- c(...); vals <- vals[!is.na(vals) & vals != ""]
+  if (length(vals)) vals[1L] else ""
+}
+
+build_exp1 <- function(dt, align) {
+  out <- dt[, .(Subject, Session)]
+  out[, Task := "matching"]
+  out[, Phase := fifelse(align == 0L, "",
+                  fifelse(dt$SubTrial == "1", "practice", "main"))]
+  # Block/Trial from aligned E-Prime sample
+  blk_tri <- lapply(seq_len(nrow(dt)), function(i) {
+    if (align[i] == 0L) return(c("", ""))                 # blank placeholder row
+    if (dt$SubTrial[i] == "1") return(c("NA", "NA"))      # practice
+    fr <- ep1_list[[align[i]]]
+    smp <- suppressWarnings(as.integer(fr$Sample))
+    if (is.na(smp)) return(c("NA", "NA"))
+    c(as.character((smp - 1L) %/% 96L + 1L), as.character((smp - 1L) %% 96L + 1L))
+  })
+  out[, Block := vapply(blk_tri, `[`, character(1), 1L)]
+  out[, Trial := vapply(blk_tri, `[`, character(1), 2L)]
+  # renumber Block to global 1-6 (self=0, emotion=1, reward=2)
+  st_idx <- fifelse(dt$ShapeE %in% c("self", "other"), 0L,
+             fifelse(dt$ShapeE %in% c("happy", "neutral"), 1L, 2L))
+  out[, Block := fifelse(Block %in% c("", "NA"), Block,
+                         as.character(st_idx * 2L + suppressWarnings(as.integer(Block))))]
+  out[, Matching := fifelse(dt$Match == "Matched", "Matching",
+                     fifelse(dt$Match == "Mismatched", "Nonmatching", ""))]
+  # Shape stimulus filename + Shape identity (from aligned E-Prime)
+  out[, Shape := vapply(seq_len(nrow(dt)), function(i)
+    if (align[i] == 0L) "" else ep1_list[[align[i]]]$Stimulus, character(1))]
+  out[, Shape_Origin_Identity := vapply(seq_len(nrow(dt)), function(i)
+    if (align[i] == 0L) "" else ep1_list[[align[i]]]$Shape, character(1))]
+  id1 <- exp1_identity[match(dt$ShapeE, exp1_identity$ShapeE)]
+  out[, Shape_English_Identity := fcoalesce(id1$English, "")]
+  out[, Shape_Standardized_Identity := fcoalesce(id1$Std, "")]
+  # Label + Label identity
+  out[, Label := dt$Label]
+  out[, Label_Origin_Identity := dt$Label]
+  out[, Label_English_Identity := fcoalesce(id1$English, "")]
+  out[, Label_Standardized_Identity := fcoalesce(id1$Std, "")]
+  # extraIV
+  out[, extraIV1 := exp1_valence[dt$ShapeE]]
+  out[, extraIV1 := fifelse(is.na(extraIV1), "", extraIV1)]
+  out[, extraIV2 := "NA"]
+  # responses
+  out[, CorrResponse := dt$CorrectAnswer]
+  resp <- pick3(dt$Target.RESP, dt$TargetE.RESP, dt$TargetS.RESP)
+  rt   <- pick3(dt$Target.RT,   dt$TargetE.RT,   dt$TargetS.RT)
+  acc  <- pick3(dt$Target.ACC,  dt$TargetE.ACC,  dt$TargetS.ACC)
+  noresp <- resp == "" & dt$ShapeE != ""      # 无反应（非全空占位行）
+  out[, Response := fifelse(noresp, "NA", resp)]
+  out[, RT_ms    := fifelse(noresp, "NA", rt)]
+  out[, ACC      := fifelse(noresp, "NA", acc)]
+  out
+}
+
+pick3 <- function(a, b, c) {
+  vapply(seq_along(a), function(i) pick(a[i], b[i], c[i]), character(1))
+}
+
+clean1 <- build_exp1(d1, align1)
+
+# =============================================================================
+# Exp2 (self-matching): align + build
+# =============================================================================
+d2_key <- lapply(seq_len(nrow(d2)), function(i)
+  c(d2$Shape[i], d2$Words[i], d2$Emotion[i], d2$Target.CRESP[i], d2$Target.RESP[i], d2$Target.RT[i]))
+ep2_key <- lapply(ep2_list, function(fr) c(fr$Shape, fr$Words, fr$Emotion, fr$CA, fr$RESP, fr$RT))
+
+d2[, rn := .I]
+d2_key_split <- split(seq_len(nrow(d2)), list(d2$Subject, d2$Session), drop = TRUE)
+ep2_split <- split(seq_along(ep2_list),
+                   list(sapply(ep2_list, `[[`, "Subject"), sapply(ep2_list, `[[`, "Session")),
+                   drop = TRUE)
+
+align2 <- integer(nrow(d2))
+for (grp in names(d2_key_split)) {
+  di <- d2_key_split[[grp]]; ei <- ep2_split[[grp]]
+  if (is.null(ei)) next
+  a <- greedy_align(d2_key[di], ep2_key[ei])
+  align2[di] <- ifelse(a > 0L, ei[a], 0L)
+}
+
+build_exp2 <- function(dt, align) {
+  out <- dt[, .(Subject, Session)]
+  out[, Task := "self-matching"]
+  # Phase / Block / Trial from aligned frame
+  phase_blk <- vapply(seq_len(nrow(dt)), function(i) {
+    if (align[i] == 0L) return("practice")
+    fr <- ep2_list[[align[i]]]
+    if (fr$Procedure == "PracTrialProc") "practice" else "main"
+  }, character(1))
+  out[, Phase := phase_blk]
+  out[, Block := vapply(seq_len(nrow(dt)), function(i)
+    if (align[i] == 0L || phase_blk[i] == "practice") "NA" else ep2_list[[align[i]]]$Block, character(1))]
+  out[, Trial := vapply(seq_len(nrow(dt)), function(i)
+    if (align[i] == 0L || phase_blk[i] == "practice") "NA" else ep2_list[[align[i]]]$Sample, character(1))]
+  # Matching from Shape vs Label identity
+  id2 <- exp2_identity[match(dt$Shape, exp2_identity$Shape)]
+  idl <- exp2_identity[match(dt$Words, exp2_identity$Origin)]
+  out[, Matching := fifelse(is.na(id2$Std) | is.na(idl$Std), "",
+                     fifelse(id2$Std == idl$Std, "Matching", "Nonmatching"))]
+  # Shape stimulus filename + identity
+  out[, Shape := vapply(seq_len(nrow(dt)), function(i)
+    if (align[i] == 0L) "" else ep2_list[[align[i]]]$Target, character(1))]
+  out[, Shape_Origin_Identity := id2$Origin]
+  out[, Shape_English_Identity := id2$English]
+  out[, Shape_Standardized_Identity := id2$Std]
+  out[, Label := dt$Words]
+  out[, Label_Origin_Identity := idl$Origin]
+  out[, Label_English_Identity := idl$English]
+  out[, Label_Standardized_Identity := idl$Std]
+  out[, extraIV1 := "NA"]
+  out[, extraIV2 := fifelse(dt$Emotion == "neutal", "neutral", dt$Emotion)]
+  out[, CorrResponse := dt$Target.CRESP]
+  out[, Response := fifelse(dt$Target.RESP == "", "NA", dt$Target.RESP)]
+  out[, RT_ms    := fifelse(dt$Target.RESP == "", "NA", dt$Target.RT)]
+  out[, ACC      := fifelse(dt$Target.RESP == "", "NA", dt$Target.ACC)]
+  out
+}
+
+clean2 <- build_exp2(d2, align2)
+
+# =============================================================================
+# Merge, order, write
+# =============================================================================
+FINAL_COLS <- c("Subject", "Session", "Task", "Phase", "Block", "Trial", "Matching",
+  "Shape", "Shape_Origin_Identity", "Shape_English_Identity", "Shape_Standardized_Identity",
+  "Label", "Label_Origin_Identity", "Label_English_Identity", "Label_Standardized_Identity",
+  "extraIV1", "extraIV2", "CorrResponse", "Response", "RT_ms", "ACC")
+
+clean <- rbindlist(list(clean1, clean2), use.names = TRUE, fill = TRUE)
+setcolorder(clean, FINAL_COLS)
+clean <- clean[order(as.integer(Subject), fifelse(Task == "self-matching", 1L, 0L),
+          as.integer(Session), fifelse(Phase == "main", 1L, 0L),
+          suppressWarnings(as.integer(Block)), suppressWarnings(as.integer(Trial)), na.last = TRUE)]
+# ensure the 6015-6 all-blank placeholder row stays fully blank
+blank_rows <- clean[, Reduce(`&`, lapply(.SD, function(v) v == ""))]
+clean[blank_rows, (FINAL_COLS) := lapply(.SD, function(v) fifelse(v == "", "", v)), .SDcols = FINAL_COLS]
+
+out_csv <- file.path(out_dir, "Hu_YQ_2026_ChinaSciData_Exp1_Clean.csv")
+fwrite(clean, out_csv, quote = "auto", bom = TRUE, na = "")
+message("Wrote ", out_csv, " (", nrow(clean), " rows, ", ncol(clean), " cols)")
+
+# =============================================================================
+# Codebook
+# =============================================================================
+codebook_rows <- list(
+  c("Subject", "Participant ID", "6001-6036", "Categorical"),
+  c("Session", "Session number (training time point / lab visit)", "Number (1-6; 7 = subject 6031 only)", "Numerical"),
+  c("Task", "Task type: matching (self/emotion/reward associations) vs self-matching (self/friend/stranger association)", "matching; self-matching", "Categorical"),
+  c("Phase", "Trial phase", "practice; main", "Categorical"),
+  c("Block", "Block number (global 1-6 across sub-tasks)", "Number (1-6); NA = practice", "Numerical"),
+  c("Trial", "Trial order within block", "Number (1-96 matching; 1-240 self-matching); NA = practice", "Numerical"),
+  c("Matching", "Whether the presented shape-label pair matches the learned association (Matching) or not (Nonmatching)", "Matching; Nonmatching", "Categorical"),
+  c("Shape", "Shape stimulus image filename", "C.bmp; D.bmp; P.bmp; S.bmp; T.bmp; Tra.bmp; c.bmp; c_eh.bmp; c_en.bmp; c_es.bmp; hc.bmp; hc_eh.bmp; hc_en.bmp; hc_es.bmp; vc.bmp; vc_eh.bmp; vc_en.bmp; vc_es.bmp", "Categorical"),
+  c("Shape_Origin_Identity", "Original-language identity of the shape stimulus", "你; 生人; 高兴; 中性; ￥1; ￥16; 自己; 朋友", "Categorical"),
+  c("Shape_English_Identity", "English identity of the shape stimulus", "self; other; happy; neutral; 1; 16; friend; stranger", "Categorical"),
+  c("Shape_Standardized_Identity", "Standardized identity (6-category vocabulary: Self/Close/Stranger/NonPerson/Acquaintance/Celebrity; non-identity stimuli kept as-is)", "Self; Stranger; happy; neutral; ￥1; ￥16; Close", "Categorical"),
+  c("Label", "Label word presented (original language)", "你; 生人; 高兴; 中性; ￥1; ￥16; 自己; 朋友", "Categorical"),
+  c("Label_Origin_Identity", "Original-language identity of the label", "你; 生人; 高兴; 中性; ￥1; ￥16; 自己; 朋友", "Categorical"),
+  c("Label_English_Identity", "English identity of the label", "self; other; happy; neutral; 1; 16; friend; stranger", "Categorical"),
+  c("Label_Standardized_Identity", "Standardized identity (6-category vocabulary)", "Self; Stranger; happy; neutral; ￥1; ￥16; Close", "Categorical"),
+  c("extraIV1", "Valence: positive (self/happy/high-reward) vs neutral (other/neutral/low-reward)", "positive; neutral; NA (not applicable: self-matching task)", "Categorical"),
+  c("extraIV2", "Emotion embedded in the shape", "control; happy; neutral; sad; NA (not applicable: matching task)", "Categorical"),
+  c("CorrResponse", "Correct response key", "1; 2 (matching); m; n (self-matching)", "Categorical"),
+  c("Response", "Actual key response; NA = no response", "1; 2 (matching); m; n (self-matching); NA (no response)", "Categorical"),
+  c("RT_ms", "Reaction time in milliseconds; NA = no response", "ms; NA = no response", "Numerical"),
+  c("ACC", "Accuracy", "1 (correct); 0 (error); NA (no response)", "Categorical")
+)
+cb <- rbindlist(lapply(codebook_rows, function(r) as.list(r)))
+setnames(cb, c("Variable_name", "Variable_description", "Variable_value", "Variable_category"))
+wb <- createWorkbook(); addWorksheet(wb, "Sheet1")
+writeData(wb, "Sheet1", cb)
+saveWorkbook(wb, file.path(out_dir, "Codebook_Hu_YQ_2026_ChinaSciData_Exp1_Clean.xlsx"), overwrite = TRUE)
+message("Wrote Codebook (", nrow(cb), " vars)")
+# =============================================================================
+# Exp2 (Zhou 2023, PsychoPy) — build raw + Clean from Exp2/Raw/sub-*/
+# =============================================================================
+PHASES2 <- c("baseline","training1","training2","training3","training4","training5","training6","training7","formal")
+zhou_group <- c("1" = "matching-first", "2" = "nonmatching-first")
+
+read_xlsx_raw <- function(path) {
+  df <- as.data.table(readxl::read_excel(path, col_types = "text"))
+  nm <- names(df)
+  if (nm[1L] %in% c("", "..1", "...1", "X1")) df[, (1L) := NULL]
+  for (j in names(df)) set(df, which(is.na(df[[j]])), j, "")
+  df
+}
+
+raw2_list <- list()
+for (subj_dir in list.dirs(file.path(study_dir, "Exp2", "Raw"), recursive = FALSE, full.names = TRUE)) {
+  if (!grepl("^sub-", basename(subj_dir))) next
+  id <- sub("^sub-", "", basename(subj_dir))
+  for (ph in PHASES2) {
+    phdir <- file.path(subj_dir, ph)
+    if (!dir.exists(phdir)) next
+    for (fname in c(paste0(id, ".xlsx"), paste0(id, "练习.xlsx"))) {
+      p <- file.path(phdir, fname)
+      if (!file.exists(p)) next
+      df <- read_xlsx_raw(p)
+      df[, ID := id]                                    # folder name as ID (fix mislabeling)
+      df[, Session := ph]
+      df[, Phase := fifelse(grepl("练习", fname), "practice", "main")]
+      raw2_list[[length(raw2_list) + 1L]] <- df
+    }
+  }
+}
+raw2 <- rbindlist(raw2_list, use.names = TRUE, fill = TRUE)
+for (j in names(raw2)) set(raw2, which(is.na(raw2[[j]])), j, "")   # NA -> ""
+
+RAW2_COLS <- c("Session","Phase","ID","Gender","Date","Group",
+  "point_start","point_end","point_duration","stim_start","res_time","stim_end",
+  "blank_start","blank_end","feedback_start","feedback_end","relax_start",
+  "stim_shape","stim_text","reaction","is_match","expect_match","expect_res")
+for (c in setdiff(RAW2_COLS, names(raw2))) raw2[, (c) := ""]
+raw2 <- raw2[, ..RAW2_COLS]
+raw2 <- raw2[order(as.integer(ID), match(Session, PHASES2), Phase == "main")]
+fwrite(raw2, file.path(study_dir, "Exp2", "Hu_YQ_2026_ChinaSciData_Exp2_raw.csv"), quote = "auto", bom = TRUE, na = "")
+message("Wrote Exp2 raw (", nrow(raw2), " rows)")
+
+# Clean
+parity <- as.integer(raw2$ID) %% 2L
+shape_origin <- fifelse(raw2$stim_shape == "circle",
+                 fifelse(parity == 0L, "self", "other"),
+                 fifelse(parity == 0L, "other", "self"))
+corr <- fifelse(raw2$expect_match != "", raw2$expect_match, raw2$expect_res)
+rt_ms <- fifelse(raw2$reaction == "[]", "NA",
+          as.character(round((as.numeric(raw2$res_time) - as.numeric(raw2$stim_start)) * 1000, 1)))
+
+clean2 <- data.table(
+  Subject = raw2$ID,
+  Group = zhou_group[substr(raw2$ID, 2L, 2L)],
+  Session = raw2$Session,
+  Task = "self-matching",
+  Phase = raw2$Phase,
+  Matching = fifelse(raw2$is_match == "match", "Matching",
+              fifelse(raw2$is_match == "mismatch", "Nonmatching", "filler")),
+  Shape = raw2$stim_shape,
+  Shape_Origin_Identity = shape_origin,
+  Shape_English_Identity = fifelse(shape_origin == "self", "Self", "Other"),
+  Shape_Standardized_Identity = fifelse(shape_origin == "self", "Self", "Stranger"),
+  Label = raw2$stim_text,
+  Label_Origin_Identity = raw2$stim_text,
+  Label_English_Identity = fifelse(raw2$stim_text == "自我", "Self",
+                            fifelse(raw2$stim_text == "他人", "Other", "Filler")),
+  Label_Standardized_Identity = fifelse(raw2$stim_text == "自我", "Self",
+                                 fifelse(raw2$stim_text == "他人", "Stranger", "Filler")),
+  CorrResponse = corr,
+  Response = fifelse(raw2$reaction == "[]", "NA", raw2$reaction),
+  RT_ms = rt_ms,
+  ACC = fifelse(raw2$reaction == "[]", "NA", fifelse(raw2$reaction == corr, "1", "0"))
+)
+clean2 <- clean2[order(as.integer(Subject), match(Session, PHASES2), Phase == "main")]
+fwrite(clean2, file.path(study_dir, "Exp2", "Hu_YQ_2026_ChinaSciData_Exp2_Clean.csv"), quote = "auto", bom = TRUE, na = "")
+message("Wrote Exp2 Clean (", nrow(clean2), " rows)")
+
+# Exp2 Codebook
+cb2_rows <- list(
+  c("Subject", "Participant ID", "11001-11011; 12001-12010; 21001-21003; 22001-22002", "Categorical"),
+  c("Group", "Between-subjects training group (2nd ID digit)", "matching-first; nonmatching-first", "Categorical"),
+  c("Session", "Session / training time point", "baseline; training1; training2; training3; training4; training5; training6; training7; formal (= post-test)", "Categorical"),
+  c("Task", "Task type", "self-matching", "Categorical"),
+  c("Phase", "Trial phase", "practice; main", "Categorical"),
+  c("Matching", "Trial type: Matching (shape-label consistent) / Nonmatching (inconsistent) / filler (no-identity)", "Matching; Nonmatching; filler (no-identity trial)", "Categorical"),
+  c("Shape", "Shape stimulus (shape-label correspondence counterbalanced by ID parity)", "circle; square", "Categorical"),
+  c("Shape_Origin_Identity", "Original-language identity of the shape stimulus", "self; other", "Categorical"),
+  c("Shape_English_Identity", "English identity of the shape stimulus", "Self; Other", "Categorical"),
+  c("Shape_Standardized_Identity", "Standardized identity (6-category)", "Self; Stranger", "Categorical"),
+  c("Label", "Label word presented", "自我 (self); 他人 (other); 白栽; 地入 (filler pseudo-words)", "Categorical"),
+  c("Label_Origin_Identity", "Original-language identity of the label", "自我; 他人; 白栽; 地入", "Categorical"),
+  c("Label_English_Identity", "English identity of the label", "Self; Other; Filler", "Categorical"),
+  c("Label_Standardized_Identity", "Standardized identity (6-category)", "Self; Stranger; Filler", "Categorical"),
+  c("CorrResponse", "Correct response key", "p; o", "Categorical"),
+  c("Response", "Actual key response; NA = no response", "p; o; NA (no response)", "Categorical"),
+  c("RT_ms", "Reaction time in milliseconds; NA = no response", "ms; NA = no response", "Numerical"),
+  c("ACC", "Accuracy", "1 (correct); 0 (error); NA (no response)", "Categorical")
+)
+cb2 <- rbindlist(lapply(cb2_rows, function(r) as.list(r)))
+setnames(cb2, c("Variable_name", "Variable_description", "Variable_value", "Variable_category"))
+wb2 <- createWorkbook(); addWorksheet(wb2, "Sheet1")
+writeData(wb2, "Sheet1", cb2)
+saveWorkbook(wb2, file.path(study_dir, "Exp2", "Codebook_Hu_YQ_2026_ChinaSciData_Exp2_Clean.xlsx"), overwrite = TRUE)
+message("Wrote Exp2 Codebook (", nrow(cb2), " vars)")
+
+# =============================================================================
+# subj_info (participant level; Age 手工维护，脚本不生成)
+# =============================================================================
+info_xlsx <- "/Users/ack/Desktop/tmp/tpm-Training_effect_of_SPE_from_2_experiments/Data_sent_to_Jie/Info_participants.xlsx"
+
+# --- Exp1 subj_info (Sex/Handedness 来自 E-Prime 表头; BDI/BAI 来自 Info_participants) ---
+ep1_hdr <- rbindlist(lapply(list.files(eprime1_dir, pattern = "\\.txt$", full.names = TRUE), function(p) {
+  hdr <- parse_eprime(p)$hdr
+  data.table(Subject = hdr[["Subject"]] %||% "", Sex = hdr[["Sex"]] %||% "",
+             Handedness = hdr[["Handedness"]] %||% "")
+}))
+ep1_hdr <- unique(ep1_hdr[Subject != ""], by = "Subject")
+
+info1 <- as.data.table(readxl::read_excel(info_xlsx))
+info1 <- info1[!is.na(ID)]
+info1[, ID := as.character(ID)]
+info1[, BDI_Score := fifelse(is.na(`BDI得分`), "NA", as.character(`BDI得分`))]
+info1[, BAI_Score := fifelse(is.na(`BAI得分`), "NA", as.character(`BAI得分`))]
+info1 <- info1[, .(ID, BDI_Score, BAI_Score)]
+
+si1 <- merge(ep1_hdr, info1, by.x = "Subject", by.y = "ID", all.x = TRUE)
+si1 <- si1[order(as.integer(Subject))]
+si1_out <- data.table(
+  Subject_ID = si1$Subject,
+  Exp_id = "Hu_YQ_2026_ChinaSciData_Exp1",
+  Age = "NA",   # 手工维护（和原作者确认后填写）
+  Gender = fifelse(si1$Sex == "male", "Male", "Female"),
+  Handedness = "R",
+  Ethnicity = "/", Employment_Status = "/", Country = "/", First_Language = "/", Education = "/",
+  BDI_Score = si1$BDI_Score, BAI_Score = si1$BAI_Score)
+fwrite(si1_out, file.path(study_dir, "Exp1", "Hu_YQ_2026_ChinaSciData_Exp1_subj_info.csv"),
+       quote = "auto", bom = TRUE, na = "")
+message("Wrote Exp1 subj_info (", nrow(si1_out), " rows)")
+
+# --- Exp2 subj_info (Gender=NA 是编号首位 bug; Group 由编号第 2 位推导) ---
+exp2_subjects <- sort(unique(raw2$ID))
+si2_out <- data.table(
+  Subject_ID = exp2_subjects,
+  Exp_id = "Hu_YQ_2026_ChinaSciData_Exp2",
+  Age = "/",
+  Gender = "NA",
+  Handedness = "/",
+  Ethnicity = "/", Employment_Status = "/", Country = "/", First_Language = "/", Education = "/",
+  Group = zhou_group[substr(exp2_subjects, 2L, 2L)])
+fwrite(si2_out, file.path(study_dir, "Exp2", "Hu_YQ_2026_ChinaSciData_Exp2_subj_info.csv"),
+       quote = "auto", bom = TRUE, na = "")
+message("Wrote Exp2 subj_info (", nrow(si2_out), " rows)")
+
+message("DONE")
