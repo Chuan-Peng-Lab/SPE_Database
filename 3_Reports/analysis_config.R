@@ -4,15 +4,20 @@
 # 目的：把「哪些文件构成一个逻辑数据集」「哪些行进入分析」从三段代码里
 #       抽出来集中定义，避免三处各写一份、口径漂移。
 #
+# v4 相对 v3 的变化（2026-10-12，Hu_YQ_2026_ChinaSciData 结构重构之后）：
+#   Hu_YQ 的两个实验文件已由数据层重排为：`..._Exp1_Clean`（北京 2015，36 人，
+#   两个任务已合并为一个数据集）+ `..._Exp2_Clean`（开封 2023，26 人）。
+#   因此 v3 的「Exp1 + Exp2 合并」规则必须删除（否则会把北京与开封合成一个
+#   62 人数据集）；开封的基线阶段由 `Phase == "01_baseline"` 改为
+#   `Session == "baseline"`（新 Clean 的阶段名在 Session 列，Phase 只有
+#   practice/main）。本文件只改装配规则，分析模型不变。
+#
 # v3 相对 v2 的变化（均为数据侧规则变化，不是分析模型变化）：
 #   (1) 大文件分片：v2 用 pattern="_Clean\\.csv$"，匹配不到 2026-09-27 起的
 #       `_Clean_part<N>.csv`，会**静默丢掉整个数据集**（Sun_2026_DataExp_Exp1、
 #       Hu_YQ_2026_ChinaSciData_Exp2 各丢一个）。v3 匹配两种命名并按逻辑数据集
 #       rbind 还原（库规则：分片 = 一个数据集，不新增 Exp/不新增主索引行）。
-#   (2) Hu_YQ_2026_ChinaSciData：Exp1 与 Exp2 是北京同一批 36 名被试的两个任务
-#       （被试编号 6001–6036 完全重叠），按库规则合并为**一个**逻辑数据集，
-#       避免同一批人被计两次。Exp3 是开封训练研究，仅取训练前基线阶段
-#       `01_baseline`（训练 1–7 与 formal 是操纵结果，不进入基线 SPE 估计）。
+#   (2) Hu_YQ_2026_ChinaSciData：见 v4 说明（v3 的合并规则已废止）。
 #   (3) 保守法的「至少 3 个不同身份」判定：只数 6 类规范身份
 #       （Self/NonPerson/Stranger/Celebrity/Acquaintance/Close），
 #       奖赏（£1/£3/£9）、情绪（Happy/Neutral/...）、伪词（Filler）、
@@ -47,11 +52,9 @@ spe_logical_id <- function(path) {
 }
 
 # ---- Hu_YQ 结构性规则 ------------------------------------------------------
-HU_YQ_EXP1 <- "Hu_YQ_2026_ChinaSciData_Exp1_Clean"
-HU_YQ_EXP2 <- "Hu_YQ_2026_ChinaSciData_Exp2_Clean"
-HU_YQ_MERGED <- "Hu_YQ_2026_ChinaSciData_Exp1"          # 合并后（北京，36 人）
-HU_YQ_EXP3 <- "Hu_YQ_2026_ChinaSciData_Exp3_Clean"      # 开封训练研究（26 人）
-HU_YQ_EXP3_PHASE <- "01_baseline"                       # 仅训练前基线
+HU_YQ_EXP1 <- "Hu_YQ_2026_ChinaSciData_Exp1_Clean"      # 北京 2015，36 人（两任务已合并）
+HU_YQ_EXP2 <- "Hu_YQ_2026_ChinaSciData_Exp2_Clean"      # 开封 2023 训练研究，26 人
+HU_YQ_EXP2_BASELINE <- "baseline"                       # 仅训练前基线（Session 列取值）
 
 # ---- Sun_2026_DataExp 结构性规则 -------------------------------------------
 # 两任务 = 同批被试的两个 session：Task1（shape-matching，Session 2，2026-10-01 重建后）
@@ -104,22 +107,21 @@ spe_read_datasets <- function(root, cols, verbose = TRUE) {
 spe_apply_structure <- function(dt, practice_policy = PRACTICE_POLICY, verbose = TRUE) {
   dt <- data.table::copy(dt)
 
-  # (2a) 合并北京两个任务为一个逻辑数据集
-  n_before <- uniqueN(dt$Source)
-  dt[Source %in% c(HU_YQ_EXP1, HU_YQ_EXP2), Source := HU_YQ_MERGED]
-  if (verbose && n_before != uniqueN(dt$Source)) {
-    cat(sprintf("Hu_YQ：Exp1 + Exp2 合并为一个数据集（%d -> %d 个数据集）\n",
-                n_before, uniqueN(dt$Source)))
-  }
-
-  # (2b) 开封训练研究只保留训练前基线阶段
-  if ("Phase" %in% names(dt)) {
-    drop <- dt$Source == HU_YQ_EXP3 & (is.na(dt$Phase) | dt$Phase != HU_YQ_EXP3_PHASE)
-    if (verbose && any(drop)) {
-      cat(sprintf("Hu_YQ Exp3：仅保留 Phase == '%s'（剔除 %d 行 / %.0f%%）\n",
-                  HU_YQ_EXP3_PHASE, sum(drop), 100 * mean(drop[dt$Source == HU_YQ_EXP3])))
+  # (2a) Hu_YQ 结构性规则（v4，2026-10-12）
+  # 数据层已把北京两个任务合并为 `..._Exp1_Clean`（36 人）、开封训练研究编为
+  # `..._Exp2_Clean`（26 人）——两个数据集各自独立，此处不再做任何合并。
+  # 开封训练研究只保留训练前基线阶段（Session 列；Phase 仅 practice/main）。
+  if ("Session" %in% names(dt)) {
+    drop <- dt$Source == HU_YQ_EXP2 &
+      (is.na(dt$Session) | dt$Session != HU_YQ_EXP2_BASELINE)
+    if (verbose) {
+      cat(sprintf("Hu_YQ Exp2（开封）：仅保留 Session == '%s'（剔除 %d 行 / %.0f%%）\n",
+                  HU_YQ_EXP2_BASELINE, sum(drop),
+                  100 * mean(drop[dt$Source == HU_YQ_EXP2])))
     }
     dt <- dt[!drop]
+  } else if (HU_YQ_EXP2 %in% unique(dt$Source)) {
+    warning("Hu_YQ 开封数据集需要 Session 列以取训练前基线；请在调用脚本的 NEEDED 中加入 Session")
   }
 
   # (3) Sun_2026_DataExp：剔除 Task1（shape-matching，无身份维度），保留 Task2（self-matching）

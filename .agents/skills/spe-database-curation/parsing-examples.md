@@ -87,7 +87,7 @@ PsychoPy 导出 RT 通常是秒，但作者可能已 ×1000 存为 ms——**以
 1. **配对码（pairing code）唯一决定 (shape, personlabel, type)**：testlist 第 1 列 objnumber（1-9）→ 1/2/3 正确配对、4-9 错误配对；`personlabel 索引 = f(objnumber)`（{1,5,9}→1、{2,6,7}→2、{3,4,8}→3）、`shape 槽位 = f(objnumber)`（{1,4,7}→1、{2,5,8}→2、{3,6,9}→3）。
 2. **每试次呈现标签未写入 .dat 但可恢复**：标签数组（V10-V12 槽位标签 / 伪词按 version 分配）逐行重复写入，呈现标签 = 标签数组[f(objnumber)]——**确定性恢复后生成单值 Label 列**（Label1/2/3 式宽格式 = 槽位绑定、被试内恒定，≠ 每试次呈现标签，勿混用）。
 3. **验证法**：① .dat 与库内 raw 逐行 0 差异；② 按作者聚合脚本口径（正确试次 RT 均值 + MAD/200 上下限）重算其 xlsx 逐格对比——命中即确认解码正确；不命中先怀疑**作者脚本自身笔误**（Wozniak_2022 perm6 sequence 数组重复 5 缺 8，9 名 perm6 被试的 NM/NMLab 两格全偏，45/54 被试 9 格 100% 命中）。
-4. **伪词任务身份映射**：伪词无翻译（English 层保留原样），Standardized 层 = 该伪词在该被试槽位分配中的身份（V13 直给自我伪词）；两任务合并入库时用 `Task` 列区分（self-matching / self-pseudoWords），同一 Clean 文件（每被试两段各 360 行）。
+4. **伪词任务身份映射**：伪词无翻译（English 层保留原样），Standardized 层 = 该伪词在该被试槽位分配中的身份（V13 直给自我伪词）；两任务合并入同一 Clean 文件（每被试两段各 360 行）；2026-10-12 起两任务 `Task` 同为 `self-matching`，由 `Label` 列的原刺激区分（伪词 Nenu/Miru/Waru = 伪词任务；You/none/friend name = 标准任务）。
 
 ## 作者共享产物特征
 

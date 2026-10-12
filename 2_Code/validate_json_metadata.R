@@ -72,9 +72,9 @@ vocab_warn  <- character(0)
 vocab_known <- character(0)
 warn_vocab <- function(fmt, ...) vocab_warn <<- c(vocab_warn, sprintf(fmt, ...))
 known_vocab <- function(fmt, ...) vocab_known <<- c(vocab_known, sprintf(fmt, ...))
-# 豁免：Hu_YQ_2026_ChinaSciData 结构重构待执行（见 3_Reports/Hu_YQ_2026_Issues.md H1-H14），
-# 其 exp JSON 的受控词表偏差随重构一并修正，修正后删除本豁免。
-VOCAB_KNOWN <- c("Hu_YQ_2026_ChinaSciData")
+# 豁免：当前无（Hu_YQ_2026_ChinaSciData 的受控词表偏差已于 2026-10-12 修正，
+# Modality/Stimulus_order/SOA 均取受控值，原豁免随之删除）。
+VOCAB_KNOWN <- c()
 
 # --- collect JSON files (skip AppleDouble sidecars) ----------------------------
 json_files <- list.files(data_dir, pattern = "\\.json$",

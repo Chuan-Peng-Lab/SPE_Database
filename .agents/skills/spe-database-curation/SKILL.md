@@ -18,7 +18,7 @@ SPE Database（self-matching task, Sui et al. 2012）整理与入库规则：roo
 每层带机器可读 JSON 元数据。本技能是 curation 规范，**规则正文自足**（文件命名/JSON schema/Identity
 三级标准化/ACC 编码/列序模板 v2/Codebook/主索引字段语义/缺失三态/校验规则不依赖仓库级文档，可迁移
 任何采用本布局的 SPE 风格数据库）。**仅本仓库适用的内容**（迁移他库时删除）：工具路径与命令注记
-（`2_Code/`、`1_Data/utils.R`、`read_dataset_inf.py`、`Rscript …validate_*.R`，细节在 tools.md）；
+（`2_Code/`、`1_Data/utils.R`、`read_dataset_inf.py`、`Rscript …validate_*.R`，细节在 tools.md）；面向数据使用者的三层标准化简明说明见仓库内 `1_Data/README.md`（规则正文仍以本技能为准）；
 仓库集成收尾注记（PROJ_STATE.md 登记、AGENTS/README 计数、外置盘文件清理——正文在 AGENTS.md）。
 
 **文件组成**：`SKILL.md`（本文件，工作流+核心规则+速查表，日常加载）；`parsing-examples.md`
@@ -322,6 +322,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 - **行序约定**：数据行**始终按 ID 列字母序排列**（纯字典序，Python `sorted(key=ID)` 即同款）；新增研究入库时**追加后立即重排**（或直接插入排序位置），任何编辑后行序保持排序；校验手段：`python sorted` 检查或 `git diff` 只应显示内容/插入行而非整体乱序
 - 文献信息：`FirstAuthor`、`Year`（印刷年）、`PubType`（Journal/preprint/unpublished data）、`Journal`、`DOI`（论文 DOI）、`Country`、`City`、`Corresponding_author`、`Email`、`Repo_Link`（数据链接）、`License`、`Note`
 - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
+  - **`Male`/`Female` 缺失口径（2026-10-12 定案）**：数据文件中无性别信息、且原研究/作者处**有**该信息但我们未获得 → `missing`；仅有总体值而无法拆到本行（组间拆行、pair 研究等）→ 留空（不确定）；确无性别维度 → `NA`。
   - **N 口径**：`Sample_Size` **一律 = Clean 中被试总数**（数据口径）；招募/论文报告 N 与此不一致时记 Note（`Paper_N: X recruited, Y excluded; N in database` 式）。`Valid_Subj` = **作者对 summary-data 初步分析后保留的被试量**（= 论文分析样本）；因本库最小预处理不删除被试，通常 Valid = Sample；仅当作者剔除了**库内仍保留**的被试时 Valid < Sample（先例 Orellana-Corrales_2021_APP E1：Clean 34 / Valid 28）。`Drop_Subj` = Sample − Valid（库内被作者排除数，通常 0）；**未进库的招募排除不占 Drop，只进 Note**。pair 粒度研究按人数口径（Clean Subject=pair ID 时例外）+ Note 记 pair 粒度。
 - 设计：`Design`、`subj_Group`（被试分组列，**每 group 一行**：行的唯一性 = `Folder_Name` + `Exp` + `subj_Group` 三元组。组间设计研究按组拆分为多行（Exp 不变），每行 `subj_Group` 填**单个**原文组名（如 `LpSTS`，不用分号堆叠——该做法已废弃）；无组间设计保持单行填 `All`。展开后每行的 `Sample_Size`/`Valid_Subj`/`Male`/`Female` 填**组内值**（数据可拆按数据、否则按论文；论文亦无 → **留空 = 不确定**，CSV 禁用 `/`，三态见本节缺失标记），总体口径与组名映射记 Note；展开行的 `ID`/`Paper_ID`/`Paper` 无稿件对应时留空。**组间判定**：`Design` 列含 between-subjects/Group 标记是直接依据，但 Design 未标注不代表无组间——需以全文核对（案例：Xu_2022、Constable_2020 Switch Identity、Vicovaro E2 self-symmetry/asymmetry 均仅见于全文）；试次级/被试内变量不展开；在线研究（MTurk/Prolific 等）按平台被试主体标 Country（如 MTurk→United States）。`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
 - 流程：`Practice_Block`、`Practice_Trial`、`numBlocks`、`numTrials`、`Environmental_Info`（**刺激呈现软件**，非 Lab/Online 设置）
@@ -482,17 +483,25 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
     独立脚本模式（Wozniak_2018/Hu_2020 同款）：Rmd 段删除留指针注释、`<Folder_Name>_clean.R` 从 Rmd 原代码复制
     仅改问题处、一致性检查按有效被试进行（无效被试已知重复，不参与唯一性检查）。
 - **任务与附加自变量命名（全库统一）**：
-  - `Task` 列：**全库标准列**，区分"联结对象是否含自参照身份"的任务类型。默认值 `self-matching`
-    （形状↔自我/他人联结，数据库核心）；其他受控值：`facialExpression-matching`（联结纯情绪面孔）、
-    `monetaryValue-matching`（联结金钱价值）、`self-pseudoWords`（形状↔伪词配对，Wozniak_2022）、
-    `shape-matching`（形状↔形状名匹配的**无身份基线**任务，Sun_2026_DataExp Task1/Day-2 几何图形版）、
-    `choice-task`（**二择一知觉辨别**任务：判断刺激的感觉特征本身、无匹配判断——如随机点阵的运动方向/
-    主色辨别，Wu_2026_Chinaxiv 的辨别任务；此类任务仍可由 `Shape`/`Label` 的 Identity 三层承载联结身份，
+  - `Task` 列：**全库标准列**，区分"联结对象是否含自参照身份"的任务类型。受控值（2026-10-12 统一）：
+    ① `self-matching`（默认，数据库核心）：形状↔自我/他人等**自参照身份**联结的匹配判断；
+    ② `shape-matching`：**联结对象不含自参照身份**的形状-标签匹配（如形状↔形状名、形状↔情绪面孔、
+    形状↔货币金额、以及同一任务内混合联结类型的匹配判断）。**原 `facialExpression-matching`
+    （纯情绪面孔联结）与 `monetaryValue-matching`（金钱价值联结）已于 2026-10-12 并入本值**，
+    历史文件不再使用旧取值；
+    ③ `choice-task`：**二择一知觉辨别**任务（判断刺激的感觉特征本身、无匹配判断——如随机点阵的运动方向/
+    主色辨别，Wu_2026_Chinaxiv；此类任务仍可由 `Shape`/`Label` 的 Identity 三层承载联结身份，
     组内其他操纵归 extraIV）。
-    多任务研究（如 Hobbs 三任务）按行填对应值；单任务研究填默认值。判定标准：
-    **联结对象含自参照身份 → self-matching（任务内其他操纵归 extraIV）；不含 → 其他 Task 值**。
+    多任务研究按行填对应值；单任务研究填默认值。判定标准：
+    **联结对象含自参照身份 → self-matching（任务内其他操纵归 extraIV）；不含 → shape-matching 等**。
     同一研究含多个任务时，用 `Session`/`Task` 两列共同区分（Sun_2026_DataExp：Session 2 + shape-matching、
     Session 3 + self-matching，整合为同一 Clean 文件）。
+    **同值多任务的信息保全（2026-10-12 定规）**：一项研究内多个任务共用同一 `Task` 值时，任务/刺激的区分信息
+    **必须**由刺激列与 identity 列（必要时加 `extraIV1`-`extraIV2`）承载，并在 Codebook 与 exp JSON detail 写明，
+    **不得只依赖 `Task` 列**。已登记两例：① Hobbs_2023_PsychMed 的情绪与金钱任务同为 `shape-matching`，
+    以 identity 列区分（Self = Self/Close/Stranger、Valence = happy/neutral/sad、Reward = £9/£3/£1）；
+    ② Wozniak_2022_PsychRes 的伪词任务与标准自我任务同为 `self-matching`，以 `Label` 列的原刺激区分
+    （伪词 Nenu/Miru/Waru = 伪词任务；You/none/friend name = 标准任务；两任务的 `Shape` 列同为身份槽位标签）。
   - `extraIV1`/`extraIV2`：self-matching 任务内的**额外操纵自变量**（第 3/4 自变量）统一命名
     （如 Blocktype→extraIV1、Expectancy→extraIV1、Domain→extraIV1 + Valence→extraIV2 等）。
     每研究的 extraIV 具体语义（值、操纵定义、论文文字对应）**必须登记在 Codebook 与 exp JSON detail**
@@ -540,6 +549,20 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   （货币刺激，Lee E2）、`ingroup`（内群体成员/搭档，Constable_2019 E4 的 Coactor：pair 中另一名
   队友；论文行为与 Stranger 无差异但语义为组内成员，用户决策）。使用条件：语义无法归入
   6 类时允许原样/自定义值，须在 Codebook 枚举注明。
+  **已登记的规范外取值清单（2026-10-12 全库摸底核定；写入前先核对本清单，新增取值须先登记）**：
+
+  | 取值 | 含义 | 已登记研究 |
+  |---|---|---|
+  | `£1`/`£3`/`£9`；`￥1`/`￥16` | 货币金额刺激（非身份类别，原样保留） | Lee_2023_Cognition_Exp2；Hobbs_2023_PsychMed_Exp1；Hu_YQ_2026_ChinaSciData_Exp1 |
+  | `happy`/`neutral` | 情绪刺激（情绪条件下无自参照身份，原样保留） | Hu_YQ_2026_ChinaSciData_Exp1（全库唯一） |
+  | `ingroup` | 内群体成员/搭档（pair 研究，语义为组内） | Constable_2019_JEPHPP_Exp4 |
+  | `Filler` | 无身份伪词试次（试次类型） | Hu_YQ_2026_ChinaSciData_Exp2（全库唯一） |
+  | `NA` | 该行/该侧确无身份信息（不适用）：如 choice-task 无匹配维度、源文件占位行 | Wu_2026_Chinaxiv_Exp1/Exp2；Zhang_2023_NeuroImage_Exp1（占位行） |
+  | `subj_name` | 呈现刺激为**被试提供的名字**但姓名列已匿名化（占位值，保留"呈现的是名字"这一信息；对应 `Label`/`Label_Origin_Identity`/`Label_English_Identity` 的同一占位值） | Hobbs_2023_PsychMed_Exp1 的 self 任务非匹配行（8,640 行，2026-10-12 由 `missing` 改此值，依据论文 Methods"被试提供自己/朋友/陌生人的 first name"） |
+| `missing` | **原研究有该信息、库内未获得**（共享文件未记录、匿名化删除等）；使用场景应极少 | Zhao_2026_PsychonBullRev_Exp1–3 的非匹配行（共享文件未记录标签词，共 23,686 行） |
+
+  取值语义分工：`NA` = 明确不适用/无信息；`missing` = 信息存在但未获得；两者都不得用于"尚未核对"的场合。
+  上述清单以外出现新取值时，按「人工决策点」暂停确认后再登记。
   **集体自我（group-self）规则（Constable_2019 系列）**：
   集体自我身份（we/team 类）全库仅 Constable_2019 使用。处理：① Origin 层保留原文
   （We/Team/Person1/Person2 等）；② English 层统一术语 `Individual_Self/Group-Self/
@@ -560,7 +583,8 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   删除了该列），则 `Label` 与 `Label_Origin_Identity`/`Label_English_Identity` 一律写占位值 `subj_name`
   （比 `missing` 保留了「该试次呈现的是被试提供的名字」这一信息，也便于与「确无标签刺激」区分）；
   `Label_Standardized_Identity` 在**可推处**填身份（如 Matching 试次上呈现名必为该形状所关联的人 → 等于该形状身份）、
-  不可推处（如非匹配试次，只知不是形状身份）填 `missing`。先例：Hobbs_2023_PsychMed self 任务（论文 Methods 明写
+  不可推处（如非匹配试次，只知是"被试提供的名字之一"而无法确定是哪一位）填同一占位值 `subj_name`
+  （2026-10-12 定案：该列表达的是"呈现的是被试提供的名字"，比 `missing` 保留更多信息；`missing` 仅用于信息确实无法获得的场合）。先例：Hobbs_2023_PsychMed self 任务（论文 Methods 明写
   Self 条件用 first names；作者 cleaning 脚本 `associative_df$Label[Task == "Self"] <- NA`）。
 - **刺激-身份绑定恢复（Vicovaro 先例）**：作者导出可能只记录身份而丢弃几何
   形状、且绑定 counterbalanced——从作者实验代码/逐被试配置恢复（Vicovaro OrdineP#.xlsx 的
