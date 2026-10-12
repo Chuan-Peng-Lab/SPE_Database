@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Wozniak_2022_PsychRes rebuild (2026-09): per-trial Label recovery for the standard
-self-matching task + ingestion of the pseudo-words task (self-pseudoWords), merged into
-one Clean file per experiment with a Task column. Idempotent: standard task rebuilt
-from raw.csv (V1-V16), words task parsed from per-subject .dat files.
+"""Wozniak_2022_PsychRes rebuild (2026-09; Task unified 2026-10-12): per-trial Label
+recovery for the standard self-matching task + ingestion of the pseudo-words task,
+merged into one Clean file per experiment. Both tasks carry Task = "self-matching";
+the tasks are told apart by the Label column's original stimulus (pseudo-words
+Nenu/Miru/Waru = pseudo-words task; You/none/friend name = standard task), as the
+Shape column holds the identity slot label in both tasks. Idempotent: standard task
+rebuilt from raw.csv (V1-V16), words task parsed from per-subject .dat files.
 """
 import csv, io, glob, os
 from collections import Counter
@@ -85,7 +88,7 @@ for exp, wtask in WORDS_TASKS.items():
             rt = v["V16"]
             words_rows.append({
                 "Subject": subj, "Shape": shape_id_clean, "Label": pseudo,
-                "Task": "self-pseudoWords",
+                "Task": "self-matching",   # 2026-10-12 统一；由 Label 列原刺激区分任务
                 "Matching": "Matching" if v["V14"] == "1" else "Nonmatching",
                 "Label_Origin_Identity": pseudo, "Label_English_Identity": pseudo,
                 "Label_Standardized_Identity": std_identity(label_id_clean),
@@ -114,15 +117,17 @@ for exp, wtask in WORDS_TASKS.items():
 
     # ---- guards ----
     taskc = Counter(r["Task"] for r in merged)
-    assert taskc["self-pseudoWords"] == 6480, f"{exp}: {taskc}"
-    assert taskc["self-matching"] in (6473, 6480), f"{exp}: {taskc}"
-    per = Counter((r["Subject"], r["Task"]) for r in merged)
-    assert all(v == 360 or (k == ("3002", "self-matching") and v == 353) for k, v in per.items()), f"{exp}: {[k for k,v in per.items() if v!=360][:3]}"
+    assert set(taskc) == {"self-matching"}, f"{exp}: {taskc}"
+    assert sum(taskc.values()) in (12953, 12960), f"{exp}: {taskc}"
+    pseudo = Counter(1 for r in merged if r["Label"] in PSEUDO_BY_VERSION[1])
+    assert sum(pseudo.values()) == 6480, f"{exp}: pseudo rows {sum(pseudo.values())}"
+    per = Counter(r["Subject"] for r in merged)
+    assert all(v == 720 or (k == "3002" and v == 713) for k, v in per.items()), f"{exp}: {[k for k,v in per.items() if v!=720][:3]}"
     # 同一被试同一伪词 LStd 唯一
     for subj in subj_order:
         ls = {}
         for r in merged:
-            if r["Subject"] == subj and r["Task"] == "self-pseudoWords":
+            if r["Subject"] == subj and r["Label"] in PSEUDO_BY_VERSION[1]:
                 ls.setdefault(r["Label"], set()).add(r["Label_Standardized_Identity"])
         assert all(len(v) == 1 for v in ls.values()), f"{exp} {subj}: {ls}"
     print(f"{exp}: ✓ {len(merged)} 行 ({dict(taskc)}), guards 通过")

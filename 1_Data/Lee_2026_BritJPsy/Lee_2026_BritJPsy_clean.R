@@ -32,7 +32,7 @@
 ## 输出（3 个实验文件夹，每个含 raw/Clean/subj_info 三 CSV；列序对齐 SKILL 模板 v2）：
 ##   Exp1a/Exp1b：标准 self-matching（形状↔自我/朋友/陌生人联结）+
 ##     extraIV1 = 情绪 prime（happy/neutral；sad/neutral）
-##   Exp2：facialExpression-matching（形状↔情绪面孔联结，Task 受控值）
+##   Exp2：shape-matching（形状↔情绪面孔联结；2026-10-12 起统一取值，原 facialExpression-matching）
 ##     + extraIV1 = 人名 prime（self/stranger）
 ## =====================================================================
 
@@ -152,7 +152,7 @@ make_exp1 <- function(expfolder, exp_code, prime_levels) {
   clean
 }
 
-## ---------------- Experiment 2：facialExpression-matching + 人名 prime -------------
+## ---------------- Experiment 2：shape-matching（情绪面孔）+ 人名 prime -------------
 make_exp2 <- function() {
   sat <- read_exp("E2_SSt_E_data")
   n_sat <- sat[, .N, by = subject]
@@ -172,7 +172,7 @@ make_exp2 <- function() {
   )]
   cols <- c("Subject", "Task", "Block", "Trial", "Matching",
             "Shape", "Label", "extraIV1", "RT_ms", "ACC")
-  d[, Task := "facialExpression-matching"]
+  d[, Task := "shape-matching"]  # 2026-10-12 统一取值
   clean <- d[, .SD, .SDcols = cols]
   setorderv(clean, c("Subject", "Block", "Trial"))
   clean

@@ -39,6 +39,6 @@
         "Background": "Gray"
       }
     },
-    "detail": "Experiment 3 (WordsSelfPairing): two tasks. (1) standard self-matching as Exp1. (2) self-pseudoWords task (SelfPriorExp_WordsSelfPairing): pseudo-words paired with identities 'Nenu pairs with You' (word-identity pairing); 360 trials. Label recovery and Clean merge as Exp1. Setting normalized to \"Laboratory\" 2026-10 (was: \"Laboratory setting\"). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\")."
+    "detail": "Experiment 3 (WordsSelfPairing): two tasks. (1) standard self-matching as Exp1. (2) self-pseudoWords task (SelfPriorExp_WordsSelfPairing): pseudo-words paired with identities 'Nenu pairs with You' (word-identity pairing); 360 trials. Label recovery and Clean merge as Exp1. Setting normalized to \"Laboratory\" 2026-10 (was: \"Laboratory setting\"). Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneously\"). (2026-10-12) Task unified: both tasks of this experiment carry Task = 'self-matching' (the pseudo-words task formerly used 'self-pseudoWords'); tell them apart by the Label column (pseudo-words Nenu/Miru/Waru = pseudo-words task; You/none/friend name = standard task), since the Shape column holds the identity slot label in both tasks."
   }
 }
