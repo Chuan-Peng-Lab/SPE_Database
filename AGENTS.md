@@ -58,7 +58,7 @@ Agent 在本仓库的角色 = **心理学 / 认知科学 / 认知神经科学 / 
 - `PROJ_STATE.md` — 会话状态摘要：新会话先读它再开工；每 session 收尾更新一次（见 §会话收尾）。
 - `.agents/skills/spe-database-curation/SKILL.md` — curation 规则正文归属（自足、可迁移他库）；任何数据整理/入库任务一律先加载 `skill(name="spe-database-curation")`（跨工具技能根 `.agents/skills`，DSH/opencode 均自动加载）。
 - 引用方向：README ↔ AGENTS ↔ PROJ_STATE 相互引用并**统一指向技能**；每条规则正文只写一个归属文件，其余文件只放一行指针（含目标节）。
-- 其他重要文档（正文均在各自文件，此处只放指针）：`3_Reports/Table1_Issues_Solvability.md`（稿件 Table 1 差异逐项可解性判定，与 PROJ_STATE §3 双向关联）；`3_Reports/Verifying_original_results_issues.md`（多源交叉核验发现的问题统一记录处）；`3_Reports/Hu_YQ_2026_Issues.md`（`Hu_YQ_2026_ChinaSciData` 条目问题清单与处置记录：结构重构已于 2026-10-12 完成并入 §3，剩余为输入区来源缺口 H1 与设计/口径待确认项 H2–H14、N1–N4）；`3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md`（`Wu_2026_Chinaxiv` 入库计划：列序与自变量映射、三方核对、exp JSON 字段完整性、Codebook 编写计划与其 §10 Issues 清单 = Wu Issue 1–8 独立编号）；`REF/README_html2md.md`（REF 全文 html→json→md 管线用法）；`For_COLLABORATORS.md`（给合作者的推进指南：待数据补齐路径、新研究入库 4 步、REF 不上 GitHub 需联系 hcp4715）。
+- 其他重要文档（正文均在各自文件，此处只放指针）：`3_Reports/Table1_Issues_Solvability.md`（稿件 Table 1 差异逐项可解性判定，与 PROJ_STATE §3 双向关联）；`3_Reports/Verifying_original_results_issues.md`（多源交叉核验发现的问题统一记录处）；`3_Reports/Hu_YQ_2026_Issues.md`（`Hu_YQ_2026_ChinaSciData` 未解决问题清单：**只记未解决项**——H1 输入区原始数据、H2 开封公开版本、H3 任务映射、H5/H6/H8/H9/H14③ 设计与口径、N1–N3、N5 开封交付缺漏；已解决编号不再保留）；`3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md`（`Wu_2026_Chinaxiv` 入库计划：列序与自变量映射、三方核对、exp JSON 字段完整性、Codebook 编写计划与其 §10 Issues 清单 = Wu Issue 1–8 独立编号）；`REF/README_html2md.md`（REF 全文 html→json→md 管线用法）；`For_COLLABORATORS.md`（给合作者的推进指南：待数据补齐路径、新研究入库 4 步、REF 不上 GitHub 需联系 hcp4715）。
 
 ## 项目逻辑与任务判别（单向数据管道）
 
