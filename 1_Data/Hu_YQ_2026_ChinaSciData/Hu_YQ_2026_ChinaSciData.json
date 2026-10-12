@@ -1,6 +1,6 @@
 {
   "Paper_name": "Data for Training Effect of Self Prioritization",
-  "Summary": "Cleaned, de-identified, minimally preprocessed trial-level behavioral data of two self-prioritization training-effect experiments: Experiment 1 collected by Chuan-Peng et al. (2015, unpublished; Tsinghua University, Beijing) and Experiment 2 collected by Zhou et al. (2023, unpublished; Henan University, Kaifeng), both from the same research team led by Chuan-Peng. Participants learned shape-label associations and judged whether each presented shape-label pair matched the learned association. Data follow the SPE Database schema (v2).",
+  "Summary": "Cleaned, de-identified, minimally preprocessed trial-level behavioral data of two self-prioritization training-effect experiments: Experiment 1 collected by Chuan-Peng et al. (2015, unpublished; Tsinghua University, Beijing) and Experiment 2 collected by Zhou et al. (2023, unpublished; Henan University, Kaifeng). Participants learned shape-label associations and judged whether each presented shape-label pair matched the learned association. Data follow the SPE Database schema (v2).",
   "Year": "2026",
   "Author": "Yuqian Hu; Chenghao Zhou; Yanan Chen; Kaiping Peng; Jie Sui; Hu Chuan-Peng",
   "Journal": "/",
@@ -8,6 +8,6 @@
   "City": "Beijing, Kaifeng",
   "Extra_Var": "type_of_association, type_of_target",
   "Email": "/",
-  "DOI": "10.57760/sciencedb.08117",
+  "DOI": "/",
   "Conclusion": "The dataset bundles two experiments: Exp 1 (self-matching / reward / emotion associations), and Exp2 (matching-verification training, matching-first vs nonmatching-first groups). See the experiment JSONs for full design details."
 }
