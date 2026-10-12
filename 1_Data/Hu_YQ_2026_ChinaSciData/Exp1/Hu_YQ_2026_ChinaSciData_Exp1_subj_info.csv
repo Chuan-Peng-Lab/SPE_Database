@@ -1,5 +1,5 @@
 ﻿"Subject_ID","Exp_id","Age","Gender","Handedness","Ethnicity","Employment_Status","Country","First_Language","Education","BDI_Score","BAI_Score"
-6001,"Hu_YQ_2026_ChinaSciData_Exp1",26,"Male","R","/","/","/","/","/",4,"NA"
+6001,"Hu_YQ_2026_ChinaSciData_Exp1",26,"Male","R","/","/","/","/","/",4,"/"
 6002,"Hu_YQ_2026_ChinaSciData_Exp1",23,"Female","R","/","/","/","/","/",2,21
 6003,"Hu_YQ_2026_ChinaSciData_Exp1",20,"Male","R","/","/","/","/","/",5,26
 6004,"Hu_YQ_2026_ChinaSciData_Exp1",20,"Female","R","/","/","/","/","/",3,21
@@ -7,7 +7,7 @@
 6006,"Hu_YQ_2026_ChinaSciData_Exp1",19,"Female","R","/","/","/","/","/",21,66
 6007,"Hu_YQ_2026_ChinaSciData_Exp1",21,"Male","R","/","/","/","/","/",5,31
 6008,"Hu_YQ_2026_ChinaSciData_Exp1",25,"Male","R","/","/","/","/","/",2,22
-6009,"Hu_YQ_2026_ChinaSciData_Exp1","NA","Female","R","/","/","/","/","/",1,21
+6009,"Hu_YQ_2026_ChinaSciData_Exp1","/","Female","R","/","/","/","/","/",1,21
 6010,"Hu_YQ_2026_ChinaSciData_Exp1",21,"Female","R","/","/","/","/","/",21,27
 6011,"Hu_YQ_2026_ChinaSciData_Exp1",19,"Female","R","/","/","/","/","/",5,25
 6012,"Hu_YQ_2026_ChinaSciData_Exp1",21,"Female","R","/","/","/","/","/",7,35

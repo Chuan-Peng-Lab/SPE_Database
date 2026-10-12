@@ -1,13 +1,13 @@
 {
   "Paper_name": "Data for Training Effect of Self Prioritization",
-  "Summary": "Cleaned, de-identified, minimally preprocessed trial-level behavioral data of two self-prioritization training-effect experiments: Experiment 1 collected by Chuan-Peng et al. (2015, unpublished; Tsinghua University, Beijing) and Experiment 2 collected by Zhou et al. (2023, unpublished; Henan University, Kaifeng). Participants learned shape-label associations and judged whether each presented shape-label pair matched the learned association. Data follow the SPE Database schema (v2).",
+  "Summary": "Cleaned, de-identified, minimally preprocessed trial-level behavioral data of two self-prioritization experiments: Experiment 1 collected by Chuan-Peng Hu et al. (2015, Tsinghua University, Beijing) with two association tasks (association-type-matching and self-matching), and Experiment 2 collected by Chenghao Zhou et al. (2023, Henan University, Kaifeng), a matching-verification training study. Participants learned shape-label associations and judged whether each presented shape-label pair matched the learned association. Year refers to the year of this data record (2026); the data-collection periods are 2015 (Experiment 1) and 2023 (Experiment 2) as recorded in Collected_date of the experiment JSONs. Data follow the SPE Database schema (v2).",
   "Year": "2026",
   "Author": "Yuqian Hu; Chenghao Zhou; Yanan Chen; Kaiping Peng; Jie Sui; Hu Chuan-Peng",
   "Journal": "/",
   "Country": "China",
   "City": "Beijing, Kaifeng",
-  "Extra_Var": "type_of_association, type_of_target",
-  "Email": "/",
+  "Extra_Var": "association type (self-other / happy-neutral / high-low reward); emotional expression; training group",
+  "Email": "hcp4715@hotmail.com",
   "DOI": "/",
-  "Conclusion": "The dataset bundles two experiments: Exp 1 (self-matching / reward / emotion associations), and Exp2 (matching-verification training, matching-first vs nonmatching-first groups). See the experiment JSONs for full design details."
+  "Conclusion": "The dataset bundles two experiments: Experiment 1 (Beijing 2015) with an association-type-matching task (self-other, happy-neutral and high-low reward associations) and a self-matching task (self/friend/stranger identity x emotional expression); Experiment 2 (Kaifeng 2023) with matching-verification training (matching-first vs nonmatching-first groups; baseline, training 1-7 and post-test). See the experiment JSONs for full design details."
 }

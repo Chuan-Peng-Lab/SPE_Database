@@ -13,32 +13,33 @@
       "Viewing_distance": "~57 cm"
     },
     "Experimental_Design": {
-      "Conditions": "2 (group: matching-first / nonmatching-first, between) x 9 (phase: baseline, training 1-7, post-test, within) x matching (matching / nonmatching, within) x identity (self / other, within), plus filler trials (no identity)"
+      "Conditions": "2 (group: matching-first / nonmatching-first, between) x 9 (session: baseline, training 1-7, post-test, within) x matching (matching / nonmatching, within) x identity (self / other, within), plus filler trials (no identity)"
     },
     "Block_Structure": {
-      "Block_number": "formal: 2 blocks; practice: 2 blocks (320-trial version) or 4 blocks (240-trial version)",
-      "Trial_number": "320-version: formal 2 x 160 = 320 trials, practice 2 x 24 = 48 trials; 240-version: formal 2 x 120 = 240 trials, practice 4 x 30 = 120 trials",
-      "Practice_trials": "48 (320-version) / 120 (240-version)"
+      "Block_number": "formal: 2 blocks; practice: 2 blocks (320-trial version) or 4 blocks (240-trial version). The source exports carry no block or trial numbers (open item)",
+      "Trial_number": "320-trial version: formal 2 x 160 = 320 trials, practice 2 x 24 = 48 trials; 240-trial version: formal 2 x 120 = 240 trials, practice 4 x 30 = 120 trials",
+      "Practice_trials": "48 (320-trial version) / 120 (240-trial version); declared value to be confirmed by the original author (open item)"
     },
     "Trial_Structure": {
       "Fixation_duration": "/",
       "Stimulus_duration": "100 ms",
-      "SOA": "/",
-      "Stimulus_order": "simultaneous (shape and label displayed together)",
+      "SOA": "0 ms (simultaneous)",
+      "ISI": "/",
+      "Stimulus_order": "Simultaneous",
       "Response_deadline": "1200 ms",
       "ITI": "1200 ms",
-      "Feedback_duration": "500 ms (practice only; formal has no feedback)"
+      "Feedback_duration": "500 ms (practice only; no feedback in the formal sessions)"
     },
     "Stimulus_Properties": {
-      "Modality": "Visual (geometric shapes + Chinese person labels)",
+      "Modality": "Visual",
       "Fixation": "/",
-      "Shape": "Square, Circle; shape-label correspondence counterbalanced across participants by ID parity (even: self-circle/other-square; odd: self-square/other-circle)",
-      "Label": "Self, Other (自我, 他人); Filler: 白栽, 地入 (pseudo-words referencing self/other in character structure)",
+      "Shape": "square, circle; shape-label correspondence counterbalanced across participants by ID parity (even ID: self = circle / other = square; odd ID: self = square / other = circle)",
+      "Label": "自我 (self), 他人 (other); filler pseudo-words: 白栽, 地入 (character-structure references to self / other)",
       "Colors": {
         "Stimulus": "/",
         "Background": "/"
       }
     },
-    "detail": "Experiment 2 of a dual-process evidence-accumulation model of the self-prioritization effect, adapted from Sui et al. (2012). 26 participants: matching-first group 14 (11001-11011, 21001-21003), nonmatching-first group 12 (12001-12010, 22001-22002); group determined by the 2nd ID digit. Software is PsychoPy (not E-Prime). Two program versions exist: 17 sessions used the 240-trial legacy version (11 in baseline + 6 in training2/4/5), the rest the 320-trial version; stimuli, timing, keys, and shape-label mapping are identical across versions. Group and TrialType columns added during merge; Matching column has 3 values: Matching (= match), Nonmatching (= mismatch), and filler (a meaningful no-identity trial type, kept as-is rather than coded NA; the raw PsychoPy code 'fill' was renamed to 'filler' in Clean). 26 participants x 9 sessions (baseline + training1-7 + formal) = 234 theoretical sessions; 18 sessions missing across 15 participants. Fully missing (both main and practice files absent; 13): 11001-training4, 11005-training4, 11007-training4, 11009-training5, 11011-training4, 11011-training7, 12001-baseline, 12003-training4, 12004-training4, 12008-training6, 12009-training3, 21003-training2, 21003-training4. Partially missing (practice file present but main file absent; 5): 11002-training2, 12002-training7, 12007-training3, 12007-training6, 22001-training4. training4 is the most commonly missing session (8 = 7 fully + 1 partially). Known data issues: baseline/11001 contains files whose ID column is mislabeled 11003 (belongs to 11001); the raw CSV resolves this by using the folder name as ID; baseline/12001 is a copy of 12002 (12001 own baseline missing); training3/11006 block 2 keys reversed (accuracy 0.925 after swapping o/p); training1/22002 keys reversed (corrected by fit_error.m); training3 and training4 of 12010 are the same session. Demographic bug (per original author): the program stored the ID first digit in the 'Gender' column, so the raw table's Gender column (values 1/2) is actually the ID first digit, not real gender; this Gender column is kept only in the raw CSV and dropped from the Clean CSV (it is not real demographic data); subj_info Gender is therefore NA. No standardized *_raw.csv produced yet; raw per-session PsychoPy exports are in Exp2/Raw/. Consolidated into study Hu_YQ_2026_ChinaSciData (Exp2) on 2026-10-04. Session column = phase (baseline; training1-7; formal, where formal = the post-test); Phase column = practice/main, per phase. Both taken from the merged raw file Hu_YQ_2026_ChinaSciData_Exp2_raw.csv (built from Exp2/Raw/sub-*/ per-session PsychoPy exports). "
+    "detail": "Experiment 2 of a dual-process evidence-accumulation model of the self-prioritization effect, adapted from Sui et al. (2012); a matching-verification training study with 26 participants (matching-first 14: 11001-11011, 21001-21003; nonmatching-first 12: 12001-12010, 22001-22002; group = 2nd ID digit). Software is PsychoPy (not E-Prime). Session = one lab visit / training time point (baseline, training 1-7, formal = post-test); all nine sessions of a participant fall on distinct dates (verified from the raw Date column). Phase = practice / main within each session. Two program versions exist: 17 sessions used the 240-trial legacy version (11 baseline + 6 in training 2/4/5), the rest the 320-trial version; stimuli, timing, keys and shape-label mapping are identical across versions. Matching has three values: Matching (is_match = match), Nonmatching (is_match = mismatch) and filler (no-identity pseudo-word trials, kept as-is rather than recoded; registered exception in validate_clean_csv.R, cf. Wu_2026_Chinaxiv). Label-side identity columns describe the presented label word; Filler is kept as-is in Label_Standardized_Identity (registered exception). The Clean table has no Block/Trial columns because the source exports contain no block or trial numbers; trial order is preserved by the row order within each session (open item, awaiting confirmation by the original author). RT_ms is computed as (res_time - stim_start) * 1000; a missing response (reaction '[]') is written as NA in Response/RT_ms/ACC. Standardized raw table: Hu_YQ_2026_ChinaSciData_Exp2_raw.csv (23 columns, 79,592 rows, 18.3 MB), merged from the per-session PsychoPy exports in Exp2/Raw/sub-<ID>/<phase>/ (main file <ID>.xlsx, practice file <ID>练习.xlsx); the participant ID is taken from the folder name. Source anomalies kept as delivered: one baseline export of participant 11001 is mislabelled 11003 in its ID column; the baseline folder of 12001 contains a copy of 12002 while 12001's own baseline is missing; training3 and training4 of 12010 are the same session; training3/11006 block 2 and training1/22002 have reversed response keys (corrected by fit_error.m). Demographic bug: the program stored the ID first digit in its 'Gender' column, so that column holds no gender information; subj_info Gender = NA and the index Male/Female are recorded as 'missing' (the study has the information, the delivered data does not) pending author confirmation. 26 participants x 9 sessions = 234 theoretical sessions; 18 sessions are missing across 15 participants: 13 fully missing (both main and practice files absent) - 11001-training4, 11005-training4, 11007-training4, 11009-training5, 11011-training4, 11011-training7, 12001-baseline, 12003-training4, 12004-training4, 12008-training6, 12009-training3, 21003-training2, 21003-training4 - and 5 with the practice file only: 11002-training2, 12002-training7, 12007-training3, 12007-training6, 22001-training4 (training4 is the most frequently missing session: 8)."
   }
 }
