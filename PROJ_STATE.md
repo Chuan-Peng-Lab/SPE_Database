@@ -44,14 +44,13 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 |---|---|---|---|
 | Orellana-2020 Study 2 | Subject 34 仅 edat2（无 txt）；Subject 1-28 人口学缺失 | 已记 CSV Note | 不主动追；等作者/用户提供原始导出 |
 | Zhang-2024 | exp1 数据 43 vs 论文 42 分析（差 1 原因未知）；人口学缺失 | 数据口径 43，论文口径记 Note | 不主动改 |
-| Zhao_2026_PsychonBullRev（Psychon Bull Rev，DOI 10.3758/s13423-026-03000-8；3 实验 ×4 行〔Exp3 按任务组拆两行〕，2026-09-09 录入） | OSF（osf.io/j2pxc）共享的是作者**筛选后的分析试次文件**：仅留有反应且 RT≥200 ms 的试次（缺无反应/过速试次约 2–5%）、无 block/trial 编号与逐试次形状几何/标签文字（身份绑定 counterbalanced 未记录）；屏幕标签语言/文字与呈现软件未确认；数据仓库未公开、License 未声明（已去信请求公开 + CC BY 4.0 与原始导出）；**输入区 `Zhao_2026_PsychonBullRev_Raw/` 当前不存在**（clean.R 头部称已归档、脚本 stopifnot 依赖该目录），原始 OSF 导出（hddm_trial_data / behavior_questionnaire xlsx）未在库内保留 → clean.R 无法重跑、缺 provenance（2026-09-25 发现） | Clean/subj_info/Codebook/JSON 已建，两级校验 0 ERROR（Exp3 两条 W2 为「Clean 两组 44 人 vs CSV 按组 22」口径，与 Constable_2021 等先例同类）；Status 留空 | 作者回复后：补原始导出（若可得）重跑 clean.R、确认语言/软件后更新 Origin/Environmental_Info/Stim_language、公开 OSF 后填 Repo_Link 公开态与 License，再置 Status=1；**补录/重新下载 OSF 原始 xlsx 至输入区，恢复 clean.R 可重跑性（2026-09-25 待办）** |
 
 | Hu_YQ_2026_ChinaSciData（中国科学数据，DOI 10.57760/sciencedb.08117；2 实验 / 4 行 / 62 人） | **无输入区** `Hu_YQ_2026_ChinaSciData_Raw/`（H1）→ 清洗脚本不能在库内重跑、标准文件无法回溯复核；开封数据公开版本未核实（H2）；任务↔文件映射待作者确认（H3）；设计/口径待确认：开封练习段（H5）与 block 口径（H6）、北京练习试次数（H8）、被试级试次差异（H9）、情绪形状任务的 `Stim_Type`（H14③）、开封块/试次编号（N3）；材料待补：开封性别（N1）、6009/6031 年龄（N2）、开封 18 个缺失阶段与 4 处异常导出（N5） | Clean / raw / subj_info / Codebook / exp JSON 齐备；两级校验 0 ERROR（结构级 `validate_json_metadata.R` EXIT=0；内容级 `validate_clean_csv.R` 0 ERROR / 28 WARN，均为已知口径或登记例外） | 合作者提供 H1（含 N5 的缺漏阶段）后重跑 `clean.R` 复核产出并做多源交叉核验；其余项按 `3_Reports/Hu_YQ_2026_Issues.md` 回复更新 |
 
 通用判定原则：Clean 已完成且说明文件（Codebook/JSON）齐全的研究，可豁免 `*_raw.csv`，不强制追补。
 - **另见 §6**：16 个 Clean 文件（10 研究）缺 `Shape`/`Label` 可读值列——非回归（自创建起即无该列，非删列），处置待定。
 
-### 类别三：已入库、数据与论文存在出入（Issue 1–8；2026-09-04 新增 Issue 8 = Lee_2026_BritJPsy；2026-10-06 新增 `Wu_2026_Chinaxiv`——其**Wu Issue 1–8 为本研究独立编号**，登记于入库计划 §10，不并入本文件的 Issue 1–8）
+### 类别三：已入库、数据与论文存在出入（Issue 1–9；2026-09-04 新增 Issue 8 = Lee_2026_BritJPsy；2026-10-06 新增 `Wu_2026_Chinaxiv`——其**Wu Issue 1–8 为本研究独立编号**，登记于入库计划 §10，不并入本文件的 Issue 1–8；2026-10-13 新增 Issue 9 = Zhao_2026_PsychonBullRev）
 
 | 论文 | Issue | 一句话摘要 | 处置 |
 |---|---|---|---|
@@ -64,8 +63,9 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 | Golubickis_2021_ActaPsych | 7 | Appendix B 单 RT SD 单元格无法复现（论文 112 vs 复算 122.5，无统计影响） | 登记暂缓 |
 | Lee_2026_BritJPsy Exp2 | 8 | 论文 Methods 句称非自我 prime 为 best friend's first name，但 E3a.iqx 脚本与数据为 stranger 名（Figure 5 标题亦写 "Self vs Friend"）；Abstract/Intro/Results/OSF Rmd 均用 self/stranger | 登记暂缓（exp JSON detail + Dataset_inf Note） |
 | Wu_2026_Chinaxiv | Wu 1–8 | 作者共享 Exp2 CleanData 与 raw 不可对应（三版本；半数被试行不可追溯）；Exp2 匹配试次 192（raw）vs 256（稿件）；Exp2 RT 窗口 4000 ms（预注册/数据）vs 3000（稿件）；7 个早期版本导出缺 `task_type`；Exp1 作者 `data_color` 重复计入 Subject 70；显示器 1080×768（稿件）vs canvas 1920 px（raw）；5 人 canvas 1440–1536 px；稿件红/蓝 HSL 标注写反 | 登记暂缓（Wu Issue 1–8 见 `3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md` §10 + 两份 exp JSON detail + 主索引 Note；**不并入 Verifying_original_results_issues.md**，2026-10-06 用户定案） |
+| Zhao_2026_PsychonBullRev | 9 | Exp1 有 17/48 份原始日志的练习段未以「连续正确 6 次」结束（结尾连续正确 0–5 次、练习长度 6–73 试次），与归档程序 `SPE.psyexp` 的终止规则不符；17 份均为 2025-03-31 之前的场次（程序文件最后修改日），疑当时使用较早版本；Exp2/Exp3 全部符合 | 登记暂缓（练习试次作者分析时已排除 → 不影响论文结果；已记三份 exp JSON detail + 主索引 Exp1 行 Note，原始日志完整保留练习试次） |
 
-统一处置：全部**登记暂缓**（Issue 1–8 详情见 Verifying_original_results_issues.md；`Wu_2026_Chinaxiv` 的 Wu Issue 1–8 见其入库计划 §10），不阻塞 Status=1；**是否联系作者由项目负责人决定**（超库范围不主动执行）；触发动作：稿件版本更新时按暂缓清单处置。
+统一处置：全部**登记暂缓**（Issue 1–9 详情见 Verifying_original_results_issues.md；`Wu_2026_Chinaxiv` 的 Wu Issue 1–8 见其入库计划 §10），不阻塞 Status=1；**是否联系作者由项目负责人决定**（超库范围不主动执行）；触发动作：稿件版本更新时按暂缓清单处置。
 
 ### 类别四：未入库（deferred）
 
@@ -77,10 +77,10 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ### CSV 遗留空白
 
-- **License 空 44 行 / 18 研究**（无数据许可声明留空；2026-09-09 +4 = Zhao_2026_PsychonBullRev×4 待 OSF 公开后确认；含 Lee_2026_BritJPsy×3 新入库行；2026-09-25 −1 = Pan_2025_unpub 确认为 CC BY 4.0）：Amodeo×2、Atzeni×1、Bukowski×7、Golubickis×2、Kolvoort×1、Lee_2026×3、Liu×1、Orellana-2020×3、Orellana-2023_QJEP×2、Sui_2014_APP×4、Sui_2014_unpub×1、Sui_2015×1、Svensson×3、Vicovaro×2、Wozniak_2020×3、Zhang_2024×2、Zhang_2026×2、Zhao_2026×4
+- **License 空 40 行 / 17 研究**（无数据许可声明留空；2026-09-09 +4 = Zhao_2026_PsychonBullRev×4 待 OSF 公开后确认；2026-10-13 −4 = 该研究 OSF 仓库已公开并声明 CC BY 4.0，据数据页填实 `CC BY 4.0`；含 Lee_2026_BritJPsy×3 新入库行；2026-09-25 −1 = Pan_2025_unpub 确认为 CC BY 4.0）：Amodeo×2、Atzeni×1、Bukowski×7、Golubickis×2、Kolvoort×1、Lee_2026×3、Liu×1、Orellana-2020×3、Orellana-2023_QJEP×2、Sui_2014_APP×4、Sui_2014_unpub×1、Sui_2015×1、Svensson×3、Vicovaro×2、Wozniak_2020×3、Zhang_2024×2、Zhang_2026×2
 - **City 空白 4 行**：Sui_2014_unpub×1、Sui_2015×1、Dalmaso×2（跨日本/意大利两国、REF 全文未点名城市 → 三态「不确定」；2026-09-25 由 `NA` 改正）
 - **City `NA`（Online 研究不适用）13 行**：Kirk×2、Perrykkad×1、Lee_2026×3、Pan×1、Golubickis×2、Lee_2023×2、Liu_2023×1、Svensson_2023×1；其中 8 行为 2026-09-25 由非规范拼写 `N/A` 统一（线上依据 = 各 REF 全文明述 Prolific / SONA / Testable / Inquisit），同日 4 个 paper JSON 的 `City` 与 Golubickis 两个 exp JSON 的 `Location` 亦由 `N/A` 改为 SKILL 规定的 JSON 记号 `/`
-- Stim_language 空 4 行（Zhao_2026×4，完成确认时填齐；Hu_YQ_2026_ChinaSciData 的 4 行已于 2026-09-25 填 `Chinese`）；Country 空 0；Journal 空 0（Journal `NA` 10 行 = preprint/unpublished 无期刊，not applicable）
+- Stim_language 空 0 行（Zhao_2026×4 于 2026-10-13 据作者程序与原始日志填 `Chinese`；Hu_YQ_2026_ChinaSciData 的 4 行已于 2026-09-25 填 `Chinese`）；Country 空 0；Journal 空 0（Journal `NA` 10 行 = preprint/unpublished 无期刊，not applicable）
 
 
 ### 其他暂缓项
@@ -130,19 +130,20 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 22. **Sun_2026_DataExp 发表状态（2026-10 定案）**：`PubType = Journal`、`Journal = Data Express`（论文在 revision 中）；**`DOI` 暂空、待正式发表后补填**——此项已定，后续不再作为待决策/待办问题反复提出。
 23. **术语与受控值收口（2026-10-02 定案）**：① 主术语 = `self-matching task`（`shape–label matching` / `perceptual matching` 仅作别名注明），跨领域工作行话一律不用（定义与对照表见 SKILL §领域术语基准）；② `Setting`/`Modality`/`Stimulus_order` 三字段已全库受控化，由结构级校验脚本按 WARN 把关；③ ACC 全库收口为 `1`/`0`/`NA`/`-2`/`-3`/`-4`，**无反应一律字面量 `NA`**（不写空字段），内容级校验脚本按原文本判空；④ `Hu_YQ_2026_ChinaSciData` 的受控值/编码偏差已于 2026-10-12 全部修正（受控词表 KNOWN 豁免删除；Exp2 的 `Matching = filler` 与身份列非身份取值改为登记例外）。
 24. **`subj_info` 的 `Gender` 全库统一 `Female`/`Male`（2026-10-08 定案）**：`F`/`M`/`f`/`m`/小写全称一律展开为 `Female`/`Male`；作者原始歧义值（`fm`）与非二元类别（`Other`、`A-different-gender`）原样保留；人口学缺失写 `/`（规则正文见 SKILL §数据标准化「`*_subj_info.csv` 列值口径」）。本轮同步：Zhang_2026_JNeurosci、Smith_2024_Cortex、Zhang_2023_NeuroImage、Sui_2015_unpub、Orellana-Corrales_2023_QJEP 及其清洗脚本。
+25. **Zhao_2026_PsychonBullRev 按作者原始日志全量重建（2026-10-13 定案）**：输入区收齐作者原始 PsychoPy 程序与逐被试日志后，标准文件**不以作者过滤后的 OSF 分析文件为数据源**，改按原始日志重建（规则正文见 SKILL §数据标准化「作者共享分析文件（已过滤）与原始逐被试导出并存时以原始导出为准」）：保留全部被试（含作者因低于机遇水平排除的 Exp1 3 人 / Exp2 2 人 → `Sample_Size` 48/49、`Valid_Subj` 45/47、`Drop_Subj` 3/2）与全部试次（含无反应与 RT<200 ms），练习试次以 `Phase = practice` + `Block = NA` 保留；补 `Shape`（形状文件名）、`Label`（中文标签词）、`Block`/`Trial`、`CorrResponse`/`Response`（物理键 z/m）与研究特有列 `Counterbalance`；OSF 分析文件移入输入区作核对基准，重建产物应用作者过滤口径后**逐行复现**该文件（15,659 / 16,528 / 15,376 行）。CSV 同步：`Environmental_Info = PsychoPy 2022.2.4`、`Stim_language = Chinese`、`License = CC BY 4.0`（OSF 仓库已公开）、Status=1。
 
 ## 5. 当前库内现状汇总（2026-10-12 实测）
 
 - **主索引**：Dataset_inf.csv **114 行 / 51 unique Folder_Name**（实测 37 列）；磁盘 **52 个研究文件夹** = 51 curated + Scheller_2026_elife（仅输入区，无 CSV 行）
-- **Status**：`1` 110 行；空白 **4 行**（Zhao_2026_PsychonBullRev×4，类别二待完成确认，见 §3）
+- **Status**：`1` **114 行**；空白 **0 行**（Zhao_2026_PsychonBullRev×4 已于 2026-10-13 按原始日志重建并完成确认置 1，见 §3 类别三 Issue 9）
 - **Codebook**：**93 个**（= 逻辑数据集数；全库统一 canonical `Codebook_*_Clean.xlsx` 命名）
 - **JSON**：**144 个**（51 paper 级〔50 平铺 Paper_name + 1 Kirk_2025_BritJPsy 嵌套 Paper_ID〕+ 93 实验级）
 - **Clean 文件**：**97 个物理文件 / 93 个逻辑数据集**（含 2 个已分片数据集：`Sun_2026_DataExp_Exp1`〔4 片〕、`Hu_YQ_2026_ChinaSciData_Exp1`〔2 片〕，逐字节可还原；规则见 SKILL.md §文件与文件夹规范「大文件拆分」）
 - **raw 文件**：**99 个物理文件 / 95 个逻辑数据集**；`Sun_2026_DataExp_Exp1` 4 片；`Hu_YQ_2026_ChinaSciData_Exp1` raw 73.2 MB（含由 E-Prime 日志恢复的 `Stimulus`/`TrialListS.Sample`/`TrialListE.Sample`/`TrialList.Sample` 四列）分 2 片
 - **校验基线**（2026-10-12 实测）：
   - 结构级：`validate_json_metadata.R` EXIT=0（**144 JSON / 52 文件夹** ↔ CSV 交叉一致；known_pending 0 个；known_unlisted 1 个 = Scheller_2026_elife；分片与主文件按同一数据集只检查一次）；受控词表检查 **WARN 0**、**KNOWN 豁免 0**
-  - 内容级：`validate_clean_csv.R` **0 ERROR / 28 WARN**（files=97 datasets=93；分片按各片合计计被试数并检查 E4 表头一致性）。计数 28 = W1 缺标准列 27（16 个 Clean 缺 `Shape`/`Label`，见 §6）+ W5 1（`Zhang_2023_NeuroImage_Exp1`）；另打印 **42 条**不计数的 W2 组间拆行 Sample/Valid 口径差异（Lee_2026×3、Hu_YQ_2026_ChinaSciData×4、Sun_2026_DataExp 589 vs 503、Wu_2026_Chinaxiv_Exp1 141 vs 70/71 等）。**ACC 值域全库已收口**：实测仅 `1`/`0`/`NA`/`-2`/`-4`，域外值 0、空字段 0。登记例外（`known`）：Constable_2020、Zhang_2023、Perrykkad_2022、Wu_2026×2、**Hu_YQ_2026_ChinaSciData_Exp2（`Matching = filler`）**
-  - Table 1：**待重跑**——磁盘上的 `Output/Table1_v2.csv` 为重构前产物（116 行），现主索引已为 114 行、Hu_YQ 条目为 2 实验；重跑命令 `Rscript 3_Reports/Generate_Table1_v2.R`（依 `1_Data/` 实际文件夹动态生成）
+  - 内容级：`validate_clean_csv.R` **0 ERROR / 28 WARN**（files=97 datasets=93；分片按各片合计计被试数并检查 E4 表头一致性）。计数 28 = W1 缺标准列 27（16 个 Clean 缺 `Shape`/`Label`，见 §6）+ W5 1（`Zhang_2023_NeuroImage_Exp1`）；另打印 **44 条**不计数的 W2 口径差异（Lee_2026×3、Hu_YQ_2026_ChinaSciData×4、Zhao_2026_PsychonBullRev Exp1 48 vs Valid 45 / Exp2 49 vs 47 / Exp3 44 vs 组内 22、Sun_2026_DataExp 589 vs 503、Wu_2026_Chinaxiv_Exp1 141 vs 70/71 等）。**ACC 值域全库已收口**：实测仅 `1`/`0`/`NA`/`-2`/`-4`，域外值 0、空字段 0。登记例外（`known`）：Constable_2020、Zhang_2023、Perrykkad_2022、Wu_2026×2、**Hu_YQ_2026_ChinaSciData_Exp2（`Matching = filler`）**
+  - Table 1：**已重跑（2026-10-13）**——`Rscript 3_Reports/Generate_Table1_v2.R` 输出 `Output/Table1_v2.csv` **114 行** + `Table1_v2_summary_stats.csv`（51 文件夹 / 92 unique study-exp / 被试合计 5732）；Zhao_2026_PsychonBullRev 四行已随重建更新（N 48/49/22/22、Language `Chinese`、License `CC BY 4.0`、Exp_Implement `Lab Experiment`；Exp2 的 M/F 18/29 为 47 名被分析被试，2 名被排除者无人口学，见 §3 类别三 Issue 9 与主索引 Note）
   - git：分支 `main`（工作区状态以 git status 为准）
 
 ## 6. 散落未解决问题（自历史记录提取，不属于上述四类表）
@@ -155,7 +156,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **全库一致性审计（2026-10-08，用户要求「看看是否还有其他问题」）**：对 93 个逻辑数据集做内部一致性核查——① `Matching` vs `Shape_Std == Label_Std`；② `ACC` vs `Response == CorrResponse`；③ Identity 三级映射是否为函数；④ Std 值域；⑤ (Subject,Block,Trial) 键唯一性；⑥ `RT_ms`/`RT_sec` 换算。**结果**：
   - **已确认并修正 `Xu_2022_CurrPsych` Exp1**：Clean 的 `Matching` 由「作者正确键 == 固定 'j'」推得，而该研究的 yes 键逐被试反平衡（raw `Yes` 列 j/f）→ **105 名被试中 52 名的 21,048 行 Matching 全部反向**；依据 raw「`Correctanswer == Yes` ⟺ `Shape == Label`（42,444/42,444 行）」修正，修后矛盾 0。
 - **`Hobbs_2023_PsychMed` 标签/身份列已按 SKILL 修正（2026-10-08，用户确认）**：① **Label 侧改按「实际呈现的刺激」编码**（此前由形状所属条件派生，导致同一行 `Label` 与 `Label_Origin_Identity` 指向不同刺激）——emotion 任务用呈现的情绪（happy/sad/neutral，Std 仍 NonPerson）、reward 任务用呈现金额（£9/£3/£1，Origin 保留 raw 的 9/3/1），各影响约 8,640 行；② **self 任务**：呈现的是被试提供的名字，作者在匿名化时删除了该列（论文 Methods + 作者 `Associative_cleaning.R` 原文）→ 按新约定 `Label`/`Label_Origin_Identity`/`Label_English_Identity` = 占位值 `subj_name`（规则见 SKILL §数据标准化），`Label_Standardized_Identity` 在 Matching 试次 = 该形状身份、非匹配试次 = `missing`（17,280 行）；③ **`Shape_Origin/English_Identity`** 改填形状承载的身份（raw `Shape` 列原文 Self/Friend/Stranger、Happy/Sad/Neutral、HighReward/MediumReward/LowReward；English 与 Label 侧同词表），不再重复 `Shape` 列的几何名（51,840 行），Std 值不变。脚本/Codebook/raw 同步更新，重跑核验值级 0 差异；脚本新增两条一致性检查（非 self 任务 `Matching ⟺ Shape_English == Label_English`；self 匹配行身份一致、非匹配行 `missing`）。
-  - **待逐研究核验（同型矛盾 10–50%，也可能是 Std 词表合并等设计因素）**：Liu_2023（50%）、Wang_2016 Exp1/2（58%/61%）、Hu_2023_psyarxiv Exp3b（50%）、Kolvoort_2020（45%）、Sun_2026（33%）、Lee_2023 Exp1（25%）、Wozniak_2020（22%）、Hu_2020（17%）、Constable_2019（10–17%）、Sui_2014_unpub（17%）。
+  - **待逐研究核验（同型矛盾 10–50%，也可能是 Std 词表合并等设计因素）**：Liu_2023（50%）、Wang_2016 Exp1/2（58%/61%）、Hu_2023_psyarxiv Exp3b（50%）、Kolvoort_2020（45%）、Sun_2026（33%）、Lee_2023 Exp1（25%）、Wozniak_2020（22%）、Hu_2020（17%）、Constable_2019（10–17%）、Sui_2014_unpub（17%）。已核实的一例：`Zhao_2026_PsychonBullRev` Exp1（16.7%，2026-10-13 重建后实测）确系词表合并所致——true self 与 general self 同归 Std `Self`，改用 English 层比较则 0 违例（该说明已写入其 Codebook 与 exp JSON detail）。
   - 通过项：`ACC` vs `Response==CorrResponse` 全库 0 违例；Std 值域 0 越界；键唯一性、`RT_ms`/`RT_sec` 换算 0 异常；`Task` 受控值 0 例外（2026-10-12 统一：`matching`/`facialExpression-matching`/`monetaryValue-matching` 并入 `shape-matching`，见 §5）。
 - **`Sui_2015_unpub` 脚本归位（2026-10-08，用户定案）**：合并逻辑并入标准脚本名 `Sui_2015_unpub_clean.R`（现行脚本，重跑验证 raw/Clean/subj_info 逐值零差异）；`Sui_2015_unpub_merge.R` 保留为 2026-09 合并步骤的历史记录（头部注明，内容不变）；原双 Exp 版本脚本内容不再保留（见 git 历史）。
 - **`Wozniak_2018_PLOS` 补 `Task` 列（2026-10-08）**：Exp1/Exp2 的 Clean 自创建起缺全库标准列 `Task`（其 Codebook 早已记录该列，取值 `self-matching`）→ 已补列（常量 `self-matching`，位置符合模板 v2）、脚本同步（含 `stopifnot` 列序检查）、Exp1 Codebook 补缺失的 `Response` 行（取值 `m`/`z`）。
@@ -165,8 +166,8 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - **全库 `*_Standardized_Identity` 取值域摸底与处置（2026-10-12）**：6 类规范值外的取值已按用户决定登记进 SKILL（货币 `£1`/`£3`/`£9`、`￥1`/`￥16`；情绪 `happy`/`neutral`（仅 Hu_YQ）；`ingroup`（Constable_2019 E4）；`Filler`（仅 Hu_YQ Exp2）；占位/缺失 `NA`、`subj_name`、`missing` 三态语义）。审计中作两处修正（均以论文为依据）：
   - `Hobbs_2023_PsychMed_Exp1` self 任务非匹配行（8,640 行）：`missing` → **`subj_name`**（论文 Methods：被试提供自己/朋友/陌生人的 first name，呈现刺激必为其中之一、但匿名化后无法确定是哪一位）——脚本、Codebook、exp JSON 同步；SKILL 的 `subj_name` 规则同步改写。
   - `Smith_2024_Cortex_Exp1` 的 `Label = You` 行（5,760 行）：`Label_English_Identity`/`Label_Standardized_Identity` 原为 `NA` → **`You`/`Self`**（论文 Methods：标签为 You/Friend/Stranger 三个词，referents = self/friend/stranger）——Codebook 枚举与 exp JSON 同步。
-  其余 `missing` 仅存于 `Zhao_2026_PsychonBullRev` Exp1–3 的非匹配行（共享文件未记录标签词，共 23,686 行），符合"原研究有、库内未获得"的定义。
-- **分析层待重跑（2026-10-12，只改代码未重跑）**：`analysis_config.R` 已升 v4 并适配 Hu_YQ 的两实验结构，但受影响脚本 `Figure3_Ridges_Pairwise`、`Figure_Bootstrap_Mismatch` 与 Table 1 重渲染尚未执行（用户指示本轮不执行）。
+  2026-10-13 起全库 `*_Identity` 列**已无 `missing` 取值**：原唯一用例 `Zhao_2026_PsychonBullRev` Exp1–3 的非匹配行（23,686 行）已随作者原始 PsychoPy 逐被试日志重建、填实为真实标签词（SKILL 的取值登记同步更新）。
+- **分析层待重跑（2026-10-12 记录；2026-10-13 部分完成）**：`analysis_config.R` 已升 v4 并适配 Hu_YQ 的两实验结构；**Table 1 已于 2026-10-13 重跑**（见 §5），受影响脚本 `Figure3_Ridges_Pairwise`、`Figure_Bootstrap_Mismatch` 仍未执行。
 
 ## 7. 历史归档说明
 

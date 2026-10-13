@@ -1,14 +1,14 @@
 {
   "exp3": {
     "schema_version": "2",
-    "Collected_date": "/",
+    "Collected_date": "2025-05 (first session 2025-05-10, last session 2025-05-25; 44 sessions)",
     "Physical_Environment": {
-      "Location": "Tsinghua University, Beijing, China (assumed from ethics approval and university recruitment; software to be confirmed)",
+      "Location": "Tsinghua University, Beijing, China (ethics approval THU-04-2025-1135; participants recruited from the local community)",
       "Setting": "Laboratory",
       "Equipment": {
         "Presenting": "/",
         "Monitor": "/",
-        "Software": "/"
+        "Software": "PsychoPy 2022.2.4 (standalone PsychoPy experiment; psychopyVersion = 2022.2.4 recorded in every raw data file)"
       },
       "Viewing_distance": "/"
     },
@@ -16,29 +16,30 @@
       "Conditions": "2 (experimental task: true self vs general self matching task; between-subjects) x 3 (identity: self, friend, stranger) x 2 (trial type: matching, nonmatching); mixed design, 60 trials per condition"
     },
     "Block_Structure": {
-      "Block_number": "6 blocks",
-      "Trial_number": "360 trials total per participant (60 per condition; randomized order across 6 blocks)",
-      "Practice_trials": "practice block with feedback until 6 consecutive correct responses (variable length); practice data not included in the shared files"
+      "Block_number": "6 blocks (60 trials each; a self-paced rest screen followed trials 60, 120, 180, 240 and 300)",
+      "Trial_number": "360 trials total per participant (60 per condition; randomized order across the 6 blocks); all 360 trials are retained in the database, including no-response and RT < 200 ms trials",
+      "Practice_trials": "one criterion practice block with feedback, repeated until six consecutive correct responses (programme variable practice_times = 6); length varies between participants (6-314 trials, median 25; 2,478 practice trials in total across the 44 participants). Practice trials are flagged in the Clean file (Phase = practice) and were excluded from the authors' analyses."
     },
     "Trial_Structure": {
-      "Fixation_duration": "500 ms (fixation cross on grey background)",
-      "Stimulus_duration": "100 ms (simultaneous shape-label pair)",
-      "SOA": "0 ms (simultaneous presentation; shape above, label below, 3.5 deg apart)",
+      "Fixation_duration": "500 ms (fixation cross on grey background; the cross remains on screen while the shape-label pair is displayed, 600 ms in total)",
+      "Stimulus_duration": "100 ms (shape and label presented simultaneously)",
+      "SOA": "0 ms (shape and label presented simultaneously; shape above, label below, 3.5 deg apart)",
+      "ISI": "0 ms (simultaneous presentation of shape and label)",
       "Stimulus_order": "Simultaneous",
-      "Response_deadline": "1100 ms (blank screen after stimulus during which response was made; 'Too Slow' feedback otherwise)",
-      "ITI": "not reported separately",
-      "Feedback_duration": "500 ms (Correct / Incorrect / Too Slow after each trial)"
+      "Response_deadline": "1100 ms (blank screen from stimulus offset; only the keys z and m were accepted, 'reaction too slow' feedback otherwise)",
+      "ITI": "not reported separately (the next trial starts with the 500 ms fixation cross)",
+      "Feedback_duration": "500 ms (feedback text in Chinese: 反应正确 correct / 反应错误 incorrect / 反应过慢 too slow)"
     },
     "Stimulus_Properties": {
       "Modality": "Visual",
-      "Fixation": "fixation cross on grey background (RGB 127, 127, 127)",
-      "Shape": "geometric shapes: circle, square, triangle (2.4 x 2.4 deg); identity binding counterbalanced across participants and not recorded in the shared files",
-      "Label": "identity words: self (true self task: true self; general self task: general self), friend, stranger (on-screen language/wording to be confirmed with authors)",
+      "Fixation": "white fixation cross (+) on grey background (RGB 127, 127, 127), 500 ms",
+      "Shape": "geometric shape images presented above the fixation cross: circle.png, rectangle.png (the file renders a white square of 214 x 213 px on a 300 x 300 px canvas, i.e. the 'square' of the article) and triangle.png; displayed at 2.4 deg x 2.4 deg. The shape-identity binding (conditions 1-6) and the response-key mapping (A/B) were counterbalanced across participants and are recorded per trial in the Clean file (Shape, Shape_Origin_Identity, Counterbalance)",
+      "Label": "Chinese identity words presented below the fixation cross at approx. 4.4 deg x 2.4 deg: the group's own self label (真实我 true self in the true self task, 一般我 general self in the general self task), 朋友 (friend), 陌生人 (stranger)",
       "Colors": {
-        "Stimulus": "not reported",
+        "Stimulus": "white shapes and white text on grey background",
         "Background": "grey (RGB 127, 127, 127)"
       }
     },
-    "detail": "Experiment 3 of Zhao & Wang (2026, Psychon Bull Rev). Between-subjects manipulation of the self task: all participants first learned definitions of both true self and general self, then were randomly assigned to a true self matching task or a general self matching task (each paired with friend and stranger; 22 participants per group). Preregistered at AsPredicted (https://aspredicted.org/szh6-z3y7.pdf) prior to data collection. Response keys Z/M counterbalanced (not recorded; shared code response 1 = 'match' key, 0 = 'non-match' key). Data source: OSF https://osf.io/j2pxc/, file data/hddm_trial_data/exp3_hddm_trial_data.xlsx (task column: 1 = true self task, 2 = general self task) plus exp3_behavior_questionnaire.xlsx. All 44 recruited participants were analysed (19 female overall; true self task group: 22, 13 male/9 female, Mage 23.14; general self task group: 22, 12 male/10 female, Mage 22.64) and are present in the shared file. Shared trial file keeps only trials with a response and RT >= 200 ms (rows 15376 < 44 x 360 = 15840). Identity coding in the shared file: code 1 = the group's own self label (true self in task 1; general self in task 2), 2 = friend, 3 = stranger; recorded here accordingly, with the between-subjects task stored in the Group column. Label identity recorded only on matching trials; 'missing' elsewhere. Questionnaires after the task (online): BTS, SEB, SCS. Ethics: Tsinghua University Ethics Committee THU-04-2025-1135. On-screen stimulus language/wording and presentation software to be confirmed with the authors. Stimulus_order set to \"Simultaneous\" 2026-10 (was: \"Simultaneous: fixation cross, then shape (2.4 x 2.4 deg) above and label (approx. 4.4 x 2.4 deg) below\")."
+    "detail": "Experiment 3 of Zhao & Wang (2026, Psychon Bull Rev, DOI 10.3758/s13423-026-03000-8). Between-subjects manipulation of the self task: all participants first learned the definitions of both the true self and the general self, then were randomly assigned to a true self matching task or a general self matching task (each paired with 朋友 friend and 陌生人 stranger; 22 participants per group). Preregistered at AsPredicted (https://aspredicted.org/szh6-z3y7.pdf) before data collection. The matching key was counterbalanced with the shape-identity binding over 12 conditions (A: match = z, non-match = m; B: match = m, non-match = z), assigned randomly by the programme. DATA SOURCE AND REBUILD (2026-10-13): the standard files were rebuilt from the authors' original per-participant PsychoPy data files (Zhao_2026_PsychonBullRev_Raw/EXP3-true self vs general self spe/{true,general}/programming_files/data/*.csv, 22 + 22 files); the earlier version was derived from the authors' filtered OSF analysis file (osf.io/j2pxc, data/hddm_trial_data/exp3_hddm_trial_data.xlsx, 15,376 rows), which is retained in the input zone and is reproduced exactly by the rebuilt Clean file under the authors' filters (rows with a response and RT >= 200 ms; verified as an exact trial-by-trial match on match / shape_identity / response / corr / rt / subj_idx). All 44 recruited participants were analysed (19 female; true self task group: 22, 13 male / 9 female, Mage 23.14; general self task group: 22, 12 male / 10 female, Mage 22.64), no participant was excluded, so Sample_Size = Valid_Subj = 22 per group and Drop_Subj = 0. The between-subjects task is stored in the Group column; in the original data the identity code 1 means the group's own self label (true self in the true self task, general self in the general self task), 2 = friend, 3 = stranger - the code meanings therefore differ between the two task groups and are documented in the Codebook. ACC follows the database coding (1 = correct key, 0 = incorrect key, NA = no response; PsychoPy's corr = 0 on no-response trials is recoded to NA); Response/CorrResponse hold the physical keys z / m. Label identity is available for every trial, including nonmatching trials. CAVEAT: because the two self aspects both map onto the standardized category Self within a task group, Matching cannot be recovered from Shape_Standardized_Identity vs Label_Standardized_Identity in this experiment; compare Shape_English_Identity with Label_English_Identity instead. The matching-trials-only analyses reported in the article used the authors' own filtering (practice trials, no-response trials and RT < 200 ms trials removed). Demographics: the raw logs of this experiment contain no age/gender fields (unlike Experiment 1), so Age/Gender in the subj_info file come from the authors' OSF behaviour questionnaire (exp3_behavior_questionnaire.xlsx, all 44 participants). Questionnaires after the task (online): BTS, SCS, SEB. Ethics: Tsinghua University Ethics Committee THU-04-2025-1135."
   }
 }

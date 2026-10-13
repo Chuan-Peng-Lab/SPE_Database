@@ -425,3 +425,29 @@ SD 差异排查：无单个被试剔除可使 SD 变为 112（剔除最极端被
 - 库内数据以原始文件与脚本为准：Exp2 extraIV1 prime 编码 self/stranger；该差异不影响任何统计结论（论文 Exp2 全部方向性结果（self prime 缩小 happy-sad bias、facilitate happy targets）均以 self/stranger 编码复现）；
 - 差异已记录于 exp JSON detail（`Lee_2026_BritJPsy_Exp2.json`）与 Dataset_inf.csv Note；
 - **是否联系作者说明由项目负责人决定**（当前不主动联系）。
+
+---
+
+# Issue 9 — Zhao_2026_PsychonBullRev：Exp1 部分场次的练习段与程序终止规则不符（2026-10-13）
+
+> **一句话结论**：作者提供的原始 PsychoPy 数据中，**Exp1 有 17/48 份日志的练习段并非以「连续正确 6 次」结束**（结尾连续正确 0–5 次，练习长度 6–73 试次），与归档程序 `SPE.psyexp` 的终止规则不符；同一判定下 Exp2/Exp3 的全部 93 份日志均严格符合（合计 124/141 份符合）。17 份均为 2025-03-31 之前的场次（程序文件最后修改日期），疑当时使用较早版本程序。练习试次在作者全部分析中已排除，**不影响论文结果**；库内 Clean 保留练习试次并以 `Phase` 标记，差异登记为未解决项。
+
+- 论文：Zhao, Y., & Wang, F. (2026). Beyond the unitary self: Behavioral and drift-diffusion modeling evidence for a true self-prioritization effect and intra-self competition. *Psychonomic Bulletin & Review*. DOI: 10.3758/s13423-026-03000-8
+- 数据来源：作者原始程序与逐被试数据（输入区 `Zhao_2026_PsychonBullRev_Raw/EXP{1,2,3}*/programming_files/`、`程序与原始数据.rar`）+ OSF https://osf.io/j2pxc/（2026-10-13 入库）
+- 核对时间：2026-10-13（以原始日志重建标准文件后做四方核对）
+- 核对脚本：`1_Data/Zhao_2026_PsychonBullRev/Zhao_2026_PsychonBullRev_clean.R`（内嵌一致性检查）
+
+## 1. 证据
+
+1. **归档程序的终止规则**（四个实验目录的 `SPE.psyexp` 一致，均含）：`code_2` Begin Experiment 设 `practice_times = 6; accmulated_crr = 0`；`code` End Routine 中「正确 → 计数 +1；错误或无反应 → 计数归零」，并 `if accmulated_crr == 6: practice.finished = True`；练习循环 `practice`（nReps = 3，条件文件 `practice_*.xlsx` 360 行）据此提前结束。程序文件修改时间：Exp1 2025-03-31、Exp2 2025-03-16、Exp3 2025-04-23/24。
+2. **逐日志核验**（141 份 = 48 + 49 + 22 + 22）：结尾连续正确 = 6 的 124 份；**Exp1 中 17 份结尾连续正确 0–5**（被试 1、3、4、6、7、15、17、24、26、27、29、31、35、37、41、42、44，练习长度 6–73 试次）。
+3. **时间分布**：17 份全部采集于 2025-03-31 之前（2024-12-20 ~ 2025-01-07）；Exp1 中 2025-03-31 的 4 名被试、Exp2（2025-03-20 ~ 03-31）与 Exp3（2025-05-10 ~ 05-25）全部符合规则。
+4. **已排除的两条替代规则**：①「无反应也重置连续计数」可解释 124/141；②「无反应不重置」可解释 101/141——17 份在两种规则下结尾均达不到计数 6，故其终止原因无法由现有材料复原。
+5. 其余练习数据完整（试次顺序、形状/标签/身份码、按键与 RT 均可读；Clean 中 Exp1 练习 1,788 行、Exp2 2,421 行、Exp3 2,478 行）。
+
+## 2. 影响与处置
+
+- 论文 Methods 明确「practice trials … were excluded (Sui et al., 2012)」，且三个实验的 360 个正式试次完整、与作者 OSF 分析文件逐行一致 → **论文结果不受影响**；
+- 库内 Clean 保留全部练习试次（`Phase = practice`、`Block = NA`），未做删除或修正，`Practice_Trial` 记「variable (6-224 / 6-335 / 6-314, criterion: 6 consecutive correct)」；
+- 差异已记录于三份 exp JSON detail 与 `Dataset_inf.csv` 的 Exp1 行 Note；
+- 较早版本程序未提供，无法判定当时规则，**是否联系作者核实由项目负责人决定**（当前不主动联系）。

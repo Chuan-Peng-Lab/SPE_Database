@@ -135,6 +135,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 | raw/Clean/subj_info 已齐、缺 JSON/Codebook | 第 5 步（元数据核心） | 场景 A（backfill） |
 | Clean 已齐、缺标准 `*_raw.csv` | 第 3 步清洗脚本，或按豁免原则判定（见下） | 阶段 4 |
 | 标准文件已齐、仅需校验/完成确认 | 第 10 步 | — |
+| 标准文件已建但数据源为作者**过滤后**的共享分析文件，输入区后到原始逐被试导出 | 第 3 步**重建**（以原始导出为准，过滤文件留输入区作核对基准） | 2026-10-13 Zhao_2026_PsychonBullRev 先例 |
 | 已有文件夹但 CSV 无行（known_unlisted） | 先登记 Dataset_inf.csv（第 10 步前置），再按上表 | — |
 
 ### 统一流程（10 步）
@@ -559,7 +560,7 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   | `Filler` | 无身份伪词试次（试次类型） | Hu_YQ_2026_ChinaSciData_Exp2（全库唯一） |
   | `NA` | 该行/该侧确无身份信息（不适用）：如 choice-task 无匹配维度、源文件占位行 | Wu_2026_Chinaxiv_Exp1/Exp2；Zhang_2023_NeuroImage_Exp1（占位行） |
   | `subj_name` | 呈现刺激为**被试提供的名字**但姓名列已匿名化（占位值，保留"呈现的是名字"这一信息；对应 `Label`/`Label_Origin_Identity`/`Label_English_Identity` 的同一占位值） | Hobbs_2023_PsychMed_Exp1 的 self 任务非匹配行（8,640 行，2026-10-12 由 `missing` 改此值，依据论文 Methods"被试提供自己/朋友/陌生人的 first name"） |
-| `missing` | **原研究有该信息、库内未获得**（共享文件未记录、匿名化删除等）；使用场景应极少 | Zhao_2026_PsychonBullRev_Exp1–3 的非匹配行（共享文件未记录标签词，共 23,686 行） |
+  | `missing` | **原研究有该信息、库内未获得**（共享文件未记录、匿名化删除等）；使用场景应极少 | 2026-10-13 起**库内无研究使用**：原唯一用例 Zhao_2026_PsychonBullRev_Exp1–3 非匹配行（23,686 行）已随作者原始 PsychoPy 逐被试日志入库、逐试次填实为真实标签词；保留为允许取值 |
 
   取值语义分工：`NA` = 明确不适用/无信息；`missing` = 信息存在但未获得；两者都不得用于"尚未核对"的场合。
   上述清单以外出现新取值时，按「人工决策点」暂停确认后再登记。
@@ -634,6 +635,14 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
   rather than dropped. Such codes are documented in the codebook, not removed;
   full preprocessing (filtering, outlier removal, accuracy coding) is the user's
   responsibility.
+  **保留练习试次时的编号**（2026-10-13 定案）：`Phase = practice`（小写，与 `Phase = formal` 成对）；
+  练习段无正式分块 → `Block = NA`（不适用）、`Trial` = 练习段内序号 1..n；正式试次 `Block` = 1..块数、
+  `Trial` = 块内序号 1..每块试次数。`(Subject, Phase, Block, Trial)` 须唯一（先例 Bukowski_2021_ActaPsych、
+  Zhao_2026_PsychonBullRev）。
+  **作者共享"分析文件"（已过滤）与原始逐被试导出并存时以原始导出为准**：分析文件缺失无反应/过速试次、
+  被排除被试、分块与刺激列时，标准文件按原始导出重建（保留全部试次与被试），分析文件移入输入区作
+  核对基准——重建产物在应用作者的过滤口径后应能**逐行复现**该分析文件（赵 2026-10-13 先例：Exp1–3
+  的 15,659/16,528/15,376 行逐试次复现；见 §入库工作流「起点判定」重建行）。
 
 ### `*_subj_info.csv` 列值口径（2026-10-08 定案）
 
