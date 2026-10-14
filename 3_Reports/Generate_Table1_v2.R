@@ -1,10 +1,10 @@
 # ============================================================================
-# Generate_Table1_v2.R  —  从 Dataset_inf.csv 重新生成稿件 Table 1（v2）
+# Generate_Table1_v2.R  —  从 Dataset_inf.csv 重新生成 Table 1（v2）
 #
-# 相对 Generate_Table1.qmd 的修正：
+# 相对旧 qmd 出表管线的修正（旧管线已于 2026-10-14 移出仓库，见 PROJ_STATE §7）：
 #   (1) 移除 `stopifnot("Paper_ID" %in% names(inf))`：Paper_ID 列已从
 #       Dataset_inf.csv 移除，旧 qmd 因此无法渲染（EXIT != 0）。
-#   (2) 输出改为 CSV（不依赖 quarto / pandoc），便于写入 Word 稿件。
+#   (2) 输出改为 CSV（不依赖 quarto / pandoc），便于 CSV 比对与下游使用。
 #   (3) 统计口径：全部在 1_Data/ 下真实存在文件夹的行（2026-09-24 实测 107 行；
 #       Hu_YQ_2026_ChinaSciData 为 deferred、无文件夹，故不入表）。
 #
