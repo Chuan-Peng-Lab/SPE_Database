@@ -156,8 +156,8 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 
 **收尾**
 10. **写入 + 校验 + 同步（通用收尾）**：`cp` /tmp → 目标；更新 `Dataset_inf.csv`（每实验一行
-    `Folder_Name`+`Exp`，UTF-8 **带 BOM** 字节保真——写入纪律见 §主索引「写入纪律：CSV 字节保真编辑」，
-    不动 legacy `Dataset_inf.xlsx`）；`validate_json_metadata.R` EXIT=0 + `validate_clean_csv.R` 0 ERROR；
+    `Folder_Name`+`Exp`，UTF-8 **带 BOM** 字节保真——    写入纪律见 §主索引「写入纪律：CSV 字节保真编辑」）；
+    `validate_json_metadata.R` EXIT=0 + `validate_clean_csv.R` 0 ERROR；
     `known_pending`/`known_unlisted` 例外清单同步。**本仓库集成注记（仅 SPE_Database 适用，迁移他库删除）**：
     更新 PROJ_STATE.md（3 节类别行 + 5 节现状数字，见下方检查清单）；AGENTS/README 计数同步（如有）；
     外置盘文件清理（git 前删除 `._*`、不提交 macOS 附带文件——正文见 AGENTS.md §会话约定，此处仅指针）。
@@ -335,9 +335,6 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 - 状态：`Status`（**=1 判定标准**：最关键标准是**库内标准文件（raw/Clean/subj_info/Codebook/paper+exp JSON）形成逻辑上完全一致、清晰可追溯的结构**——各层级互相印证、缺口已解释（豁免/占位/排除均有依据）；与原论文表述是否完全一致是**次要指标**，不一致不阻塞 Status=1，而是记录于 `3_Reports/Verifying_original_results_issues.md`（Issue 编号）及 exp JSON detail/CSV Note（先例：Zhang_2023_NeuroImage，Issue 5）；raw 豁免的研究不影响标记）、`Behavior_Data`、`Questionnaire_Data`、`EEG/fMRI Data`
 - **缺失标记（全库统一三态）**：元数据单元格遇缺失只允许三种表达——① `missing`：**明确无法获得**该信息（如匿名化移除不可恢复、论文未报告且无法补）；② 空白：**不确定**该信息是否存在/有无（默认态，不确定就不要写）；③ `NA`：**明确没有该信息/不适用**（not applicable，如 unpublished 无 DOI、研究明确无练习段）。`/` **仅限 JSON 字段**的未知约定，Dataset_inf.csv 不用 `/`。判定示例：练习计数因匿名化不可恢复→`missing`；练习有无未披露→空白；任务结构明确无练习→`NA`。改标前先查 exp JSON detail/论文/数据，禁止凭值猜测。
 - 同论文多实验行共享的字段（作者/邮箱/年/期刊/DOI 等）只填一次，其余行留空或同步传播均可——以组内非空值一致为准。
-- Legacy: `1_Data/Dataset_inf.xlsx` is an OUTDATED earlier layout (different
-  schema: no `Folder_Name`; sheets `Label` + `Sheet1`) — do NOT edit; scheduled
-  for deletion once collaborators confirm the CSV.
 
 ### 读取模板
 

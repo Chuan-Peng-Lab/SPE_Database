@@ -53,7 +53,7 @@ Confirmed contributors
 - Goris, Judith (Department of Experimental Psychology, Ghent University)
 - Guan, Lili (School of Psychology, Northeast Normal University)
 - Haciahmet, Céline (University of Trier)
-- Hung, Kalai (Tsinghua University)
+- Hung, Kalai (Department of Psychological and Cognitive Sciences, Tsinghua University)
 - Kolvoort, Ivar (Department of Psychology, Programme Group Psychological Methods, University of Amsterdam)
 - Liang, Qiongdan (Department of Psychological and Cognitive Sciences, Tsinghua University)
 - Liu, Tuo (Department of Educational Psychology, Goethe University Frankfurt)
@@ -69,7 +69,8 @@ Confirmed contributors
 - Vicovaro, Michele (Department of General Psychology, University of Padova)
 - Wiersema, Jan R. (Department of Experimental Clinical and Health Psychology, Ghent University)
 - Wozniak, Mateusz (Social Cognition in Human-Robot Interaction Group, Italian Institute of Technology; Social Mind Center, Department of Cognitive Science, Central European University; Cognition and Philosophy Lab, Department of Philosophy, Monash University; Institute of Psychology, Jagiellonian University)
-- Zhang, Yongfa (Tsinghua University)
+- Zhang, Yongfa (Department of Psychological and Cognitive Sciences, Tsinghua University)
+- Zhao, Yue (Department of Psychological and Cognitive Sciences, Tsinghua University)
 - Wanke Pan (School of Psychology, Nanjing Normal University)
 - Xinru Sun (School of Psychology, Nanjing Normal University)
 - Siyu Wu (School of Psychology, Nanjing Normal University)
@@ -151,7 +152,7 @@ root
 │  .gitignore
 │  README.md
 ├─1_Data 
-│   └─ Dataset_inf.csv  # master index (UTF-8 with BOM); legacy Dataset_inf.xlsx pending removal
+│   └─ Dataset_inf.csv  # master index (UTF-8 with BOM)
 │   └─ <Folder_Name>   # = the study (folder name = project-wide study ID); <Folder_Name> = <Author>_<Year>_<Suffix>, Suffix = readable journal/database abbreviation (e.g. JEPHPP, ActaPsych, ConsciousCog, QJEP), full short journal name (Cognition, Cortex), psyarxiv/unpub tag, or data-repo abbreviation (SDB)
 │       └─ <Folder_Name>_<Exp-id>_Clean.csv
 │       └─ <Folder_Name>_<Exp-id>_Clean_part<N>.csv  # 分片：单一 Clean > 50 MB 时按被试边界拆分（规则见 SKILL.md §文件与文件夹规范「大文件拆分」）

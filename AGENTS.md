@@ -67,7 +67,7 @@ Agent 在本仓库的角色 = **心理学 / 认知科学 / 认知神经科学 / 
 - **整理/入库任务**：原始数据放输入区 `1_Data/<Folder_Name>/<Folder_Name>_Raw/`（只读、gitignore、不参与校验）→ 加载 SKILL 走 10 步流程：扫描识别实验/被试/会话 → 生成独立清洗脚本 `<Folder_Name>_clean.R`（脚本写法见 SKILL §工具与脚本；`Clean_Data.Rmd` 仅为历史参考）→ 产出标准文件（standard files：每研究的 5 类规范产物 = `*_raw.csv` / `*_ExpN_Clean.csv` / `*_subj_info.csv` / `Codebook_*_Clean.xlsx` / paper + 实验 JSON；定义见 SKILL §领域术语基准）→ 更新 `Dataset_inf.csv`（字节保真）→ 入库完成确认时重渲染 Table 1 并做多源交叉核验。
 - **分析/出数任务**：直接用规范数据与 `3_Reports/` 代码，产出写 `3_Reports/Output/`；与稿件比对默认关闭（`--param compare_manu:true` 按版本触发），禁止以稿件/旧产物反推数据。
 - **两级校验（任何改动后必跑）**：结构级 `Rscript 2_Code/validate_json_metadata.R`（EXIT=0）+ 内容级 `Rscript 2_Code/validate_clean_csv.R`（0 ERROR）。
-- 历史遗留（manu_v16、Dataset_inf.xlsx、非标准命名变体等）不主动修改。
+- 历史遗留（manu_v16、非标准命名变体等）不主动修改。
 
 ## 干活效率规则（减少无效读取）
 
@@ -102,7 +102,7 @@ Agent 在本仓库的角色 = **心理学 / 认知科学 / 认知神经科学 / 
 ## 最小结构地图（细则正文归 SKILL/README/PROJ_STATE）
 
 - **What**：SPE (Self-Prioritization Effect) Database — 使用 self-matching task（其他用法：shape–label matching task / perceptual matching task；Sui, He & Humphreys 2012）的研究的 curated trial-level 数据库（术语基准见 SKILL §领域术语基准；逐研究标准文件 + `1_Data/Dataset_inf.csv` 主索引）；收录规模/状态见 PROJ_STATE.md。
-- 研究数据：`1_Data/<Folder_Name>/`（输入区 `<Folder_Name>_Raw/` + 标准文件，见 §项目逻辑）。主索引 `Dataset_inf.csv`（格式约定见 §数据文件格式约定）：行 = `Folder_Name`+`Exp`+`subj_Group` 三元组，`Folder_Name` 为全项目关键 ID（= 研究/study 文件夹名，命名语法 `<Author>_<Year>_<Suffix>`）；`Paper_ID` deprecated 勿新建；旧版 `Dataset_inf.xlsx` 勿用；`Environmental_Info` = 刺激呈现软件而非 Lab/Online（后者由 exp JSON `Physical_Environment.Setting` 推导）——语义细则见 SKILL §主索引。
+- 研究数据：`1_Data/<Folder_Name>/`（输入区 `<Folder_Name>_Raw/` + 标准文件，见 §项目逻辑）。主索引 `Dataset_inf.csv`（格式约定见 §数据文件格式约定）：行 = `Folder_Name`+`Exp`+`subj_Group` 三元组，`Folder_Name` 为全项目关键 ID（= 研究/study 文件夹名，命名语法 `<Author>_<Year>_<Suffix>`）；`Paper_ID` deprecated 勿新建；`Environmental_Info` = 刺激呈现软件而非 Lab/Online（后者由 exp JSON `Physical_Environment.Setting` 推导）——语义细则见 SKILL §主索引。
 - 工具：`2_Code/`（独立清洗脚本 `<Folder_Name>_clean.R` 为现行标准流程 + 两级校验脚本；历史：`Clean_Data.Rmd`、交互式/Shiny 清洗器）。
 - 分析：`3_Reports/`（Process_Data / Subject_Table / Reports / Generate_Table1 / 1_Identity / 2_Mismatch / 3_Exploratory + `Output/`）。
 - 全文库：`REF/`（`<Folder_Name>.pdf/.html`；整目录 gitignore、不上 GitHub）。

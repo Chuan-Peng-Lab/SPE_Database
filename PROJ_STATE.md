@@ -10,7 +10,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ## 2. 核心文件
 
-- `1_Data/Dataset_inf.csv` — **主索引**（UTF-8 带 BOM，**37 列**〔`Study`/`Paper_ID`/`Paper` 三列已废弃、经确认不再恢复，见 §4 决策 20〕；行唯一性 = `Folder_Name`+`Exp`+`subj_Group` 三元组；行序按 ID 列字母序）。`Dataset_inf.xlsx`（遗留旧 schema，亦 37 列）待合作者确认后删除。
+- `1_Data/Dataset_inf.csv` — **主索引**（UTF-8 带 BOM，**37 列**〔`Study`/`Paper_ID`/`Paper` 三列已废弃、经确认不再恢复，见 §4 决策 20〕；行唯一性 = `Folder_Name`+`Exp`+`subj_Group` 三元组；行序按 ID 列字母序）。
 - `1_Data/<Folder_Name>/` ×51 — curated 研究标准文件（standard files：5 类规范产物 = raw / Clean / subj_info / Codebook / paper+exp JSON；磁盘另有 1 个 deferred 输入区文件夹 Scheller_2026_elife）
 - `AGENTS.md` — agent 约定与已知 caveats；`README.md` — 人类读者入口；三份相互引用，数据整理任务统一加载 `spe-database-curation` 技能
 - `.agents/skills/spe-database-curation/SKILL.md` — 通用 curation 技能（自足独立；**领域术语基准 +「表述规范」工作用语对照表**、命名语法、JSON schema、Codebook 规范、DOI/年份核验）

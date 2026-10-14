@@ -181,8 +181,7 @@ for (f in sort(json_files)) {
 }
 
 # --- cross-check Dataset_inf.csv (Folder_Name) vs study folders ----------------
-# Dataset_inf.csv lives inside 1_Data/ and is the master inventory (the legacy
-# Dataset_inf.xlsx is outdated and pending deletion). Its Folder_Name column is
+# Dataset_inf.csv lives inside 1_Data/ and is the master inventory. Its Folder_Name column is
 # the project-wide key ID for papers/preprints and must agree with the actual
 # study folders: (a) every folder must be listed, and (b) every listed
 # Folder_Name must have a folder. Studies whose data have not been curated yet

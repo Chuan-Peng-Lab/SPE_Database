@@ -61,6 +61,6 @@ agent 将自动执行：扫描输入区识别实验/被试/会话 → 生成独�
 
 - 输入区（`*_Raw/`、`*_raw/`）只读且被 git 忽略：不需要也不应该提交；agent 不会修改输入区里的原始文件。
 - **不要覆盖或删除库内已有文件**（含 REF/ 与各研究文件夹）；如需清理，先与 hcp4715 确认（历史上曾发生过不可恢复的误删）。
-- 主索引 = `1_Data/Dataset_inf.csv`（UTF-8 带 BOM；`Dataset_inf.xlsx` 为旧版，待合作者确认后删除）——由 agent 维护，合作者无需直接编辑。
+- 主索引 = `1_Data/Dataset_inf.csv`（UTF-8 带 BOM）——由 agent 维护，合作者无需直接编辑。
 - 数据放好后，整个整理入库由 agent 完成；完成后请 agent 汇报校验结果，有任何疑问联系 hcp4715。
 - 细则正文归属：入库 10 步流程与命名/JSON/Codebook 规范 → `SKILL.md`；项目状态与未解决问题清单 → `PROJ_STATE.md`；agent 仓库纪律与教训 → `AGENTS.md`。
