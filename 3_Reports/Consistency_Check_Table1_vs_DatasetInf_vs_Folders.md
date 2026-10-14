@@ -4,6 +4,8 @@
 **范围**: 比较三个来源中研究（study）与实验（experiment）的数量及标识符。
 **核查方式**: 对 Table 1（docx）、`Dataset_inf.csv` 与 `1_Data/` 目录列表进行自动化比对。
 
+> **状态（2026-10-14 复核）**: 本文为 **2026-08-10 快照**；`待处理问题` 8 项经按当前数据逐项核验后**已全部解决/消解**（见该节），不再保留开放条目。下文表格中的文件夹名、行数与 `Paper_ID` 口径均为当时状态，现由 `1_Data/Dataset_inf.csv` + `3_Reports/Output/Table1_v2.csv` 取代，仅作历史记录。
+
 ## 比较的数据来源
 
 | # | 来源 | 路径 | 行数 |
@@ -68,57 +70,14 @@
 
 ## 待处理问题（Open Issues）
 
-### 问题 1 — CSV 中列出的 9 个研究在 `1_Data/` 中没有对应文件夹
-- **来源**: Dataset_inf.csv
-- **涉及**: `Bukowski_2021_AP`、`Golubickis_2021_AP`、`Hobbs_2023_PM`、`Hu_2023_SDB`、`Mcivor_2020_EJN`、`Orellana-Corrales_2021_EP`、`Scheller_2024_elife`、`Svensson_2021_PR`、`Wozniak_2020_PLOS`
-- **状态**: `Wozniak_2020_PLOS` 在 AGENTS.md 中已记录为"待收录"（数据尚未整理）。其余 8 个**未记录在案**——要么是待整理，要么是 CSV 中的过期条目。
-- **建议处理**: 对这 8 个条目逐一处理：(a) 整理数据文件夹；(b) 加入已记录在案的待收录列表；(c) 若已过时则从 CSV 中删除。校验脚本（`validate_json_metadata.R`）已能标记这些问题。
-
-### 问题 2 — 3 个 CSV Paper_ID 在 Table 1 中缺失
-- **来源**: Table 1 ↔ Dataset_inf.csv
-- **涉及**: `Pt5E1`（Hu_2023_SDB）、`Pu7E1`（Wozniak_2020_PLOS）、空 Paper_ID（Scheller_2024_elife）
-- **状态**: Table 1 中的 70 个 ID 均存在于 CSV；这 3 个是 CSV 独有。`Scheller_2024_elife` 行存在**空 Paper_ID**。
-- **建议处理**: 如果这些数据集需要报告，则在 Table 1 中补充相应行；否则在稿件中标记为排除/待收录。
-
-### 问题 3 — Table 1 中 Exp 列存在复制粘贴错误
-- **来源**: Table 1（docx）
-- **涉及**: `P5E1`–`P5E4` **全部被标记为"Exp4"**；而 CSV 与文件夹子目录（`Constable_2019_EPHPP/Exp1..Exp4`）显示为 Exp1–Exp4。另有 `P46E1`（Table 1 为"Exp2"，CSV 为"1"）和 `P46E2`（Table 1 为"Exp4"，CSV 为"2"）。
-- **状态**: 已确认为 Table 1 的向下填充/复制粘贴错误。
-- **建议处理**: 更正 Table 1 中的 Exp 值：`P5E1`→Exp1、`P5E2`→Exp2、`P5E3`→Exp3、`P5E4`→Exp4；并根据文件夹结构核对 `P46E1`/`P46E2`。
-
-### 问题 4 — Dataset_inf.csv 中存在空的 Exp 值
-- **来源**: Dataset_inf.csv
-- **涉及**: 8 行：`P54E2`、`P54E3`、`Pu5E1`、`Pu5E2`、`Pu6E1`、`Pu9E1`、`Pu9E2`、`Pu10E1`（另有问题 2 中的 3 个 CSV 独有 ID）
-- **状态**: Exp 列为空；Table 1 中这些记录均有对应值（Exp1–Exp3）。
-- **建议处理**: 根据 Table 1 / 文件夹文件名回填 Exp 值。
-
-### 问题 5 — Table 1 中研究标签的归属错误
-- **来源**: Table 1（docx）
-- **涉及**:
-  - `P46E2`: 标记为"Constable et al. (2019)"，但 CSV 中年份为 2020，文件夹为 `Constable_2020_CE` → 应归属 2020 年 CE 论文
-  - `Pu2E1`: 标记为"Martínez-Pérez et al. (2024)"，但 CSV `FirstAuthor` 为"Mario Dalmaso et al."，文件夹为 `Dalmaso_2024_CC` → 标记错误
-  - `Pt9E1`: 标记为"Woźniak et al. (2020)"，但 CSV 文件夹为 `Wozniak_2022_PR`（与 `Pt9E2`/`Pt9E3` 相同）
-  - `P95E2`: 标记为"Wozniak_2018_PLOS"（文件夹命名风格），而 `P95E1` 为"Woźniak et al. (2018)"——同一论文但风格不一致
-- **状态**: 已确认存在归属错误/标签风格不一致。
-- **建议处理**: 更正 Table 1 中的研究标签，使其与 CSV `Folder_Name` / `FirstAuthor` 一致。
-
-### 问题 6 — Table 1 中部分研究标签横跨多个文件夹（粒度问题）
-- **来源**: Table 1 ↔ 文件夹
-- **涉及**: 6 个标签对应多个文件夹：Constable et al. (2019) → `Constable_2019_EPHPP` + `Constable_2020_CE`；Constable et al. (2020) → `Constable_2020_AP` + `Constable_2020_CE`；Orellana-Corrales et al. (2020) → `Orellana-Corrales_2021_APP` + `_EP`；Martínez-Pérez et al. (2024) → `Martinez-Perez_2024_CC` + `Dalmaso_2024_CC`；Sui et al. (2014) → 3 个文件夹；Svensson et al. (2022) → `Svensson_2021_PR` + `Svensson_2023_QJEP`。
-- **状态**: 并非错误——CSV 与文件夹一致；影响的是如何从 Table 1 推导"研究数量"。
-- **建议处理**: 考虑按文件夹（`Paper` 列）对 Table 1 行分组以统计数量，或增加论文↔文件夹的明确映射。
-
-### 问题 7 — Liang_2022_HBM：文件夹中的实验多于 CSV/Table 1 记录
-- **来源**: 三个来源均涉及
-- **涉及**: `Liang_2022_HBM` 文件夹包含 4 个 Clean CSV（`Exp1`、`Exp1.1`、`Exp1.2`、`Exp1.3`），但 CSV 仅列出 3 行（全部为"Exp 1"），且只有 1 个 Exp JSON 存在。
-- **状态**: 存在数据遗漏风险——磁盘上有实验数据但未登记入目录。
-- **建议处理**: 在 CSV 中补充 `Exp1.1`/`Exp1.2`/`Exp1.3` 行（若需报告也加入 Table 1），并创建缺失的 Exp JSON。
-
-### 问题 8 — 多个文件夹缺少实验 JSON 元数据
-- **来源**: 文件夹
-- **涉及**: `Kirk_2025_BJP`（2 个实验，0 个 JSON）、`Lee_2023_Cognition`（2，0）、`Orellana-Corrales_2021_APP`（2，0）、`Pan_2025`（1，0）、`Smith_2024_Cortex`（1，0）、`Sui_2014`（1，0）、`Sui_2015`（2，0）、`Sun_2025`（1，0）、`Svensson_2023_QJEP`（1，0）——实验数据以 Clean CSV 形式存在，但没有对应的 `<Study>_Exp<N>.json` 元数据。
-- **状态**: 元数据完整性缺口；JSON 校验脚本对缺失的实验 JSON 不会报错（仅对格式错误的文件报错）。
-- **建议处理**: 为这些文件夹生成 `_Exp<N>.json`（v2 模式）。
+**2026-10-14 复核：原 8 项已全部解决/消解，逐项移出**（按当前数据核验，非依原标记）：
+① 9 个「缺文件夹」条目已全部落位（多为改名：`Bukowski_2021_AP`→`Bukowski_2021_ActaPsych`、`Golubickis_2021_AP`→`Golubickis_2021_ActaPsych`、`Hobbs_2023_PM`→`Hobbs_2023_PsychMed`、`Hu_2023_SDB`→`Hu_YQ_2026_ChinaSciData`、`Mcivor_2020_EJN`→`Mcivor_2021_EJN`、`Orellana-Corrales_2021_EP`→`Orellana-Corrales_2020_ExpPsych`/`_2021_APP`/`_2023_QJEP`、`Svensson_2021_PR`→`Svensson_2022_PsychRes`/`_2023_QJEP`、`Scheller_2024_elife`→`Scheller_2026_elife`〔deferred〕；`Wozniak_2020_PLOS` 亦已收录）；
+② `Paper_ID` 键已废弃（主索引现为 `Folder_Name_Exp<N>_<subj_Group>` 复合键，`ID` 列）；
+③⑤ 系稿件 Table 1 的复制粘贴/归属错误（稿件 v16 已废弃；可解性登记见 `Table1_Issues_Solvability.md`）；
+④ 空 `Exp` 值已全部回填（现 114 行、0 空值）；
+⑥ 复核确认**并非错误**（标签粒度问题），已关闭；
+⑦ `Liang_2022_HumBrainMap` 冗余 `Exp1_Clean.csv` 已删、Exp JSON 已补（现 1 Clean + 1 Exp JSON + 3 行按 `subj_Group` 拆组）；
+⑧ 9 个文件夹的实验 JSON 已全部补齐（全库 93 份 exp JSON，结构级校验 EXIT=0）。
 
 ---
 
