@@ -1,4 +1,4 @@
-# Sun_2026_DataExp 入库计划（v4 — 决策已全部并入，待用户批准执行）
+# Sun_2026_DataExp 入库计划（v4 — 决策已全部并入；2026-10-01 执行完毕）
 
 > 依据：SKILL.md（入库 10 步 / 模板 v2 / 主索引规则）、`AGENTS.md`、`Sun_2026_DataExp_Raw/04_code_and_reproducibility/removed_subjects_log.md`（用户指定权威）、输入区文件与现有五件套实测。
 > **v2 更新（用户指示）**：① **SMT_1（Day 2 几何版）入库，为 Task1、Session=2；SMT_2（Day 3 自我参照版）为 Task2、Session=3**；两任务整合为**同名 CSV**（`Sun_2026_DataExp_Exp1_*`），可按被试边界分片。② **`empty_ID_ghost` 分配临时 ID 后入库**。
@@ -131,7 +131,7 @@
 | `Block_Structure.Trial_number` | `768 formal trials per task per subject (1536 for subjects completing both sessions)` | 数据实测 |
 | `Block_Structure.Practice_trials` | `48 per practice block, adaptive repetition until accuracy >= 60% (observed 96-480)` | `SMT_1.js` / `SMT_2.js`（`acc=60`） |
 | `Trial_Structure`（两任务相同） | Fixation `500 ms`；Stimulus `200 ms (1000-1200 ms)`；SOA `500 ms`；Response_deadline `2200 ms`（作答自 1000 ms）；Feedback `500 ms`；ITI 依注释核（约 100 ms） | `SMT_1.js` L312-388、`SMT_2.js` L1113-1195 |
-| `Stimulus_Properties` | Modality `Visual`；Shape 190 px ≈3.8°×3.8°；Label 80 px 微软雅黑 ≈3.6°×1.6°；Colors 待核 CSS | 程序 |
+| `Stimulus_Properties` | Modality `Visual`；Shape 190 px ≈3.8°×3.8°；Label 80 px 微软雅黑 ≈3.6°×1.6°；Colors 已补全（`Stimulus`/`Background`） | 程序 |
 | `detail` | 682/681/590/503 口径、87 人剔除明细、12 人保留、幽灵临时 ID、Task1 无身份→NonPerson、Task1 双跑个案与 `Run` 列、两源分歧（681 vs 644）、分片说明 | 本计划 |
 
 ### 步骤 6：Dataset_inf.csv 收口（字节保真：往返测试 → 写 → diff 仅目标单元格 → ID 行序保持）
@@ -174,7 +174,7 @@
 - [x] 幽灵以 `phase_015_subj_ghost01` 入库并在 JSON/Note 标注；同一被试两 session 同片（按 Subject 排序后分片）。
 - [x] Task1 双跑按决策落地：`phase_003_subj_14` 仅 768 正式（重跑遍）；`phase_017_subj_20` 1536 且 `Run=1/2`；JSON `detail` 说明；差异清单已入 log §7。
 - [x] 两级校验 0 ERROR 且无 Sun KNOWN 豁免（`known` 条目已删除）。
-- [x] Dataset_inf / exp JSON 一致（N 口径、软件、设置、Identity；`PubType=Journal`、`Journal=Data Express`、`License=CC BY 4.0`、`Repo_Link=SciDB`、`City=NA`）。⚠️ paper JSON 的 `City` 仍为 `Nanjing`（本次未改动，属待用户裁决的一致性项，见执行汇报）。
+- [x] Dataset_inf / exp JSON 一致（N 口径、软件、设置、Identity；`PubType=Journal`、`Journal=Data Express`、`License=CC BY 4.0`、`Repo_Link=SciDB`、`City=NA`）。paper JSON 的 `City` 已于 §8 执行（2026-10-01）改为 `/`，原「待用户裁决」项已消解。
 - [x] `Design` 列保留原值未动，并已提请用户撰写（§7.2 第 9 项）。
 
 ---
@@ -248,12 +248,13 @@
 | — | `Others` 列 | 保持空白（§6.1） |
 | — | raw 分片规则 | 已写入 SKILL + `split_clean_csv.py`（§4 步骤 2） |
 
-### 7.2 仍需您处理的两项
+### 7.2 仍需您处理的一项
 
 | # | 事项 | 状态 |
 |---|---|---|
-| 9 | `Design` 列文案 | **由您亲自撰写**（现值为错误的 generic 文本含 stranger）——执行时我不改动该单元格，收口时提醒 |
-| 10 | **是否执行本计划（步骤 1–7）** | **等您决定**。执行会：新增 `_Exp1_raw(_part<N>)`、重写 `_Clean(_part<N>)` 与 `subj_info`、重生成 Codebook、更新 exp JSON 与 `Dataset_inf.csv`（旧文件先备份 `_trash_<日期>/` 再替换） |
+| 9 | `Design` 列文案 | **由您亲自撰写**（现值为错误的 generic 文本含 stranger）——收口时提醒；与 `PROJ_STATE` §3 类别一 Sun 条目一致 |
+
+（原 #10「是否执行本计划（步骤 1–7）」已于 2026-10-01 按 §8 执行完毕，条目删除；结果见文首状态行与 §8。）
 
 
 
@@ -308,7 +309,7 @@
 
 **口径定案结果**：Clean/raw = **589 被试 / 1,040,880 行**（Session 2 = 516,864 + Session 3 = 524,016），列数 **20**（无 `Run`）；排除 92 名仅-Session 2 被试 + 1 条仅-Session 3 幽灵（共 93 条记录，写入 `removed_subjects_590_to_503.csv` 与 log）。
 
-**执行状态**：**待执行**（用户指示"更新计划，不执行"）。执行步骤见 §8.3。
+**执行状态**：**已执行完毕（2026-10-01）**——结果见本节开头与文首状态行（589 被试 / 1,040,880 行 / 20 列）；§8.3 的执行步骤已全部执行，原「待执行」记述作废。
 
 ---
 
