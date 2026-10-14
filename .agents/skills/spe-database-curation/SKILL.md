@@ -184,7 +184,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 □ PROJ_STATE.md 登记：3 节对应类别行更新 + 5 节现状汇总数字同步（完成进度不追加——只入 git commit）
 □ AGENTS/README 计数同步（如有）
 □ 外置盘文件清理：git 前删除 `._*`、不提交 macOS 附带文件（正文见 AGENTS.md §会话约定）
-（Table 1 渲染不做：qmd 为动态 keep-by-folder 逻辑，新研究自动入表；仅在稿件版本更新时 --param compare_manu:true 渲染）
+（Table 1 不做 qmd/quarto 渲染：`Generate_Table1_v2.R` 按文件夹动态出表，新研究自动入表；旧 qmd 出表管线及其稿件比对选项已于 2026-10-14 移出，见 PROJ_STATE §7）
 ```
 
 ## 人工决策点（13 条 — 遇到即暂停，等待确认）
@@ -200,7 +200,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 7. **输入区异常**：多格式混存、损坏文件、per-participant 命名无法对应实验/会话时，暂停人工判断。
 8. **数据获取**：Repo_Link 缺失/失效、数据未公开时，暂停（不得用稿件/旧产物反推数据）。
 9. **unpublished 研究**：无 DOI，paper JSON 手工填写（Summary/Conclusion 可 `"/"`），年份以数据收集年为准。
-10. **稿件/旧产物**：一律仅作参考线索，永不作为数据来源覆盖 1_Data/（稿件 v16 已废弃）。
+10. **稿件/旧产物**：一律仅作参考线索，永不作为数据来源覆盖 `1_Data/`（稿件已更新且不在本库内，不作比对基线，见 PROJ_STATE §4 决策 17）。
 11. **多任务论文口径**：同一论文含多个任务（如 AB + 匹配）时，`Practice_Trial`/`numBlocks`/`numTrials` 取产生该行数据那个任务的值；发现论文中存在但 CSV 未收录的实验行，登记待入库，不擅自补行。
 12. **已发表论文核查对照全文，不只扫空白**：元数据补全/核查时直接对照 `REF/` 全文（期刊名拼写、身份列拼写、Others 措辞、N 口径、实验行数都可能与空白清单外的问题共存，案例：Kirk `Psycholog`/`Slef`、Sui_2014 N 不符、Wang 缺 Exp2）。
 13. **缺失标记三态分类**：单元格属 `missing`（明确无法获得）/ 空白（不确定有无）/ `NA`（明确没有/不适用）中哪一类属人工判断——分类不明或证据不足时暂停确认；改标前先查 exp JSON detail / 论文 / 数据，禁止凭值猜测。规则正文见「主索引 Dataset_inf.csv」缺失标记。
@@ -325,7 +325,7 @@ QUOTE_MINIMAL + 末行无换行。BOM 不是某个语言的特殊处理，而是
 - 样本量：`Sample_Size`、`Male`、`Female`、`Valid_Subj`、`Drop_Subj`
   - **`Male`/`Female` 缺失口径（2026-10-12 定案）**：数据文件中无性别信息、且原研究/作者处**有**该信息但我们未获得 → `missing`；仅有总体值而无法拆到本行（组间拆行、pair 研究等）→ 留空（不确定）；确无性别维度 → `NA`。
   - **N 口径**：`Sample_Size` **一律 = Clean 中被试总数**（数据口径）；招募/论文报告 N 与此不一致时记 Note（`Paper_N: X recruited, Y excluded; N in database` 式）。`Valid_Subj` = **作者对 summary-data 初步分析后保留的被试量**（= 论文分析样本）；因本库最小预处理不删除被试，通常 Valid = Sample；仅当作者剔除了**库内仍保留**的被试时 Valid < Sample（先例 Orellana-Corrales_2021_APP E1：Clean 34 / Valid 28）。`Drop_Subj` = Sample − Valid（库内被作者排除数，通常 0）；**未进库的招募排除不占 Drop，只进 Note**。pair 粒度研究按人数口径（Clean Subject=pair ID 时例外）+ Note 记 pair 粒度。
-- 设计：`Design`、`subj_Group`（被试分组列，**每 group 一行**：行的唯一性 = `Folder_Name` + `Exp` + `subj_Group` 三元组。组间设计研究按组拆分为多行（Exp 不变），每行 `subj_Group` 填**单个**原文组名（如 `LpSTS`，不用分号堆叠——该做法已废弃）；无组间设计保持单行填 `All`。展开后每行的 `Sample_Size`/`Valid_Subj`/`Male`/`Female` 填**组内值**（数据可拆按数据、否则按论文；论文亦无 → **留空 = 不确定**，CSV 禁用 `/`，三态见本节缺失标记），总体口径与组名映射记 Note；展开行的 `ID`/`Paper_ID`/`Paper` 无稿件对应时留空。**组间判定**：`Design` 列含 between-subjects/Group 标记是直接依据，但 Design 未标注不代表无组间——需以全文核对（案例：Xu_2022、Constable_2020 Switch Identity、Vicovaro E2 self-symmetry/asymmetry 均仅见于全文）；试次级/被试内变量不展开；在线研究（MTurk/Prolific 等）按平台被试主体标 Country（如 MTurk→United States）。`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
+- 设计：`Design`、`subj_Group`（被试分组列，**每 group 一行**：行的唯一性 = `Folder_Name` + `Exp` + `subj_Group` 三元组。组间设计研究按组拆分为多行（Exp 不变），每行 `subj_Group` 填**单个**原文组名（如 `LpSTS`，不用分号堆叠——该做法已废弃）；无组间设计保持单行填 `All`。展开后每行的 `Sample_Size`/`Valid_Subj`/`Male`/`Female` 填**组内值**（数据可拆按数据、否则按论文；论文亦无 → **留空 = 不确定**，CSV 禁用 `/`，三态见本节缺失标记），总体口径与组名映射记 Note；展开行的 `ID`/`Paper_ID`/`Paper` 无对应时留空。**组间判定**：`Design` 列含 between-subjects/Group 标记是直接依据，但 Design 未标注不代表无组间——需以全文核对（案例：Xu_2022、Constable_2020 Switch Identity、Vicovaro E2 self-symmetry/asymmetry 均仅见于全文）；试次级/被试内变量不展开；在线研究（MTurk/Prolific 等）按平台被试主体标 Country（如 MTurk→United States）。`Extra_Ind_Var`、`Stim_Type`、`Stim_language`、`Self`、`Close`、`Others`
 - 流程：`Practice_Block`、`Practice_Trial`、`numBlocks`、`numTrials`、`Environmental_Info`（**刺激呈现软件**，非 Lab/Online 设置）
   - **numTrials 口径**：一律填**每被试总试次数（total）**，不填 per-block；应能与实验条件数整除出每条件试次数（如 8 条件×60=480）。多 session/多 run 设计（如 Qian E1 4 sessions×144）按全 session 合计。
   - **Session 语义**：`Session` = 完成一个通常意义上的完整心理学实验的一次参加（如 6 blocks、约 1 小时；完成后被试离开实验室或下线）。被试再次来实验室/上线完成另一个完整实验 = 下一个 session（如纵向研究 T2/T3）。同一参加内的重复任务段（如 fMRI 连续 5 个 run）**不叫 session**——用 `Block`（或 Run）列。案例：Atzeni_2026 T2/T3 = 两次独立上线 → Session 列 ✓；Zhang_2026 的 5 个 fMRI "session" 实为同一次扫描内 5 个 run → Clean 列名 Block（作者原列名 session 保留于 raw）。
@@ -438,8 +438,8 @@ use `"/"` for unknown. All existing experiment JSONs are v2 — new files must b
 - **Physical_Environment** — where/how the task was delivered (hardware, room, distance).
   `Setting` must use a controlled vocabulary: `Laboratory`, `Online`, or a combined
   value (e.g., `Laboratory + Online`); use `"/"` only when truly unknown. Do NOT
-  invent free-text variants (e.g., "quiet room", "chamber", "remote"): the manuscript
-  Table 1 pipeline (`Generate_Table1_v2.R`) infers `Exp_Implement` by regex-matching
+  invent free-text variants (e.g., "quiet room", "chamber", "remote"): the Table 1 pipeline
+  (`Generate_Table1_v2.R`) infers `Exp_Implement` by regex-matching
   `Setting`, so non-standard wording silently degrades to NA.
   **Setting = Online 时**：`Physical_Environment.Location` 与 Dataset_inf.csv / paper JSON 的
   `City` 可不填（在线被试可分布于任何地点，位置无意义）——JSON `Location` 填 `/`，Dataset_inf.csv `City` 填 `NA`（不适用，案例 Kirk/Perrykkad）或留空，无需追查。

@@ -4,7 +4,7 @@
 
 ## 1. 当前目标
 
-SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的研究文件夹名 `<Folder_Name>`（= 该 study 在全库的唯一 ID，格式 `<Author>_<Year>_<期刊缩写>`）作为全项目论文/预印本的关键 ID，以 `1_Data/Dataset_inf.csv` 为主索引，使各研究的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并为稿件 Table 1 生成可靠数据源。
+SPE（自我优先效应）数据库的整理与元数据治理：以「可读、自解释」的研究文件夹名 `<Folder_Name>`（= 该 study 在全库的唯一 ID，格式 `<Author>_<Year>_<期刊缩写>`）作为全项目论文/预印本的关键 ID，以 `1_Data/Dataset_inf.csv` 为主索引，使各研究的命名、年份、DOI、期刊信息与权威记录（Crossref/OSF/论文 JSON）对齐，并使 Table 1 可由 `1_Data/` 直接生成（稿件已更新且不在本仓库内，不作为比对基线，见 §4 决策 17）。
 
 当前规模：**52 unique 研究 / 114 行**（51 已入库 + 1 暂缓：Scheller_2026_elife；`Hu_YQ_2026_ChinaSciData` = 2 个实验 / 4 行 / 62 人〔Exp1 北京 = 两个任务合并、Exp2 开封〕，Clean 与 raw 各按被试边界分 2 片；`Wu_2026_Chinaxiv` = 2 个实验 / 3 行；`Sun_2026_DataExp` 的 Clean 与 raw 各分 4 片）。全部数据入库或豁免后即达成阶段性成果。
 
@@ -20,14 +20,13 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - `For_COLLABORATORS.md` — **合作者推进指南**（正文归属本文件）：待合作者推进的 3 项（Hu_YQ 补输入区原始数据与确认设计口径〔清单见 `3_Reports/Hu_YQ_2026_Issues.md`〕 / Scheller 补匹配任务数据 / Wu_2026_Chinaxiv Exp2 数据版本澄清，末项待项目负责人决定是否联系作者）补齐路径 + 未来新研究入库 4 步 + REF/ 不上 GitHub 的版本同步提醒
 - `2_Code/validate_json_metadata.R` — 结构级校验脚本（2026-10 起新增 `Setting`/`Modality`/`Stimulus_order` 受控词表检查，WARN 级；Hu_YQ 偏差已于 2026-10-12 修正、原 KNOWN 豁免删除；W5 新增 `Hu_YQ_2026_ChinaSciData_Exp2` 的 `filler` 登记）；`2_Code/validate_clean_csv.R` — 内容级校验脚本（2026-09-25 起支持 `_Clean_part<N>.csv` 分片：按逻辑数据集聚合 E3/W2、新增 E4 表头一致性；2026-10 起 ACC 值域收紧为 `1`/`0`/`NA`/`-2`/`-3`/`-4`，并按原文本检查空字段；**2026-10-06 起 W5（Matching 值域）与 W4 同款支持 `known` 登记豁免**——用于「任务本身无匹配维度 → 该列为 NA」的研究，已登记 `Wu_2026_Chinaxiv_Exp1/Exp2`）
 - `2_Code/split_clean_csv.py` — 大文件分片工具（> 50 MB 的 `*_Clean.csv` 按被试边界切分；默认 dry-run，`--apply` 备份原件后写入并逐字节校验可还原；规则正文见 SKILL §文件与文件夹规范「大文件拆分」）
-- `3_Reports/Generate_Table1_v2.R`（**现行 Table 1 工具**，`Rscript` 出 `Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto）+ `Output/table1_problems.txt`（qmd 时代产物，仍可查）— Table 1 再生成与比对；旧 `Generate_Table1.qmd` 已失效（`Paper_ID` 列移除后无法渲染）
-- `3_Reports/Table1_Issues_Solvability.md` — Table 1 问题逐项可解性判定（与本文档 §3 双向关联）
+- `3_Reports/Generate_Table1_v2.R`（**现行 Table 1 工具**，`Rscript` 出 `Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto）— Table 1 直接由 `1_Data/` 生成；旧 qmd/quarto 出表管线及其产物（`Generate_Table1.qmd`/`.docx`、`ref_docx_landscape.docx`、`Output/Table1.csv`、`Output/Table1_summary_stats.csv`、`Output/table1_problems.txt`）已于 2026-10-14 移出仓库（见 §7）
 - `3_Reports/Verifying_original_results_issues.md` — **作者原始结果验证问题统一记录处**（Issue 1–9，与本文档 §3 类别三关联）
 - `3_Reports/Hu_YQ_2026_Issues.md` — **Hu_YQ_2026_ChinaSciData 未解决问题清单**（只记未解决项：H1 输入区原始数据、H2 开封公开版本、H3 任务映射、H5/H6/H8/H9/H14③ 设计与口径、N1–N3、N5 开封交付缺漏；已解决编号不再保留；与本文档 §3 类别二行关联）
 - `3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md` — **Wu_2026_Chinaxiv 入库计划**（列序/自变量映射、试次结构与分块、三方核对、exp JSON 字段完整性与 Codebook 编写计划、§10 Issues 清单 = Wu Issue 1–8 独立编号；与本文档 §3 类别三新增行关联）
 - `2_Code/qjep_verify/`、`2_Code/mcivor_verify/`、`2_Code/orellano2020_verify/`、`2_Code/wang2016_verify/`、`2_Code/hobbs_verify/`、`2_Code/wozniak2020_verify/` — 各研究多源交叉核验脚本固化
 - `REF/README_html2md.md` — REF 全文 HTML→MD 转换管线使用说明（正文归属本文件，AGENTS/PROJ_STATE 只放指针）
-- `3_Reports/CodeReview_and_v16.2_Consistency_Report.md` — **稿件 v16.2 生成 + 三段分析代码审查报告**（2026-09-24；含代码 bug 清单 B1–B6、v2 结果、Table 1 差异 41 处、参考文献审计）；产物 = `_v2` 代码/图 + `Generate_Table1_v2.R` + `Datasets/4_Writing/SPE_数据库_v16.2.docx`
+- `3_Reports/CodeReview_2026-09-24.md` — **三段分析代码审查报告（v2 修复版）**（2026-09-24；2026-10-14 精简并改名——旧稿件相关条目（B1–B6、稿件文字改动清单、Table 1 差异、参考文献审计、稿件 docx 复核）已删除，仅保留 v2 结果、产物索引与复跑步骤；删前全文见 git，归档登记见 §7）；产物 = `_v2` 代码/图 + `Generate_Table1_v2.R`
 
 ## 3. 当前论文状态分类
 
@@ -64,7 +63,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 | Wu_2026_Chinaxiv | Wu 1–8 | 作者共享 Exp2 CleanData 与 raw 不可对应（三版本；半数被试行不可追溯）；Exp2 匹配试次 192（raw）vs 256（稿件）；Exp2 RT 窗口 4000 ms（预注册/数据）vs 3000（稿件）；7 个早期版本导出缺 `task_type`；Exp1 作者 `data_color` 重复计入 Subject 70；显示器 1080×768（稿件）vs canvas 1920 px（raw）；5 人 canvas 1440–1536 px；稿件红/蓝 HSL 标注写反 | 登记暂缓（Wu Issue 1–8 见 `3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md` §10 + 两份 exp JSON detail + 主索引 Note；**不并入 Verifying_original_results_issues.md**，2026-10-06 用户定案） |
 | Zhao_2026_PsychonBullRev | 9 | Exp1 有 17/48 份原始日志的练习段未以「连续正确 6 次」结束（结尾连续正确 0–5 次、练习长度 6–73 试次），与归档程序 `SPE.psyexp` 的终止规则不符；17 份均为 2025-03-31 之前的场次（程序文件最后修改日），疑当时使用较早版本；Exp2/Exp3 全部符合 | 登记暂缓（练习试次作者分析时已排除 → 不影响论文结果；已记三份 exp JSON detail + 主索引 Exp1 行 Note，原始日志完整保留练习试次） |
 
-统一处置：全部**登记暂缓**（Issue 1–9 详情见 Verifying_original_results_issues.md；`Wu_2026_Chinaxiv` 的 Wu Issue 1–8 见其入库计划 §10），不阻塞 Status=1；**是否联系作者由项目负责人决定**（超库范围不主动执行）；触发动作：稿件版本更新时按暂缓清单处置。
+统一处置：全部**登记暂缓**（Issue 1–9 详情见 Verifying_original_results_issues.md；`Wu_2026_Chinaxiv` 的 Wu Issue 1–8 见其入库计划 §10），不阻塞 Status=1；**是否联系作者由项目负责人决定**（超库范围不主动执行）；触发动作：仅在获得新的原始数据/材料或作者澄清时重核（不以稿件版本更新为触发，见 §4 决策 17）。
 
 ### 类别四：未入库（deferred）
 
@@ -84,7 +83,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ### 其他暂缓项
 
-稿件 Table1 暂缓清单（table1_problems.txt 111 行 + Table1_Issues_Solvability.md 36 项——2026-10-14 按当前数据重核，已定案条目 71 项删除，稿件版本更新时启用）；Kirk_2025_BritJPsy.json 嵌套 schema 例外（内部键 KIRK_2025_BJP 保留）；Hu_2023_psyarxiv（PsyArXiv 预印本）与 Hu_YQ_2026_ChinaSciData（ChinaSciData）为两个独立条目，确认分别保留；历史管线 Clean_Data.Rmd 内仍引用旧文件夹名（纯历史记录，未改）。
+Kirk_2025_BritJPsy.json 嵌套 schema 例外（内部键 KIRK_2025_BJP 保留）；Hu_2023_psyarxiv（PsyArXiv 预印本）与 Hu_YQ_2026_ChinaSciData（ChinaSciData）为两个独立条目，确认分别保留；历史管线 Clean_Data.Rmd 内仍引用旧文件夹名（纯历史记录，未改）。原「稿件 Table 1 暂缓清单」（`Output/table1_problems.txt` + `Table1_Issues_Solvability.md`）已于 2026-10-14 移出仓库（见 §7）。
 
 ### 条件触发的工作（跨类别）
 
@@ -120,7 +119,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ### F. 状态与流程治理
 16. **校验链路**：元数据改动必跑 validate_json_metadata.R；数据改动加跑 validate_clean_csv.R。
-17. **稿件 v16 已废弃**：Table 1 以 `3_Reports/Generate_Table1_v2.R` 输出为准（2026-10 定案；旧 qmd 已失效，历史报告不改）；与稿件自动比对仅在稿件版本更新时手动启用。
+17. **不以稿件为比对基线**（2026-10 定案；2026-10-14 强化）：Table 1 以 `1_Data/` 经 `3_Reports/Generate_Table1_v2.R` 生成的结果为准；稿件已更新且不在本仓库内，旧稿件副本与旧出表管线（qmd 及其产物、稿件 Table 1 差异清单、稿件审计报告）已于 2026-10-14 移出（见 §7）；不再进行任何稿件版本比对。
 18. **Status=1 判定标准**：**最关键标准 = 库内标准文件形成逻辑上完全一致、清晰可追溯的结构**（各层级互相印证、缺口已解释）；与原论文表述是否一致是次要指标——不一致不阻塞 Status=1，记录于 Verifying_original_results_issues.md（Issue 编号）+ exp JSON detail/CSV Note。
 19. **Task/extraIV 命名规范**：`Task` 列区分联结任务类型（默认 `self-matching`；纯情绪面孔/金钱/伪词等用受控值）；任务内额外操纵自变量统一命名 `extraIV1`/`extraIV2`（语义入 Codebook+exp JSON detail）；列顺序统一模板（Subject→[Group]→[Session]→Task→[Phase]→[Condition]→Block→Trial→[Practice]→Matching→Shape→[ShapeLoc]→[Shape_Subtype]→Shape-Identity×3→Label→Label-Identity×3→[extraIV1/2]→[CorrResponse]→[Response]→RT_ms→RT_sec→ACC→研究特有尾部）。
 
@@ -178,5 +177,12 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 | §6 REF/ 全文收录统计 | 44 研究覆盖明细、模板适配记录、`*_DS.md` 说明、管线教训 | REF/README_html2md.md（正文归属）+ git 历史 |
 | §7 完成进度 | 全量历史会话记录表（2026-08 ~ 2026-09-02，约 30 行，含各研究入库详情、多源交叉核验、治理动作、全局校验基线） | **git 历史**：备份 commit `9e90b8e` 之前版本为精简前全文；各动作对应 commit message 可定位 |
 | `3_Reports/Stage3_1_CrossCheck_archived.md`（整文件，2026-10-14 删除） | 阶段 3.1 四方交叉复核 P1–P22 处置记录（全部已解决；相关表述已自核心文件移除） | **git 历史**：`git log -- 3_Reports/Stage3_1_CrossCheck_archived.md` |
+| `3_Reports/CodeReview_and_v16.2_Consistency_Report.md` → **`CodeReview_2026-09-24.md`**（2026-10-14 改名 + 精简） | 标题/头部的稿件 v16.2 表述、§1/§2/§5/§6/§7/§8（代码 bug 清单 B1–B6〔B1–B5 已在 `_v2` 修复；B6 经 Crossref 复核为误报——`Constable_2019_JEPHPP` 名称正确〕、稿件文字改动清单、Table 1 差异 41 处、参考文献审计、稿件 docx 复核） | **git 历史**：`git log --follow -- 3_Reports/CodeReview_2026-09-24.md`（文件保留：§3 v2 结果、§4 交付产物、§9 复跑） |
+| `3_Reports/Manu_v16_Methods_Structure_Audit.md`（整文件，2026-10-14 删除） | 稿件 v16 方法文与库内实况一致性审计：审计基线快照、方法文 Claims 判定矩阵（A1–A5/B1–B3/C1–C2）、实况树/目标树（Figure 1 草案）、不一致清单 #1–#6、规模数字重算（#4 已解决 2026-10-02、#5 已解决 2026-10-08，余随旧稿件 moot） | **git 历史**：`git log -- 3_Reports/Manu_v16_Methods_Structure_Audit.md` |
+| `3_Reports/Table1_Issues_Solvability.md`（整文件，2026-10-14 删除） | 「旧稿件 Table 1 vs 数据」逐项可解性判定（36 项保留清单）；稿件已更新且不再作比对基线 → 整份清单失效 | **git 历史**：`git log -- 3_Reports/Table1_Issues_Solvability.md` |
+| `3_Reports/Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md`（整文件，2026-10-14 删除） | 2026-08-10「稿件 Table1 vs Dataset_inf vs 文件夹」快照（8 项待处理问题已全部解决；文件夹名已过时） | **git 历史**：`git log -- 3_Reports/Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md` |
+| 旧出表管线（2026-10-14 移出）：`Generate_Table1.qmd`、`Generate_Table1.docx`、`ref_docx_landscape.docx`、`Output/Table1.csv`、`Output/Table1_summary_stats.csv`、`Output/table1_problems.txt` | qmd/quarto 出表管线及其产物（含「稿件 Table 1 差异」原始清单 111 行）；已被 `Generate_Table1_v2.R` + `Table1_v2.*` 取代 | **git 历史**：`git log -- 3_Reports/Generate_Table1.qmd`（其余文件同理） |
+| `3_Reports/SPE_database_manu_v16.docx`（2026-10-14 移出） | 稿件旧副本（1.45 MB）；稿件已更新至库外新版，本仓库不再保留稿件副本 | **git 历史**：`git log -- 3_Reports/SPE_database_manu_v16.docx` |
+| `3_Reports/Sun_2026_DataExp_Ingestion_Plan.md` §7.2 #10（2026-10-14 删除） | 「是否执行本计划（步骤 1–7）——等您决定」（已于 2026-10-01 执行完毕） | **git 历史**：`git log -- 3_Reports/Sun_2026_DataExp_Ingestion_Plan.md`（该文件仍保留 §7.2 #9 `Design` 列文案待办） |
 
 查询方式：`git log --oneline -- PROJ_STATE.md` 或按研究/动作关键词 `git log --grep="<关键词>"`。全局校验基线以 §5 为准，不随历史删除。

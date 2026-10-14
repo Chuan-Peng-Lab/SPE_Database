@@ -58,16 +58,16 @@ Agent 在本仓库的角色 = **心理学 / 认知科学 / 认知神经科学 / 
 - `PROJ_STATE.md` — 会话状态摘要：新会话先读它再开工；每 session 收尾更新一次（见 §会话收尾）。
 - `.agents/skills/spe-database-curation/SKILL.md` — curation 规则正文归属（自足、可迁移他库）；任何数据整理/入库任务一律先加载 `skill(name="spe-database-curation")`（跨工具技能根 `.agents/skills`，DSH/opencode 均自动加载）。
 - 引用方向：README ↔ AGENTS ↔ PROJ_STATE 相互引用并**统一指向技能**；每条规则正文只写一个归属文件，其余文件只放一行指针（含目标节）。
-- 其他重要文档（正文均在各自文件，此处只放指针）：`3_Reports/Table1_Issues_Solvability.md`（稿件 Table 1 差异逐项可解性判定，与 PROJ_STATE §3 双向关联）；`3_Reports/Verifying_original_results_issues.md`（多源交叉核验发现的问题统一记录处）；`3_Reports/Hu_YQ_2026_Issues.md`（`Hu_YQ_2026_ChinaSciData` 未解决问题清单：**只记未解决项**——H1 输入区原始数据、H2 开封公开版本、H3 任务映射、H5/H6/H8/H9/H14③ 设计与口径、N1–N3、N5 开封交付缺漏；已解决编号不再保留）；`3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md`（`Wu_2026_Chinaxiv` 入库计划：列序与自变量映射、三方核对、exp JSON 字段完整性、Codebook 编写计划与其 §10 Issues 清单 = Wu Issue 1–8 独立编号）；`REF/README_html2md.md`（REF 全文 html→json→md 管线用法）；`For_COLLABORATORS.md`（给合作者的推进指南：待数据补齐路径、新研究入库 4 步、REF 不上 GitHub 需联系 hcp4715）。
+- 其他重要文档（正文均在各自文件，此处只放指针）：`3_Reports/Verifying_original_results_issues.md`（多源交叉核验发现的问题统一记录处）；`3_Reports/Hu_YQ_2026_Issues.md`（`Hu_YQ_2026_ChinaSciData` 未解决问题清单：**只记未解决项**——H1 输入区原始数据、H2 开封公开版本、H3 任务映射、H5/H6/H8/H9/H14③ 设计与口径、N1–N3、N5 开封交付缺漏；已解决编号不再保留）；`3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md`（`Wu_2026_Chinaxiv` 入库计划：列序与自变量映射、三方核对、exp JSON 字段完整性、Codebook 编写计划与其 §10 Issues 清单 = Wu Issue 1–8 独立编号）；`REF/README_html2md.md`（REF 全文 html→json→md 管线用法）；`For_COLLABORATORS.md`（给合作者的推进指南：待数据补齐路径、新研究入库 4 步、REF 不上 GitHub 需联系 hcp4715）。
 
 ## 项目逻辑与任务判别（单向数据管道）
 
-数据只向前流动：`原始公开数据 → 规范数据 → 稿件产出`；**稿件永不反向作为数据源**（稿件 v16 已废弃，其待收录条目信息已登记入 Dataset_inf.csv Note 列）。
+数据只向前流动：`原始公开数据 → 规范数据 → 数据产出`；**稿件永不反向作为数据源**，也不作为比对基线——稿件已更新且不在本仓库内（旧副本与旧出表管线已于 2026-10-14 移出，见 PROJ_STATE §7）。
 
-- **整理/入库任务**：原始数据放输入区 `1_Data/<Folder_Name>/<Folder_Name>_Raw/`（只读、gitignore、不参与校验）→ 加载 SKILL 走 10 步流程：扫描识别实验/被试/会话 → 生成独立清洗脚本 `<Folder_Name>_clean.R`（脚本写法见 SKILL §工具与脚本；`Clean_Data.Rmd` 仅为历史参考）→ 产出标准文件（standard files：每研究的 5 类规范产物 = `*_raw.csv` / `*_ExpN_Clean.csv` / `*_subj_info.csv` / `Codebook_*_Clean.xlsx` / paper + 实验 JSON；定义见 SKILL §领域术语基准）→ 更新 `Dataset_inf.csv`（字节保真）→ 入库完成确认时重渲染 Table 1 并做多源交叉核验。
-- **分析/出数任务**：直接用规范数据与 `3_Reports/` 代码，产出写 `3_Reports/Output/`；与稿件比对默认关闭（`--param compare_manu:true` 按版本触发），禁止以稿件/旧产物反推数据。
+- **整理/入库任务**：原始数据放输入区 `1_Data/<Folder_Name>/<Folder_Name>_Raw/`（只读、gitignore、不参与校验）→ 加载 SKILL 走 10 步流程：扫描识别实验/被试/会话 → 生成独立清洗脚本 `<Folder_Name>_clean.R`（脚本写法见 SKILL §工具与脚本；`Clean_Data.Rmd` 仅为历史参考）→ 产出标准文件（standard files：每研究的 5 类规范产物 = `*_raw.csv` / `*_ExpN_Clean.csv` / `*_subj_info.csv` / `Codebook_*_Clean.xlsx` / paper + 实验 JSON；定义见 SKILL §领域术语基准）→ 更新 `Dataset_inf.csv`（字节保真）→ 入库完成确认时重跑 `3_Reports/Generate_Table1_v2.R` 并做多源交叉核验。
+- **分析/出数任务**：直接用规范数据与 `3_Reports/` 代码，产出写 `3_Reports/Output/`；`1_Data/` 即权威来源，不引入稿件作比对基线（稿件已更新且不在本库，见 §项目逻辑）。
 - **两级校验（任何改动后必跑）**：结构级 `Rscript 2_Code/validate_json_metadata.R`（EXIT=0）+ 内容级 `Rscript 2_Code/validate_clean_csv.R`（0 ERROR）。
-- 历史遗留（manu_v16、非标准命名变体等）不主动修改。
+- 历史遗留（manu_v16 时代产物、非标准命名变体等）不主动修改。
 
 ## 干活效率规则（减少无效读取）
 
@@ -115,11 +115,11 @@ Agent 在本仓库的角色 = **心理学 / 认知科学 / 认知神经科学 / 
 
 ## Known data-quality caveats（避坑：视为已知，勿重新"发现"）
 
-1. **稿件 Table 1 与数据的已知出入已全部核验处置**（2026-10-14 复核；含 Exp 编号错抄如 P5E1–P5E3 全标 Exp4、N 口径差异、Trials 措辞、Study 归属等）——历史快照见 `3_Reports/Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md`（其 8 项待处理问题已全部解决），逐项可解性见 `Table1_Issues_Solvability.md`（qmd 时代产物 `Output/table1_problems.txt` 仍可查；现行出表工具 = `Generate_Table1_v2.R`）；**勿再当新发现报告**。
+1. **旧稿件的 Table 1 差异不再追踪**：2026-08~10 期间记录过的「稿件 Table 1 vs 数据」出入（Exp 编号错抄如 P5E1–P5E3 全标 Exp4、N 口径差异、Trials 措辞、Study 归属等）已核验处置完毕；稿件已更新（现为库外新版）并不再作为比对基线，相关清单与旧出表管线已于 2026-10-14 移出仓库（见 PROJ_STATE §7）。Table 1 现由 `1_Data/` 经 `Generate_Table1_v2.R` 生成；**勿再把旧稿件差异当新发现报告**。
 2. **清洗 = 最小预处理，不过滤**：ACC 等特殊值有意保留并记录于 Codebook；Clean 的 ACC 目标编码 = SKILL §数据标准化「ACC 统一编码」（`1`/`0`/`NA`/`-2`/`-3`/`-4`，无反应一律 `NA`），**勿在文档中沿用旧码 `-1`/`2` 作示例**（那是作者原始码，仅存于 raw；未统一的遗留码在 SKILL 同节登记）；使用者须按自己分析目标预处理。
 3. **缺失代码引用**：`2_Code/README_Auto_Clean.md` 引用的 `SPE_Auto_Clean.R`/`Test_Auto_Clean.R` 不存在，勿寻找。
 4. **大文件（>10 MB）勿整读**：`Sun_2026_DataExp_Exp1_Clean_part1–4.csv`（各 ~38 MB，2026-10-01 按被试边界分 4 片）、`Hu_YQ_2026_ChinaSciData_Exp1_raw_part1/2.csv`（38.3 / 34.9 MB，2026-10-12 补列后分片）、`Hu_YQ_2026_ChinaSciData_Exp1_Clean_part1/2.csv`（27.7 / 25.2 MB）、`Haciahmet_2023_Psychophysiol_Exp1_raw.csv` 42 MB、`Wu_2026_Chinaxiv_Exp1_raw.csv` 36.1 MB、`Wu_2026_Chinaxiv_Exp1_Clean.csv` 14.0 MB。分片规则与读写口径见 SKILL.md §文件与文件夹规范「大文件拆分」（分片共用 1 份 Codebook/JSON、不新增主索引行）。
-5. **Table 1 现行工具 = `3_Reports/Generate_Table1_v2.R`**（2026-10 用户定案）：`Rscript 3_Reports/Generate_Table1_v2.R` → `Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto。旧 `Generate_Table1.qmd` **已失效**（`Paper_ID` 列移除后无法渲染），不要再走 qmd/quarto 流程（历史命令见 git）。流程仍为 `1_Data → Dataset_inf.csv → Table 1`，ID 列 = Folder_Name，比对口径"Not specified"=missing、CC0=CC0 1.0 Universal；`Exp_Implement` 由 exp JSON `Setting` 正则推断（与 qmd 同逻辑）；操作细节 PROJ_STATE §5。
+5. **Table 1 现行工具 = `3_Reports/Generate_Table1_v2.R`**（2026-10 用户定案）：`Rscript 3_Reports/Generate_Table1_v2.R` → `Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto。旧 `Generate_Table1.qmd` 及其产物（`Generate_Table1.docx`、`ref_docx_landscape.docx`、`Output/Table1.csv`、`Output/Table1_summary_stats.csv`）已于 2026-10-14 移出仓库（qmd 因 `Paper_ID` 列移除已无法渲染；历史命令见 git），不要再走 qmd/quarto 流程。流程仍为 `1_Data → Dataset_inf.csv → Table 1`，ID 列 = Folder_Name，比对口径"Not specified"=missing、CC0=CC0 1.0 Universal；`Exp_Implement` 由 exp JSON `Setting` 正则推断；操作细节 PROJ_STATE §5。
 
 ## Repo layout（仓库整洁，防误判）
 
