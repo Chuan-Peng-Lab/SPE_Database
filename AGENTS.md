@@ -115,10 +115,10 @@ Agent 在本仓库的角色 = **心理学 / 认知科学 / 认知神经科学 / 
 
 ## Known data-quality caveats（避坑：视为已知，勿重新"发现"）
 
-1. **稿件 Table 1 与数据存在已知出入**（Exp 编号错抄如 P5E1–P5E3 全标 Exp4、N 口径差异、Trials 措辞、Study 归属等）——登记于 `3_Reports/Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md`，逐项可解性见 `Table1_Issues_Solvability.md`（qmd 时代产物 `Output/table1_problems.txt` 仍可查；现行出表工具 = `Generate_Table1_v2.R`）；勿再当新发现报告。
+1. **稿件 Table 1 与数据的已知出入已全部核验处置**（2026-10-14 复核；含 Exp 编号错抄如 P5E1–P5E3 全标 Exp4、N 口径差异、Trials 措辞、Study 归属等）——历史快照见 `3_Reports/Consistency_Check_Table1_vs_DatasetInf_vs_Folders.md`（其 8 项待处理问题已全部解决），逐项可解性见 `Table1_Issues_Solvability.md`（qmd 时代产物 `Output/table1_problems.txt` 仍可查；现行出表工具 = `Generate_Table1_v2.R`）；**勿再当新发现报告**。
 2. **清洗 = 最小预处理，不过滤**：ACC 等特殊值有意保留并记录于 Codebook；Clean 的 ACC 目标编码 = SKILL §数据标准化「ACC 统一编码」（`1`/`0`/`NA`/`-2`/`-3`/`-4`，无反应一律 `NA`），**勿在文档中沿用旧码 `-1`/`2` 作示例**（那是作者原始码，仅存于 raw；未统一的遗留码在 SKILL 同节登记）；使用者须按自己分析目标预处理。
 3. **缺失代码引用**：`2_Code/README_Auto_Clean.md` 引用的 `SPE_Auto_Clean.R`/`Test_Auto_Clean.R` 不存在，勿寻找。
-4. **大文件（>10 MB）勿整读**：`Sun_2026_DataExp_Exp1_Clean_part1–4.csv`（各 ~38 MB；原 75 MB 单文件于 2026-09-25 按被试边界分片）、`Hu_YQ_2026_ChinaSciData_Exp1_raw_part1/2.csv`（38.3 / 34.9 MB，2026-10-12 补列后分片）、`Hu_YQ_2026_ChinaSciData_Exp1_Clean_part1/2.csv`（27.7 / 25.2 MB）、`Processed_Data_Filtered.csv` 60 MB、`Haciahmet_2023_Psychophysiol_Exp1_raw.csv` 42 MB、`Wu_2026_Chinaxiv_Exp1_raw.csv` 36.1 MB、`Share_Data.RData` 31 MB、`Wu_2026_Chinaxiv_Exp1_Clean.csv` 14.0 MB。分片规则与读写口径见 SKILL.md §文件与文件夹规范「大文件拆分」（分片共用 1 份 Codebook/JSON、不新增主索引行）。
+4. **大文件（>10 MB）勿整读**：`Sun_2026_DataExp_Exp1_Clean_part1–4.csv`（各 ~38 MB，2026-10-01 按被试边界分 4 片）、`Hu_YQ_2026_ChinaSciData_Exp1_raw_part1/2.csv`（38.3 / 34.9 MB，2026-10-12 补列后分片）、`Hu_YQ_2026_ChinaSciData_Exp1_Clean_part1/2.csv`（27.7 / 25.2 MB）、`Haciahmet_2023_Psychophysiol_Exp1_raw.csv` 42 MB、`Wu_2026_Chinaxiv_Exp1_raw.csv` 36.1 MB、`Wu_2026_Chinaxiv_Exp1_Clean.csv` 14.0 MB。分片规则与读写口径见 SKILL.md §文件与文件夹规范「大文件拆分」（分片共用 1 份 Codebook/JSON、不新增主索引行）。
 5. **Table 1 现行工具 = `3_Reports/Generate_Table1_v2.R`**（2026-10 用户定案）：`Rscript 3_Reports/Generate_Table1_v2.R` → `Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto。旧 `Generate_Table1.qmd` **已失效**（`Paper_ID` 列移除后无法渲染），不要再走 qmd/quarto 流程（历史命令见 git）。流程仍为 `1_Data → Dataset_inf.csv → Table 1`，ID 列 = Folder_Name，比对口径"Not specified"=missing、CC0=CC0 1.0 Universal；`Exp_Implement` 由 exp JSON `Setting` 正则推断（与 qmd 同逻辑）；操作细节 PROJ_STATE §5。
 
 ## Repo layout（仓库整洁，防误判）

@@ -22,10 +22,9 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 - `2_Code/split_clean_csv.py` — 大文件分片工具（> 50 MB 的 `*_Clean.csv` 按被试边界切分；默认 dry-run，`--apply` 备份原件后写入并逐字节校验可还原；规则正文见 SKILL §文件与文件夹规范「大文件拆分」）
 - `3_Reports/Generate_Table1_v2.R`（**现行 Table 1 工具**，`Rscript` 出 `Output/Table1_v2.csv` + `Table1_v2_summary_stats.csv`，不依赖 quarto）+ `Output/table1_problems.txt`（qmd 时代产物，仍可查）— Table 1 再生成与比对；旧 `Generate_Table1.qmd` 已失效（`Paper_ID` 列移除后无法渲染）
 - `3_Reports/Table1_Issues_Solvability.md` — Table 1 问题逐项可解性判定（与本文档 §3 双向关联）
-- `3_Reports/Verifying_original_results_issues.md` — **作者原始结果验证问题统一记录处**（Issue 1–8，与本文档 §3 类别三关联）
+- `3_Reports/Verifying_original_results_issues.md` — **作者原始结果验证问题统一记录处**（Issue 1–9，与本文档 §3 类别三关联）
 - `3_Reports/Hu_YQ_2026_Issues.md` — **Hu_YQ_2026_ChinaSciData 未解决问题清单**（只记未解决项：H1 输入区原始数据、H2 开封公开版本、H3 任务映射、H5/H6/H8/H9/H14③ 设计与口径、N1–N3、N5 开封交付缺漏；已解决编号不再保留；与本文档 §3 类别二行关联）
 - `3_Reports/Wu_2026_Chinaxiv_Ingestion_Plan.md` — **Wu_2026_Chinaxiv 入库计划**（列序/自变量映射、试次结构与分块、三方核对、exp JSON 字段完整性与 Codebook 编写计划、§10 Issues 清单 = Wu Issue 1–8 独立编号；与本文档 §3 类别三新增行关联）
-- `3_Reports/Stage3_1_CrossCheck_archived.md` — 阶段 3.1 未解决问题编号清单（P1–P22，仅存档）
 - `2_Code/qjep_verify/`、`2_Code/mcivor_verify/`、`2_Code/orellano2020_verify/`、`2_Code/wang2016_verify/`、`2_Code/hobbs_verify/`、`2_Code/wozniak2020_verify/` — 各研究多源交叉核验脚本固化
 - `REF/README_html2md.md` — REF 全文 HTML→MD 转换管线使用说明（正文归属本文件，AGENTS/PROJ_STATE 只放指针）
 - `3_Reports/CodeReview_and_v16.2_Consistency_Report.md` — **稿件 v16.2 生成 + 三段分析代码审查报告**（2026-09-24；含代码 bug 清单 B1–B6、v2 结果、Table 1 差异 41 处、参考文献审计）；产物 = `_v2` 代码/图 + `Generate_Table1_v2.R` + `Datasets/4_Writing/SPE_数据库_v16.2.docx`
@@ -85,7 +84,7 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 ### 其他暂缓项
 
-稿件 Table1 暂缓清单（table1_problems.txt 111 行 + Table1_Issues_Solvability.md 107 项，稿件版本更新时启用）；Kirk_2025_BritJPsy.json 嵌套 schema 例外（内部键 KIRK_2025_BJP 保留）；Hu_2023_psyarxiv（PsyArXiv 预印本）与 Hu_YQ_2026_ChinaSciData（ChinaSciData）为两个独立条目，确认分别保留；历史管线 Clean_Data.Rmd 内仍引用旧文件夹名（纯历史记录，未改）。
+稿件 Table1 暂缓清单（table1_problems.txt 111 行 + Table1_Issues_Solvability.md 36 项——2026-10-14 按当前数据重核，已定案条目 71 项删除，稿件版本更新时启用）；Kirk_2025_BritJPsy.json 嵌套 schema 例外（内部键 KIRK_2025_BJP 保留）；Hu_2023_psyarxiv（PsyArXiv 预印本）与 Hu_YQ_2026_ChinaSciData（ChinaSciData）为两个独立条目，确认分别保留；历史管线 Clean_Data.Rmd 内仍引用旧文件夹名（纯历史记录，未改）。
 
 ### 条件触发的工作（跨类别）
 
@@ -175,8 +174,9 @@ SPE（自我优先效应）数据库的整理与元数据治理：以「可读�
 
 | 原章节 | 内容 | 归档位置 |
 |---|---|---|
-| §5 效率教训与弃用方案 | 一次 unpub 会话教训、阶段 2 犯错教训、弃用方案 3 条 | 规则已沉淀于 AGENTS.md §效率教训与防坑 + SKILL.md；弃用方案对应 git 历史 commit |
+| §5 效率教训与弃用方案 | 一次 unpub 会话教训、阶段 2 犯错教训、弃用方案 3 条 | 规则已沉淀于 AGENTS.md §干活效率规则 / §防坑 + SKILL.md；弃用方案对应 git 历史 commit |
 | §6 REF/ 全文收录统计 | 44 研究覆盖明细、模板适配记录、`*_DS.md` 说明、管线教训 | REF/README_html2md.md（正文归属）+ git 历史 |
 | §7 完成进度 | 全量历史会话记录表（2026-08 ~ 2026-09-02，约 30 行，含各研究入库详情、多源交叉核验、治理动作、全局校验基线） | **git 历史**：备份 commit `9e90b8e` 之前版本为精简前全文；各动作对应 commit message 可定位 |
+| `3_Reports/Stage3_1_CrossCheck_archived.md`（整文件，2026-10-14 删除） | 阶段 3.1 四方交叉复核 P1–P22 处置记录（全部已解决；相关表述已自核心文件移除） | **git 历史**：`git log -- 3_Reports/Stage3_1_CrossCheck_archived.md` |
 
-查询方式：`git log --oneline -- PROJ_STATE.md` 或按研究/动作关键词 `git log --grep="<关键词>"`。全局校验基线（127 JSON / 82 Clean 0 ERROR / Table 1 97 行）已作为当前状态移入 §5，不随历史删除。
+查询方式：`git log --oneline -- PROJ_STATE.md` 或按研究/动作关键词 `git log --grep="<关键词>"`。全局校验基线以 §5 为准，不随历史删除。

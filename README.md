@@ -13,7 +13,7 @@ This project is in parallel with an on-going preregistered meta-analysis leading
 - **Master index**: `1_Data/Dataset_inf.csv` (UTF-8 with BOM) — one row per experiment-sample, keyed by `Folder_Name` (the project-wide **study ID** = the study folder name) + `Exp` + `subj_Group`. Key columns: `FirstAuthor`, `Year` (official print year), `Journal`, `DOI` (paper DOI), `Country`/`City`, `Stim_Type`, `Stim_language`, `License`, `numTrials`, `Sample_Size`/`Male`/`Female`, `Repo_Link` (data repository link). Current inventory: **51 curated studies on disk + 1 deferred (Scheller_2026_elife)** (authoritative counts live in the CSV); `Hu_YQ_2026_ChinaSciData` currently holds two experiments (4 index rows, 62 participants) — its input data zone is still pending; the open items (input data, Kaifeng release, design calibers) are listed in `3_Reports/Hu_YQ_2026_Issues.md`.
 - **Data-user guide**: `1_Data/README.md` summarises the three standardization layers (folder structure, trial-level data, experiment metadata) for downstream users. **Note that `Task` is not the condition variable**: after the database-wide unification (2026-10-12) it only has three values (`self-matching` / `shape-matching` / `choice-task`), and different conditions can share one value — read the condition from the stimulus columns, the three-level identity columns, `extraIV1`/`extraIV2`, `Session`/`Phase`/`Block`, and the study's Codebook and experiment JSON `detail`.
 - **Data readability** (since 2026-08-30): `Shape`/`Label` columns hold actual stimulus values (shape names / label words); original numeric codes are kept in the raw `ShapeCode`/`LabelCode` columns and the Clean `*_Origin_Identity` columns.
-- **Cleaned data**: `*_ExpN_Clean.csv` uses standardized columns `Subject`, `Shape`, `Label`, `Matching`, `ACC`, `RT_ms`, plus 3-level Identity columns (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger). Cleaning is minimal preprocessing (harmonization) — special values are kept under the database-wide ACC coding (e.g., no response = `NA`, out-of-range key = `-2`) and documented in the codebook; users preprocess per their own analysis goals. Clean files larger than 50 MB are split at whole-subject boundaries into `_Clean_part<N>.csv` (identical header; one shared codebook and experiment JSON; reassemble with `rbind`; rule in SKILL.md §文件与文件夹规范「大文件拆分」).
+- **Cleaned data**: `*_ExpN_Clean.csv` uses standardized columns `Subject`, `Shape`, `Label`, `Matching`, `ACC`, `RT_ms`, plus 3-level Identity columns (Origin → English → Standardized: NonPerson/Self/Close/Acquaintance/Celebrity/Stranger). Cleaning is minimal preprocessing (harmonization) — special values are kept under the database-wide ACC coding (e.g., no response = `NA`, out-of-range key = `-2`) and documented in the codebook; users preprocess per their own analysis goals. Clean and raw files larger than 50 MB are split at whole-subject boundaries into `_Clean_part<N>.csv` / `_raw_part<N>.csv` (identical header; one shared codebook and experiment JSON; reassemble with `rbind`; rule in SKILL.md §文件与文件夹规范「大文件拆分」).
 - **Per-study metadata**: paper-level `<Folder_Name>.json` + experiment-level `<Folder_Name>_Exp<N>.json` (v2 schema) + `Codebook_<Folder_Name>_Exp<N>_Clean.xlsx`.
 - **Contributing / adding data**: follow the curation conventions in `.agents/skills/spe-database-curation/SKILL.md` (folder naming, JSON schemas, codebook rules, DOI/year verification workflow) — load it via `skill(name="spe-database-curation")` for any data-curation task.
 - **For agents**: repository conventions and efficiency rules live in `AGENTS.md`; project state lives in `PROJ_STATE.md` (see also the Document map in AGENTS.md).
@@ -139,7 +139,15 @@ Confirmed contributors
 
 **Added**
 
+* **[New studies]**: Also ingested `Hu_YQ_2026_ChinaSciData` (2 experiments / 4 index rows; input zone still pending — open items in `3_Reports/Hu_YQ_2026_Issues.md`), `Sun_2026_DataExp`, `Lee_2026_BritJPsy`, and `Zhao_2026_PsychonBullRev` (3 experiments; standard files rebuilt from the author's raw PsychoPy logs).
 * **[New study: Wu_2026_Chinaxiv]**: Two preregistered experiments on self-prioritization in perceptual decision-making (random-dot kinematogram; matching task followed by a choice task), 141 participants (motion/colour groups) + 60 participants, 3 rows in the master index; full standard files, codebooks and JSON metadata (2026-10-06).
+* **[Standardized Task column]**: `Task` unified to three values — `self-matching` / `shape-matching` / `choice-task` (2026-10-12); conditions are no longer encoded in `Task` alone (see `1_Data/README.md`).
+* **[Data readability]**: `Shape`/`Label` columns hold actual stimulus values; original numeric codes are kept in the raw `ShapeCode`/`LabelCode` columns and the Clean `*_Origin_Identity` columns (since 2026-08-30).
+
+**Changed**
+
+* **[Column order]**: All `*_Clean.csv` files reordered to the v2 template; Codebooks and clean scripts synchronized (2026-10-08).
+* **[Master index]**: `Dataset_inf.csv` is the single index (UTF-8 with BOM, 37 columns); the legacy `Dataset_inf.xlsx` was removed.
 
 **Planned**
 
@@ -151,21 +159,27 @@ Confirmed contributors
 root
 │  .gitignore
 │  README.md
-├─1_Data 
+│  AGENTS.md            # agent conventions and efficiency rules
+│  PROJ_STATE.md        # project status and open items
+│  For_COLLABORATORS.md # contributor guide (中文)
+├─.agents
+│   └─ skills/spe-database-curation/  # authoritative curation rules (SKILL.md)
+├─1_Data
 │   └─ Dataset_inf.csv  # master index (UTF-8 with BOM)
 │   └─ <Folder_Name>   # = the study (folder name = project-wide study ID); <Folder_Name> = <Author>_<Year>_<Suffix>, Suffix = readable journal/database abbreviation (e.g. JEPHPP, ActaPsych, ConsciousCog, QJEP), full short journal name (Cognition, Cortex), psyarxiv/unpub tag, or data-repo abbreviation (SDB)
 │       └─ <Folder_Name>_<Exp-id>_Clean.csv
 │       └─ <Folder_Name>_<Exp-id>_Clean_part<N>.csv  # 分片：单一 Clean > 50 MB 时按被试边界拆分（规则见 SKILL.md §文件与文件夹规范「大文件拆分」）
+│       └─ <Folder_Name>_<Exp-id>_raw.csv
+│       └─ <Folder_Name>_<Exp-id>_raw_part<N>.csv  # 分片：单一 raw > 50 MB 时同理
 │       └─ <Folder_Name>_<Exp-id>_subj_info.csv
 │       └─ Codebook_<Folder_Name>_<Exp-id>_Clean.xlsx
 │       └─ <Folder_Name>.json  # Including Meta data for each paper.
 │       └─ <Folder_Name>_<Exp-id>.json  # Including methodological information for the specific experiment.
-│       └─ <Folder_Name>_<Exp-id>_raw.csv
 ├─2_Code
 │   └─ Clean_Data.Rproj
 │   └─ Clean_Data.Rmd
 │   └─ README.md
 └─3_Reports
-     │
-     └─ README.md
+      └─ Generate_Table1_v2.R  # current Table 1 generator
+      └─ Output/               # generated tables and reports
 ```
